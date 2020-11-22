@@ -1,0 +1,32 @@
+Package: dmpkg
+Type: Package
+Title: Animate Your Data
+Version: 0.0.0.9005
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 2.1.0),
+    readr,
+    here,
+    Rmisc
+Imports: 
+    rlang,
+    dplyr,
+    purrr,
+    ggplot2,
+    gganimate,
+    magick,
+    tibble,
+    magrittr,
+    purrr,
+    scales,
+    ggimage
+Depends: 
+    R (>= 2.10)
