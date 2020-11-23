@@ -316,7 +316,9 @@ aes_d_validate <- function(mapping, compulsory_cols, data_names){
 #' A mapping looks like: <column_to_be_created> = <existing column>
 #' @param ... Unquoted, comma-seperated column mappings
 #' @examples
+#' \dontrun{
 #' aes_d(group = class)
+#' }
 aes_d <- function (...)
 {
   dots <- enquos(...)

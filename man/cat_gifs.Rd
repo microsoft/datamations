@@ -22,19 +22,19 @@ library(gganimate)
 library(tibble)
 library(dplyr)
 
-mt_animate <- mtcars %>%
-  tibble::as_tibble() %>%
+mt_animate <- mtcars \%>\%
+  tibble::as_tibble() \%>\%
   dplyr::mutate(Row = row_number())
 
-part1 <-  mt_animate %>%
+part1 <-  mt_animate \%>\%
  dplyr::filter(Row < 17)
 
-part2 <-  mt_animate %>%
+part2 <-  mt_animate \%>\%
   dplyr::filter(Row >= 17)
 
 temp_dir <- tempdir()
 
-part1 %>%
+part1 \%>\%
   ggplot(aes(mpg, hp)) +
   geom_point() +
   labs(title = 'Row: {frame_time}') +
@@ -43,7 +43,7 @@ part1 %>%
 
 anim_save(filename = file.path(temp_dir, "part1.gif"))
 
-part2 %>%
+part2 \%>\%
   ggplot(aes(mpg, hp)) +
   geom_point() +
   labs(title = 'Row: {frame_time}') +

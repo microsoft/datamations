@@ -1,7 +1,7 @@
 Package: dmpkg
 Type: Package
 Title: Animate Your Data
-Version: 0.0.0.9005
+Version: 0.0.0.9007
 Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
@@ -27,6 +27,12 @@ Imports:
     magrittr,
     purrr,
     scales,
-    ggimage
+    ggimage,
+    boot,
+    stringr,
+    tidyr,
+    tweenr,
+    animation,
+    ggbeeswarm
 Depends: 
     R (>= 2.10)

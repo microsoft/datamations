@@ -17,5 +17,7 @@ Here we are mapping columns into a function so we can use standard names inside 
 A mapping looks like: <column_to_be_created> = <existing column>
 }
 \examples{
+\dontrun{
 aes_d(group = class)
+}
 }
