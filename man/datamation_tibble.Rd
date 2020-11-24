@@ -8,6 +8,7 @@ datamation_tibble(
   pipeline,
   envir = rlang::global_env(),
   output = "output.gif",
+  titles = NA,
   xlim = c(NA, NA),
   ylim = c(NA, NA)
 )

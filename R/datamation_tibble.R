@@ -15,7 +15,7 @@
 #' @param output Path to where gif will be saved.
 #' @export
 datamation_tibble <- function(pipeline, envir = rlang::global_env(),
-                              output = "output.gif",
+                              output = "output.gif", titles = NA,
                               xlim = c(NA, NA), ylim = c(NA, NA)) {
 
   fittings <- pipeline %>%
@@ -43,14 +43,18 @@ datamation_tibble <- function(pipeline, envir = rlang::global_env(),
                      ymin = ylim[1],
                      ymax = ylim[2])
 
-  current_state <- list(df = data_states[[1]], fitting = fittings[[2]],
-                 coords = make_coords(data_states[[1]],
-                                      row_ceiling = dimensions$ymax) %>% mutate(Color = "#C0C0C0"))
+  current_state <- list(df = data_states[[1]],
+                        fitting = fittings[[2]],
+                        title_state = list(titles = titles, current_title = 1),
+                        coords = make_coords(data_states[[1]],
+                                              row_ceiling = dimensions$ymax) %>%
+                                                mutate(Color = "#C0C0C0"))
   next_state <- list(df = data_states[[2]])
 
   for (i in 1:(length(data_states) - 1)) {
     if(tidy_functions_list[i] == "group_by") {
-      result <- dmta_group_by(current_state, next_state, dimensions = dimensions)
+      result <- dmta_group_by(current_state, next_state,
+                              dimensions = dimensions, anim_title = titles[i])
       anim_list <- c(anim_list, result$anim_path)
       current_state <- result
       current_state[["df"]] <- data_states[[i + 1]]
@@ -59,7 +63,8 @@ datamation_tibble <- function(pipeline, envir = rlang::global_env(),
         next_state <- list(df = data_states[[i + 2]])
       }
     } else if(tidy_functions_list[i] == "ungroup") {
-      result <- dmta_ungroup(current_state, next_state, dimensions = dimensions)
+      result <- dmta_ungroup(current_state, next_state, dimensions = dimensions,
+                             anim_title = titles[i])
       anim_list <- c(anim_list, result$anim_path)
       current_state <- result
       current_state[["df"]] <- data_states[[i + 1]]
@@ -68,7 +73,8 @@ datamation_tibble <- function(pipeline, envir = rlang::global_env(),
         next_state <- list(df = data_states[[i + 2]])
       }
     } else if(tidy_functions_list[i] %in% c("summarize", "summarise")) {
-      result <- dmta_summarize(current_state, next_state, dimensions = dimensions)
+      result <- dmta_summarize(current_state, next_state,
+                               dimensions = dimensions, anim_title = titles[i])
       anim_list <- c(anim_list, result$anim_path)
       current_state <- result
       current_state[["df"]] <- data_states[[i + 1]]

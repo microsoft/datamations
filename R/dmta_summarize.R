@@ -11,7 +11,8 @@
 #' @importFrom stats median
 #' @importFrom tibble as_tibble tibble
 
-dmta_summarize <- function(state1, state2, dimensions, outline = TRUE) {
+dmta_summarize <- function(state1, state2, dimensions,
+                           outline = TRUE, anim_title = NA) {
   # state1 <- current_state; state2 <- next_state; outline = FALSE
 
   new_columns <- state1$fitting %>%
@@ -311,8 +312,15 @@ dmta_summarize <- function(state1, state2, dimensions, outline = TRUE) {
       geom_point(aes(color = Color, group = ID), shape = "\u25AC", size = 3) +
       scale_color_manual(breaks = unique(anim_data$Color),
                          values = as.character(unique(anim_data$Color))) +
-      theme_zilch() +
-      ggtitle(deparse(state1$fitting)) +
+      theme_zilch()
+
+    if(is.na(anim_title)) {
+      anim <- anim + ggtitle(deparse(state1$fitting))
+    } else {
+      anim <- anim + ggtitle(anim_title)
+    }
+
+    anim <- anim +
       transition_states(Time,
                         transition_length = 12,
                         state_length = 10, wrap = FALSE) +

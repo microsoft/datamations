@@ -64,4 +64,10 @@ dmpkg::datamation_tibble(pipeline, output = "mtcars_group_cyl.gif")
 # The command below takes 50 seconds to execute on my machine
 pipeline <- "small_salary_data %>% group_by(Degree, Work) %>% summarize(Avg_Salary = mean(Salary))"
 dmpkg::datamation_tibble(pipeline, output = "salary_group2_summarize_mean.gif")
+
+# The command below takes 50 seconds to execute on my machine
+pipeline <- "small_salary_data %>% group_by(Degree, Work) %>% summarize(Avg_Salary = mean(Salary))"
+dmpkg::datamation_tibble(pipeline, output = "salary_group2_summarize_mean.gif",
+                         titles = c("Grouping by Degree and Work", 
+                                    "Calculating the Mean of Each Group"))
 ```

@@ -9,7 +9,7 @@
 #' @importFrom rlang parse_expr
 #' @importFrom stats median
 #' @importFrom tibble as_tibble tibble
-dmta_ungroup <- function(state1, state2, dimensions) {
+dmta_ungroup <- function(state1, state2, dimensions, anim_title = NA) {
   # tibble is not grouped to begin with
   if(!is_grouped_df(state1$df)) {
 
@@ -65,8 +65,15 @@ dmta_ungroup <- function(state1, state2, dimensions) {
     geom_point(aes(color = Color, group = Row_Ungrouped_Coord), shape = 15, size = 3) +
     scale_color_manual(breaks = unique(anim_data$Color),
                        values = as.character(unique(anim_data$Color))) +
-    theme_zilch() +
-    ggtitle(deparse(state1$fitting)) +
+    theme_zilch()
+
+    if(is.na(anim_title)) {
+      anim <- anim + ggtitle(deparse(state1$fitting))
+    } else {
+      anim <- anim + ggtitle(anim_title)
+    }
+
+  anim <- anim +
     transition_states(Time,
                       transition_length = 12,
                       state_length = 10, wrap = FALSE) +
