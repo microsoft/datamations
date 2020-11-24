@@ -10,7 +10,7 @@
 #' @importFrom stringr str_replace
 #' @import ggplot2
 #' @export
-animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, output = "both"){
+animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, output = "both", titles = ""){
 
   # find the grouping variable
   group_vars <- attributes(.data)$groups %>%
@@ -293,16 +293,20 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
 
       # set up plot titles
       natural_group_vars <- paste(group_vars, collapse = " AND ")
-      title <- ""
+      # BEGIN
+      # title <- ""
       if ((i - 1) %/% nframes %in% c(0,1,2)) {
-        title <- paste0("Step 2: Next you plot the salary of each person\n            within each group")
+        # title <- paste0("Step 2: Next you plot the salary of each person\n            within each group")
+        title <- titles[1]
         if (output == "second") {
-          title <- paste0("Step 3: Lastly you plot the average salary \n            of each group and zoom in")
+          # title <- paste0("Step 3: Lastly you plot the average salary \n            of each group and zoom in")
+          title <- titles[2]
         }
       } else {
-        title <- paste0("Step 3: Lastly you plot the average salary \n            of each group and zoom in")
+        # title <- paste0("Step 3: Lastly you plot the average salary \n            of each group and zoom in")
+        title <- titles[2]
       }
-
+      # END
 
       if (i <= nframes * 2) {
 

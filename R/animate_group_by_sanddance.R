@@ -11,7 +11,7 @@
 #' @import tweenr
 #' @import rlang
 #' @export
-animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE){
+animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE, titles = ""){
 
   # prep some mapping
   dots <- enquos(...)
@@ -156,14 +156,18 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE)
           group_by(group)
       }
 
-      # ACHTUNG: hard-coding stuff for the experiment
-      if (length(group_vars_chr) == 1){
-        title <- "Step 1: Each dot shows one person\n            and each group shows degree type"
-      } else if (length(group_vars_chr) == 2) {
-        title <- "Step 1: Each dot shows one person and each group\n            shows degree type AND work setting"
-      } else {
-        stop("animate_group_by() was hard-coded for salary dataset")
-      }
+      # BEGIN ACHTUNG: hard-coding stuff for the experiment
+      title <- titles
+      # if (length(group_vars_chr) == 1){
+      #   title <- "Step 1: Each dot shows one person\n            and each group shows degree type"
+      # } else if (length(group_vars_chr) == 2) {
+      #   title <- "Step 1: Each dot shows one person and each group\n            shows degree type AND work setting"
+      # } else {
+      #   stop("animate_group_by() was hard-coded for salary dataset")
+      # }
+      # END
+
+
       # natural_group_var_chr <- paste(group_vars_chr, collapse = " AND ")
       # title <- paste0("Step 1: Each dot shows one person\n            and each group shows ", natural_group_var_chr)
 
