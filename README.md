@@ -14,7 +14,7 @@ datamation gifs. (`eval=FALSE` in chunk options might prevent you from
 automatically running the chuncks. Remove if necessary.)
 
 ``` r
-install.packages(file.choose(), repos = NULL, type="source")
+install.packages(file.choose(), repos = NULL, type = "source")
 ```
 
 ``` r
