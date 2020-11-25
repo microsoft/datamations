@@ -7,14 +7,14 @@
 
 First, download the zip file of the package source called
 `dmpkg_0.0.0.9007.tar.gz` from [this
-link](https://zenodo.org/record/4287448), since the anonymous GitHub
+link](https://zenodo.org/record/4290800), since the anonymous GitHub
 repo doesn’t allow for downloading. With the zip file you downloaded,
 run the code below (`README.Rmd`) to reproduce the datamation gifs.
-(`eval=FALSE` in chunk options might prevent you from automatically
-running the chuncks. Remove if necessary.)
+(`eval = FALSE` in chunk options might prevent you from automatically
+running the chunks. Remove if necessary.)
 
 ``` r
-install.packages(file.choose(), repos = NULL, type="source")
+install.packages(file.choose(), repos = NULL, type = "source")
 ```
 
 ``` r
