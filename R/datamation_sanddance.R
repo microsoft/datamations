@@ -14,8 +14,8 @@
 #' @param output Path to where gif will be saved.
 #' @export
 datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
-                              output = "output.gif", titles = NA,
-                              xlim = c(NA, NA), ylim = c(NA, NA)) {
+                              output = "output.gif", titles = "",
+                              xlim = c(NA, NA), ylim = c(NA, NA), ...) {
 
   # BEGIN from datamation_tibble.R
 
@@ -56,6 +56,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
       verb <- tidy_func_arg[[i]][[1]]
       args <- tidy_func_arg[[i]][[2]]
 
+
       call_verb <-
         switch(verb,
                group_by = animate_group_by_sanddance,
@@ -70,7 +71,14 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
                summarize = parse_expr(args)[[-1]]
         )
 
-      do.call(call_verb, list(data, call_args))
+      caption <-
+        switch(verb,
+               group_by = titles[i - 1],
+               summarise = titles[(i - 1):i],
+               summarize = titles[(i - 1):i]
+        )
+
+      do.call(call_verb, list(data, call_args, titles=caption, ...))
     }
   }, movie.name=output, interval = 0.1, ani.width = 500, ani.height = 350, ani.res = 100)
 
