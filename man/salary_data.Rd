@@ -4,9 +4,7 @@
 \name{salary_data}
 \alias{salary_data}
 \title{Hypothetical salary data for 3000 workers}
-\format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 3000 rows and 4 columns.
-}
+\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 3000 rows and 4 columns.}
 \usage{
 salary_data
 }

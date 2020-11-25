@@ -4,7 +4,13 @@
 \alias{animate_group_by_sanddance}
 \title{Produces frames (plots) of transition from ungrouped to grouped icon arrays}
 \usage{
-animate_group_by_sanddance(.data, ..., nframes = 5, is_last = FALSE)
+animate_group_by_sanddance(
+  .data,
+  ...,
+  nframes = 5,
+  is_last = FALSE,
+  titles = ""
+)
 }
 \arguments{
 \item{.data}{the grouped dataframe TODO: or coords??????}
