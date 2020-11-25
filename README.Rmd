@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 First, download the zip file of the package source called `dmpkg_0.0.0.9007.tar.gz` 
 from [this link](https://zenodo.org/record/4287448). 
-Then run the code below and select the zip file you downloaded.
+Then run the code below (`README.Rmd`) and select the zip file you downloaded.
 
 ```{r, eval=FALSE}
 install.packages(file.choose(), repos = NULL, type="source")
