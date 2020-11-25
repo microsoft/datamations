@@ -44,16 +44,17 @@ work_degree_title_step1 <- "Step 1: Each dot shows one person and each group\n  
 
 
 ```{r}
-# temporary test 
-test_pipe2 <- "small_salary %>% group_by(Degree, Work) %>% summarize(mean = mean(Salary))"
+plot_pipe <- "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))"
 
-datamation_sanddance(test_pipe2, output = "Degree_Work_two_colors.gif")
+datamation_sanddance(test_pipe, output = "mean_salary_group_by_degree.gif")
 
-test_pipe <- "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))"
+plot_pipe2 <- "small_salary %>% group_by(Degree, Work) %>% summarize(mean = mean(Salary))"
 
-datamation_sanddance(test_pipe, output = "Degree_two_colors.gif")
+datamation_sanddance(test_pipe2, output = "mean_salary_group_by_degree_work.gif")
+
 ```
 
+Using internal function calls 
 
 ```{r, eval=FALSE}
 # The command below takes 90 seconds to execute on my machine

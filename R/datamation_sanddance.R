@@ -49,28 +49,29 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
 
   # END from datamation_tibble.R
 
-  # NEW: assemble function + data + variables
-  for (i in 2:length(fittings)){
-    data <- data_states[[i-1]]
-    verb <- tidy_func_arg[[i]][[1]]
-    args <- tidy_func_arg[[i]][[2]]
+  saveGIF({
+    # NEW: assemble function + data + variables
+    for (i in 2:length(fittings)){
+      data <- data_states[[i-1]]
+      verb <- tidy_func_arg[[i]][[1]]
+      args <- tidy_func_arg[[i]][[2]]
 
-    call_verb <-
-      switch(verb,
-             group_by = animate_group_by_sanddance,
-             summarise = animate_summarize_mean_sanddance,
-             summarize = animate_summarize_mean_sanddance
-      )
+      call_verb <-
+        switch(verb,
+               group_by = animate_group_by_sanddance,
+               summarise = animate_summarize_mean_sanddance,
+               summarize = animate_summarize_mean_sanddance
+        )
 
-    call_args <-
-      switch(verb,
-             group_by = parse_expr(args),
-             summarise = parse_expr(args)[[-1]],
-             summarize = parse_expr(args)[[-1]]
-      )
+      call_args <-
+        switch(verb,
+               group_by = parse_expr(args),
+               summarise = parse_expr(args)[[-1]],
+               summarize = parse_expr(args)[[-1]]
+        )
 
-    do.call(call_verb, list(data, call_args))
-  }
-
+      do.call(call_verb, list(data, call_args))
+    }
+  }, movie.name=output, interval = 0.1, ani.width = 500, ani.height = 350, ani.res = 100)
 
 }
