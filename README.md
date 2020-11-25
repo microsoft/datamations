@@ -1,47 +1,55 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# dmpkg
+# Datamation pacakge
 
 ## Installation
 
 First, download the zip file of the package source called
 `dmpkg_0.0.0.9007.tar.gz` from [this
-link](https://zenodo.org/record/4287448). Then run the code below and
-select the zip file you downloaded.
+link](https://zenodo.org/record/4287448), since the anonymous GitHub
+repo doesn’t allow for downloading. With the zip file you downloaded,
+run the code below to reproduce the datamation gifs. (`eval=FALSE` in
+chunk options might prevent you from automatically running the chuncks.
+Remove if necessary.)
 
 ``` r
 install.packages(file.choose(), repos = NULL, type="source")
 ```
 
-## Examples for Plot-based Datamations
-
 ``` r
 library(dmpkg)
 library(animation)
 library(tidyverse)
+```
 
-# The command below takes 90 seconds to execute on my machine
-saveGIF({
-  small_salary %>%
-    animate_group_by_sanddance(Degree, nframes = 30) %>%
-    animate_summarize_mean_sanddance(Salary, nframes = 30)
-}, movie.name="Degree_two_colors.gif", interval = 0.1, ani.width = 500, ani.height = 350, ani.res = 100)
+## Examples for Plot-based Datamations
 
-# The command below takes 100 seconds to execute on my machine
-saveGIF({
-  small_salary %>%
-    animate_group_by_sanddance(Degree, Work, nframes = 30) %>%
-    animate_summarize_mean_sanddance(Salary, nframes = 30)
-}, movie.name="Work_Degree_two_colors.gif", interval = 0.1, ani.width = 500, ani.height = 350, ani.res= 100)
+``` r
+degree_title_step1 <- "Step 1: Each dot shows one person\n            and each group shows degree type"
+degree_title_step2 <- "Step 2: Next you plot the salary of each person\n            within each group"
+degree_title_step3 <- "Step 3: Lastly you plot the average salary \n            of each group and zoom in"
+work_degree_title_step1 <- "Step 1: Each dot shows one person and each group\n            shows degree type AND work setting"
+```
+
+``` r
+plot_pipe <- "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))"
+
+# The command below takes 70 seconds to execute on my machine
+datamation_sanddance(plot_pipe, output = "mean_salary_group_by_degree.gif",
+                     titles = c(degree_title_step1, degree_title_step2, degree_title_step3), 
+                     nframes = 30)
+
+plot_pipe2 <- "small_salary %>% group_by(Degree, Work) %>% summarize(mean = mean(Salary))"
+
+# The command below takes 15 seconds to execute on my machine
+datamation_sanddance(plot_pipe2, output = "mean_salary_group_by_degree_work.gif",
+                     titles = c(work_degree_title_step1, degree_title_step2, degree_title_step3))
 ```
 
 ## Examples for Table-based Datamations
 
 ``` r
-library(dmpkg)
-library(tidyverse)
-
 # The command below takes 20 seconds to execute on my machine
 pipeline <- "small_salary_data %>% group_by(Degree)"
 dmpkg::datamation_tibble(pipeline, output = "salary_group_degree.gif")
@@ -53,4 +61,10 @@ dmpkg::datamation_tibble(pipeline, output = "mtcars_group_cyl.gif")
 # The command below takes 50 seconds to execute on my machine
 pipeline <- "small_salary_data %>% group_by(Degree, Work) %>% summarize(Avg_Salary = mean(Salary))"
 dmpkg::datamation_tibble(pipeline, output = "salary_group2_summarize_mean.gif")
+
+# The command below takes 50 seconds to execute on my machine
+pipeline <- "small_salary_data %>% group_by(Degree, Work) %>% summarize(Avg_Salary = mean(Salary))"
+dmpkg::datamation_tibble(pipeline, output = "salary_group2_summarize_mean.gif",
+                         titles = c("Grouping by Degree and Work", 
+                                    "Calculating the Mean of Each Group"))
 ```
