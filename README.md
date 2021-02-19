@@ -3,8 +3,6 @@
 
 # Datamation pacakge
 
-> The Datamations package accompanies the paper _Datamations: Animated Explanations of Data Analysis Pipelines_, presented at C+J 2021  and will appear at ACM CHI 2021. The paper is available at [link](http://jakehofman.com/pdfs/datamations.pdf), and the preregistration, data, and materials are at [OSF](https://osf.io/85njc/).
-
 ## Installation
 
 First, download the zip file of the package source called
@@ -20,7 +18,7 @@ install.packages(file.choose(), repos = NULL, type = "source")
 ```
 
 ``` r
-library(dmpkg)
+library(datamation)
 library(animation)
 library(tidyverse)
 ```
