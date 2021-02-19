@@ -26,7 +26,7 @@ install.packages(file.choose(), repos = NULL, type = "source")
 ```
 
 ```{r, eval=FALSE}
-library(datamations)
+library(datamation)
 library(animation)
 library(tidyverse)
 ```
