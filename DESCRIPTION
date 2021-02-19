@@ -1,11 +1,11 @@
-Package: dmpkg
+Package: datamations
 Type: Package
-Title: Animate Your Data
+Title: Animated Explanations of Data Analysis Pipelines
 Version: 0.0.0.9007
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: c(
+    person("Xiaoying", "Pu", email = "xpu@umich.edu", role = c("cre", "aut")),
+    person("Sean", "Kross", email = "smk240@gmail.com", role = c("aut")))
+Description: Generates animations that explain plots and tables from tidyverse pipelines.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
