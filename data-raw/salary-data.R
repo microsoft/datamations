@@ -1,4 +1,4 @@
-library(dmpkg)
+library(datamations)
 library(tibble)
 library(readr)
 library(here)

@@ -1,4 +1,4 @@
 library(testthat)
-library(dmpkg)
+library(datamations)
 
-test_check("dmpkg")
+test_check("datamations")
