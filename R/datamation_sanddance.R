@@ -18,8 +18,6 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
                                  output = "output.gif", titles = "",
                                  xlim = c(NA, NA), ylim = c(NA, NA), ...) {
 
-  # BEGIN from datamation_tibble.R
-
   fittings <- pipeline %>%
     parse_expr() %>%
     dismantle()
@@ -32,9 +30,12 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
   }
 
   tidy_functions_list <- fittings %>%
+    # Splits expressions into the functions and arguments
     map(as.list) %>%
+    # Keeping the functions only
     map(~ .x[[1]]) %>%
     map_chr(as.character) %>%
+    # Assumes the first element is the data
     {
       .[-1]
     }
@@ -75,6 +76,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
         call_args <-
           switch(verb,
             group_by = parse_expr(args),
+            # TODO: What if calculation in summarise is unnamed? What if there's more than one calculation? Check these cases
             summarise = parse_expr(args)[[-1]],
             summarize = parse_expr(args)[[-1]]
           )

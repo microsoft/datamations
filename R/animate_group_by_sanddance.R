@@ -13,14 +13,13 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 
   # prep some mapping
   dots <- enquos(...)
-  group_vars_chr <- map_chr(dots, ~ quo_name(.))
+  group_vars_chr <- map_chr(dots, rlang::quo_name)
   color_var_chr <- first(dots)
   grouped_facet_var <- paste(group_vars_chr, collapse = "_")
   grouped_facet_sym <- sym(grouped_facet_var)
 
   df <- .data
 
-  # browser()
   # preprocess data
   .data <- .data %>%
     mutate(self = "id") %>%
@@ -31,6 +30,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     pull(!!grouped_facet_var) %>%
     levels()
 
+  # TODO: I assume this is happening due to a preferred ordering of the degree/work example - check what happens without it
   if (length(fct_lvls) == 4) {
     fct_lvls <- fct_lvls[c(1, 3, 2, 4)]
   }
@@ -45,7 +45,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   # initial frame
   #   with no color mapping
   init_coords <- .data %>%
-    waffle_iron_groups(aes_d(group = .data$self))
+    waffle_iron_groups(aes_d(group = self))
 
   # p_init <- plot_grouped_dataframe_sanddance(init_coords)
   # print(p_init)
@@ -185,11 +185,6 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     group_by(!!!map(group_vars_chr, sym))
 }
 
-
-
-
-
-
 ## ==== utils from ggwaffle ======
 
 #' Calculates the x,y, and other aesthetics
@@ -198,14 +193,14 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 #' @param mapping includes group and x, z.B.
 #' @return dataframe with x, y, plus optional aesthetics columns
 waffle_iron_groups <- function(data, mapping, rows = 7, sample_size = 1, na.rm = T) {
+
   if (!(sample_size > 0 & sample_size <= 1)) {
     stop("Please use a sample value between 0 and 1", call. = F)
   }
+
   sample_rows <- sample(x = 1:nrow(data), size = (nrow(data) *
     sample_size))
   data <- data[sample_rows, ]
-
-
 
   group_mapping <- NULL
   # if there's x or y mapping, split up `data`
@@ -262,11 +257,8 @@ waffle_iron_groups <- function(data, mapping, rows = 7, sample_size = 1, na.rm =
   res %>%
     left_join(offsets, by = "group") %>%
     mutate(x = .data$x + .data$offset) %>%
-    mutate(y = .data$rows - .data$y + 1)
+    mutate(y = rows - .data$y + 1)
 }
-
-
-
 
 # Rename columns in a dataset
 #
@@ -322,7 +314,7 @@ aes_d_validate <- function(mapping, compulsory_cols, data_names) {
 #' }
 aes_d <- function(...) {
   dots <- enquos(...)
-  aes_cols <- map(dots, ~ rlang::quo_get_expr(.))
+  aes_cols <- map(dots, rlang::quo_get_expr)
   as.list(aes_cols)
   # as.list(match.call()[-1])
 }
