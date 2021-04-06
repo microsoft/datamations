@@ -16,19 +16,22 @@ dmta_image <- function(state1, image) {
     ggplot(aes(x = .data$Col, y = .data$Row_Coord)) +
     geom_point(aes(color = .data$Color, group = .data$Row_Coord), shape = 15, size = 3) +
     # xlim(-15, 20) +
-    scale_color_manual(breaks = unique(anim_data$Color),
-                       values = as.character(unique(anim_data$Color))) +
+    scale_color_manual(
+      breaks = unique(anim_data$Color),
+      values = as.character(unique(anim_data$Color))
+    ) +
     theme_zilch() +
-    transition_states(Time,
-                      transition_length = 12,
-                      state_length = 10, wrap = FALSE) +
-    ease_aes('cubic-in-out') +
-    view_follow(fixed_x = c(-15,19))
+    transition_states(.data$Time,
+      transition_length = 12,
+      state_length = 10, wrap = FALSE
+    ) +
+    ease_aes("cubic-in-out") +
+    view_follow(fixed_x = c(-15, 19))
 
   anim_path <- tempfile(fileext = ".gif")
   anim_save(animation = anim, filename = anim_path)
 
   return(list(coords = time1 %>%
-                select(.data$Color, .data$Row, .data$Col, .data$Row_Coord, .data$Col_Coord) %>%
-                arrange(.data$Row, .data$Col), anim_path = anim_path))
+    select(.data$Color, .data$Row, .data$Col, .data$Row_Coord, .data$Col_Coord) %>%
+    arrange(.data$Row, .data$Col), anim_path = anim_path))
 }

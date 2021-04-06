@@ -18,10 +18,10 @@
 #'   tibble::as_tibble() %>%
 #'   dplyr::mutate(Row = row_number())
 #'
-#' part1 <-  mt_animate %>%
-#'  dplyr::filter(Row < 17)
+#' part1 <- mt_animate %>%
+#'   dplyr::filter(Row < 17)
 #'
-#' part2 <-  mt_animate %>%
+#' part2 <- mt_animate %>%
 #'   dplyr::filter(Row >= 17)
 #'
 #' temp_dir <- tempdir()
@@ -29,26 +29,27 @@
 #' part1 %>%
 #'   ggplot(aes(mpg, hp)) +
 #'   geom_point() +
-#'   labs(title = 'Row: {frame_time}') +
+#'   labs(title = "Row: {frame_time}") +
 #'   transition_time(Row) +
-#'   ease_aes('linear')
+#'   ease_aes("linear")
 #'
 #' anim_save(filename = file.path(temp_dir, "part1.gif"))
 #'
 #' part2 %>%
 #'   ggplot(aes(mpg, hp)) +
 #'   geom_point() +
-#'   labs(title = 'Row: {frame_time}') +
+#'   labs(title = "Row: {frame_time}") +
 #'   transition_time(Row) +
-#'   ease_aes('linear')
+#'   ease_aes("linear")
 #'
 #' anim_save(filename = file.path(temp_dir, "part2.gif"))
 #'
 #' cat_gifs(
-#'   c(file.path(temp_dir, "part1.gif"),
-#'     file.path(temp_dir, "part2.gif"))
+#'   c(
+#'     file.path(temp_dir, "part1.gif"),
+#'     file.path(temp_dir, "part2.gif")
+#'   )
 #' )
-#'
 #' }
 cat_gifs <- function(paths, output = "output.gif") {
   paths %>%
@@ -58,4 +59,3 @@ cat_gifs <- function(paths, output = "output.gif") {
 
   invisible(output)
 }
-

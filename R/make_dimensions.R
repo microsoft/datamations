@@ -10,7 +10,6 @@
 #' @importFrom stats median
 #' @importFrom tibble as_tibble tibble
 make_dimensions <- function(data_states, fittings) {
-
   row_counts <- data_states %>%
     map_dbl(nrow)
 
@@ -27,11 +26,14 @@ make_dimensions <- function(data_states, fittings) {
 
   size <- max(max_row, max_col)
 
-  x_midpoint <- 1:max_col %>% median() %>% floor()
+  x_midpoint <- 1:max_col %>%
+    median() %>%
+    floor()
 
-  list(xmin = x_midpoint - ceiling(size/2),
-       xmax = x_midpoint + ceiling(size/2),
-       ymin = 0,
-       ymax = size)
+  list(
+    xmin = x_midpoint - ceiling(size / 2),
+    xmax = x_midpoint + ceiling(size / 2),
+    ymin = 0,
+    ymax = size
+  )
 }
-

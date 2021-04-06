@@ -8,7 +8,7 @@
 #' @importFrom stats median
 #' @importFrom tibble as_tibble tibble
 map_coords <- function(rows, cols) {
-  #rows <- 26:29;cols <- 1:3
+  # rows <- 26:29;cols <- 1:3
   n_values <- length(rows) * length(cols)
 
   rows <- sort(rows) %>% rev()
@@ -34,4 +34,3 @@ map_coords <- function(rows, cols) {
 
   coordinates
 }
-

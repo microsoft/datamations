@@ -9,8 +9,8 @@
 #' @importFrom ggplot2 scale_x_continuous
 #' @export
 plot_grouped_dataframe_withresponse_sanddance <- function(
-  .data, response_var, xlim = NULL, ylim = NULL,
-  mapping = NULL, var_levels = NULL, in_flight = TRUE, show_y_axis = FALSE, title = ""){
+                                                          .data, response_var, xlim = NULL, ylim = NULL,
+                                                          mapping = NULL, var_levels = NULL, in_flight = TRUE, show_y_axis = FALSE, title = "") {
 
 
   # recover chr or factor types
@@ -22,12 +22,12 @@ plot_grouped_dataframe_withresponse_sanddance <- function(
   # }
 
   # recover the color column
-  if (! is.null(var_levels)) {
+  if (!is.null(var_levels)) {
     class(.data$x) <- c("mapped_discrete", "numeric")
 
     .data <- .data %>%
       separate(
-        group,
+        .data$group,
         into = str_split(mapping$group, "_")[[1]],
         remove = FALSE
       )
@@ -44,8 +44,8 @@ plot_grouped_dataframe_withresponse_sanddance <- function(
   color_var <- sym(mapping$colour)
 
   # recover x labels
-  group_levels <- group_keys(.data ) %>%
-    pull(group) %>%
+  group_levels <- group_keys(.data) %>%
+    pull(.data$group) %>%
     str_replace("_", " in\n") # natural langage, not masters_industry
 
   breaks <- 1:length(group_levels)
@@ -53,36 +53,37 @@ plot_grouped_dataframe_withresponse_sanddance <- function(
 
   p <- NULL
 
-  if(!is.null(group_var)) {
+  if (!is.null(group_var)) {
     if (!in_flight) { # show the axes
       p <- ggplot(.data) +
-        geom_point(aes(x = x, y = y, color = !!color_var)) +
-        coord_cartesian(x = xlim, ylim = ylim) +
-        theme(panel.background = element_rect(fill = "white", colour = "grey50"),
-              legend.key = element_rect(fill = "white"),
-              legend.position = "bottom"
+        geom_point(aes(x = .data$x, y = .data$y, color = !!color_var)) +
+        coord_cartesian(xlim = xlim, ylim = ylim) +
+        theme(
+          panel.background = element_rect(fill = "white", colour = "grey50"),
+          legend.key = element_rect(fill = "white"),
+          legend.position = "bottom"
         ) +
         labs(
           title = title,
           x = str_replace(`$`(mapping, x), "_", " and "),
           y = `$`(mapping, y),
           color = `$`(mapping, colour)
-        )  +
+        ) +
         scale_x_continuous(labels = group_levels, breaks = breaks) +
-        scale_y_continuous(labels = label_dollar(prefix = "$",suffix = "k"))
-
+        scale_y_continuous(labels = label_dollar(prefix = "$", suffix = "k"))
     } else { # hide axes
       p <- ggplot(.data) +
-        geom_point(aes(x = x, y = y, color = !!color_var)) +
-        coord_cartesian(x = xlim, ylim = ylim) +
+        geom_point(aes(x = .data$x, y = .data$y, color = !!color_var)) +
+        coord_cartesian(xlim = xlim, ylim = ylim) +
         labs(
-          title = tile,
+          title = .data$tile,
           x = str_replace(`$`(mapping, x), "_", " and "),
           y = `$`(mapping, y),
           color = `$`(mapping, colour)
-      ) + theme_inflight(show_y_axis) +
+        ) +
+        theme_inflight(show_y_axis) +
         scale_x_continuous(labels = group_levels, breaks = breaks) +
-        scale_y_continuous(labels = label_dollar(prefix = "$",suffix = "k"))
+        scale_y_continuous(labels = label_dollar(prefix = "$", suffix = "k"))
     }
 
     p

@@ -23,7 +23,7 @@ make_coords <- function(df, row_ceiling = nrow(df)) {
       coordinates$Row[i] <- row
       coordinates$Col[i] <- col
       coordinates$Row_Coord[i] <- rev(seq_along(1:nrow(df)))[row]
-      #coordinates$Row_Coord[i] <- (row_ceiling:1)[seq_along(1:nrow(df))][row]
+      # coordinates$Row_Coord[i] <- (row_ceiling:1)[seq_along(1:nrow(df))][row]
       coordinates$Col_Coord[i] <- col
       i <- i + 1
     }

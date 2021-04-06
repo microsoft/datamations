@@ -13,5 +13,5 @@ snake <- function(fittings, envir = parent.frame()) {
   c(
     eval(fittings[[1]], envir = envir) %>% as_tibble() %>% list(),
     accumulate(fittings, ~ call("%>%", .x, .y) %>% eval(envir = envir))[-1]
-  ) %>% map_if(~(is.data.frame(.x) || is.vector(.x)) && !is_grouped_df(.x), as_tibble)
+  ) %>% map_if(~ (is.data.frame(.x) || is.vector(.x)) && !is_grouped_df(.x), as_tibble)
 }

@@ -17,8 +17,8 @@ theme_inflight <- function(show_y_axis = FALSE) {
       # axis.line = element_blank(),
       # axis.ticks.length = unit(0, "null"),
       # plot.title = element_text(size = 18),
-      legend.text=element_text(color = "black"),
-      legend.title=element_text(color = "black"),
+      legend.text = element_text(color = "black"),
+      legend.title = element_text(color = "black"),
       legend.key = element_rect(fill = "white"),
       legend.position = "bottom",
       plot.background = element_blank(),
@@ -26,9 +26,10 @@ theme_inflight <- function(show_y_axis = FALSE) {
       # panel.spacing = unit(c(0, 0, 0, 0), "null")
     )
   } else {
-    theme(panel.background = element_rect(fill = "white", colour = "grey50"),
-          legend.key = element_rect(fill = "white"),
-          legend.position = "bottom"
+    theme(
+      panel.background = element_rect(fill = "white", colour = "grey50"),
+      legend.key = element_rect(fill = "white"),
+      legend.position = "bottom"
     )
   }
 }
