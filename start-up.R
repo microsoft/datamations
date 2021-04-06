@@ -1,4 +1,4 @@
-library(dmpkg)
+library(datamations)
 library(magrittr)
 library(rlang)
 library(tidyverse)
