@@ -3,13 +3,11 @@
 #' @param .data the grouped dataframe TODO: or coords??????
 #' @param ... the grouping variables
 #' @return ggplot object
-#' @importFrom rlang enquos
-#' @importFrom purrr map_chr map_df
-#' @import dplyr
-#' @import tidyr
-#' @import purrr
-#' @import tweenr
-#' @import rlang
+#' @importFrom rlang enquos sym .data :=
+#' @importFrom purrr map_chr map_df walk
+#' @importFrom dplyr first row_number tribble lag
+#' @importFrom tidyr unite unnest
+#' @importFrom ggplot2 layer_scales
 #' @export
 animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE, titles = ""){
 
@@ -127,8 +125,8 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     xlim_init, ylim_init, 2,
     xlim_final, ylim_final, 3, # the final state, should have the same y range?
   )  %>%
-    unnest(c(xlim, ylim)) %>%
-    group_by(time) %>%
+    unnest(c(.data$xlim, .data$ylim)) %>%
+    group_by(.data$time) %>%
     mutate(lim_id = row_number()) %>%
     group_split()
 
@@ -153,7 +151,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 
       if (!(i %in% 1:nframes)) {
         df <- df %>%
-          group_by(group)
+          group_by(.data$group)
       }
 
       # BEGIN ACHTUNG: hard-coding stuff for the experiment
@@ -248,23 +246,23 @@ waffle_iron_groups <- function (data, mapping, rows = 7, sample_size = 1, na.rm 
     if (is.numeric(res$group)) {
       res <- res %>%
         left_join(group_mapping, by = "group") %>%
-        select(-group) %>%
-        rename(group = real_group)
+        select(-.data$group) %>%
+        rename(group = .data$real_group)
     }
   }
 
 
   # find the width of each group
   offsets <- res %>%
-    group_by(group) %>%
-    summarize(width = max(x) + 1) %>%
-    mutate(offset = cumsum(width)) %>%
-    mutate(offset = lag(offset, default = 0))
+    group_by(.data$group) %>%
+    summarize(width = max(.data$x) + 1) %>%
+    mutate(offset = cumsum(.data$width)) %>%
+    mutate(offset = lag(.data$offset, default = 0))
 
   res %>%
     left_join(offsets, by = "group") %>%
-    mutate(x = x + offset) %>%
-    mutate(y = rows - y + 1)
+    mutate(x = .data$x + .data$offset) %>%
+    mutate(y = .data$rows - .data$y + 1)
 
 }
 

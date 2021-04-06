@@ -1,5 +1,5 @@
 #' minimal theme that only shows legend and x axis ticks
-#' 
+#' @importFrom ggplot2 element_line element_text
 theme_inflight <- function(show_y_axis = FALSE) {
   if (!show_y_axis) {
     theme(
@@ -29,6 +29,6 @@ theme_inflight <- function(show_y_axis = FALSE) {
     theme(panel.background = element_rect(fill = "white", colour = "grey50"),
           legend.key = element_rect(fill = "white"),
           legend.position = "bottom"
-    ) 
+    )
   }
 }

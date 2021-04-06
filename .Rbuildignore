@@ -5,3 +5,6 @@
 start-up.R
 ^README\.Rmd$
 ^\.github$
+^renv$
+^README_cache$
+^data-raw$

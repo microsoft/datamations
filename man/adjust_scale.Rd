@@ -9,6 +9,3 @@ adjust_scale(range_c)
 \description{
 Pad continuous x-axis to look like discrete scale
 }
-\references{
-
-}

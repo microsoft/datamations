@@ -4,17 +4,21 @@
 #' @param response_var quoted
 #' @param nframes number of frames per animation "stage"
 #' @param output returns the first step, the second step, or both
-#' @importFrom tweenr  keep_state tween_state
+#' @importFrom tweenr keep_state tween_state
 #' @importFrom ggbeeswarm geom_beeswarm geom_quasirandom
 #' @importFrom scales label_dollar comma_format label_number
 #' @importFrom stringr str_replace
-#' @import ggplot2
+#' @importFrom rlang enexpr is_empty
+#' @importFrom dplyr mutate_all funs rename right_join group_keys
+#' @importFrom ggplot2 layer_data geom_pointrange coord_cartesian scale_y_continuous element_rect xlab scale_x_discrete labs
+#' @importFrom stats setNames
+#' @importFrom tidyr separate
 #' @export
 animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, output = "both", titles = ""){
 
   # find the grouping variable
   group_vars <- attributes(.data)$groups %>%
-    select(-.rows) %>%
+    select(-.data$.rows) %>%
     names() # chr vector
     # names() %>%
     # first() # chr, assuming only one grouping variable
@@ -54,7 +58,7 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
     ) %>%
     ungroup() %>%
     mutate(id = row_number(), time = 1)  %>%
-    select(x, y, group, id, time) # ACHTUNG: there might be other aesthetics
+    select(.data$x, .data$y, .data$group, .data$id, .data$time) # ACHTUNG: there might be other aesthetics
   # waffle_iron output: "y"      "x"      "group"  "width"  "offset" "id"     "time"
 
   # save types before casting them all to integers
@@ -107,7 +111,7 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
 
   categorical_vars <- coord_inter %>%
     ungroup() %>%
-    select(where(~ ! is.numeric(.))) %>%
+    select(tidyselect:::where(~ ! is.numeric(.))) %>%
     mutate_all(~ as.factor(.)) %>%
     mutate_all(funs(num = as.numeric(.)))
 
@@ -153,8 +157,8 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
   new_name <- setNames(new_name, as.character(res_var))
 
   ci_df <- boots_wrapper(.data, !!sym(grouped_facet_var), res_var_chr) %>%
-    mutate(.lower = mean - (mean - .lower),
-           .upper = (.upper - mean) + mean) %>%
+    mutate(.lower = mean - (mean - .data$.lower),
+           .upper = (.data$.upper - mean) + mean) %>%
     rename(!!new_name)
 
 
@@ -180,8 +184,8 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
 
   coord_final <- coord_final %>%
     # mutate(x = factor(x, levels = fct_lvls, ordered = TRUE)) %>%
-    mutate(x = as.factor(x)) %>%
-    mutate(x = as.numeric(x))
+    mutate(x = as.factor(.data$x)) %>%
+    mutate(x = as.numeric(.data$x))
 
   # p_final <- plot_grouped_dataframe_withresponse_sanddance(
   #   coord_final, response_var = res_var
@@ -189,7 +193,7 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
 
   p_final <- ggplot(ci_df) +
     geom_pointrange(aes(!!sym(grouped_facet_var), !!sym(res_var_chr),
-                           ymin = .lower, ymax = .upper,
+                           ymin = .data$.lower, ymax = .data$.upper,
                            color = !!sym(grouped_facet_var)))
 
   xlim_final <- layer_scales(p_final)$x$range_c$range
@@ -220,7 +224,7 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
   # tweens <- coord_inter %>%
     bind_rows(coord_final) %>%
     # select the relevant columns?
-    select(id, time, x, y, group) %>% # ACHTUNG
+    select(.data$id, .data$time, .data$x, .data$y, .data$group) %>% # ACHTUNG
     split(.$time)
 
   tweens <- tween_list$`1`  %>%
@@ -283,7 +287,7 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
     walk_indices, function(i){
 
       grouped_tweens <- tweens[[i]] %>%
-        group_by(group)
+        group_by(.data$group)
         # group_by(!!sym(group_var))
 
 
@@ -341,7 +345,7 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
         if ((i - 1) %/% nframes == 4) {
           p <- ggplot(ci_df) +
             geom_pointrange(aes(!!sym(grouped_facet_var), !!sym(res_var_chr),
-                                   ymin = .lower, ymax = .upper,
+                                   ymin = .data$.lower, ymax = .data$.upper,
                                    color = !!sym(color_var_chr))) +
             theme_inflight(TRUE) +
             coord_cartesian(x = xlim, ylim = ylim) +
@@ -349,7 +353,7 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
         } else {
           p <- ggplot(ci_df) +
             geom_pointrange(aes(!!sym(grouped_facet_var), !!sym(res_var_chr),
-                                   ymin = .lower, ymax = .upper,
+                                   ymin = .data$.lower, ymax = .data$.upper,
                                    color = !!sym(color_var_chr))) +
             theme(panel.background = element_rect(fill = "white", colour = "grey50"),
                   legend.key = element_rect(fill = "white"),

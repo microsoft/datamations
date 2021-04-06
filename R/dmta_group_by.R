@@ -2,7 +2,7 @@
 #' @importFrom gganimate anim_save ease_aes transition_states view_follow
 #' @importFrom ggplot2 aes element_blank geom_point ggplot ggtitle scale_color_manual theme
 #' @importFrom magick image_read image_write
-#' @importFrom purrr accumulate flatten map map2 map2_dbl map2_dfr map_chr map_dbl map_dfr map_if pmap_dbl pmap_dfr reduce
+#' @importFrom purrr accumulate map map2 map2_dbl map2_dfr map_chr map_dbl map_dfr map_if pmap_dbl pmap_dfr reduce
 #' @importFrom rlang parse_expr
 #' @importFrom stats median
 #' @importFrom tibble as_tibble tibble
@@ -22,7 +22,7 @@ dmta_group_by <- function(state1, state2, dimensions, anim_title = NA) {
 
   if(!tibble::has_name(time1, "Row_Ungrouped_Coord")) {
     time1 <- time1 %>%
-      mutate(Row_Ungrouped_Coord = Row_Coord)
+      mutate(Row_Ungrouped_Coord = .data$Row_Coord)
   }
 
   # color_lookup_names <- state2$df %>%
@@ -43,29 +43,29 @@ dmta_group_by <- function(state1, state2, dimensions, anim_title = NA) {
     as_tibble()
 
   time2 <- time1 %>%
-    mutate(Color = map2(Col, Row, ~ color_tbl[[colnames(state2$df)[.x]]][.y]) %>%
+    mutate(Color = map2(.data$Col, .data$Row, ~ color_tbl[[colnames(state2$df)[.x]]][.y]) %>%
              map_chr(~ if_else(is.null(.x), "#C0C0C0", .x))) %>%
-    arrange(Row, Col, Time) %>%
+    arrange(.data$Row, .data$Col, .data$Time) %>%
     mutate(Time = 2)
 
   time3 <- time2 %>%
-    arrange(Row, Col) %>%
+    arrange(.data$Row, .data$Col) %>%
     mutate(Group_Index = rep(state2$df %>% group_indices(), each = n_columns)) %>%
-    arrange(Group_Index, Row) %>%
+    arrange(.data$Group_Index, .data$Row) %>%
     mutate(Row_Coord = rep(max(.$Row_Coord):min(.$Row_Coord), each = n_columns)) %>%
     mutate(Time = 3) %>%
-    mutate(Row_Coord = Row_Coord - (Group_Index - 1))
+    mutate(Row_Coord = .data$Row_Coord - (.data$Group_Index - 1))
 
   anim_data <- bind_rows(
     time1,
     time2,
     time3 %>%
-      select(-Group_Index)
+      select(-.data$Group_Index)
   )
 
   anim <- anim_data %>%
-    ggplot(aes(x = Col, y = Row_Coord)) +
-    geom_point(aes(color = Color, group = Row_Ungrouped_Coord), shape = "\u25AC", size = 3) +
+    ggplot(aes(x = .data$Col, y = .data$Row_Coord)) +
+    geom_point(aes(color = .data$Color, group = .data$Row_Ungrouped_Coord), shape = "\u25AC", size = 3) +
     scale_color_manual(breaks = unique(anim_data$Color),
                        values = as.character(unique(anim_data$Color))) +
     theme_zilch()

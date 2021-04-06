@@ -3,12 +3,13 @@
 #' @importFrom gganimate anim_save ease_aes transition_states view_follow
 #' @importFrom ggplot2 aes element_blank geom_point ggplot ggtitle scale_color_manual theme
 #' @importFrom magick image_read image_write
-#' @importFrom purrr accumulate flatten map map2 map2_dbl map2_dfr map_chr map_dbl map_dfr map_if pmap_dbl pmap_dfr reduce
+#' @importFrom purrr accumulate map map2 map2_dbl map2_dfr map_chr map_dbl map_dfr map_if pmap_dbl pmap_dfr reduce
 #' @importFrom rlang parse_expr
 #' @importFrom stats median
 #' @importFrom tibble as_tibble tibble
 #' @importFrom magrittr "%>%"
 #' @importFrom purrr map map_chr
+#' @importFrom animation saveGIF
 #' @param pipeline A tidyverse pipeline.
 #' @param envir An environment.
 #' @param output Path to where gif will be saved.

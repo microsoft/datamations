@@ -6,7 +6,7 @@
 #' @importFrom gganimate anim_save ease_aes transition_states view_follow
 #' @importFrom ggplot2 aes element_blank geom_point ggplot ggtitle scale_color_manual theme
 #' @importFrom magick image_read image_write
-#' @importFrom purrr accumulate flatten map map2 map2_dbl map2_dfr map_chr map_dbl map_dfr map_if pmap_dbl pmap_dfr reduce
+#' @importFrom purrr accumulate map map2 map2_dbl map2_dfr map_chr map_dbl map_dfr map_if pmap_dbl pmap_dfr reduce
 #' @importFrom rlang parse_expr
 #' @importFrom stats median
 #' @importFrom tibble as_tibble tibble
@@ -23,7 +23,7 @@ dmta_summarize <- function(state1, state2, dimensions,
     which()
   col_tbl <- tibble(
     Col_Name = colnames(state1$df),
-    Col = seq_along(Col_Name)
+    Col = seq_along(.data$Col_Name)
   )
 
   # tibble is not grouped to begin with
@@ -32,14 +32,14 @@ dmta_summarize <- function(state1, state2, dimensions,
 
     if(!tibble::has_name(state1$coords, "Row_Coord")) {
       time1 <- state1$coords %>%
-        mutate(Time = 1, Row_Coord = Row, ID = 1:n())
+        mutate(Time = 1, Row_Coord = .data$Row, ID = 1:n())
     } else {
       time1 <- state1$coords %>%
         mutate(Time = 1, ID = 1:n())
     }
 
     time1 <- time1 %>%
-      mutate(ID = as.character(ID))
+      mutate(ID = as.character(.data$ID))
 
     if(outline) {
       color_tbl <- tibble(
@@ -61,13 +61,13 @@ dmta_summarize <- function(state1, state2, dimensions,
     mover_data <- map(new_columns, ~vars_that_make_new_cols[[.x]]) %>%
       map2_dfr(1:length(.), ~ tibble(Col_Name = .x, Summary_Col = .y)) %>%
       #mutate(Time = 1:n() + 2) %>%
-      mutate(Time = Summary_Col + 2) %>%
+      mutate(Time = .data$Summary_Col + 2) %>%
       left_join(col_tbl)
 
     append_to_time2 <- mover_data %>%
       pmap_dfr(~ time2 %>%
              filter(Col == ..4) %>%
-             mutate(ID = paste0(ID, "M", ..3)) %>%
+             mutate(ID = paste0(.data$ID, "M", ..3)) %>%
              mutate(When = ..3))
 
     movements <- list()
@@ -76,13 +76,13 @@ dmta_summarize <- function(state1, state2, dimensions,
       result <- append_to_time2 %>%
         mutate(Time = unique(mover_data$Time)[i]) %>%
         mutate(Row_Coord = as.numeric(Row_Coord)) %>%
-        mutate(Row_Coord = pmap_dbl(list(Time, When, Row_Coord),
+        mutate(Row_Coord = pmap_dbl(list(.data$Time, .data$When, .data$Col_Coord),
                             ~ if_else(..1 == ..2, mid_point, ..3))) %>%
-        mutate(Col_Coord = pmap_dbl(list(Time, When, Col_Coord),
+        mutate(Col_Coord = pmap_dbl(list(.data$Time, .data$When, .data$Col_Coord),
                             ~ if_else(..1 == ..2, unique(mover_data$Summary_Col)[i] + length(state1$df), ..3))) %>%
         mutate(Moved = Time == When) %>%
-        mutate(Col_Coord = map2_dbl(Moved, Col_Coord, ~ if_else(.x, .y + summ_offset, .y))) %>%
-        mutate(Color = map2_chr(Moved, Color, ~ if_else(.x, "#C0C0C0", .y)))
+        mutate(Col_Coord = map2_dbl(.data$Moved, .data$Col_Coord, ~ if_else(.x, .y + summ_offset, .y))) %>%
+        mutate(Color = map2_chr(.data$Moved, .data$Color, ~ if_else(.x, "#C0C0C0", .y)))
 
       movements[[i]] <- result
     }
@@ -117,14 +117,14 @@ dmta_summarize <- function(state1, state2, dimensions,
 
     after_summ[[1]] <- anim_data %>%
       filter(Time == end_of_summ_time) %>%
-      mutate(Color = map_chr(ID, ~ if_else(grepl("M", .x), "#C0C0C0", "#FFFFFF"))) %>%
+      mutate(Color = map_chr(.data$ID, ~ if_else(grepl("M", .x), "#C0C0C0", "#FFFFFF"))) %>%
       mutate(Time = Time + 1)
 
     after_summ[[2]] <- after_summ[[1]] %>%
-      filter(Col_Coord > length(state1$df)) %>%
+      filter(.data$Col_Coord > length(state1$df)) %>%
       mutate(Row_Coord = max(state1$coords$Row_Coord),
-             Col_Coord = Col_Coord - (length(state1$df) + summ_offset)) %>%
-      mutate(Time = Time + 1)
+             Col_Coord = .data$Col_Coord - (length(state1$df) + summ_offset)) %>%
+      mutate(Time = .data$Time + 1)
 
     anim_data <- bind_rows(
       anim_data,
@@ -132,8 +132,8 @@ dmta_summarize <- function(state1, state2, dimensions,
     )
 
     anim <- anim_data %>%
-      ggplot(aes(x = Col_Coord, y = Row_Coord)) +
-      geom_point(aes(color = Color, group = ID), shape = 15, size = 3) +
+      ggplot(aes(x = .data$Col_Coord, y = .data$Row_Coord)) +
+      geom_point(aes(color = .data$Color, group = .data$ID), shape = 15, size = 3) +
       scale_color_manual(breaks = unique(anim_data$Color),
                          values = as.character(unique(anim_data$Color))) +
       theme_zilch() +
@@ -154,7 +154,7 @@ dmta_summarize <- function(state1, state2, dimensions,
 
     time1 <- state1$coords %>%
       mutate(Time = 1, ID = 1:n()) %>%
-      mutate(ID = as.character(ID))
+      mutate(ID = as.character(.data$ID))
 
     grouping_cols <- time1 %>%
       filter(Color != "#C0C0C0") %>%
@@ -182,13 +182,13 @@ dmta_summarize <- function(state1, state2, dimensions,
     mover_data <- map(new_columns, ~vars_that_make_new_cols[[.x]]) %>%
       map2_dfr(1:length(.), ~ tibble(Col_Name = .x, Summary_Col = .y)) %>%
       #mutate(Time = 1:n() + 2) %>%
-      mutate(Time = Summary_Col + 2) %>%
+      mutate(Time = .data$Summary_Col + 2) %>%
       left_join(col_tbl)
 
     append_to_time2 <- mover_data %>%
       pmap_dfr(~ time2 %>%
                  filter(Col == ..4) %>%
-                 mutate(ID = paste0(ID, "M", ..3)) %>%
+                 mutate(ID = paste0(.data$ID, "M", ..3)) %>%
                  mutate(When = ..3))
 
     movements <- list()
@@ -202,7 +202,7 @@ dmta_summarize <- function(state1, state2, dimensions,
         mutate(Col_Coord = pmap_dbl(list(Time, When, Col_Coord),
                                     ~ if_else(..1 == ..2, unique(mover_data$Summary_Col)[i] + length(state1$df), ..3))) %>%
         mutate(Moved = Time == When) %>%
-        mutate(Col_Coord = map2_dbl(Moved, Col_Coord, ~ if_else(.x, .y + summ_offset, .y))) %>%
+        mutate(Col_Coord = map2_dbl(.data$Moved, .data$Col_Coord, ~ if_else(.x, .y + summ_offset, .y))) %>%
         mutate(Color = map2_chr(Moved, Color, ~ if_else(.x, "#C0C0C0", .y)))
 
       movements[[i]] <- result
@@ -238,15 +238,15 @@ dmta_summarize <- function(state1, state2, dimensions,
 
     after_summ[[1]] <- anim_data %>%
       filter(Time == end_of_summ_time) %>%
-      mutate(Color = map_chr(ID, ~ if_else(grepl("M", .x), "#C0C0C0", "#FFFFFF"))) %>%
+      mutate(Color = map_chr(.data$ID, ~ if_else(grepl("M", .x), "#C0C0C0", "#FFFFFF"))) %>%
       mutate(Time = Time + 1)
 
     after_summ[[2]] <- after_summ[[1]] %>%
-      filter(Col_Coord > length(state1$df)) %>%
-      mutate(Row_Coord = map_dbl(Group_Index, ~ seq(max(state1$coords$Row_Coord), 0)[summ_rows$Group_Index][.x]),
-             Col_Coord = Col_Coord - (length(state1$df) + summ_offset)) %>%
-      mutate(Col_Coord = Col_Coord + length(state1$df %>% group_vars())) %>%
-      mutate(Time = Time + 1)
+      filter(.data$Col_Coord > length(state1$df)) %>%
+      mutate(Row_Coord = map_dbl(.data$Group_Index, ~ seq(max(state1$coords$Row_Coord), 0)[summ_rows$Group_Index][.x]),
+             Col_Coord = .data$Col_Coord - (length(state1$df) + summ_offset)) %>%
+      mutate(Col_Coord = .data$Col_Coord + length(state1$df %>% group_vars())) %>%
+      mutate(Time = .data$Time + 1)
 
     anim_data <- bind_rows(
       anim_data,
@@ -255,11 +255,11 @@ dmta_summarize <- function(state1, state2, dimensions,
 
     # Group_Index Col Name Color
     column_group_info <- state1$coords %>%
-      select(Color, Row_Coord, Col_Coord, Group_Index, Col) %>%
+      select(.data$Color, .data$Row_Coord, .data$Col_Coord, .data$Group_Index, .data$Col) %>%
       unique() %>%
       filter(Color != "#C0C0C0") %>%
       select(-Row_Coord) %>%
-      group_by(Group_Index, Col_Coord) %>%
+      group_by(.data$Group_Index, .data$Col_Coord) %>%
       group_split() %>%
       map(unique) %>%
       bind_rows() %>%
@@ -279,10 +279,10 @@ dmta_summarize <- function(state1, state2, dimensions,
     group_timing <- list()
 
     group_timing[[2]] <- column_group_info %>%
-      mutate(Col_Coord = LTR_Order) %>%
-      mutate(Col_Coord = Col_Coord + length(state1$df) + 4) %>%
-      mutate(ID = 1:n()) %>% mutate(ID = paste0(ID, "G")) %>%
-      select(Color, Row_Coord, Col_Coord, Group_Index, ID) %>%
+      mutate(Col_Coord = .data$LTR_Order) %>%
+      mutate(Col_Coord = .data$Col_Coord + length(state1$df) + 4) %>%
+      mutate(ID = 1:n()) %>% mutate(ID = paste0(.data$ID, "G")) %>%
+      select(.data$Color, .data$Row_Coord, .data$Col_Coord, .data$Group_Index, .data$ID) %>%
       mutate(Time = 2)
 
     group_timing[[1]] <- group_timing[[2]] %>%
@@ -299,7 +299,7 @@ dmta_summarize <- function(state1, state2, dimensions,
     group_timing[[max(anim_data$Time)]] <- group_timing[[2]] %>%
       mutate(Color = "#C0C0C0") %>%
       mutate(Row_Coord = map_dbl(Group_Index, ~ seq(max(state1$coords$Row_Coord), 0)[summ_rows$Group_Index][.x])) %>%
-      mutate(Col_Coord = Col_Coord - (length(state1$df) + 4)) %>%
+      mutate(Col_Coord = .data$Col_Coord - (length(state1$df) + 4)) %>%
       mutate(Time = max(anim_data$Time))
 
     anim_data <- bind_rows(
@@ -308,8 +308,8 @@ dmta_summarize <- function(state1, state2, dimensions,
     )
 
     anim <- anim_data %>%
-      ggplot(aes(x = Col_Coord, y = Row_Coord)) +
-      geom_point(aes(color = Color, group = ID), shape = "\u25AC", size = 3) +
+      ggplot(aes(x = .data$Col_Coord, y = .data$Row_Coord)) +
+      geom_point(aes(color = .data$Color, group = .data$ID), shape = "\u25AC", size = 3) +
       scale_color_manual(breaks = unique(anim_data$Color),
                          values = as.character(unique(anim_data$Color))) +
       theme_zilch()
@@ -352,66 +352,3 @@ dmta_summarize <- function(state1, state2, dimensions,
     }
   }
 }
-
-# time1 <- result$coords %>%
-#   mutate(ID = 1:n()) %>%
-#   bind_rows(
-#     tibble(
-#       Row = NA, Col = NA,
-#       Row_Coord = 20, Col_Coord = 40,
-#       Color = NA, ID = -1
-#     )
-#   ) %>%
-#   mutate(Time = 1) %>%
-#   mutate(Image = c(rep(NA, 12), "salary-by-work-and-degree.png"))
-#
-# time1 %>%
-#   ggplot(aes(x = Col_Coord, y = Row_Coord)) +
-#   geom_point(aes(color = Color, group = ID), shape = 15, size = 3) +
-#   scale_color_manual(breaks = unique(result$coords$Color),
-#                      values = as.character(unique(result$coords$Color))) +
-#   theme_zilch() +
-#   ylim(-5, max(result$coords$Row_Coord)) + xlim(-15, 19) +
-#   geom_image(aes(image = Image), size = 0.8)
-#
-#
-# time2 <- result$coords %>%
-#   mutate(ID = 1:n()) %>%
-#   bind_rows(
-#     tibble(
-#       Row = NA, Col = NA,
-#       Row_Coord = 20, Col_Coord = 2,
-#       Color = NA, ID = -1
-#     )
-#   ) %>%
-#   mutate(Time = 2) %>%
-#   mutate(Image = c(rep(NA, 12), "salary-by-work-and-degree.png"))
-#
-# time2 %>%
-#   ggplot(aes(x = Col_Coord, y = Row_Coord)) +
-#   geom_point(aes(color = Color, group = ID), shape = 15, size = 3) +
-#   scale_color_manual(breaks = unique(anim_data$Color),
-#                      values = as.character(unique(anim_data$Color))) +
-#   theme_zilch() +
-#   ylim(-5, max(last_coords$Row_Coord)) + xlim(-15, 19) +
-#   geom_image(aes(image = Image), size = 0.8)
-#
-# anim_data <- bind_rows(
-#   time1, time2
-# )
-#
-# anim <- anim_data %>%
-#   ggplot(aes(x = Col_Coord, y = Row_Coord)) +
-#   geom_point(aes(color = Color, group = ID), shape = 15, size = 3) +
-#   geom_image(aes(image = Image), size = 0.8) +
-#   scale_color_manual(breaks = unique(result$coords$Color),
-#                      values = as.character(unique(result$coords$Color))) +
-#   theme_zilch() +
-#   ggtitle("") +
-#   transition_states(Time,
-#                     transition_length = 12,
-#                     state_length = 10, wrap = FALSE) +
-#   ease_aes('cubic-in-out') +
-#   view_follow(fixed_x = c(-15,19), fixed_y = c(-5, max(result$coords$Row_Coord)))
-#
-# anim_save(animation = anim, filename = "slide11.gif")
