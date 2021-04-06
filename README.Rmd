@@ -160,5 +160,5 @@ datamation_tibble(
 ```
 
 ```{r mtcars-group-cyl-datamations-gif, echo = FALSE}
-knitr::include_graphics(here::here("man", "figures", "README-mtcars_group_cyl.gif"))
+knitr::include_graphics("man/figures/README-mtcars_group_cyl.gif")
 ```

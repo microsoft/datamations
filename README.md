@@ -102,4 +102,4 @@ mtcars_group_cyl <- "mtcars %>% group_by(cyl)"
 datamation_tibble(mtcars_group_cyl, output = "mtcars_group_cyl.gif")
 ```
 
-<img src="/Users/sharla/Documents/Consulting/Microsoft/datamations/man/figures/README-mtcars_group_cyl.gif" width="80%" />
+<img src="man/figures/README-mtcars_group_cyl.gif" width="80%" />
