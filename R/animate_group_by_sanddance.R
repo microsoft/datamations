@@ -235,7 +235,7 @@ waffle_iron_groups <- function(data, mapping, rows = 7, sample_size = 1, na.rm =
     return(grid_data)
   }
 
-  res <- map_df(data, ~ gen_grid(.))
+  res <- map_df(data, gen_grid)
 
   if (!is.null(group_mapping)) {
     if (is.numeric(res$group)) {
