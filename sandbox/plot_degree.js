@@ -128,6 +128,7 @@ function scatter_plot() {
       ...d,
       r: circleRadius,
       x: xScale(d.Degree) + xScale.bandwidth() / 2,
+      fy: yScale(d.Salary),
       y: yScale(d.Salary),
       color: d.Degree === "Masters" ? colors.green : colors.red,
     }
@@ -135,9 +136,9 @@ function scatter_plot() {
 
   const simulation = d3.forceSimulation(arr)
     .force("collide", d3.forceCollide()
-      .strength(0.08)
-      .iterations(2)
-      .radius(circleRadius + 0.1)
+      // .strength(0.08)
+      .iterations(5)
+      .radius(circleRadius + 0.5)
     )
     .stop();
     
