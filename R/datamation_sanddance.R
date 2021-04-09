@@ -44,18 +44,14 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
     map(as.list) %>%
     map(as.character)
 
-  # ACHTUNG: ungroup not implemented?
   supported_tidy_functions <- c("group_by", "summarize", "summarise")
 
   map(
     tidy_functions_list,
     ~ if (!(.x %in% supported_tidy_functions)) {
-      stop(paste(.x, "not supported by datamation_tibble"), call. = FALSE)
+      stop(paste(.x, "not supported by datamation_sanddance"), call. = FALSE)
     }
   )
-
-
-  # END from datamation_tibble.R
 
   saveGIF(
     {
