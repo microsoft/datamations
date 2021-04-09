@@ -121,16 +121,11 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     keep_state(ifelse(is_last, nframes * 2, nframes)) %>% # keep the icon array up for a bit
     split(.$.frame)
 
-  tween_lims_list <- tribble(
-    ~xlim, ~ylim, ~time,
-    xlim_init, ylim_init, 1,
-    xlim_init, ylim_init, 2,
-    xlim_final, ylim_final, 3, # the final state, should have the same y range?
-  ) %>%
-    unnest(c(.data$xlim, .data$ylim)) %>%
-    group_by(.data$time) %>%
-    mutate(lim_id = row_number()) %>%
-    group_split()
+  tween_lims_list <- build_limits_list(
+    xlims = c(xlim_init, xlim_init, xlim_final),
+    ylims = c(ylim_init, ylim_init, ylim_final),
+    id_name = "lim_id"
+  )
 
   tween_lims <- tween_lims_list[[1]] %>%
     keep_state(nframes) %>%

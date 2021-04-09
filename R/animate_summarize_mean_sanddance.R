@@ -253,18 +253,11 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
     keep_state(nframes * 2) %>%
     split(.$.frame)
 
-  tween_lims_list <- tribble(
-    ~xlim, ~ylim, ~time,
-    xlim_init, ylim_init, 1,
-    xlim_inter, ylim_inter, 2,
-    xlim_final, ylim_final, 3, # the final state, should have the same y range?
-  ) %>%
-    unnest(c(xlim, ylim)) %>%
-    group_by(.data$time) %>%
-    mutate(id = row_number()) %>%
-    ungroup() %>%
-    split(.$time)
-
+  tween_lims_list <- build_limits_list(
+    xlims = c(xlim_init, xlim_inter, xlim_final),
+    ylims = c(ylim_init, ylim_inter, ylim_final),
+    id_name = "id"
+  )
 
   tween_lims <- tween_lims_list$`1` %>%
     tween_state( # 1. icon array, still
