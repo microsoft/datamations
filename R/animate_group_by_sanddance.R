@@ -1,7 +1,10 @@
 #' Produces frames (plots) of transition from ungrouped to grouped icon arrays
 #'
-#' @param .data the grouped dataframe TODO: or coords??????
-#' @param ... the grouping variables
+#' @param .data grouped dataframe
+#' @param ... grouping variables
+#' @param nframes number of frames per animation stage
+#' @param is_last flag for whether this is the last stage of the pipeline. Defaults to \code{FALSE}
+#' @param titles titles for animation stage
 #' @return ggplot object
 #' @importFrom rlang enquos sym .data :=
 #' @importFrom purrr map_chr map_df walk
