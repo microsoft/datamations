@@ -113,7 +113,7 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
     ungroup() %>%
     select(tidyselect:::where(~ !is.numeric(.))) %>%
     mutate_all(as.factor) %>%
-    mutate_all(funs(num = as.numeric(.)))
+    mutate_all(list(num = as.numeric))
 
   if (is_empty(categorical_vars)) {
     var_levels <- NULL
