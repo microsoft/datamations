@@ -29,16 +29,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
     stop("No data transformation detected by datamation_tibble", call. = FALSE)
   }
 
-  tidy_functions_list <- fittings %>%
-    # Splits expressions into the functions and arguments
-    map(as.list) %>%
-    # Keeping the functions only
-    map(~ .x[[1]]) %>%
-    map_chr(as.character) %>%
-    # Assumes the first element is the data
-    {
-      .[-1]
-    }
+  tidy_functions_list <- parse_functions(fittings)
 
   tidy_func_arg <- fittings %>%
     map(as.list) %>%
