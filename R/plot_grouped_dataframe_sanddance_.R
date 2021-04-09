@@ -21,6 +21,7 @@ plot_grouped_dataframe_sanddance <- function(
   # recover the
   if (!is.null(group_var)) {
     if (length(str_split(mapping$group, "_")) == 1) {
+      # TODO: this does not properly handle if there's an underscore in the grouping variable values!
       coords <- coords %>%
         separate(
           .data$group,
@@ -68,6 +69,7 @@ plot_grouped_dataframe_sanddance <- function(
     # generate annotations for grouped icon arrays
     # assuming two grouping vars: one is color, the other one goes onto the x axis
 
+    # TODO: this is not good - assumes that grouping variables won't contain "_", which is unlikely
     grouping_vars <- str_split(mapping$group, "_")[[1]] # $x?
     color <- mapping$colour
 

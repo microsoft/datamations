@@ -33,11 +33,6 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     pull(!!grouped_facet_var) %>%
     levels()
 
-  # TODO: I assume this is happening due to a preferred ordering of the degree/work example - check what happens without it
-  if (length(fct_lvls) == 4) {
-    fct_lvls <- fct_lvls[c(1, 3, 2, 4)]
-  }
-
   .data <- .data %>%
     mutate(!!grouped_facet_var := factor(
       {{ grouped_facet_sym }},
@@ -143,6 +138,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 
   walk(
     1:(total_nframes), function(i) {
+      # browser()
       df <- tweens_df[[i]]
       lims <- tween_lims[[i]]
       xlim <- lims$xlim

@@ -1,5 +1,3 @@
-#'
-#'
 #' @param .data
 #' @param response_var quoted
 #' @param nframes number of frames per animation "stage"
@@ -24,6 +22,7 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
   # first() # chr, assuming only one grouping variable
   color_var_chr <- first(group_vars) # ACHTUNG: actually there could be more
 
+  # sharla NOTE: this is where multiple grouping variables are collapsed into one - so it's an issue if there's one where the values are separated by "_"
   grouped_facet_var <- paste(group_vars, collapse = "_")
   grouped_facet_sym <- sym(grouped_facet_var)
 
