@@ -49,9 +49,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
       for (i in 2:length(fittings)) {
         # Starts with data in the previous stage
         data <- data_states[[i - 1]]
-        #
         verb <- tidy_func_arg[[i]][[1]]
-        args <- tidy_func_arg[[i]][[2]]
 
         call_verb <-
           switch(verb,
@@ -60,9 +58,16 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
             summarize = animate_summarize_mean_sanddance
           )
 
+        args <-
+          switch(verb,
+          group_by = tidy_func_arg[[i]][-1],
+          summarise = tidy_func_arg[[i]][[2]],
+          summarize = tidy_func_arg[[i]][[2]]
+        )
+
         call_args <-
           switch(verb,
-            group_by = parse_expr(args),
+            group_by = rlang::parse_exprs(args),
             # TODO: What if calculation in summarise is unnamed? What if there's more than one calculation? Check these cases
             summarise = parse_expr(args)[[-1]],
             summarize = parse_expr(args)[[-1]]

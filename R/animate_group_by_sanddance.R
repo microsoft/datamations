@@ -15,7 +15,7 @@
 animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE, titles = "") {
 
   # Map grouping variables
-  group_vars <- enquos(...)
+  group_vars <- c(...)
   # Convert grouping variables to character
   group_vars_chr <- map_chr(group_vars, rlang::quo_name)
   # Use the first grouping variable for colour
@@ -25,13 +25,13 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   grouped_facet_var <- sym(grouped_facet_var_chr)
   # Note that if there is only one grouping variable, then all this above will be the same variable
 
+  # Keep an unaltered copy of the data to return later
   df <- .data
 
   # Unite grouping variables into a single variable
   # (If there's only only grouping variable, then it will be preserved)
   .data <- .data %>%
-    # TODO: What if data already has a variable called 'self'? What if it's grouped by it?
-    mutate(self = "id") %>%
+    mutate(.self = "id") %>%
     unite({{grouped_facet_var}}, group_vars_chr, remove = FALSE)
 
   # Pull levels of grouping variable and set them
@@ -45,7 +45,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 
   # Calculate initial coordinates of waffle chart
   init_coords <- .data %>%
-    waffle_iron_groups(aes_d(group = self))
+    waffle_iron_groups(aes_d(group = .self))
 
   # Calculate final coordinates of waffle chart
   final_coords <- .data %>%
@@ -68,9 +68,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   p_final <- plot_grouped_dataframe_sanddance(final_coords)
   # print(p_init_offset)
 
-  # limits
-  # xlim <- c(0, max(final_coords$x) + 1)
-  # ylim <- c(0, max(init_coords_offset$y) + 1)
+  # Pad coordinates to give more space
   xlim_init <- layer_scales(p_init_offset)$x$range$range
   ylim_init <- layer_scales(p_init_offset)$y$range$range
   xlim_init[1] <- xlim_init[1] - (xlim_init[2] - xlim_init[1]) / 4
@@ -85,27 +83,29 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   ylim_final[1] <- ylim_final[1] - (ylim_final[2] - ylim_final[1]) / 4
   ylim_final[2] <- ylim_final[2] + (ylim_final[2] - ylim_final[1]) / 4
 
-
-  # aesthetics mapping
+  # Map group and colour aesthetics
   aes_with_group <- aes(group = !!grouped_facet_var_chr, color = !!color_var)
 
-  # tweening between states ->
-  # states:
-  # 1 grey, ungrouped icon array layout
-  # 2 colored, ungrouped icon array layout (keep state, but color 'em)
-  # 3 colored, grouped icon array layout
-  # tweens <- rbind(init_coords_offset, final_coords) %>%
+  # Set up states tweening
+  # State 1: Grey, ungrouped icon array
+  # State 2: Coloured, ungrouped icon array (keep layout, but color 'em)
+  # State 3: Coloured, grouped icon array
+  # State 4: Coloured, grouped icon array, secondary grouping level
+
+  # Set total number of frames
   total_nframes <- 4 * nframes
   if (is_last) {
     total_nframes <- 5 * nframes
   }
 
+  # Split the data into groups to tween between
   tweens <- init_coords_offset %>%
     ungroup() %>%
     bind_rows(init_coords_offset %>% mutate(time = 2, group = final_coords$group)) %>%
     bind_rows(final_coords %>% mutate(time = 3)) %>%
     split(.$time)
 
+  # Tween between the data states
   tweens_df <- tweens$`1` %>%
     keep_state(nframes) %>%
     tween_state(tweens$`2`, nframes = 1, ease = "linear") %>%
@@ -114,26 +114,25 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     keep_state(ifelse(is_last, nframes * 2, nframes)) %>% # keep the icon array up for a bit
     split(.$.frame)
 
+  # Set up the limits into groups to tween between
   tween_lims_list <- build_limits_list(
     xlims = c(xlim_init, xlim_init, xlim_final),
     ylims = c(ylim_init, ylim_init, ylim_final),
     id_name = "lim_id"
   )
 
+  # Tween between the limits
   tween_lims <- tween_lims_list[[1]] %>%
     keep_state(nframes) %>%
     tween_state(tween_lims_list[[2]], nframes = nframes, ease = "linear") %>%
     tween_state(tween_lims_list[[3]], nframes = nframes, ease = "linear") %>%
     keep_state(ifelse(is_last, nframes * 2, nframes)) %>%
-    # tweenr::tween_components(
-    #   ease = "linear", nframes = total_nframes,
-    #   id = lim_id, time = time
-    # ) %>%
     split(.$.frame)
 
+  # Generate the frames, one for each tween
   walk(
-    1:(total_nframes), function(i) {
-      # browser()
+    1:(total_nframes),
+    function(i) {
       df <- tweens_df[[i]]
       lims <- tween_lims[[i]]
       xlim <- lims$xlim
@@ -144,39 +143,26 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
           group_by(.data$group)
       }
 
-      # BEGIN ACHTUNG: hard-coding stuff for the experiment
       title <- titles
-      # if (length(group_vars_chr) == 1){
-      #   title <- "Step 1: Each dot shows one person\n            and each group shows degree type"
-      # } else if (length(group_vars_chr) == 2) {
-      #   title <- "Step 1: Each dot shows one person and each group\n            shows degree type AND work setting"
-      # } else {
-      #   stop("animate_group_by() was hard-coded for salary dataset")
-      # }
-      # END
 
-
-      # natural_group_var_chr <- paste(group_vars_chr, collapse = " AND ")
-      # title <- paste0("Step 1: Each dot shows one person\n            and each group shows ", natural_group_var_chr)
-
-
-      print(plot_grouped_dataframe_sanddance(
+      p <- plot_grouped_dataframe_sanddance(
         df, xlim, ylim,
         mapping = aes_with_group,
         title = title
-      ))
+      )
+
+      print(p)
     }
   )
 
-  # return the final coordinates
-  # final_coords
+  # Return the final coordinates, with their grouping
   df %>%
     group_by(!!!map(group_vars_chr, sym))
 }
 
 ## ==== utils from ggwaffle ======
 # Source: https://github.com/liamgilbey/ggwaffle/blob/master/R/iron.R
-# NOTE: Should double check about licensing / crediting of thise code
+# NOTE: Should double check about licensing / crediting of this code
 #
 
 #' Calculates the x,y, and other aesthetics
