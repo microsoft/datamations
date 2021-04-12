@@ -14,61 +14,56 @@
 #' @export
 animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE, titles = "") {
 
-  # prep some mapping
-  dots <- enquos(...)
-  group_vars_chr <- map_chr(dots, rlang::quo_name)
-  color_var_chr <- first(dots)
-  grouped_facet_var <- paste(group_vars_chr, collapse = "_")
-  grouped_facet_sym <- sym(grouped_facet_var)
+  # Map grouping variables
+  group_vars <- enquos(...)
+  # Convert grouping variables to character
+  group_vars_chr <- map_chr(group_vars, rlang::quo_name)
+  # Use the first grouping variable for colour
+  color_var <- first(group_vars)
+  # Collapse the variables into a single one (NOTE: problematic to use _ because variable names themselves could use _)
+  grouped_facet_var_chr <- paste(group_vars_chr, collapse = "_")
+  grouped_facet_var <- sym(grouped_facet_var_chr)
+  # Note that if there is only one grouping variable, then all this above will be the same variable
 
   df <- .data
 
-  # preprocess data
+  # Unite grouping variables into a single variable
+  # (If there's only only grouping variable, then it will be preserved)
   .data <- .data %>%
+    # TODO: What if data already has a variable called 'self'? What if it's grouped by it?
     mutate(self = "id") %>%
-    unite(!!grouped_facet_var, !!group_vars_chr, remove = FALSE)
+    unite({{grouped_facet_var}}, group_vars_chr, remove = FALSE)
 
+  # Pull levels of grouping variable and set them
   fct_lvls <- .data %>%
-    mutate(!!grouped_facet_var := factor({{ grouped_facet_sym }})) %>%
-    pull(!!grouped_facet_var) %>%
-    levels()
+    pull({{ grouped_facet_var }}) %>%
+    unique()
 
   .data <- .data %>%
-    mutate(!!grouped_facet_var := factor(
-      {{ grouped_facet_sym }},
-      levels = fct_lvls
-    )) %>%
-    arrange(!!sym(grouped_facet_var))
+    mutate({{grouped_facet_var}} := factor({{ grouped_facet_var }}, levels = fct_lvls)) %>%
+    arrange({{ grouped_facet_var }})
 
-  # initial frame
-  #   with no color mapping
+  # Calculate initial coordinates of waffle chart
   init_coords <- .data %>%
     waffle_iron_groups(aes_d(group = self))
 
-  # p_init <- plot_grouped_dataframe_sanddance(init_coords)
-  # print(p_init)
-
-
-  # final frame
+  # Calculate final coordinates of waffle chart
   final_coords <- .data %>%
     waffle_iron_groups(
-      aes_d(group = !!grouped_facet_var, x = !!grouped_facet_var)
+      aes_d(group = {{grouped_facet_var}}, x = {{grouped_facet_var}})
     ) %>%
     ungroup() %>%
     mutate(id = row_number(), time = 2)
 
-  # p_final <- plot_grouped_dataframe_sanddance(final_coords)
-  # print(p_final)
-
   #  offset the prev step
-
+  # TODO: Why?
   init_coords_offset <-
     init_coords %>%
     # mutate(y = y + max(final_coords$y) + 5) %>%
     ungroup() %>%
     mutate(id = row_number(), time = 1)
 
-
+  # Generate plots of initial and final positions - purpose is to access the limits for some padding
   p_init_offset <- plot_grouped_dataframe_sanddance(init_coords_offset)
   p_final <- plot_grouped_dataframe_sanddance(final_coords)
   # print(p_init_offset)
@@ -92,7 +87,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 
 
   # aesthetics mapping
-  aes_with_group <- aes(group = !!grouped_facet_var, color = !!color_var_chr)
+  aes_with_group <- aes(group = !!grouped_facet_var_chr, color = !!color_var)
 
   # tweening between states ->
   # states:
@@ -180,6 +175,9 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 }
 
 ## ==== utils from ggwaffle ======
+# Source: https://github.com/liamgilbey/ggwaffle/blob/master/R/iron.R
+# NOTE: Should double check about licensing / crediting of thise code
+#
 
 #' Calculates the x,y, and other aesthetics
 #'
@@ -296,6 +294,7 @@ aes_d_validate <- function(mapping, compulsory_cols, data_names) {
 }
 
 #' Aesthetic mappings for datasets
+#' Some sourcing, but not exact: https://github.com/liamgilbey/ggwaffle/blob/master/R/aes_d.R
 #'
 #' The idea comes straight from \code{aes} in ggplot2. That provides a way to map columns of a dataset to features of graphic.
 #' Here we are mapping columns into a function so we can use standard names inside that function.

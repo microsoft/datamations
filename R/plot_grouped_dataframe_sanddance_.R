@@ -29,6 +29,7 @@ plot_grouped_dataframe_sanddance <- function(
           remove = FALSE
         )
     } else if (length(str_split(mapping$group, "_")) > 1) {
+      browser()
       stop("Too many grouping vars for icon array")
     }
   }

@@ -46,12 +46,12 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
 
   saveGIF(
     {
-      # NEW: assemble function + data + variables
       for (i in 2:length(fittings)) {
+        # Starts with data in the previous stage
         data <- data_states[[i - 1]]
+        #
         verb <- tidy_func_arg[[i]][[1]]
         args <- tidy_func_arg[[i]][[2]]
-
 
         call_verb <-
           switch(verb,
