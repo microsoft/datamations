@@ -1,0 +1,40 @@
+{
+  "timeline": {
+    "sync": [
+      {
+        "component": {
+          "axis": "y"
+        },
+        "change": {
+          "scale": {
+            "domainDimension": "same"
+          }
+        },
+        "timing": {
+          "duration": 1000
+        }
+      },
+      {
+        "component": {
+          "mark": "marks"
+        },
+        "change": {
+          "scale": [
+            "x"
+          ],
+          "data": [
+            "id"
+          ],
+          "encode": {
+            "update": true,
+            "enter": true,
+            "exit": true
+          }
+        },
+        "timing": {
+          "duration": 1000
+        }
+      }
+    ]
+  }
+}

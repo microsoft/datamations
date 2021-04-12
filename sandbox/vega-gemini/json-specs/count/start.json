@@ -1,0 +1,311 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 500,
+  "height": 250,
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_0",
+      "values": [
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 86
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 71
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 104
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 94
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 93
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 96
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 100
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 86
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 80
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 85
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 95
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 97
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 72
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 98
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 96
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 93
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 88
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 97
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 83
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 90
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 89
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 86
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 83
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 99
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 99
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 91
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 101
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 98
+        }
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"Salary\"]) && isFinite(+datum[\"Salary\"])"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "marks",
+      "type": "symbol",
+      "style": [
+        "circle"
+      ],
+      "from": {
+        "data": "data_0"
+      },
+      "encode": {
+        "update": {
+          "opacity": {
+            "value": 0.7
+          },
+          "fill": {
+            "scale": "color",
+            "field": "Degree"
+          },
+          "ariaRoleDescription": {
+            "value": "circle"
+          },
+          "description": {
+            "signal": "\"Degree: \" + (isValid(datum[\"Degree\"]) ? datum[\"Degree\"] : \"\"+datum[\"Degree\"]) + \"; Salary: \" + (format(datum[\"Salary\"], \"\"))"
+          },
+          "x": {
+            "scale": "x",
+            "field": "Degree"
+          },
+          "y": {
+            "scale": "y",
+            "field": "Salary"
+          },
+          "shape": {
+            "value": "circle"
+          }
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "point",
+      "domain": {
+        "data": "data_0",
+        "field": "Degree",
+        "sort": true
+      },
+      "range": [
+        0,
+        {
+          "signal": "width"
+        }
+      ],
+      "padding": 0.5
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": {
+        "data": "data_0",
+        "field": "Salary"
+      },
+      "range": [
+        {
+          "signal": "height"
+        },
+        0
+      ],
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {
+        "data": "data_0",
+        "field": "Degree",
+        "sort": true
+      },
+      "range": "category"
+    }
+  ],
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "Degree",
+      "labelAngle": 0,
+      "labelBaseline": "top",
+      "encode": {
+        "axis": {
+          "name": "x"
+        }
+      },
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": true,
+      "title": "Salary",
+      "labelOverlap": true,
+      "tickCount": {
+        "signal": "ceil(height/40)"
+      },
+      "encode": {
+        "axis": {
+          "name": "y"
+        }
+      },
+      "zindex": 0,
+      "gridScale": "x"
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "symbolType": "circle",
+      "title": "Degree",
+      "encode": {
+        "symbols": {
+          "update": {
+            "opacity": {
+              "value": 0.7
+            }
+          }
+        },
+        "legend": {
+          "name": "legend0"
+        }
+      }
+    }
+  ]
+}

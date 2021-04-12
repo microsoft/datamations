@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="./gemini.web.js"></script>
+  </head>
+  <body>
+    <div>
+      <button onclick="play()">Animate</button>
+    </div>
+    <div id="view"></div>
+
+    <script>
+      const salary = [
+        { Degree: "Masters", Work: "Industry", Salary: 86 },
+        { Degree: "Masters", Work: "Academia", Salary: 71 },
+        { Degree: "PhD", Work: "Industry", Salary: 104 },
+        { Degree: "Masters", Work: "Industry", Salary: 94 },
+        { Degree: "Masters", Work: "Academia", Salary: 93 },
+        { Degree: "Masters", Work: "Academia", Salary: 96 },
+        { Degree: "PhD", Work: "Academia", Salary: 100 },
+        { Degree: "Masters", Work: "Industry", Salary: 86 },
+        { Degree: "PhD", Work: "Academia", Salary: 80 },
+        { Degree: "Masters", Work: "Industry", Salary: 85 },
+        { Degree: "PhD", Work: "Academia", Salary: 95 },
+        { Degree: "Masters", Work: "Industry", Salary: 97 },
+        { Degree: "PhD", Work: "Industry", Salary: 72 },
+        { Degree: "Masters", Work: "Industry", Salary: 98 },
+        { Degree: "Masters", Work: "Industry", Salary: 91 },
+        { Degree: "Masters", Work: "Industry", Salary: 91 },
+        { Degree: "PhD", Work: "Academia", Salary: 96 },
+        { Degree: "Masters", Work: "Industry", Salary: 93 },
+        { Degree: "Masters", Work: "Industry", Salary: 88 },
+        { Degree: "Masters", Work: "Industry", Salary: 97 },
+        { Degree: "Masters", Work: "Industry", Salary: 83 },
+        { Degree: "PhD", Work: "Academia", Salary: 90 },
+        { Degree: "Masters", Work: "Industry", Salary: 89 },
+        { Degree: "Masters", Work: "Industry", Salary: 86 },
+        { Degree: "Masters", Work: "Industry", Salary: 83 },
+        { Degree: "Masters", Work: "Industry", Salary: 99 },
+        { Degree: "Masters", Work: "Industry", Salary: 99 },
+        { Degree: "PhD", Work: "Academia", Salary: 91 },
+        { Degree: "PhD", Work: "Industry", Salary: 101 },
+        { Degree: "Masters", Work: "Industry", Salary: 98 },
+      ];
+    </script>
+
+    <script>
+      const gemSpec = {
+        timeline: {
+          sync: [
+            { 
+              component: { axis: "y" }, 
+              "change": {
+                "scale": {
+                  "domainDimension": "same"
+                }
+              }, 
+              timing: { 
+                duration: 1000 
+              } 
+            },
+            { 
+              component: { mark: "marks" }, 
+              "change": {
+                "scale": ["x"],
+                "data": ["id"],
+                "encode": {"update": true, "enter": true, "exit": true}
+              },
+              timing: { 
+                duration: 1000 
+              } 
+            },
+          ],
+        },
+      };
+
+      const spec1 = gemini.vl2vg4gemini(getSpec({
+        data: salary
+      }));
+
+      let c1 = 0, c2 = 0, n = 4;
+
+      let intData = salary.map((d) => {
+        const s = d.Degree === 'Masters' ? c1 * n + 2 : c2 * n + 2;
+        d.Degree === 'Masters' ? c1++ : c2++;
+
+        return {
+          ...d,
+          Salary: s,
+        }
+      });
+
+      const specInter = gemini.vl2vg4gemini({
+        $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+        description: '',
+        width: 500,
+        height: 250,
+        data: {
+          values: intData
+        },
+        mark: {
+          type: 'circle',
+        },
+        encoding: {
+          x: {
+            field: 'Degree', 
+            type: 'ordinal', 
+            axis: {"labelAngle": 0},
+          },
+          y: {
+            field: 'Salary', 
+            type: 'quantitative',
+            axis: null
+          },
+          color: {
+            field: 'Degree', 
+            type: "nominal"
+          },
+        },
+      });
+
+      const spec2 = gemini.vl2vg4gemini(getSpec({
+        data: salary,
+        aggregate: 'count'
+      }));
+      
+      console.log(JSON.stringify(spec2, null, 2))
+
+      vegaEmbed("#view", spec1, { renderer: "svg" });
+
+      let toggle = true, animating = false, counter = 0;
+
+      const frames = [
+        [spec1, specInter],
+        [specInter, spec2],
+        [spec2, spec1],
+      ];
+
+      async function play() {
+        if (animating) return;
+        console.log(counter);
+        animating = true;
+
+        let anim = await gemini.animate(
+          frames[counter][0], 
+          frames[counter][1], 
+          gemSpec
+        );
+
+        await anim.play("#view");
+
+        animating = false;
+        counter = ++counter % frames.length;
+      }
+    
+      function getSpec({
+        data,
+        x_field = 'Degree',
+        y_field = 'Salary',
+        color_field = 'Degree',
+        aggregate = null
+      }) {
+        return {
+          $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+          description: '',
+          width: 500,
+          height: 250,
+          data: {
+            values: data
+          },
+          mark: {
+            type: 'circle',
+          },
+          encoding: {
+            x: {
+              field: x_field, 
+              type: 'ordinal', 
+              axis: {"labelAngle": 0},
+            },
+            y: {
+              field: y_field, 
+              type: 'quantitative',
+              aggregate: aggregate,
+            },
+            color: {
+              field: color_field, 
+              type: "nominal"
+            },
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

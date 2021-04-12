@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vega</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.0.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
+  <script>const salary = [{"Degree":"Masters","Work":"Industry","Salary":86},{"Degree":"Masters","Work":"Academia","Salary":71},{"Degree":"PhD","Work":"Industry","Salary":104},{"Degree":"Masters","Work":"Industry","Salary":94},{"Degree":"Masters","Work":"Academia","Salary":93},{"Degree":"Masters","Work":"Academia","Salary":96},{"Degree":"PhD","Work":"Academia","Salary":100},{"Degree":"Masters","Work":"Industry","Salary":86},{"Degree":"PhD","Work":"Academia","Salary":80},{"Degree":"Masters","Work":"Industry","Salary":85},{"Degree":"PhD","Work":"Academia","Salary":95},{"Degree":"Masters","Work":"Industry","Salary":97},{"Degree":"PhD","Work":"Industry","Salary":72},{"Degree":"Masters","Work":"Industry","Salary":98},{"Degree":"Masters","Work":"Industry","Salary":91},{"Degree":"Masters","Work":"Industry","Salary":91},{"Degree":"PhD","Work":"Academia","Salary":96},{"Degree":"Masters","Work":"Industry","Salary":93},{"Degree":"Masters","Work":"Industry","Salary":88},{"Degree":"Masters","Work":"Industry","Salary":97},{"Degree":"Masters","Work":"Industry","Salary":83},{"Degree":"PhD","Work":"Academia","Salary":90},{"Degree":"Masters","Work":"Industry","Salary":89},{"Degree":"Masters","Work":"Industry","Salary":86},{"Degree":"Masters","Work":"Industry","Salary":83},{"Degree":"Masters","Work":"Industry","Salary":99},{"Degree":"Masters","Work":"Industry","Salary":99},{"Degree":"PhD","Work":"Academia","Salary":91},{"Degree":"PhD","Work":"Industry","Salary":101},{"Degree":"Masters","Work":"Industry","Salary":98}];</script>
+</head>
+<body>
+  <div id="vis" style="width: 100%;"></div>
+
+  <script type="text/javascript">
+      const averages = d3.rollup(
+        salary,
+        v => d3.mean(v, d => d.Salary),
+        d => d.Degree
+      );
+
+      const avgCoords = [];
+
+      for (let [k, v] of averages) {
+        avgCoords.push({
+          Degree: k,
+          Salary: v,
+          r: 20
+        });
+      }
+
+      let aggr = true;
+      const spec1 = {
+        $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+        description: 'A simple bar chart with embedded data.',
+        width: "container",
+        height: 250,
+        data: {
+          name: 'source',
+          values: salary
+        },
+        mark: {
+          type: 'circle',
+        },
+        encoding: {
+          x: {
+            field: 'Degree', 
+            type: 'ordinal', 
+            axis: {"labelAngle": 0},
+          },
+          y: {
+            field: 'Salary', 
+            type: 'quantitative',
+          },
+          color: {"field": "Degree", "type": "nominal"},
+        }
+      };
+
+      const spec2 = {
+        $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+        description: 'A simple bar chart with embedded data.',
+        width: "container",
+        height: 250,
+        data: {
+          name: 'source',
+          values: avgCoords
+        },
+        mark: {
+          type: 'circle',
+        },
+        encoding: {
+          x: {
+            field: 'Degree', 
+            type: 'ordinal', 
+            axis: {"labelAngle": 0},
+          },
+          y: {
+            field: 'Salary', 
+            type: 'quantitative',
+          },
+          color: {"field": "Degree", "type": "nominal"},
+        }
+      };
+
+      vegaEmbed('#vis', spec1).then(res => {
+      
+        setInterval(() => {
+          const data = aggr ? avgCoords : salary;
+
+          res.view.change("source", vega.changeset()
+            .insert(data)
+            .remove(vegaEmbed.vega.truthy)
+          ).run();
+
+          aggr = !aggr;
+        }, 2200);
+        
+      });
+    </script>
+</body>
+</html>

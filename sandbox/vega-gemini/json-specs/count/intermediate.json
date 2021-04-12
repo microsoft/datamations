@@ -1,0 +1,294 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 500,
+  "height": 250,
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_0",
+      "values": [
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 2
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 6
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 2
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 10
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 14
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 18
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 6
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 22
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 10
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 26
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 14
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 30
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 18
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 34
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 38
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 42
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 22
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 46
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 50
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 54
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 58
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 26
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 62
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 66
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 70
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 74
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 78
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 30
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 34
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 82
+        }
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"Salary\"]) && isFinite(+datum[\"Salary\"])"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "marks",
+      "type": "symbol",
+      "style": [
+        "circle"
+      ],
+      "from": {
+        "data": "data_0"
+      },
+      "encode": {
+        "update": {
+          "opacity": {
+            "value": 0.7
+          },
+          "fill": {
+            "scale": "color",
+            "field": "Degree"
+          },
+          "ariaRoleDescription": {
+            "value": "circle"
+          },
+          "description": {
+            "signal": "\"Degree: \" + (isValid(datum[\"Degree\"]) ? datum[\"Degree\"] : \"\"+datum[\"Degree\"]) + \"; Salary: \" + (format(datum[\"Salary\"], \"\"))"
+          },
+          "x": {
+            "scale": "x",
+            "field": "Degree"
+          },
+          "y": {
+            "scale": "y",
+            "field": "Salary"
+          },
+          "shape": {
+            "value": "circle"
+          }
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "point",
+      "domain": {
+        "data": "data_0",
+        "field": "Degree",
+        "sort": true
+      },
+      "range": [
+        0,
+        {
+          "signal": "width"
+        }
+      ],
+      "padding": 0.5
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": {
+        "data": "data_0",
+        "field": "Salary"
+      },
+      "range": [
+        {
+          "signal": "height"
+        },
+        0
+      ],
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {
+        "data": "data_0",
+        "field": "Degree",
+        "sort": true
+      },
+      "range": "category"
+    }
+  ],
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "Degree",
+      "labelAngle": 0,
+      "labelBaseline": "top",
+      "encode": {
+        "axis": {
+          "name": "x"
+        }
+      },
+      "zindex": 0
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "symbolType": "circle",
+      "title": "Degree",
+      "encode": {
+        "symbols": {
+          "update": {
+            "opacity": {
+              "value": 0.7
+            }
+          }
+        },
+        "legend": {
+          "name": "legend0"
+        }
+      }
+    }
+  ]
+}
