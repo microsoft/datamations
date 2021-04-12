@@ -16,32 +16,45 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 
   # Map grouping variables
   group_vars <- c(...)
-  # Convert grouping variables to character
-  group_vars_chr <- map_chr(group_vars, rlang::quo_name)
   # Use the first grouping variable for colour
   color_var <- first(group_vars)
-  # Collapse the variables into a single one (NOTE: problematic to use _ because variable names themselves could use _)
-  grouped_facet_var_chr <- paste(group_vars_chr, collapse = "_")
-  grouped_facet_var <- sym(grouped_facet_var_chr)
+  # And the second for the shape
+  shape_var <- dplyr::nth(group_vars, n = 2)
+
+  # Flag for whether there is second grouping variable
+  two_group_var <- !is.null(shape_var)
+
+  # Convert grouping variables to character
+  group_vars_chr <- map_chr(group_vars, rlang::quo_name)
+  # Collapse the variables into a single one - not using just "_" because variable names themselves could contain "_" - I figure ___ should be safe, and it's what tidytext uses for something similar: https://github.com/juliasilge/tidytext/blob/master/R/reorder_within.R
+  group_vars_combined_chr <- paste(group_vars_chr, collapse = "___")
+  group_vars_combined <- sym(group_vars_combined_chr)
   # Note that if there is only one grouping variable, then all this above will be the same variable
 
   # Keep an unaltered copy of the data to return later
   df <- .data
 
+  # Convert grouping variables to character - useful if there are binary variables or with a small number of (numeric) options, since you can't map shape to a continuous variable
+  # But we should be careful about too many categories and e.g. stop if there are too many
+  .data <- .data %>%
+    dplyr::mutate_at(dplyr::all_of(group_vars_chr), as.character)
+
   # Unite grouping variables into a single variable
-  # (If there's only only grouping variable, then it will be preserved)
+  # If there's only only grouping variable, then it will be preserved
+  # The original variables are kept as well
   .data <- .data %>%
     mutate(.self = "id") %>%
-    unite({{grouped_facet_var}}, group_vars_chr, remove = FALSE)
+    unite({{group_vars_combined}}, group_vars_chr, sep = "___", remove = FALSE)
 
-  # Pull levels of grouping variable and set them
+  # Pull levels of combined grouping variable and set them
   fct_lvls <- .data %>%
-    pull({{ grouped_facet_var }}) %>%
+    arrange({{ group_vars_combined }}) %>%
+    pull({{ group_vars_combined }}) %>%
     unique()
 
   .data <- .data %>%
-    mutate({{grouped_facet_var}} := factor({{ grouped_facet_var }}, levels = fct_lvls)) %>%
-    arrange({{ grouped_facet_var }})
+    mutate({{group_vars_combined}} := factor({{ group_vars_combined }}, levels = fct_lvls)) %>%
+    arrange({{ group_vars_combined }})
 
   # Calculate initial coordinates of waffle chart
   init_coords <- .data %>%
@@ -50,98 +63,131 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   # Calculate final coordinates of waffle chart
   final_coords <- .data %>%
     waffle_iron_groups(
-      aes_d(group = {{grouped_facet_var}}, x = {{grouped_facet_var}})
-    ) %>%
-    ungroup() %>%
-    mutate(id = row_number(), time = 2)
+      aes_d(group = {{group_vars_combined}}, x = {{group_vars_combined}})
+    )
 
-  #  offset the prev step
-  # TODO: Why?
-  init_coords_offset <-
-    init_coords %>%
-    # mutate(y = y + max(final_coords$y) + 5) %>%
-    ungroup() %>%
-    mutate(id = row_number(), time = 1)
-
-  # Generate plots of initial and final positions - purpose is to access the limits for some padding
-  p_init_offset <- plot_grouped_dataframe_sanddance(init_coords_offset)
+  # Generate plots of initial and final positions - the purpose is to access the limits for some padding
+  p_init <- plot_grouped_dataframe_sanddance(init_coords)
   p_final <- plot_grouped_dataframe_sanddance(final_coords)
-  # print(p_init_offset)
 
   # Pad coordinates to give more space
-  xlim_init <- layer_scales(p_init_offset)$x$range$range
-  ylim_init <- layer_scales(p_init_offset)$y$range$range
-  xlim_init[1] <- xlim_init[1] - (xlim_init[2] - xlim_init[1]) / 4
-  xlim_init[2] <- xlim_init[2] + (xlim_init[2] - xlim_init[1]) / 4
-  ylim_init[1] <- ylim_init[1] - (ylim_init[2] - ylim_init[1]) / 4
-  ylim_init[2] <- ylim_init[2] + (ylim_init[2] - ylim_init[1]) / 4
+  lims_init <- pad_limits(p_init)
+  xlim_init <- lims_init[["xlim"]]
+  ylim_init <- lims_init[["ylim"]]
 
-  xlim_final <- layer_scales(p_final)$x$range$range
-  ylim_final <- layer_scales(p_final)$y$range$range
-  xlim_final[1] <- xlim_final[1] - (xlim_final[2] - xlim_final[1]) / 4
-  xlim_final[2] <- xlim_final[2] + (xlim_final[2] - xlim_final[1]) / 4
-  ylim_final[1] <- ylim_final[1] - (ylim_final[2] - ylim_final[1]) / 4
-  ylim_final[2] <- ylim_final[2] + (ylim_final[2] - ylim_final[1]) / 4
+  lims_final <- pad_limits(p_final)
+  xlim_final <- lims_final[["xlim"]]
+  ylim_final <- lims_final[["ylim"]]
 
   # Map group and colour aesthetics
-  aes_with_group <- aes(group = !!grouped_facet_var_chr, color = !!color_var)
+  aes_with_group <- aes(color = {{ color_var }}, shape = {{ shape_var }})
 
-  # Set up states tweening
+  # Generate the data for each state, and put into a list to tween between
+
+  coords_list <- vector("list", length = ifelse(two_group_var, 5, 3))
+
   # State 1: Grey, ungrouped icon array
-  # State 2: Coloured, ungrouped icon array (keep layout, but color 'em)
-  # State 3: Coloured, grouped icon array
-  # State 4: Coloured, grouped icon array, secondary grouping level
+  coords_stage1 <- init_coords
+  coords_list[[1]] <- coords_stage1 %>%
+    mutate(.data_stage = 1)
 
-  # Set total number of frames
-  total_nframes <- 4 * nframes
-  if (is_last) {
-    total_nframes <- 5 * nframes
+  # State 2: Coloured, ungrouped icon array
+  # Keep the position (so use the same coords), but add a variable for the colour
+  data_colour_order <- .data %>%
+    arrange({{color_var}})
+
+  coords_stage2 <- coords_stage1 %>%
+    mutate({{ color_var }} := data_colour_order[[color_var]])
+
+  coords_list[[2]] <- coords_stage2 %>%
+    mutate(.data_stage = 2)
+
+  # State 3: Coloured, grouped icon array
+  # New position (grouped), so includes a variable for the colour
+  coords_stage3 <- .data %>%
+    waffle_iron_groups(aes_d(group = {{ color_var }}, x = {{ color_var }}))
+
+  coords_list[[3]] <- coords_stage3 %>%
+    mutate({{ color_var }} := group,
+      .data_stage = 3)
+
+  # States 4 and 5 only relevant if there are two grouping variables
+
+  if (two_group_var) {
+
+  # State 4: Coloured, shaped ungrouped icon array
+  # Keep the current position, but add a variable for the shape
+  data_color_shape_order <- .data %>%
+    arrange({{ color_var }}, {{ shape_var }})
+
+  coords_stage4 <- coords_stage3 %>%
+    mutate({{ color_var }} := data_color_shape_order[[color_var]],
+           {{ shape_var }} := data_color_shape_order[[shape_var]])
+
+  coords_list[[4]] <- coords_stage4 %>%
+    mutate(.data_stage = 4)
+
+  # State 5: Coloured, shaped grouped icon array
+  coords_stage5 <- final_coords %>%
+    separate(group,
+             into = c(rlang::as_name(color_var), rlang::as_name(shape_var)),
+             sep = "___",
+             remove = FALSE)
+
+  coords_list[[5]] <- coords_stage5 %>%
+    mutate(.data_stage = 5)
+
   }
 
-  # Split the data into groups to tween between
-  tweens <- init_coords_offset %>%
-    ungroup() %>%
-    bind_rows(init_coords_offset %>% mutate(time = 2, group = final_coords$group)) %>%
-    bind_rows(final_coords %>% mutate(time = 3)) %>%
-    split(.$time)
+  # Set up the states to tween between - must all have the same columns, so only keep the ones relevant for positioning - the ones for mapping are grabbed again when each frame is generated
+  data_tween_states <- coords_list %>%
+    map(~ select(.x, y, x, group, width, offset, .data_stage) %>%
+          mutate(group = as.character(group)))
 
-  # Tween between the data states
-  tweens_df <- tweens$`1` %>%
-    keep_state(nframes) %>%
-    tween_state(tweens$`2`, nframes = 1, ease = "linear") %>%
-    keep_state(nframes - 1) %>%
-    tween_state(tweens$`3`, nframes = nframes, ease = "linear") %>%
-    keep_state(ifelse(is_last, nframes * 2, nframes)) %>% # keep the icon array up for a bit
-    split(.$.frame)
+  # Tween between the data states, with nframes as each transition, then split by frame
+  tweens_data_list <- generate_group_by_tween_list(data_tween_states, nframes)
 
   # Set up the limits into groups to tween between
-  tween_lims_list <- build_limits_list(
-    xlims = c(xlim_init, xlim_init, xlim_final),
-    ylims = c(ylim_init, ylim_init, ylim_final),
-    id_name = "lim_id"
-  )
+  # TODO: this is not quite right / good :)
+  if (two_group_var) {
+    limits_tween_states <- build_limits_list(
+      xlims = c(xlim_init, xlim_init, xlim_final, xlim_final, xlim_final),
+      ylims = c(ylim_init, ylim_init, ylim_final, ylim_final, ylim_final),
+      id_name = "lim_id"
+    )
+  } else {
+    limits_tween_states <- build_limits_list(
+      xlims = c(xlim_init, xlim_init, xlim_final),
+      ylims = c(ylim_init, ylim_init, ylim_final),
+      id_name = "lim_id"
+    )
+  }
 
-  # Tween between the limits
-  tween_lims <- tween_lims_list[[1]] %>%
-    keep_state(nframes) %>%
-    tween_state(tween_lims_list[[2]], nframes = nframes, ease = "linear") %>%
-    tween_state(tween_lims_list[[3]], nframes = nframes, ease = "linear") %>%
-    keep_state(ifelse(is_last, nframes * 2, nframes)) %>%
-    split(.$.frame)
+  # Tween between the limits, with nframes as each transition, then split by frame
+  tweens_limits_list <- generate_group_by_tween_list(limits_tween_states, nframes)
+
+  total_nframes <- length(tweens_limits_list)
 
   # Generate the frames, one for each tween
   walk(
     1:(total_nframes),
     function(i) {
-      df <- tweens_df[[i]]
-      lims <- tween_lims[[i]]
+
+      df <- tweens_data_list[[i]]
+
+      # Add mapping information to data
+      stage <- floor(unique(df[[".data_stage"]]))
+
+      if (stage != 1) {
+        stage_df <- coords_list[[stage]]
+        stage_cols <- stage_df[!names(stage_df) %in% names(df)]
+        df <- df %>%
+          dplyr::bind_cols(stage_cols)
+      }
+
+      lims <- tweens_limits_list[[i]]
       xlim <- lims$xlim
       ylim <- lims$ylim
-
-      if (!(i %in% 1:nframes)) {
-        df <- df %>%
-          group_by(.data$group)
-      }
 
       title <- titles
 
@@ -296,4 +342,26 @@ aes_d <- function(...) {
   aes_cols <- map(dots, rlang::quo_get_expr)
   as.list(aes_cols)
   # as.list(match.call()[-1])
+}
+
+generate_group_by_tween_list <- function(states, nframes) {
+
+  for(i in 1:length(states)) {
+
+    if (i == 1) {
+      tweens_df <- states[[i]] %>%
+        keep_state(nframes) %>%
+        tween_state(states[[i + 1]], nframes = nframes, ease = "linear")
+    } else if (i < length(states)) {
+      tweens_df <- tweens_df %>%
+        keep_state(nframes) %>%
+        tween_state(states[[i + 1]], nframes = nframes, ease = "linear")
+    } else {
+      tweens_df <- tweens_df %>%
+        keep_state(nframes)
+    }
+
+  }
+
+  split(tweens_df, tweens_df$.frame)
 }

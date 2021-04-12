@@ -18,3 +18,25 @@ build_limits_list <- function(xlims, ylims, id_name) {
 
   split(df, df$time)
 }
+
+#' Pad limits from a plot
+#'
+#' Pad limits from a plot by making both the x and y limits larger in absolute size.
+#'
+#' @param plot Input plot to take limits from
+#'
+#' @return
+#' @export
+#'
+#' @examples
+pad_limits <- function(plot) {
+  xlim <- layer_scales(plot)$x$range$range
+  xlim[1] <- xlim[1] - (xlim[2] - xlim[1]) / 4
+  xlim[2] <- xlim[2] + (xlim[2] - xlim[1]) / 4
+
+  ylim <- layer_scales(plot)$y$range$range
+  ylim[1] <- ylim[1] - (ylim[2] - ylim[1]) / 4
+  ylim[2] <- ylim[2] + (ylim[2] - ylim[1]) / 4
+
+  list(xlim = xlim, ylim = ylim)
+}

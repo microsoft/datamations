@@ -7,124 +7,44 @@
 #' @importFrom ggplot2 coord_equal scale_x_continuous element_text geom_line
 #' @importFrom tidyr pivot_longer
 #' @return ggplot object
-plot_grouped_dataframe_sanddance <- function(
-                                             coords, xlim = NULL, ylim = NULL, is_coord_equal = TRUE,
+plot_grouped_dataframe_sanddance <- function(coords, xlim = NULL, ylim = NULL, is_coord_equal = TRUE,
                                              mapping = NULL, in_flight = FALSE, title = "") {
 
-  # init ggplot obj
-  p <- NULL
-
-  group_var <- attributes(coords)$groups %>%
-    names() %>%
-    first() # chr,
-
-  # recover the
-  if (!is.null(group_var)) {
-    if (length(str_split(mapping$group, "_")) == 1) {
-      # TODO: this does not properly handle if there's an underscore in the grouping variable values!
-      coords <- coords %>%
-        separate(
-          .data$group,
-          into = str_split(mapping$group, "_")[[1]],
-          remove = FALSE
-        )
-    } else if (length(str_split(mapping$group, "_")) > 1) {
-      browser()
-      stop("Too many grouping vars for icon array")
-    }
-  }
-
-  modded_waffle_theme <- theme(
-    line = element_line(color = "white"),
-    text = element_text(color = "white"),
-    rect = element_rect(color = "white"),
-    title = element_text(color = "white"),
-    panel.grid = element_blank(),
-    panel.border = element_blank(),
-    panel.background = element_blank(),
-    axis.text = element_text(color = "white"),
-    axis.title = element_text(color = "white"),
-    axis.ticks = element_blank(),
-    # axis.line = element_blank(),
-    legend.text = element_text(color = "black"),
-    legend.key = element_rect(fill = "white"),
-    legend.title = element_text(color = "black"),
-    # axis.ticks.length = unit(0, "null"),
-    # plot.title = element_text(size = 18),
-    plot.background = element_blank(),
-    # panel.spacing = unit(c(0, 0, 0, 0), "null")
-    legend.position = "bottom"
-  )
-
-  # modded_waffle_theme <- theme(panel.background = element_rect(fill = "white", colour = "grey50"))
-
-  # if ungrouped
-  if (is.null(group_var)) {
+  # Return a plot immediately if there is no mapping - this is just used to get the axis limits at the beginning
+  if (is.null(mapping)) {
     p <- ggplot(coords) +
-      # geom_point(aes(x, y), color = "grey", shape = 15, size = 3) +
       geom_point(aes(.data$x, .data$y), color = "grey") +
       modded_waffle_theme
-  } else {
-    # if grouped
 
-    # generate annotations for grouped icon arrays
-    # assuming two grouping vars: one is color, the other one goes onto the x axis
+    return(p)
+  }
 
-    # TODO: this is not good - assumes that grouping variables won't contain "_", which is unlikely
-    grouping_vars <- str_split(mapping$group, "_")[[1]] # $x?
-    color <- mapping$colour
+  # Check which mapping variables are present in the data
+  colour_var_chr <- rlang::quo_name(mapping[["colour"]])
+  shape_var_chr <- rlang::quo_name(mapping[["shape"]])
 
-    if ("quosure" %in% class(color)) {
-      color <- as_label(color)
-    }
+  plot_mapping <- dplyr::case_when(
+    !colour_var_chr %in% names(coords) & !shape_var_chr %in% names(coords) ~ "none",
+    colour_var_chr %in% names(coords) & !shape_var_chr %in% names(coords) ~ "color",
+    colour_var_chr %in% names(coords) & shape_var_chr %in% names(coords) ~ "color, shape"
+  )
 
-    x_group <- setdiff(grouping_vars, color)
+  # Plot according to mapping variables
 
-    xlab_df <- NULL
-
-    if (length(x_group) == 1) {
-      xlab_df <- coords %>%
-        group_by(!!sym(x_group)) %>%
-        summarize(midpoint = mean(.data$x), left = min(.data$x), right = max(.data$x))
-    } else if (length(x_group) > 1) {
-      stop("Too many grouping vars for grouped icon arrays")
-    }
-
-    # arg passing madness: sometimes it's not a char
-    if (is.character(color)) {
-      color <- sym(color)
-    }
-
+  if (plot_mapping == "none") {
     p <- ggplot(coords) +
-      geom_point(aes(.data$x, .data$y, color = {{ color }})) +
-      modded_waffle_theme +
-      labs(color = `$`(mapping, colour))
-
-    if ((!is.null(xlab_df)) & (!in_flight)) {
-      xbreaks <- xlab_df$midpoint
-
-      xlabels <- xlab_df %>%
-        pull(!!sym(x_group))
-
-      xlab_df <- xlab_df %>%
-        mutate(y = 0) %>%
-        pivot_longer(cols = c("left", "right"), names_to = NULL, values_to = "x")
-
-      p <- p +
-        geom_line(
-          data = xlab_df,
-          mapping = aes(.data$x, .data$y, group = !!sym(x_group)),
-          color = "grey",
-          size = 1
-        ) +
-        scale_x_continuous(breaks = xbreaks, labels = xlabels) +
-        theme(axis.text.x = element_text(color = "black"))
-    }
+      geom_point(aes(.data$x, .data$y), color = "grey")
+  } else if (plot_mapping == "color") {
+    p <- ggplot(coords) +
+      geom_point(aes(.data$x, .data$y, colour = !!mapping[["colour"]]))
+  } else if (plot_mapping == "color, shape") {
+    p <- ggplot(coords) +
+      geom_point(aes(.data$x, .data$y, colour = !!mapping[["colour"]], shape = !!mapping[["shape"]])) +
+      ggplot2::guides(colour = ggplot2::guide_legend(order = 1), shape = ggplot2::guide_legend(order = 2))
   }
 
   p <- p +
-    labs(title = title) +
-    theme(plot.title = element_text(color = "Black"))
+    modded_waffle_theme
 
   if (is_coord_equal) {
     p + coord_equal(xlim = xlim, ylim = ylim)
@@ -132,3 +52,21 @@ plot_grouped_dataframe_sanddance <- function(
     p + coord_cartesian(xlim = xlim, ylim = ylim)
   }
 }
+
+modded_waffle_theme <- theme(
+  line = element_line(color = "white"),
+  text = element_text(color = "white"),
+  rect = element_rect(color = "white"),
+  title = element_text(color = "white"),
+  panel.grid = element_blank(),
+  panel.border = element_blank(),
+  panel.background = element_blank(),
+  axis.text = element_text(color = "white"),
+  axis.title = element_text(color = "white"),
+  axis.ticks = element_blank(),
+  legend.text = element_text(color = "black"),
+  legend.key = element_rect(fill = "white"),
+  legend.title = element_text(color = "black"),
+  plot.background = element_blank(),
+  legend.position = "bottom"
+)
