@@ -16,13 +16,13 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 
   # Map grouping variables
   group_vars <- c(...)
+  # Count number of groups
+  n_groups <- length(group_vars)
+
   # Use the first grouping variable for colour
   color_var <- first(group_vars)
   # And the second for the shape
   shape_var <- dplyr::nth(group_vars, n = 2)
-
-  # Flag for whether there is second grouping variable
-  two_group_var <- !is.null(shape_var)
 
   # Convert grouping variables to character
   group_vars_chr <- map_chr(group_vars, rlang::quo_name)
@@ -56,38 +56,16 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     mutate({{group_vars_combined}} := factor({{ group_vars_combined }}, levels = fct_lvls)) %>%
     arrange({{ group_vars_combined }})
 
-  # Calculate initial coordinates of waffle chart
-  init_coords <- .data %>%
-    waffle_iron_groups(aes_d(group = .self))
-
-  # Calculate final coordinates of waffle chart
-  final_coords <- .data %>%
-    waffle_iron_groups(
-      aes_d(group = {{group_vars_combined}}, x = {{group_vars_combined}})
-    )
-
-  # Generate plots of initial and final positions - the purpose is to access the limits for some padding
-  p_init <- plot_grouped_dataframe_sanddance(init_coords)
-  p_final <- plot_grouped_dataframe_sanddance(final_coords)
-
-  # Pad coordinates to give more space
-  lims_init <- pad_limits(p_init)
-  xlim_init <- lims_init[["xlim"]]
-  ylim_init <- lims_init[["ylim"]]
-
-  lims_final <- pad_limits(p_final)
-  xlim_final <- lims_final[["xlim"]]
-  ylim_final <- lims_final[["ylim"]]
-
   # Map group and colour aesthetics
   aes_with_group <- aes(color = {{ color_var }}, shape = {{ shape_var }})
 
   # Generate the data for each state, and put into a list to tween between
 
-  coords_list <- vector("list", length = ifelse(two_group_var, 5, 3))
+  coords_list <- vector("list", length = ifelse(n_groups == 2, 5, 3))
 
   # State 1: Grey, ungrouped icon array
-  coords_stage1 <- init_coords
+  coords_stage1 <- .data %>%
+    waffle_iron_groups(aes_d(group = .self))
   coords_list[[1]] <- coords_stage1 %>%
     mutate(.data_stage = 1)
 
@@ -113,7 +91,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 
   # States 4 and 5 only relevant if there are two grouping variables
 
-  if (two_group_var) {
+  if (n_groups == 2) {
 
   # State 4: Coloured, shaped ungrouped icon array
   # Keep the current position, but add a variable for the shape
@@ -128,7 +106,10 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     mutate(.data_stage = 4)
 
   # State 5: Coloured, shaped grouped icon array
-  coords_stage5 <- final_coords %>%
+  coords_stage5 <- .data %>%
+    waffle_iron_groups(
+      aes_d(group = {{group_vars_combined}}, x = {{group_vars_combined}})
+      ) %>%
     separate(group,
              into = c(rlang::as_name(color_var), rlang::as_name(shape_var)),
              sep = "___",
@@ -147,9 +128,22 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   # Tween between the data states, with nframes as each transition, then split by frame
   tweens_data_list <- generate_group_by_tween_list(data_tween_states, nframes)
 
+  # Generate plots of the first and last stage to grab limits for tweening
+  p_init <- plot_grouped_dataframe_sanddance(coords_list[[1]])
+  p_final <- plot_grouped_dataframe_sanddance(coords_list[[length(coords_list)]])
+
+  # Pad coordinates to give more space
+  lims_init <- pad_limits(p_init)
+  xlim_init <- lims_init[["xlim"]]
+  ylim_init <- lims_init[["ylim"]]
+
+  lims_final <- pad_limits(p_final)
+  xlim_final <- lims_final[["xlim"]]
+  ylim_final <- lims_final[["ylim"]]
+
   # Set up the limits into groups to tween between
   # TODO: this is not quite right / good :)
-  if (two_group_var) {
+  if (n_groups == 2) {
     limits_tween_states <- build_limits_list(
       xlims = c(xlim_init, xlim_init, xlim_final, xlim_final, xlim_final),
       ylims = c(ylim_init, ylim_init, ylim_final, ylim_final, ylim_final),
