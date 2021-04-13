@@ -1,0 +1,2864 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="./gemini.web.js"></script>
+  </head>
+  <body>
+    <div>
+      <button onclick="play()">Animate</button>
+    </div>
+    <div id="view"></div>
+
+    <script>
+      const spec_initial = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "data": {
+          "values": [
+            {
+              "y": 7,
+              "x": 1,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 1,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 1,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 2,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 1,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 3,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 1,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 4,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 1,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 5,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 1,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 6,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 1,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 7,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 2,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 8,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 2,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 9,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 2,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 10,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 2,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 11,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 2,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 12,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 2,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 13,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 2,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 14,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 3,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 15,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 3,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 16,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 3,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 17,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 3,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 18,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 3,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 19,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 3,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 20,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 3,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 21,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 4,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 22,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 4,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 23,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 4,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 24,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 4,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 25,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 4,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 26,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 4,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 27,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 4,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 28,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 5,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 29,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 5,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 30,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 5,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 31,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 5,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 32,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 5,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 33,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 5,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 34,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 5,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 35,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 6,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 36,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 6,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 37,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 6,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 38,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 6,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 39,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 6,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 40,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 6,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 41,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 6,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 42,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 7,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 43,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 7,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 44,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 7,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 45,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 7,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 46,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 7,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 47,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 7,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 48,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 7,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 49,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 8,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 50,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 8,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 51,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 8,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 52,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 8,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 53,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 8,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 54,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 8,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 55,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 8,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 56,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 9,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 57,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 9,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 58,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 9,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 59,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 9,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 60,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 9,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 61,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 9,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 62,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 9,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 63,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 10,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 64,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 10,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 65,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 10,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 66,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 10,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 67,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 10,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 68,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 10,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 69,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 10,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 70,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 11,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 71,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 11,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 72,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 11,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 73,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 11,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 74,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 11,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 75,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 11,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 76,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 11,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 77,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 12,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 78,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 12,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 79,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 12,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 80,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 12,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 81,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 12,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 82,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 12,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 83,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 12,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 84,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 13,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 85,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 13,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 86,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 13,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 87,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 13,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 88,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 13,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 89,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 13,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 90,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 13,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 91,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 14,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 92,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 14,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 93,
+              "time": 1
+            },
+            {
+              "y": 5,
+              "x": 14,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 94,
+              "time": 1
+            },
+            {
+              "y": 4,
+              "x": 14,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 95,
+              "time": 1
+            },
+            {
+              "y": 3,
+              "x": 14,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 96,
+              "time": 1
+            },
+            {
+              "y": 2,
+              "x": 14,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 97,
+              "time": 1
+            },
+            {
+              "y": 1,
+              "x": 14,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 98,
+              "time": 1
+            },
+            {
+              "y": 7,
+              "x": 15,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 99,
+              "time": 1
+            },
+            {
+              "y": 6,
+              "x": 15,
+              "group": "id",
+              "width": 16,
+              "offset": 0,
+              "id": 100,
+              "time": 1
+            }
+          ]
+        },
+        "width": 400,
+        "height": 250,
+        "mark": "point",
+        "encoding": {
+          "x": {
+            "field": "x",
+            "scale": {
+              "type": "linear",
+              "domain": [-.5, 17]
+            },
+            "axis": null
+          },
+          "y": {
+            "field": "y",
+            "scale": {
+              "type": "linear",
+              "domain": [0, 8]
+            },
+            "axis": null
+          }
+        }
+      }
+      const spec_intermediate = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "data": {
+          "values": [
+            {
+              "y": 7,
+              "x": 1,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 1,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 1,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 2,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 1,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 3,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 1,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 4,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 1,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 5,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 1,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 6,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 1,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 7,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 2,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 8,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 2,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 9,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 2,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 10,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 2,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 11,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 2,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 12,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 2,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 13,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 2,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 14,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 3,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 15,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 3,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 16,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 3,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 17,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 3,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 18,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 3,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 19,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 3,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 20,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 3,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 21,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 4,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 22,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 4,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 23,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 4,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 24,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 4,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 25,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 4,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 26,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 4,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 27,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 4,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 28,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 5,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 29,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 5,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 30,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 5,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 31,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 5,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 32,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 5,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 33,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 5,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 34,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 5,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 35,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 6,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 36,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 6,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 37,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 6,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 38,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 6,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 39,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 6,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 40,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 6,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 41,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 6,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 42,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 7,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 43,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 7,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 44,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 7,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 45,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 7,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 46,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 7,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 47,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 7,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 48,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 7,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 49,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 8,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 50,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 8,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 51,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 8,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 52,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 8,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 53,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 8,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 54,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 8,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 55,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 8,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 56,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 9,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 57,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 9,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 58,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 9,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 59,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 9,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 60,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 9,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 61,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 9,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 62,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 9,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 63,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 10,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 64,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 10,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 65,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 10,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 66,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 10,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 67,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 10,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 68,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 10,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 69,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 10,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 70,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 11,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 71,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 11,
+              "group": "Masters",
+              "width": 16,
+              "offset": 0,
+              "id": 72,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 11,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 73,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 11,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 74,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 11,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 75,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 11,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 76,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 11,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 77,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 12,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 78,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 12,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 79,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 12,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 80,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 12,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 81,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 12,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 82,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 12,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 83,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 12,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 84,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 13,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 85,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 13,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 86,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 13,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 87,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 13,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 88,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 13,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 89,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 13,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 90,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 13,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 91,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 14,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 92,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 14,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 93,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 14,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 94,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 14,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 95,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 14,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 96,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 14,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 97,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 14,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 98,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 15,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 99,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 15,
+              "group": "PhD",
+              "width": 16,
+              "offset": 0,
+              "id": 100,
+              "time": 2
+            }
+          ]
+        },
+        "mark": "point",
+        "width": 400,
+        "height": 250,
+        "encoding": {
+          "x": {
+            "field": "x",
+            "scale": {
+              "type": "linear",
+              "domain": [-.5, 17]
+            },
+            "axis": null
+          },
+          "y": {
+            "field": "y",
+            "scale": {
+              "type": "linear",
+              "domain": [0, 8]
+            },
+            "axis": null
+          },
+          "color": {
+            "field": "group",
+            "type": "nominal"
+          }
+        }
+      };
+      const spec_final = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "data": {
+          "values": [
+            {
+              "y": 7,
+              "x": 1,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 1,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 1,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 2,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 1,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 3,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 1,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 4,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 1,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 5,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 1,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 6,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 1,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 7,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 2,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 8,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 2,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 9,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 2,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 10,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 2,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 11,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 2,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 12,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 2,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 13,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 2,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 14,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 3,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 15,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 3,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 16,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 3,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 17,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 3,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 18,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 3,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 19,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 3,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 20,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 3,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 21,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 4,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 22,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 4,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 23,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 4,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 24,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 4,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 25,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 4,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 26,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 4,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 27,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 4,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 28,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 5,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 29,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 5,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 30,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 5,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 31,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 5,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 32,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 5,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 33,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 5,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 34,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 5,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 35,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 6,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 36,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 6,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 37,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 6,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 38,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 6,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 39,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 6,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 40,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 6,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 41,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 6,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 42,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 7,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 43,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 7,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 44,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 7,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 45,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 7,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 46,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 7,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 47,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 7,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 48,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 7,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 49,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 8,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 50,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 8,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 51,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 8,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 52,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 8,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 53,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 8,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 54,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 8,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 55,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 8,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 56,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 9,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 57,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 9,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 58,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 9,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 59,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 9,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 60,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 9,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 61,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 9,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 62,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 9,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 63,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 10,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 64,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 10,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 65,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 10,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 66,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 10,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 67,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 10,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 68,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 10,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 69,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 10,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 70,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 11,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 71,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 11,
+              "group": "Masters",
+              "width": 12,
+              "offset": 0,
+              "id": 72,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 13,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 73,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 13,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 74,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 13,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 75,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 13,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 76,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 13,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 77,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 13,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 78,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 13,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 79,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 14,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 80,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 14,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 81,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 14,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 82,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 14,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 83,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 14,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 84,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 14,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 85,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 14,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 86,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 15,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 87,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 15,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 88,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 15,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 89,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 15,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 90,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 15,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 91,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 15,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 92,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 15,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 93,
+              "time": 2
+            },
+            {
+              "y": 7,
+              "x": 16,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 94,
+              "time": 2
+            },
+            {
+              "y": 6,
+              "x": 16,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 95,
+              "time": 2
+            },
+            {
+              "y": 5,
+              "x": 16,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 96,
+              "time": 2
+            },
+            {
+              "y": 4,
+              "x": 16,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 97,
+              "time": 2
+            },
+            {
+              "y": 3,
+              "x": 16,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 98,
+              "time": 2
+            },
+            {
+              "y": 2,
+              "x": 16,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 99,
+              "time": 2
+            },
+            {
+              "y": 1,
+              "x": 16,
+              "group": "PhD",
+              "width": 5,
+              "offset": 12,
+              "id": 100,
+              "time": 2
+            }
+          ]
+        },
+        "mark": "point",
+        "width": 400,
+        "height": 250,
+        "encoding": {
+          "x": {
+            "field": "x",
+            "scale": {
+              "type": "linear",
+              "domain": [-.5, 17]
+            },
+            "axis": null
+          },
+          "y": {
+            "field": "y",
+            "scale": {
+              "type": "linear",
+              "domain": [0, 8]
+            },
+            "axis": null
+          },
+          "color": {
+            "field": "group",
+            "type": "nominal"
+          }
+        }
+      }
+    </script>
+
+    <script>
+      const gemSpec = {
+        timeline: {
+          sync: [
+            { 
+              component: { mark: "marks" }, 
+              "change": {
+                "scale": ["x", "y", "color"],
+                "data": ["id"],
+                "encode": {"update": true, "enter": true, "exit": true}
+              },
+              timing: { 
+                duration: 600 
+              } 
+            },
+          ],
+        },
+      };
+
+      const spec1 = gemini.vl2vg4gemini(spec_initial);
+      const specInter = gemini.vl2vg4gemini(spec_intermediate);
+      const spec2 = gemini.vl2vg4gemini(spec_final);
+      
+      vegaEmbed("#view", spec1, { renderer: "svg" });
+
+      let toggle = true, animating = false, counter = 0;
+
+      const frames = [
+        [spec1, specInter],
+        [specInter, spec2],
+        [spec2, spec1],
+      ];
+
+      async function play() {
+        const source = frames[counter][0];
+        const target = frames[counter][1];
+        if (animating) return;
+
+        animating = true;
+
+        let anim = await gemini.animate(
+          source, 
+          target, 
+          gemSpec
+        );
+
+        await anim.play("#view");
+
+        animating = false;
+        counter = ++counter % frames.length;
+      }
+    </script>
+  </body>
+</html>
