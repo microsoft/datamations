@@ -17,14 +17,14 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
   # START: same as animate_group_by_sanddance
 
   # Map grouping variables
-  group_vars <- groups(.data)
+  group_vars <- dplyr::groups(.data)
+  # Count number of groups
+  n_groups <- length(group_vars)
+
   # Use the first grouping variable for colour
   color_var <- first(group_vars)
   # And the second for the shape
   shape_var <- dplyr::nth(group_vars, n = 2)
-
-  # Flag for whether there is second grouping variable
-  two_group_var <- !is.null(shape_var)
 
   # Convert grouping variables to character
   group_vars_chr <- map_chr(group_vars, rlang::quo_name)
@@ -60,267 +60,92 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
 
   # END: same as animate_group_by_sanddance()
 
+  # Create data for stages
+
+  coords_list <- vector("list", length = 3)
+
+  # State 1: Coloured (and shaped if 2 groups), grouped icon array
+
+  coords_stage1 <- .data %>%
+      waffle_iron_groups(
+        aes_d(group = {{group_vars_combined}}, x = {{group_vars_combined}})
+      ) %>%
+      separate(group,
+               into = group_vars_chr,
+               sep = "___",
+               remove = FALSE)
+
+  coords_list[[1]] <- coords_stage1 %>%
+    select(-width, -offset) %>%
+    mutate(.data_stage = 1)
+
+  # State 2: Scatter plot, coloured (and shaped)
+
+  coords_stage2 <- .data %>%
+    select(x = {{ group_vars_combined }}, y = {{ response_var }}) %>%
+    mutate(group = x) %>%
+    separate(group,
+             into = group_vars_chr,
+             sep = "___",
+             remove = FALSE)
+
+  coords_list[[2]] <- coords_stage2 %>%
+    mutate(.data_stage = 2)
+
+  # State 3: Summary plot, coloured (and shaped)
+  coords_stage3 <- coords_stage2 %>%
+    group_by(group) %>%
+    dplyr::summarise(y = mean(y)) %>%
+    mutate(x = group) %>%
+    separate(group,
+             into = group_vars_chr,
+             sep = "___",
+             remove = FALSE)
+
+  coords_list[[3]] <- coords_stage3 %>%
+    mutate(.data_stage = 3)
+
+  # Set up the states to tween between - must all have the same columns, so only keep the ones relevant for positioning - the ones for mapping are grabbed again when each frame is generated
+
+  data_tween_states <- coords_list %>%
+    map(~ select(.x, y, x, group, .data_stage) %>%
+          mutate(group = as.character(group),
+                 x = as.character(x)))
+
+  # Tween between the data states, with nframes as each transition, then split by frame
+  tweens_data_list <- generate_summarise_tween_list(data_tween_states, nframes)
+
+  # TODO: ACTUAL PLOTS!
+  # Generate plots of each stage to grab limits for tweening
   browser()
+  p_init <- plot_grouped_dataframe_sanddance(coords_list[[1]])
+  p_intermediate <- plot_grouped_dataframe_sanddance(coords_list[[2]])
+  p_final <- plot_grouped_dataframe_sanddance(coords_list[[3]])
 
-  # find the grouping variable
-  group_vars <- attributes(.data)$groups %>%
-    select(-.data$.rows) %>%
-    names() # chr vector
-  # names() %>%
-  # first() # chr, assuming only one grouping variable
-  color_var_chr <- first(group_vars) # ACHTUNG: actually there could be more
+  # Pad coordinates to give more space
+  lims_init <- pad_limits(p_init)
+  xlim_init <- lims_init[["xlim"]]
+  ylim_init <- lims_init[["ylim"]]
 
-  # sharla NOTE: this is where multiple grouping variables are collapsed into one - so it's an issue if there's one where the values are separated by "_"
-  grouped_facet_var <- paste(group_vars, collapse = "_")
-  grouped_facet_sym <- sym(grouped_facet_var)
+  lims_intermediate <- pad_limits(p_intermediate)
+  xlim_intermediate <- lims_intermediate[["xlim"]]
+  ylim_intermediate <- lims_intermediate[["ylim"]]
 
-  .data <- .data %>%
-    unite(!!grouped_facet_var, !!group_vars) # TODO: change factor levels here?
+  lims_final <- pad_limits(p_final)
+  xlim_final <- lims_final[["xlim"]]
+  ylim_final <- lims_final[["ylim"]]
 
-  fct_lvls <- .data %>%
-    mutate(!!grouped_facet_var := factor({{ grouped_facet_sym }})) %>%
-    pull(!!grouped_facet_var) %>%
-    levels()
-  if (length(fct_lvls) == 4) {
-    fct_lvls <- fct_lvls[c(1, 3, 2, 4)]
-  }
+  # Set up the limits into groups to tween between
+    limits_tween_states <- build_limits_list(
+      xlims = c(xlim_init, xlim_intermediate, xlim_final),
+      ylims = c(ylim_init, ylim_intermediate, ylim_final),
+      id_name = "lim_id"
+    )
 
-  .data <- .data %>%
-    mutate(!!grouped_facet_var := factor({{ grouped_facet_sym }}, levels = fct_lvls)) %>%
-    arrange(!!sym(grouped_facet_var)) %>%
-    # ACHTUNG
-    group_by(!!sym(grouped_facet_var))
+    # Tween between the limits, with nframes as each transition, then split by frame
+    tweens_limits_list <- generate_summarise_tween_list(limits_tween_states, nframes)
 
-
-  # quote the "response_var" -- Adv R 19.3
-  res_var <- enexpr(response_var)
-  res_var_chr <- as.character(res_var)
-
-
-  # ===== first state: waffles ======
-  waffle_aes <- aes_d(group = !!grouped_facet_var, x = !!grouped_facet_var)
-  # x, y cols as integers
-  coord_init <- .data %>%
-    waffle_iron_groups(
-      waffle_aes
-    ) %>%
-    ungroup() %>%
-    mutate(id = row_number(), time = 1) %>%
-    select(x, y, group, id, time) # ACHTUNG: there might be other aesthetics
-
-  # Initial state is already grouped in this case - because that's the data from this stage
-
-  # sharla NOTE: first step is waffles and limits are x: -2.75, 20.7 y: -5, 8.87 so not actually scaled to the data
-  p_init <- plot_grouped_dataframe_sanddance(coord_init)
-  # Saved at summary-init.png
-
-  # add padding
-  xlim_init <- layer_scales(p_init)$x$range$range
-  xlim_init[1] <- xlim_init[1] - (xlim_init[2] - xlim_init[1]) / 4
-  xlim_init[2] <- xlim_init[2] + (xlim_init[2] - xlim_init[1]) / 4
-  ylim_init <- layer_scales(p_init)$y$range$range
-  ylim_init[1] <- ylim_init[1] - (ylim_init[2] - ylim_init[1]) / 4
-  ylim_init[2] <- ylim_init[2] + (ylim_init[2] - ylim_init[1]) / 4
-
-  # ======= second state: scatter plot (?) ========
-  # add id and time col for animation
-  coord_inter <- .data %>%
-    ungroup() %>%
-    mutate(id = row_number(), time = 2) %>%
-    group_by(!!sym(grouped_facet_var))
-
-  # save the aesthetics for later
-  aes_scatter <- aes(
-    x = !!grouped_facet_var,
-    y = !!res_var_chr,
-    group = !!grouped_facet_var,
-    color = !!color_var_chr
-    # command = paste0("summarize(mean(", !!group_var, ")")
-  )
-
-  coord_inter <- iron_groups(
-    coord_inter,
-    aes_scatter,
-    geom_point
-  )
-
-  categorical_vars <- coord_inter %>%
-    ungroup() %>%
-    select(where(~ !is.numeric(.))) %>%
-    mutate_all(~ as.factor(.)) %>%
-    mutate_all(funs(num = as.numeric(.)))
-
-  if (is_empty(categorical_vars)) {
-    var_levels <- NULL
-  } else {
-    var_levels <- categorical_vars %>%
-      unique()
-  }
-
-  # Intermediate plot - starting to cluster the pints more
-  p_inter <- ggplot(coord_inter) +
-    # geom_beeswarm(aes(x, y))
-    geom_quasirandom(aes(x, y))
-  # sharla NOTE: clustered points here, with actual value scales
-  # saved at summary-int.png
-
-  p_inter_data <- layer_data(p_inter)
-  # TODO: update coord_inter to beeswarm coords
-  coord_inter$x <- p_inter_data$x
-  class(coord_inter$x) <- c("numeric")
-  coord_inter$y <- p_inter_data$y
-
-  # get default x,y axis ranges while x is still a factor
-  # p_inter <- plot_grouped_dataframe_withresponse_sanddance(
-  # coord_inter, response_var = res_var
-  # )
-
-  xlim_inter <- layer_scales(p_inter)$x$range_c$range # continuous
-  xlim_inter <- adjust_scale(xlim_inter)
-
-  # xlim_inter[1] <- xlim_inter[1] - 0.5 # ACHTUNG
-  # xlim_inter[2] <- xlim_inter[2] + 0.5
-  ylim_inter <- layer_scales(p_inter)$y$range$range
-
-
-  # if not numeric, cast x to numeric
-  # coord_inter <- coord_inter %>%
-  #   mutate(x = as.factor(x)) %>%
-  #   mutate(x = as.numeric(x))
-  # mutate_if(~ !is.numeric(.), as.numeric) %>%
-
-  new_name <- c("mean")
-  new_name <- setNames(new_name, as.character(res_var))
-
-  ci_df <- boots_wrapper(.data, !!sym(grouped_facet_var), res_var_chr) %>%
-    mutate(
-      .lower = mean - (mean - .lower),
-      .upper = (.upper - mean) + mean
-    ) %>%
-    rename(!!new_name)
-
-
-  coord_final <- .data %>%
-    summarize(mean = mean(!!res_var)) %>%
-    # TODO: update to bootstrapped mean
-    right_join(.data, by = grouped_facet_var) %>%
-    select(-!!res_var) %>%
-    dplyr::rename(!!new_name) %>%
-    # works for dplyr v1.0.0
-    ungroup() %>%
-    mutate(id = row_number(), time = 3) %>%
-    group_by(!!sym(grouped_facet_var))
-
-  coord_final <- iron_groups(
-    coord_final,
-    aes(
-      x = !!grouped_facet_var,
-      y = !!res_var_chr,
-      group = !!grouped_facet_var,
-      color = !!color_var_chr
-    ),
-    geom_point
-  )
-
-  coord_final <- coord_final %>%
-    # mutate(x = factor(x, levels = fct_lvls, ordered = TRUE)) %>%
-    mutate(x = as.factor(x)) %>%
-    mutate(x = as.numeric(x))
-
-  # p_final <- plot_grouped_dataframe_withresponse_sanddance(
-  #   coord_final, response_var = res_var
-  # )
-
-  # TODO: Is the goal of this to still show the range of the data?
-  p_final <- ggplot(ci_df) +
-    geom_pointrange(aes(!!sym(grouped_facet_var), !!sym(res_var_chr),
-      ymin = .lower, ymax = .upper,
-      color = !!sym(grouped_facet_var)
-    ))
-  # sharla NOTE: final plot is in summary-final.png
-
-  xlim_final <- layer_scales(p_final)$x$range_c$range
-  ylim_final <- layer_scales(p_final)$y$range$range
-  # sharla NOTE: seems like final coordinates will be used somewhere
-
-  ## ----- calculate offset ------
-  # offset <- (ylim[2] - ylim[1]) * 1.2 + ylim[2]
-
-
-  # coord_init <- coord_init %>%
-  # mutate(y = offset  + y)
-
-  # update ylim
-  # xlim <- c(min(coord_init$x) - 1, max(coord_init$x) + 1)
-  # ylim <- c(min(min(coord_inter$y), min(coord_init$y)) - 1, max(max(coord_init$y), max(coord_inter$y)) + 1)
-  xlim <- NULL
-  ylim <- NULL
-
-
-  ## ------- walk the tweens -------
-
-  total_nframes <- nframes * 6
-
-  # sharla NOTE: these tweens are using the coordinates in the actual plots - so the first one is e.g. 1-20 and the second and third are the actual values (in the 85 - 90 range) - how is the difference rectified by the tweening?
-  # # A tibble: 3 x 3
-  # time mean_x mean_y
-  # <dbl>  <dbl>  <dbl>
-  # 1     1   8.13   4.05
-  # 2     2   1.27  89.7
-  # 3     3   1.28  89.7
-
-  # combine the jitter plot df with mean df
-  tween_list <- coord_init %>%
-    bind_rows(coord_inter) %>%
-    # tweens <- coord_inter %>%
-    bind_rows(coord_final) %>%
-    # select the relevant columns?
-    select(id, time, x, y, group) %>% # ACHTUNG
-    split(.$time)
-
-  tweens <- tween_list$`1` %>%
-    # 1. icon array, still
-    tween_state(
-      tween_list$`1`,
-      ease = "linear", nframes = 1
-    ) %>%
-    keep_state(nframes = nframes - 1) %>%
-    # 2. transition to scatter plot
-    # sharla NOTE: this actually tweens right from the values of e.g. 7 to 80 - how comes it looks so smooth in the plot? i think because the axes aren't added until the end, but TODO to look at this!
-    #   id time x        y   group .id     .phase .frame
-    # 1  1  1.0 1  7.00000 Masters   1     static      1
-    # 2  1  1.0 1  7.00000 Masters   1        raw      2
-    # 3  1  1.5 1 44.47225 Masters   1 transition      3
-    # 4  1  2.0 1 81.94450 Masters   1     static      4
-    # 5  1  2.0 1 81.94450 Masters   1     static      5
-    # 6  1  2.0 1 81.94450 Masters   1        raw      6
-    tween_state(
-      tween_list$`2`,
-      ease = "linear", nframes = nframes
-    ) %>%
-    # 3. keep scatter plot
-    keep_state(nframes) %>%
-    # 4. transition to summary plot
-    tween_state(
-      tween_list$`3`,
-      ease = "exponential-in-out", nframes = nframes # ACHTUNG
-    ) %>%
-    # 5, 6. keep summary up
-    keep_state(nframes * 2) %>%
-    split(.$.frame)
-
-  tween_lims_list <- tribble(
-    ~xlim, ~ylim, ~time,
-    xlim_init, ylim_init, 1,
-    xlim_inter, ylim_inter, 2,
-    xlim_final, ylim_final, 3, # the final state, should have the same y range?
-  ) %>%
-    unnest(c(xlim, ylim)) %>%
-    group_by(time) %>%
-    mutate(id = row_number()) %>%
-    ungroup() %>%
-    split(.$time)
-
+    total_nframes <- length(tweens_limits_list)
 
   # sharla NOTE: at the same time the data is tweened, the axes are too
   # which is why you don't see any big jumps - it's happening at the same time the data is being tweened
@@ -339,62 +164,26 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
   # I had set nframes = 2 here, and the total number of frames from the tweening pipelines is 12 so the math adds up - good!
   # I would rather have the logic of which plotting function to use be based on stages than the frame count, I think, because something like `(i - 1) %/% nframes %in% 2:3` is hard to understand (I don't yet!) but now I at least know why those different logical bits are coming in -- ^^^ each of these stages likely has a different plotting function controlling it!
 
-  tween_lims <- tween_lims_list$`1` %>%
-    tween_state( # 1. icon array, still
-      tween_lims_list$`1`,
-      ease = "linear", nframes = nframes
-    ) %>%
-    # 2. transition to scatter plot, zoom
-    tween_state(tween_lims_list$`2`,
-      ease = "linear", nframes = nframes
-    ) %>%
-    keep_state(nframes) %>%
-    # 3. keep scatter plot,
-    keep_state(nframes) %>%
-    # 4. transition to summary plot
-    tween_state(tween_lims_list$`3`, # 5. transition to zoomed in summary plot
-      ease = "exponential-in-out", nframes = nframes
-    ) %>%
-    keep_state(nframes) %>%
-    # 6. keep summary up
-    split(.$.frame)
-
-  # decide what indices to walk with `output`
-  # sharla NOTE: likely relevant from paper examples - I think we'll want to render all the frames, so not worrying about this
-  walk_indices <- switch(output,
-    both = 1:total_nframes,
-    first = c(1:(nframes * 3), rep(nframes * 3, nframes)), # keep the last frame up for longer
-    second = (nframes * 2 + 1):(nframes * 6)
-  )
-
-
   walk(
-    walk_indices, function(i) {
-      grouped_tweens <- tweens[[i]] %>%
-        group_by(group)
-      # group_by(!!sym(group_var))
+    1:(total_nframes), function(i) {
 
+      browser()
 
-      lims <- tween_lims[[i]]
+      df <- tweens_data_list[[i]]
+
+      # Add mapping information to data
+      stage <- floor(unique(df[[".data_stage"]]))
+
+      stage_df <- coords_list[[stage]]
+      stage_cols <- stage_df[!names(stage_df) %in% names(df)]
+      df <- df %>%
+        dplyr::bind_cols(stage_cols)
+
+      lims <- tweens_limits_list[[i]]
       xlim <- lims$xlim
       ylim <- lims$ylim
 
-      # set up plot titles
-      natural_group_vars <- paste(group_vars, collapse = " AND ")
-      # BEGIN
-      # title <- ""
-      if ((i - 1) %/% nframes %in% c(0, 1, 2)) {
-        # title <- paste0("Step 2: Next you plot the salary of each person\n            within each group")
-        title <- titles[1]
-        if (output == "second") {
-          # title <- paste0("Step 3: Lastly you plot the average salary \n            of each group and zoom in")
-          title <- titles[2]
-        }
-      } else {
-        # title <- paste0("Step 3: Lastly you plot the average salary \n            of each group and zoom in")
-        title <- titles[2]
-      }
-      # END
+      title <- titles
 
       if (i <= nframes * 2) {
         # sharla NOTE: stages 1 and 2
@@ -511,4 +300,26 @@ iron_groups <- function(.data, mapping, geom) { # ACHTUNG: decide about geom
   sub_df %>%
     rename(x_mapping) %>%
     rename(group_mapping)
+}
+
+generate_summarise_tween_list <- function(states, nframes) {
+
+    for(i in 1:length(states)) {
+
+    if (i == 1) {
+      tweens_df <- states[[i]] %>%
+        keep_state(nframes) %>%
+        tween_state(states[[i + 1]], nframes = nframes, ease = "linear")
+    } else if (i == 2) {
+      tweens_df <- tweens_df %>%
+        keep_state(nframes) %>%
+        tween_state(states[[i + 1]], nframes = nframes, ease = "exponential-in-out")
+    } else if (i == 3) {
+      tweens_df <- tweens_df %>%
+        keep_state(nframes)
+    }
+
+  }
+
+  split(tweens_df, tweens_df$.frame)
 }
