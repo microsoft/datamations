@@ -2,92 +2,88 @@
 #' inferring the response variable to keep interface clean???
 #'
 #' @param .data
-#' @param response_var class name???
-#' @param xlim
-#' @param ylim
 #' @importFrom stringr str_replace
 #' @importFrom ggplot2 scale_x_continuous
 #' @export
-plot_grouped_dataframe_withresponse_sanddance <- function(
-                                                          .data, response_var, xlim = NULL, ylim = NULL,
-                                                          mapping = NULL, var_levels = NULL, in_flight = TRUE, show_y_axis = FALSE, title = "") {
+plot_grouped_dataframe_withresponse_sanddance <- function(.data, xlim = NULL, ylim = NULL, mapping = NULL, title = "") {
 
+  # Check which mapping variables are present in the data
+  colour_var_chr <- rlang::quo_name(mapping[["colour"]])
+  shape_var_chr <- rlang::quo_name(mapping[["shape"]])
 
-  # recover chr or factor types
-  # if (! is.null(var_levels)) {
-  #   .data <- .data %>%
-  #     left_join(var_levels %>% select(group, x), by = "group") %>%
-  #     select(-c(x.x)) %>%
-  #     mutate(x = x.y)
-  # }
+  plot_mapping <- dplyr::case_when(
+    !colour_var_chr %in% names(.data) & !shape_var_chr %in% names(.data) ~ "none",
+    colour_var_chr %in% names(.data) & !shape_var_chr %in% names(.data) ~ "color",
+    colour_var_chr %in% names(.data) & shape_var_chr %in% names(.data) ~ "color, shape"
+  )
 
-  # recover the color column
-  if (!is.null(var_levels)) {
-    class(.data$x) <- c("mapped_discrete", "numeric")
+  # Plot according to mapping variables
 
-    .data <- .data %>%
-      separate(
-        .data$group,
-        into = str_split(mapping$group, "_")[[1]],
-        remove = FALSE
-      )
+  if (plot_mapping == "none") {
+    browser()
+  } else if (plot_mapping == "color") {
+    p <- ggplot(.data) +
+      geom_quasirandom(aes(x = x, y = y, color = !!mapping[["colour"]]))
+  } else if (plot_mapping == "color, shape") {
+    p <- ggplot(.data) +
+      geom_quasirandom(aes(.data$x, .data$y, colour = !!mapping[["colour"]], shape = !!mapping[["shape"]])) +
+      ggplot2::guides(colour = ggplot2::guide_legend(order = 1), shape = ggplot2::guide_legend(order = 2))
   }
 
+  p +
+    theme(
+      panel.background = element_rect(fill = "white", colour = "grey50"),
+      legend.key = element_rect(fill = "white"),
+      legend.position = "bottom"
+    ) +
+    coord_cartesian(xlim = xlim, ylim = ylim)
 
-
-
-  group_var <- attributes(.data)$groups %>%
-    names() %>%
-    first() # chr,
-
-
-  color_var <- sym(mapping$colour)
-
-  # recover x labels
-  group_levels <- group_keys(.data) %>%
-    pull(.data$group) %>%
-    str_replace("_", " in\n") # natural langage, not masters_industry
-
-  breaks <- 1:length(group_levels)
-
-
-  p <- NULL
-
-  if (!is.null(group_var)) {
-    if (!in_flight) { # show the axes
-      p <- ggplot(.data) +
-        geom_point(aes(x = .data$x, y = .data$y, color = !!color_var)) +
-        coord_cartesian(xlim = xlim, ylim = ylim) +
-        theme(
-          panel.background = element_rect(fill = "white", colour = "grey50"),
-          legend.key = element_rect(fill = "white"),
-          legend.position = "bottom"
-        ) +
-        labs(
-          title = title,
-          x = str_replace(`$`(mapping, x), "_", " and "),
-          y = `$`(mapping, y),
-          color = `$`(mapping, colour)
-        ) +
-        scale_x_continuous(labels = group_levels, breaks = breaks) +
-        scale_y_continuous(labels = label_dollar(prefix = "$", suffix = "k"))
-    } else { # hide axes
-      p <- ggplot(.data) +
-        geom_point(aes(x = .data$x, y = .data$y, color = !!color_var)) +
-        coord_cartesian(xlim = xlim, ylim = ylim) +
-        labs(
-          title = .data$tile,
-          x = str_replace(`$`(mapping, x), "_", " and "),
-          y = `$`(mapping, y),
-          color = `$`(mapping, colour)
-        ) +
-        theme_inflight(show_y_axis) +
-        scale_x_continuous(labels = group_levels, breaks = breaks) +
-        scale_y_continuous(labels = label_dollar(prefix = "$", suffix = "k"))
-    }
-
-    p
-  } else {
-    stop("no group var found")
-  }
 }
+
+
+
+
+
+
+#' plot a dataframe with grouping, but instead of icon array, do a jittered plot
+#' inferring the response variable to keep interface clean???
+#'
+#' @param .data
+#' @importFrom stringr str_replace
+#' @importFrom ggplot2 scale_x_continuous
+#' @export
+plot_grouped_dataframe_withresponse_sanddance_point <- function(.data, xlim = NULL, ylim = NULL, mapping = NULL, title = "") {
+
+  # Check which mapping variables are present in the data
+  colour_var_chr <- rlang::quo_name(mapping[["colour"]])
+  shape_var_chr <- rlang::quo_name(mapping[["shape"]])
+
+  plot_mapping <- dplyr::case_when(
+    !colour_var_chr %in% names(.data) & !shape_var_chr %in% names(.data) ~ "none",
+    colour_var_chr %in% names(.data) & !shape_var_chr %in% names(.data) ~ "color",
+    colour_var_chr %in% names(.data) & shape_var_chr %in% names(.data) ~ "color, shape"
+  )
+
+  # Plot according to mapping variables
+
+  if (plot_mapping == "none") {
+    browser()
+  } else if (plot_mapping == "color") {
+    p <- ggplot(.data) +
+      geom_point(aes(x = x, y = y, color = !!mapping[["colour"]]))
+  } else if (plot_mapping == "color, shape") {
+    p <- ggplot(.data) +
+      geom_point(aes(.data$x, .data$y, colour = !!mapping[["colour"]], shape = !!mapping[["shape"]])) +
+      ggplot2::guides(colour = ggplot2::guide_legend(order = 1), shape = ggplot2::guide_legend(order = 2))
+  }
+
+  p +
+    theme(
+      panel.background = element_rect(fill = "white", colour = "grey50"),
+      legend.key = element_rect(fill = "white"),
+      legend.position = "bottom"
+    ) +
+    coord_cartesian(xlim = xlim, ylim = ylim)
+
+}
+

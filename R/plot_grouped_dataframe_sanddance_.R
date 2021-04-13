@@ -13,7 +13,7 @@ plot_grouped_dataframe_sanddance <- function(coords, xlim = NULL, ylim = NULL, i
   # Return a plot immediately if there is no mapping - this is just used to get the axis limits at the beginning
   if (is.null(mapping)) {
     p <- ggplot(coords) +
-      geom_point(aes(.data$x, .data$y), color = "grey") +
+      geom_point(aes(.data$x, .data$y)) +
       modded_waffle_theme
 
     return(p)
