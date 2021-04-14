@@ -27,6 +27,8 @@ plot_grouped_dataframe_withresponse_sanddance <- function(.data, xlim = NULL, yl
   } else if (plot_mapping == "color, shape") {
     p <- ggplot(.data) +
       geom_quasirandom(aes(.data$x, .data$y, colour = !!mapping[["colour"]], shape = !!mapping[["shape"]])) +
+      # TODO: Can't handle more than 6 secondary grouping variables when doing this - might come up eventually :)
+      ggplot2::scale_shape_manual(values = c(19, 1, 15, 0, 17, 2)) +
       ggplot2::guides(colour = ggplot2::guide_legend(order = 1), shape = ggplot2::guide_legend(order = 2))
   }
 
@@ -74,6 +76,8 @@ plot_grouped_dataframe_withresponse_sanddance_point <- function(.data, xlim = NU
   } else if (plot_mapping == "color, shape") {
     p <- ggplot(.data) +
       geom_point(aes(.data$x, .data$y, colour = !!mapping[["colour"]], shape = !!mapping[["shape"]])) +
+      # TODO: Can't handle more than 6 secondary grouping variables when doing this - might come up eventually :)
+      ggplot2::scale_shape_manual(values = c(19, 1, 15, 0, 17, 2)) +
       ggplot2::guides(colour = ggplot2::guide_legend(order = 1), shape = ggplot2::guide_legend(order = 2))
   }
 

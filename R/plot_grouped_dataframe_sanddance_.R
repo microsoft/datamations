@@ -40,6 +40,8 @@ plot_grouped_dataframe_sanddance <- function(coords, xlim = NULL, ylim = NULL, i
   } else if (plot_mapping == "color, shape") {
     p <- ggplot(coords) +
       geom_point(aes(.data$x, .data$y, colour = !!mapping[["colour"]], shape = !!mapping[["shape"]])) +
+      # TODO: Can't handle more than 6 secondary grouping variables when doing this - might come up eventually :)
+      ggplot2::scale_shape_manual(values = c(19, 1, 15, 0, 17, 2)) +
       ggplot2::guides(colour = ggplot2::guide_legend(order = 1), shape = ggplot2::guide_legend(order = 2))
   }
 

@@ -89,14 +89,14 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
   # State 2: Scatter plot, coloured (and shaped)
 
   coords_stage2 <- .data %>%
+    ungroup() %>%
     select(x = {{ group_vars_combined }}, y = {{ response_var }}) %>%
     mutate(group = x) %>%
     separate(group,
       into = group_vars_chr,
       sep = "___",
       remove = FALSE
-    ) %>%
-    ungroup()
+    )
 
   coords_list[[2]] <- coords_stage2 %>%
     mutate(.data_stage = "two")
@@ -106,7 +106,7 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
   # None should disappear, otherwise makes tweening messy
 
   # TODO: manually computing the mean, but need to take whatever the operation actually is
-  # Possible to pass the finak state of data?
+  # Possible to pass the final state of data?
 
   coords_stage3 <- coords_stage2 %>%
     group_by(group) %>%
