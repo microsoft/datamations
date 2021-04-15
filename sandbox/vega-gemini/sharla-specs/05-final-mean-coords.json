@@ -1,0 +1,644 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "values": [
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "Masters",
+        "Degree": "Masters",
+        "y": 90.2263340061763,
+        "x": 1
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      },
+      {
+        "group": "PhD",
+        "Degree": "PhD",
+        "y": 88.2456061263219,
+        "x": 2
+      }
+    ]
+  },
+  "mark": "point",
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "scale": {
+        "type": "linear",
+        "domain": [0.5, 2.5]
+      },
+      "axis": {
+        "grid": false,
+        "domainOpacity": 1,
+        "tickOpacity": 1,
+        "labelOpacity": 1,
+        "titleOpacity": 0
+      }
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "type": "linear",
+        "domain": [75, 100]
+      },
+      "axis": {
+        "grid": false,
+        "domainOpacity": 1,
+        "tickOpacity": 1,
+        "labelOpacity": 1,
+        "titleOpacity": 0
+      }
+    },
+    "color": {
+      "field": "group",
+      "type": "nominal"
+    }
+  }
+}

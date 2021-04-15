@@ -11,7 +11,7 @@
     <div>
       <button onclick="play()">Animate</button>
     </div>
-    <div id="view"></div>
+    <div id="view" style="width: 100%; height: 300px;"></div>
 
     <script>
       const salary = [
@@ -97,8 +97,8 @@
       const specInter = gemini.vl2vg4gemini({
         $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
         description: '',
-        width: 500,
-        height: 250,
+        width: "container",
+        height: "container",
         data: {
           values: intData
         },
@@ -167,7 +167,7 @@
         return {
           $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
           description: '',
-          width: 500,
+          width: "container",
           height: 250,
           data: {
             values: data
