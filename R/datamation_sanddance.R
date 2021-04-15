@@ -47,6 +47,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
   saveGIF(
     {
       for (i in 2:length(fittings)) {
+
         # Starts with data in the previous stage
         data <- data_states[[i - 1]]
         verb <- tidy_func_arg[[i]][[1]]
@@ -54,8 +55,8 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
         call_verb <-
           switch(verb,
             group_by = animate_group_by_sanddance,
-            summarise = animate_summarize_mean_sanddance,
-            summarize = animate_summarize_mean_sanddance
+            summarise = animate_summarize_sanddance,
+            summarize = animate_summarize_sanddance
           )
 
         args <-
@@ -69,8 +70,8 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
           switch(verb,
             group_by = rlang::parse_exprs(args),
             # TODO: What if calculation in summarise is unnamed? What if there's more than one calculation? Check these cases
-            summarise = parse_expr(args)[[-1]],
-            summarize = parse_expr(args)[[-1]]
+            summarise = rlang::parse_exprs(args),
+            summarize = rlang::parse_exprs(args)
           )
 
         caption <-

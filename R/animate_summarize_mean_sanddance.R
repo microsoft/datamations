@@ -1,5 +1,5 @@
 #' @param .data
-#' @param response_var quoted
+#' @param summary_operation quoted
 #' @param nframes number of frames per animation "stage"
 #' @param output returns the first step, the second step, or both
 #' @importFrom tweenr keep_state tween_state
@@ -12,7 +12,7 @@
 #' @importFrom stats setNames
 #' @importFrom tidyr separate
 #' @export
-animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, output = "both", titles = "") {
+animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, output = "both", titles = "") {
 
   # START: same as animate_group_by_sanddance
 
@@ -63,6 +63,16 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
 
   # END: same as animate_group_by_sanddance()
 
+  summary_function <- summary_operation %>%
+    purrr::pluck(1) %>%
+    as.list() %>%
+    dplyr::nth(1)
+
+  summary_variable <- summary_operation %>%
+    purrr::pluck(1) %>%
+    as.list() %>%
+    dplyr::nth(2)
+
   # Create data for stages
 
   coords_list <- vector("list", length = 3)
@@ -90,7 +100,7 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
 
   coords_stage2 <- .data %>%
     ungroup() %>%
-    select(x = {{ group_vars_combined }}, y = {{ response_var }}) %>%
+    select(x = {{ group_vars_combined }}, y = {{ summary_variable }}) %>%
     mutate(group = x) %>%
     separate(group,
       into = group_vars_chr,
@@ -105,12 +115,9 @@ animate_summarize_mean_sanddance <- function(.data, response_var, nframes = 5, o
   # There should still be a point for each datapoint, just all overlapping
   # None should disappear, otherwise makes tweening messy
 
-  # TODO: manually computing the mean, but need to take whatever the operation actually is
-  # Possible to pass the final state of data?
-
   coords_stage3 <- coords_stage2 %>%
     group_by(group) %>%
-    dplyr::summarise(y = mean(y),
+    dplyr::summarise(across(y, !!summary_function),
                      .group_count = n()) %>%
     mutate(x = group) %>%
     separate(group,
