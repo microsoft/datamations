@@ -2,7 +2,8 @@
 % Please edit documentation in R/animate_group_by_sanddance.R
 \name{aes_d}
 \alias{aes_d}
-\title{Aesthetic mappings for datasets}
+\title{Aesthetic mappings for datasets
+Some sourcing, but not exact: https://github.com/liamgilbey/ggwaffle/blob/master/R/aes_d.R}
 \usage{
 aes_d(...)
 }

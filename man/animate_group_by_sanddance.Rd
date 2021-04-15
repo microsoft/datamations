@@ -13,9 +13,15 @@ animate_group_by_sanddance(
 )
 }
 \arguments{
-\item{.data}{the grouped dataframe TODO: or coords??????}
+\item{.data}{grouped dataframe}
 
-\item{...}{the grouping variables}
+\item{...}{grouping variables}
+
+\item{nframes}{number of frames per animation stage}
+
+\item{is_last}{flag for whether this is the last stage of the pipeline. Defaults to \code{FALSE}}
+
+\item{titles}{titles for animation stage}
 }
 \value{
 ggplot object
