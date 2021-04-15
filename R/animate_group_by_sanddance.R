@@ -44,7 +44,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   # The original variables are kept as well
   .data <- .data %>%
     mutate(.self = "id") %>%
-    unite({{group_vars_combined}}, group_vars_chr, sep = "___", remove = FALSE)
+    unite({{ group_vars_combined }}, group_vars_chr, sep = "___", remove = FALSE)
 
   # Pull levels of combined grouping variable and set them
   fct_lvls <- .data %>%
@@ -53,7 +53,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     unique()
 
   .data <- .data %>%
-    mutate({{group_vars_combined}} := factor({{ group_vars_combined }}, levels = fct_lvls)) %>%
+    mutate({{ group_vars_combined }} := factor({{ group_vars_combined }}, levels = fct_lvls)) %>%
     arrange({{ group_vars_combined }})
 
   # Map group and colour aesthetics
@@ -72,7 +72,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   # State 2: Coloured, ungrouped icon array
   # Keep the position (so use the same coords), but add a variable for the colour
   data_colour_order <- .data %>%
-    arrange({{color_var}})
+    arrange({{ color_var }})
 
   coords_stage2 <- coords_stage1 %>%
     mutate({{ color_var }} := data_colour_order[[color_var]])
@@ -87,43 +87,46 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 
   coords_list[[3]] <- coords_stage3 %>%
     mutate({{ color_var }} := group,
-      .data_stage = 3)
+      .data_stage = 3
+    )
 
   # States 4 and 5 only relevant if there are two grouping variables
 
   if (n_groups == 2) {
 
-  # State 4: Coloured, shaped ungrouped icon array
-  # Keep the current position, but add a variable for the shape
-  data_color_shape_order <- .data %>%
-    arrange({{ color_var }}, {{ shape_var }})
+    # State 4: Coloured, shaped ungrouped icon array
+    # Keep the current position, but add a variable for the shape
+    data_color_shape_order <- .data %>%
+      arrange({{ color_var }}, {{ shape_var }})
 
-  coords_stage4 <- coords_stage3 %>%
-    mutate({{ color_var }} := data_color_shape_order[[color_var]],
-           {{ shape_var }} := data_color_shape_order[[shape_var]])
+    coords_stage4 <- coords_stage3 %>%
+      mutate(
+        {{ color_var }} := data_color_shape_order[[color_var]],
+        {{ shape_var }} := data_color_shape_order[[shape_var]]
+      )
 
-  coords_list[[4]] <- coords_stage4 %>%
-    mutate(.data_stage = 4)
+    coords_list[[4]] <- coords_stage4 %>%
+      mutate(.data_stage = 4)
 
-  # State 5: Coloured, shaped grouped icon array
-  coords_stage5 <- .data %>%
-    waffle_iron_groups(
-      aes_d(group = {{group_vars_combined}}, x = {{group_vars_combined}})
+    # State 5: Coloured, shaped grouped icon array
+    coords_stage5 <- .data %>%
+      waffle_iron_groups(
+        aes_d(group = {{ group_vars_combined }}, x = {{ group_vars_combined }})
       ) %>%
-    separate(group,
-             into = c(rlang::as_name(color_var), rlang::as_name(shape_var)),
-             sep = "___",
-             remove = FALSE)
+      separate(group,
+        into = c(rlang::as_name(color_var), rlang::as_name(shape_var)),
+        sep = "___",
+        remove = FALSE
+      )
 
-  coords_list[[5]] <- coords_stage5 %>%
-    mutate(.data_stage = 5)
-
+    coords_list[[5]] <- coords_stage5 %>%
+      mutate(.data_stage = 5)
   }
 
   # Set up the states to tween between - must all have the same columns, so only keep the ones relevant for positioning - the ones for mapping are grabbed again when each frame is generated
   data_tween_states <- coords_list %>%
     map(~ select(.x, y, x, group, width, offset, .data_stage) %>%
-          mutate(group = as.character(group)))
+      mutate(group = as.character(group)))
 
   # Tween between the data states, with nframes as each transition, then split by frame
   tweens_data_list <- generate_group_by_tween_list(data_tween_states, nframes)
@@ -166,7 +169,6 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   walk(
     1:(total_nframes),
     function(i) {
-
       df <- tweens_data_list[[i]]
 
       # Add mapping information to data
@@ -211,7 +213,6 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 #' @param mapping includes group and x, z.B.
 #' @return dataframe with x, y, plus optional aesthetics columns
 waffle_iron_groups <- function(data, mapping, rows = 7, sample_size = 1, na.rm = T) {
-
   if (!(sample_size > 0 & sample_size <= 1)) {
     stop("Please use a sample value between 0 and 1", call. = F)
   }
@@ -339,9 +340,7 @@ aes_d <- function(...) {
 }
 
 generate_group_by_tween_list <- function(states, nframes) {
-
-  for(i in 1:length(states)) {
-
+  for (i in 1:length(states)) {
     if (i == 1) {
       tweens_df <- states[[i]] %>%
         keep_state(nframes) %>%
@@ -354,7 +353,6 @@ generate_group_by_tween_list <- function(states, nframes) {
       tweens_df <- tweens_df %>%
         keep_state(nframes)
     }
-
   }
 
   split(tweens_df, tweens_df$.frame)

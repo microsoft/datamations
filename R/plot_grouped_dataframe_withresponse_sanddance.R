@@ -20,7 +20,8 @@ plot_grouped_dataframe_withresponse_sanddance <- function(.data, xlim = NULL, yl
   # Plot according to mapping variables
 
   if (plot_mapping == "none") {
-    browser()
+    p <- ggplot(.data) +
+      geom_quasirandom(aes(x = x, y = y))
   } else if (plot_mapping == "color") {
     p <- ggplot(.data) +
       geom_quasirandom(aes(x = x, y = y, color = !!mapping[["colour"]]))
@@ -41,11 +42,6 @@ plot_grouped_dataframe_withresponse_sanddance <- function(.data, xlim = NULL, yl
     coord_cartesian(xlim = xlim, ylim = ylim)
 
 }
-
-
-
-
-
 
 #' plot a dataframe with grouping, but instead of icon array, do a jittered plot
 #' inferring the response variable to keep interface clean???
@@ -69,7 +65,8 @@ plot_grouped_dataframe_withresponse_sanddance_point <- function(.data, xlim = NU
   # Plot according to mapping variables
 
   if (plot_mapping == "none") {
-    browser()
+    p <- ggplot(.data) +
+      geom_point(aes(x = x, y = y))
   } else if (plot_mapping == "color") {
     p <- ggplot(.data) +
       geom_point(aes(x = x, y = y, color = !!mapping[["colour"]]))

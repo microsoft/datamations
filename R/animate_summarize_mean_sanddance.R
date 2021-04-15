@@ -26,8 +26,17 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
   # And the second for the shape
   shape_var <- dplyr::nth(group_vars, n = 2)
 
-  # Convert grouping variables to character
-  group_vars_chr <- map_chr(group_vars, rlang::quo_name)
+  # If there's no grouping variable, add one ".self" and the rest of the operations work on that :)
+  if (n_groups == 0) {
+    group_vars_chr <- ".self"
+
+    .data <- .data %>%
+      mutate(.self = "id")
+  } else {
+    # Convert grouping variables to character
+    group_vars_chr <- map_chr(group_vars, rlang::quo_name)
+  }
+
   # Collapse the variables into a single one - not using just "_" because variable names themselves could contain "_" - I figure ___ should be safe, and it's what tidytext uses for something similar: https://github.com/juliasilge/tidytext/blob/master/R/reorder_within.R
   group_vars_combined_chr <- paste(group_vars_chr, collapse = "___")
   group_vars_combined <- sym(group_vars_combined_chr)
@@ -45,7 +54,6 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
   # If there's only only grouping variable, then it will be preserved
   # The original variables are kept as well
   .data <- .data %>%
-    mutate(.self = "id") %>%
     unite({{ group_vars_combined }}, group_vars_chr, sep = "___", remove = FALSE)
 
   # Pull levels of combined grouping variable and set them
@@ -136,11 +144,14 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
     map(~ select(.x, y, x, group, .data_stage) %>%
       mutate(
         group = as.character(group),
-        x = as.character(x)
+        x = as.character(x) # TODO: This is what's making the group_by part of the summary plot all messed up!
+        # How can we handle tweening between the numeric placement of the infogrid and the categorical placement of the final viz?
       ))
 
   # Tween between the data states, with nframes as each transition, then split by frame
   tweens_data_list <- generate_summarise_tween_list(data_tween_states, nframes)
+
+  browser()
 
   # Generate plots of each stage to grab limits for tweening
   p_init <- plot_grouped_dataframe_sanddance(coords_list[[1]])
@@ -204,6 +215,8 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
 
   walk(
     1:(total_nframes), function(i) {
+
+      browser()
 
       df <- tweens_data_list[[i]]
 
