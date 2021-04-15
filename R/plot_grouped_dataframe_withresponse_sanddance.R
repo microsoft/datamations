@@ -7,6 +7,14 @@
 #' @export
 plot_grouped_dataframe_withresponse_sanddance <- function(.data, xlim = NULL, ylim = NULL, mapping = NULL, title = "") {
 
+  # Return a plot immediately if there is no mapping - this is just used to get the axis limits at the beginning
+  if (is.null(mapping)) {
+    p <- ggplot(.data) +
+      geom_quasirandom(aes(.data$x, .data$y))
+
+    return(p)
+  }
+
   # Check which mapping variables are present in the data
   colour_var_chr <- rlang::quo_name(mapping[["colour"]])
   shape_var_chr <- rlang::quo_name(mapping[["shape"]])
@@ -33,7 +41,15 @@ plot_grouped_dataframe_withresponse_sanddance <- function(.data, xlim = NULL, yl
       ggplot2::guides(colour = ggplot2::guide_legend(order = 1), shape = ggplot2::guide_legend(order = 2))
   }
 
+  # Convert numeric scales to categorical, using actually groups
+  x_breaks <- .data %>%
+    group_by(group) %>%
+    summarize(max_x = max(x),
+              min_x = min(x),
+              mid_x = min_x + (max_x - min_x) / 2)
+
   p +
+    scale_x_continuous(breaks = x_breaks[["mid_x"]], labels = x_breaks[["group"]]) +
     theme(
       panel.background = element_rect(fill = "white", colour = "grey50"),
       legend.key = element_rect(fill = "white"),
@@ -78,7 +94,17 @@ plot_grouped_dataframe_withresponse_sanddance_point <- function(.data, xlim = NU
       ggplot2::guides(colour = ggplot2::guide_legend(order = 1), shape = ggplot2::guide_legend(order = 2))
   }
 
+  # Convert numeric scales to categorical, using actually groups
+  x_breaks <- .data[["group"]] %>%
+    unique() %>%
+    as.factor() %>%
+    as.numeric()
+
+  x_labels <- .data[["group"]] %>%
+    unique()
+
   p +
+    scale_x_continuous(breaks = x_breaks, labels = x_labels) +
     theme(
       panel.background = element_rect(fill = "white", colour = "grey50"),
       legend.key = element_rect(fill = "white"),

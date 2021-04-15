@@ -109,7 +109,10 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
   coords_stage2 <- .data %>%
     ungroup() %>%
     select(x = {{ group_vars_combined }}, y = {{ summary_variable }}) %>%
-    mutate(group = x) %>%
+    mutate(group = x,
+           # Convert x to a numeric variable for tweening - labels will be manually added in the plotting step
+           x = as.factor(x),
+           x = as.numeric(x)) %>%
     separate(group,
       into = group_vars_chr,
       sep = "___",
@@ -127,7 +130,10 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
     group_by(group) %>%
     dplyr::summarise(across(y, !!summary_function),
                      .group_count = n()) %>%
-    mutate(x = group) %>%
+    mutate(x = group,
+           # Convert x to a numeric variable for tweening - labels will be manually added in the plotting step
+           x = as.factor(x),
+           x = as.numeric(x)) %>%
     separate(group,
       into = group_vars_chr,
       sep = "___",
@@ -143,15 +149,13 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
   data_tween_states <- coords_list %>%
     map(~ select(.x, y, x, group, .data_stage) %>%
       mutate(
-        group = as.character(group),
-        x = as.character(x) # TODO: This is what's making the group_by part of the summary plot all messed up!
-        # How can we handle tweening between the numeric placement of the infogrid and the categorical placement of the final viz?
-      ))
+        group = as.character(group)
+      ) %>%
+        as.data.frame()
+    )
 
   # Tween between the data states, with nframes as each transition, then split by frame
   tweens_data_list <- generate_summarise_tween_list(data_tween_states, nframes)
-
-  browser()
 
   # Generate plots of each stage to grab limits for tweening
   p_init <- plot_grouped_dataframe_sanddance(coords_list[[1]])
@@ -161,27 +165,17 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
   xlim_init <- lims_init[["xlim"]]
   ylim_init <- lims_init[["ylim"]]
 
-  # Intermediate - generate a beeswarm plot, then grab the actual x and y values from there (since we have to tween between numeric x values, and e.g. "Masters" and "PhD" are not that!)
+  # Intermediate
 
-  p_intermediate <- ggplot(coords_list[[2]]) +
-    geom_quasirandom(aes(x, y))
+  p_intermediate <- plot_grouped_dataframe_withresponse_sanddance(coords_list[[2]])
 
-  # Get x position from quasirandom plot and replace what's in the coordinate plot
-  p_intermediate_data <- layer_data(p_intermediate)
-  coords_list[[2]][["x"]] <- p_intermediate_data[["x"]]
-  class(coords_list[[2]][["x"]]) <- c("numeric")
-  coords_list[[2]][["y"]] <- p_intermediate_data[["y"]]
-
-  xlim_intermediate <- layer_scales(p_intermediate)$x$range_c$range
-  xlim_intermediate <- adjust_scale(xlim_intermediate)
-
+  xlim_intermediate <- layer_scales(p_intermediate)$x$range$range
   ylim_intermediate <- layer_scales(p_intermediate)$y$range$range
 
   # Final
 
   p_final <- plot_grouped_dataframe_sanddance(coords_list[[3]])
-
-  xlim_final <- layer_scales(p_final)$x$range_c$range
+  xlim_final <- layer_scales(p_final)$x$range$range
   ylim_final <- layer_scales(p_final)$y$range$range
 
   # Set up the limits into groups to tween between
@@ -215,8 +209,6 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
 
   walk(
     1:(total_nframes), function(i) {
-
-      browser()
 
       df <- tweens_data_list[[i]]
 
