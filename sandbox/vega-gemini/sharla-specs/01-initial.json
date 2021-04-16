@@ -914,13 +914,7 @@
         "type": "linear",
         "domain": [-0.5, 17]
       },
-      "axis": {
-        "grid": false,
-        "domainOpacity": 0,
-        "tickOpacity": 0,
-        "labelOpacity": 0,
-        "titleOpacity": 0
-      }
+      "axis": null
     },
     "y": {
       "field": "y",
@@ -928,13 +922,7 @@
         "type": "linear",
         "domain": [0, 8]
       },
-      "axis": {
-        "grid": false,
-        "domainOpacity": 0,
-        "tickOpacity": 0,
-        "labelOpacity": 0,
-        "titleOpacity": 0
-      }
+      "axis": null
     }
   }
 }

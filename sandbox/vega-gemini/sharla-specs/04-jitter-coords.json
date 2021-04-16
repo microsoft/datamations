@@ -3,600 +3,700 @@
   "data": {
     "values": [
       {
+        "id": 1,
         "x": 1,
         "y": 81.9445013836958,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 2,
         "x": 0.972357823063869,
         "y": 82.8953005648218,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 3,
         "x": 0.974211987218453,
         "y": 83.2656172472052,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 4,
         "x": 1.02773565343185,
         "y": 82.899547266541,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 5,
         "x": 0.859510972880138,
         "y": 90.1877911367919,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 6,
         "x": 0.911556555838846,
         "y": 90.3138903337531,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 7,
         "x": 1.11935425919328,
         "y": 90.3365755749401,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 8,
         "x": 1.03639287249952,
         "y": 89.6885157823563,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 9,
         "x": 0.94039380733111,
         "y": 89.657391943736,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 10,
         "x": 0.988482509852563,
         "y": 89.8103184474166,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 11,
         "x": 1.11693988689543,
         "y": 90.1445505130105,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 12,
         "x": 1.01118388127637,
         "y": 90.2597002927214,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 13,
         "x": 1.05294005357275,
         "y": 89.5807276440319,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 14,
         "x": 1.03137063510959,
         "y": 91.4775695463177,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 15,
         "x": 1.09314714597327,
         "y": 90.5421400056221,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 16,
         "x": 1.01005276989288,
         "y": 90.9508253019303,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 17,
         "x": 0.986023996142661,
         "y": 84.3256172758993,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 18,
         "x": 0.980605832916659,
         "y": 90.7608228451572,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 19,
         "x": 0.862670259252855,
         "y": 91.2149588565808,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 20,
         "x": 0.864674541180457,
         "y": 91.4811559985392,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 21,
         "x": 1.06229507983659,
         "y": 91.203505871119,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 22,
         "x": 1.01127842756888,
         "y": 84.1406831252389,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 23,
         "x": 1.2912079970795,
         "y": 90.900099467719,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 24,
         "x": 1.15575575770321,
         "y": 91.3447520111222,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 25,
         "x": 1.05881829032578,
         "y": 90.6169246234931,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 26,
         "x": 0.666047372432968,
         "y": 91.1798533124384,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 27,
         "x": 0.762699560525843,
         "y": 91.2493746823166,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 28,
         "x": 1.32958488427099,
         "y": 91.4049337708857,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 29,
         "x": 0.72645148991523,
         "y": 91.1165353488177,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 30,
         "x": 1.20053317823073,
         "y": 91.1068642993923,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 31,
         "x": 1.21755665095303,
         "y": 90.6704280367121,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 32,
         "x": 0.693807534473643,
         "y": 91.4698466714472,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 33,
         "x": 0.831365769211906,
         "y": 91.0579056167044,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 34,
         "x": 0.69030751430574,
         "y": 90.9434416298755,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 35,
         "x": 1.30847204653488,
         "y": 91.1740557027515,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 36,
         "x": 1.26248409088762,
         "y": 91.2401522365399,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 37,
         "x": 0.804650184939448,
         "y": 90.5011388328858,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 38,
         "x": 0.944119725951634,
         "y": 85.3303201349918,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 39,
         "x": 0.746489047888219,
         "y": 90.6040293425322,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 40,
         "x": 0.974298546374114,
         "y": 85.4951418309938,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 41,
         "x": 0.965751496240696,
         "y": 91.4005046924576,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 42,
         "x": 1.10950326749017,
         "y": 91.1476999609731,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 43,
         "x": 0.822743906677961,
         "y": 90.7045878821518,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 44,
         "x": 0.901900029397576,
         "y": 90.6188371984754,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 45,
         "x": 0.943017256871211,
         "y": 90.5633510330226,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 46,
         "x": 1.25280429980243,
         "y": 90.5981954357121,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 47,
         "x": 0.913779916976925,
         "y": 91.1700340267271,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 48,
         "x": 1.13631617115122,
         "y": 90.7472879537381,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 49,
         "x": 1.14038018167485,
         "y": 92.0161147855688,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 50,
         "x": 1.1451713843998,
         "y": 92.2819435379934,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 51,
         "x": 1.18796469896406,
         "y": 91.5201518230606,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 52,
         "x": 0.856664474686987,
         "y": 92.2406232669018,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 53,
         "x": 1.0320689198417,
         "y": 84.5408536496107,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 54,
         "x": 1.0959331172583,
         "y": 91.6161431246437,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 55,
         "x": 0.990491291354969,
         "y": 92.0414693744387,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 56,
         "x": 0.79634496411675,
         "y": 92.2921498068608,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 57,
         "x": 0.959707444544091,
         "y": 91.6981512298808,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 58,
         "x": 1.05914840840186,
         "y": 91.8960476492066,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 59,
         "x": 1.15766594463641,
         "y": 92.4187721665949,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 60,
         "x": 0.792215492610019,
         "y": 91.8766731780488,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 61,
         "x": 0.945967503314838,
         "y": 92.3804325407837,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 62,
         "x": 0.695294802777849,
         "y": 92.1729675922543,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 63,
         "x": 1.30160928157621,
         "y": 92.1522822889965,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 64,
         "x": 1.00887895268021,
         "y": 85.4612494898029,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 65,
         "x": 1.00478938823453,
         "y": 92.1945560907479,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 66,
         "x": 0.803025353221238,
         "y": 91.5597189620603,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 67,
         "x": 1.21147513213367,
         "y": 91.992212592857,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 68,
         "x": 0.852172992849604,
         "y": 92.4685412924737,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 69,
         "x": 0.917440408617976,
         "y": 91.9892992568202,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 70,
         "x": 0.843271164480434,
         "y": 91.9956347632688,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 71,
         "x": 1.07170970159606,
         "y": 92.3084856946953,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 72,
         "x": 1.21326458500844,
         "y": 91.7435715948232,
         "group": "Masters",
         "Degree": "Masters"
       },
       {
+        "id": 73,
         "x": 2.1495318688689,
         "y": 84.4868333523627,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 74,
         "x": 1.90681864110085,
         "y": 83.8469139884692,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 75,
         "x": 2,
         "y": 83.7531382157467,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 76,
         "x": 1.65600170669136,
         "y": 85.2683244312648,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 77,
         "x": 2.04785651508068,
         "y": 91.4052118111867,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 78,
         "x": 2.04950860666527,
         "y": 85.3309176496696,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 79,
         "x": 1.8646515031882,
         "y": 92.3489408034366,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 80,
         "x": 1.7458505487677,
         "y": 84.7384647994768,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 81,
         "x": 2.09312148691859,
         "y": 85.0068552203011,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 82,
         "x": 2.28981327844206,
         "y": 85.1630066898651,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 83,
         "x": 1.85085494199151,
         "y": 85.3773716066498,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 84,
         "x": 1.90503901465733,
         "y": 85.0828845105134,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 85,
         "x": 2.14003489913454,
         "y": 86.0538539250847,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 86,
         "x": 1.77971885011554,
         "y": 93.1602621641941,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 87,
         "x": 2.2409644519238,
         "y": 85.9106459924951,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 88,
         "x": 2.05046641151401,
         "y": 93.4098555028904,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 89,
         "x": 1.76582703894016,
         "y": 86.0406335154548,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 90,
         "x": 1.94980551639612,
         "y": 93.0570627038833,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 91,
         "x": 2.28509671966351,
         "y": 86.4447282091714,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 92,
         "x": 2.07605629753874,
         "y": 92.7338204937987,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 93,
         "x": 1.9579254126099,
         "y": 86.3678887020797,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 94,
         "x": 2.0141947001319,
         "y": 87.049029128626,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 95,
         "x": 2.22027829479345,
         "y": 93.1600916916505,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 96,
         "x": 1.72886060168454,
         "y": 86.6827135430649,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 97,
         "x": 1.92236044964819,
         "y": 93.7030599385034,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 98,
         "x": 1.92963005953781,
         "y": 87.4391794742551,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 99,
         "x": 2.16060663609996,
         "y": 93.833772216225,
         "group": "PhD",
         "Degree": "PhD"
       },
       {
+        "id": 100,
         "x": 1.88311817473521,
         "y": 94.0215112566948,
         "group": "PhD",
@@ -615,13 +715,7 @@
         "type": "linear",
         "domain": [0.5, 2.5]
       },
-      "axis": {
-        "grid": false,
-        "domainOpacity": 1,
-        "tickOpacity": 1,
-        "labelOpacity": 1,
-        "titleOpacity": 1
-      }
+      "axis": null
     },
     "y": {
       "field": "y",
@@ -631,11 +725,12 @@
         "domain": [75, 100]
       },
       "axis": {
+        "title": null,
         "grid": false,
         "domainOpacity": 1,
         "tickOpacity": 1,
         "labelOpacity": 1,
-        "titleOpacity": 1
+        "titleOpacity": 0
       }
     },
     "color": {
