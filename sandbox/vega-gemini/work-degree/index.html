@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="../gemini.web.js"></script>
     <title>Plot-Degree-Workplace</title>
@@ -53,6 +54,10 @@
       .current-frame {
         white-space: nowrap;
         padding-left: 20px;
+      }
+
+      #chart_view * {
+        pointer-events: none !important;
       }
     </style>
   </head>
