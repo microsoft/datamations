@@ -98,7 +98,7 @@
       function loadData() {
         return Promise.all(
           specFiles.map((d) => {
-            return d3.json("./specs/" + d);
+            return d3.json("https://raw.githubusercontent.com/jhofman/datamations/vegawidget-exploration/sandbox/vegawidget/work_degree/specs/" + d);
           })
         )
           .then((files) => {
