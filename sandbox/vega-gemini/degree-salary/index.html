@@ -90,7 +90,7 @@
       function loadData() {
         return Promise.all(
           specFiles.map((d) => {
-            return d3.json("./sharla-specs/" + d);
+            return d3.json("./specs/" + d);
           })
         )
           .then((files) => {
