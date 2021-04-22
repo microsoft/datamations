@@ -90,6 +90,7 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
   coords_stage1 <- .data %>%
     ungroup() %>%
     select(x = {{ group_vars_combined }}, y = {{ summary_variable }}) %>%
+    filter(!is.na(y)) %>%
     mutate(group = x,
            # Convert x to a numeric variable for tweening - labels will be manually added in the plotting step
            x = as.factor(x),
@@ -115,7 +116,7 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
 
   coords_stage2 <- coords_stage1 %>%
     group_by(group) %>%
-    dplyr::summarise(across(y, !!summary_function),
+    dplyr::summarise(across(y, !!summary_function, na.rm = TRUE),
                      .group_count = n()) %>%
     mutate(x = group,
            # Convert x to a numeric variable for tweening - labels will be manually added in the plotting step
