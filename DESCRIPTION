@@ -27,7 +27,10 @@ Imports:
     tidyr,
     tweenr,
     animation,
-    ggbeeswarm
+    ggbeeswarm,
+    shiny,
+    vegawidget,
+    palmerpenguins
 Suggests: 
     testthat (>= 2.1.0)
 Depends: 

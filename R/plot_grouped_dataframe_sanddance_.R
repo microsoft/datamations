@@ -55,20 +55,20 @@ plot_grouped_dataframe_sanddance <- function(coords, xlim = NULL, ylim = NULL, i
   }
 }
 
-modded_waffle_theme <- theme(
-  line = element_line(color = "white"),
-  text = element_text(color = "white"),
-  rect = element_rect(color = "white"),
-  title = element_text(color = "white"),
-  panel.grid = element_blank(),
-  panel.border = element_blank(),
-  panel.background = element_blank(),
-  axis.text = element_text(color = "white"),
-  axis.title = element_text(color = "white"),
-  axis.ticks = element_blank(),
-  legend.text = element_text(color = "black"),
-  legend.key = element_rect(fill = "white"),
-  legend.title = element_text(color = "black"),
-  plot.background = element_blank(),
-  legend.position = "bottom"
-)
+# modded_waffle_theme <- theme(
+#   line = element_line(color = "white"),
+#   text = element_text(color = "white"),
+#   rect = element_rect(color = "white"),
+#   title = element_text(color = "white"),
+#   panel.grid = element_blank(),
+#   panel.border = element_blank(),
+#   panel.background = element_blank(),
+#   axis.text = element_text(color = "white"),
+#   axis.title = element_text(color = "white"),
+#   axis.ticks = element_blank(),
+#   legend.text = element_text(color = "black"),
+#   legend.key = element_rect(fill = "white"),
+#   legend.title = element_text(color = "black"),
+#   plot.background = element_blank(),
+#   legend.position = "bottom"
+# )

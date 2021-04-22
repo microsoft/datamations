@@ -8,3 +8,4 @@ start-up.R
 ^renv$
 ^README_cache$
 ^data-raw$
+^app\.R$
