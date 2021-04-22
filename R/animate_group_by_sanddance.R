@@ -129,7 +129,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
       mutate(group = as.character(group)))
 
   # Generate the specs, one for each stage
-  walk(
+  map(
     1:length(data_tween_states),
     function(i) {
       df <- data_tween_states[[i]]
@@ -144,15 +144,9 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
           dplyr::bind_cols(stage_cols)
       }
 
-      p <- generate_vegalite_specs(df, aes_with_group)
-
-      print(p)
+      generate_vegalite_specs(df, aes_with_group)
     }
   )
-
-  # Return the final coordinates, with their grouping
-  df %>%
-    group_by(!!!map(group_vars_chr, sym))
 }
 
 ## ==== utils from ggwaffle ======

@@ -43,9 +43,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
     }
   )
 
-
-  for (i in 2:length(fittings)) {
-
+  res <- map(2:length(fittings), function(i) {
     # Starts with data in the previous stage
     data <- data_states[[i - 1]]
     verb <- tidy_func_arg[[i]][[1]]
@@ -80,5 +78,9 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
       )
 
     do.call(call_verb, list(data, call_args, titles = caption, ...))
-  }
+  })
+
+  res <- unlist(res, recursive  = FALSE)
+
+  invisible(res)
 }

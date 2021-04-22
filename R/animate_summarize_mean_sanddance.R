@@ -141,7 +141,7 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
         as.data.frame()
     )
 
-  walk(
+  map(
     1:(length(data_tween_states)), function(i) {
 
       df <- data_tween_states[[i]]
@@ -154,9 +154,7 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
       df <- df %>%
         dplyr::bind_cols(stage_cols)
 
-      p <- generate_vegalite_specs(df, aes_with_group, show_axes = TRUE)
-
-      print(p)
+      generate_vegalite_specs(df, aes_with_group, show_axes = TRUE)
 
     }
   )
