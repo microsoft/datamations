@@ -83,30 +83,11 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
 
   # Create data for stages
 
-  coords_list <- vector("list", length = 3)
+  coords_list <- vector("list", length = 2)
 
-  # State 1: Coloured (and shaped if 2 groups), grouped icon array
-
-  # TODO: the ordering of this is wrong compared to in group_by()
-  # Is there some way to have group by pass the coords??
+  # State 1: Scatter plot, coloured (and shaped)
 
   coords_stage1 <- .data %>%
-    waffle_iron_groups(
-      aes_d(group = {{ group_vars_combined }}, x = {{ group_vars_combined }})
-    ) %>%
-    separate(group,
-      into = group_vars_chr,
-      sep = "___",
-      remove = FALSE
-    )
-
-  coords_list[[1]] <- coords_stage1 %>%
-    select(-width, -offset) %>%
-    mutate(.data_stage = "one")
-
-  # State 2: Scatter plot, coloured (and shaped)
-
-  coords_stage2 <- .data %>%
     ungroup() %>%
     select(x = {{ group_vars_combined }}, y = {{ summary_variable }}) %>%
     mutate(group = x,
@@ -119,14 +100,20 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
       remove = FALSE
     )
 
-  coords_list[[2]] <- coords_stage2 %>%
-    mutate(.data_stage = "two")
+  stage1_quasirandom_plot <- plot_grouped_dataframe_withresponse_sanddance(coords_stage1)
+  stage1_quasirandom_data <- layer_data(stage1_quasirandom_plot)
 
-  # State 3: Summary plot, coloured (and shaped)
+  coords_stage1$x <- stage1_quasirandom_data$x
+  coords_stage1$y <- stage1_quasirandom_data$y
+
+  coords_list[[1]] <- coords_stage1 %>%
+    mutate(.data_stage = 1)
+
+  # State 2: Summary plot, coloured (and shaped)
   # There should still be a point for each datapoint, just all overlapping
   # None should disappear, otherwise makes tweening messy
 
-  coords_stage3 <- coords_stage2 %>%
+  coords_stage2 <- coords_stage1 %>%
     group_by(group) %>%
     dplyr::summarise(across(y, !!summary_function),
                      .group_count = n()) %>%
@@ -141,8 +128,8 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
     ) %>%
     tidyr::uncount(.group_count)
 
-  coords_list[[3]] <- coords_stage3 %>%
-    mutate(.data_stage = "three")
+  coords_list[[2]] <- coords_stage2 %>%
+    mutate(.data_stage = 2)
 
   # Set up the states to tween between - must all have the same columns, so only keep the ones relevant for positioning - the ones for mapping are grabbed again when each frame is generated
 
@@ -154,159 +141,23 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
         as.data.frame()
     )
 
-  # Tween between the data states, with nframes as each transition, then split by frame
-  tweens_data_list <- generate_summarise_tween_list(data_tween_states, nframes)
-
-  # Generate plots of each stage to grab limits for tweening
-  p_init <- plot_grouped_dataframe_sanddance(coords_list[[1]])
-
-  # Pad coordinates to give more space
-  lims_init <- pad_limits(p_init)
-  xlim_init <- lims_init[["xlim"]]
-  ylim_init <- lims_init[["ylim"]]
-
-  # Intermediate
-
-  p_intermediate <- plot_grouped_dataframe_withresponse_sanddance(coords_list[[2]])
-
-  xlim_intermediate <- layer_scales(p_intermediate)$x$range$range
-  ylim_intermediate <- layer_scales(p_intermediate)$y$range$range
-
-  # Final
-
-  p_final <- plot_grouped_dataframe_sanddance(coords_list[[3]])
-  xlim_final <- layer_scales(p_final)$x$range$range
-  ylim_final <- layer_scales(p_final)$y$range$range
-
-  # Set up the limits into groups to tween between
-  limits_tween_states <- build_limits_list(
-    xlims = c(xlim_init, xlim_intermediate, xlim_final),
-    ylims = c(ylim_init, ylim_intermediate, ylim_final),
-    id_name = "lim_id"
-  )
-
-  # Tween between the limits, with nframes as each transition, then split by frame
-  tweens_limits_list <- generate_summarise_tween_list(limits_tween_states, nframes)
-
-  total_nframes <- length(tweens_limits_list)
-
-  # sharla NOTE: at the same time the data is tweened, the axes are too
-  # which is why you don't see any big jumps - it's happening at the same time the data is being tweened
-  # there definitely is some magic going on here to make sure that the number of frames line up between the data tweening and the axis tweening
-  # also, the axes are only being SHOWN at a certain point so that the tweening is not so obvious
-  # between the waffle chart and scatter plot it's not shown, likely controlled by the different plotting options below
-  # and likely the calculations on which plotting function to use corresponds to here, i.e. changing once a tweening state is no longest held
-  # just to solidify the numbers/stages below:
-  # 1. icon array, nframes
-  # 2. transition to scatter plot, nframes (total = 2 * n)
-  # 3. hold scatter, nframes (total = 3 * n)
-  # 4. transition to summary plot, nframes (total = 4 * n) TODO: what is this stage?
-  # 5. transition to zoomed summary, nframes (total = 5 * n)
-  # 6. hold zoomed summary, nframes (total = 6 * n)
-
-  # I had set nframes = 2 here, and the total number of frames from the tweening pipelines is 12 so the math adds up - good!
-  # I would rather have the logic of which plotting function to use be based on stages than the frame count, I think, because something like `(i - 1) %/% nframes %in% 2:3` is hard to understand (I don't yet!) but now I at least know why those different logical bits are coming in -- ^^^ each of these stages likely has a different plotting function controlling it!
-
   walk(
-    1:(total_nframes), function(i) {
+    1:(length(data_tween_states)), function(i) {
 
-      df <- tweens_data_list[[i]]
+      df <- data_tween_states[[i]]
 
       # Add mapping information to data
       stage <- unique(df[[".data_stage"]])
-      stage <- switch(stage,
-                      one = 1,
-                      two = 2,
-                      three = 3)
 
       stage_df <- coords_list[[stage]]
       stage_cols <- stage_df[!names(stage_df) %in% names(df)]
       df <- df %>%
         dplyr::bind_cols(stage_cols)
 
-      phase <- unique(df[[".phase"]])
-
-      lims <- tweens_limits_list[[i]]
-      xlim <- lims$xlim
-      ylim <- lims$ylim
-
-      title <- titles
-
-      if (stage == 1) {
-
-        p <- plot_grouped_dataframe_sanddance(
-          df, xlim, ylim,
-          mapping = aes_with_group
-        )
-
-      } else if (stage == 2 | (stage == 3 & phase == "transition")) {
-
-        p <- plot_grouped_dataframe_withresponse_sanddance(
-          df, xlim, ylim,
-          mapping = aes_with_group
-        )
-
-      } else if (stage == 3 & phase %in% c("static", "raw")) {
-
-        p <- plot_grouped_dataframe_withresponse_sanddance_point(
-          df, xlim, ylim,
-          mapping = aes_with_group
-        )
-
-      }
+      p <- generate_vegalite_specs(df, aes_with_group, show_axes = TRUE)
 
       print(p)
+
     }
   )
-}
-
-
-#' Helper fn to update df colnames with mapping information
-#' Similar to waffle_iron_*
-#' @param data
-#' @param mapping created by aes_d
-iron_groups <- function(.data, mapping, geom) { # ACHTUNG: decide about geom
-
-  # this function doesn't consider color aes
-  if ("colour" %in% names(mapping)) {
-    mapping$colour <- NULL
-  }
-
-  m_chr <- map_chr(mapping, as.character)
-
-  # ACHTUNG: not generalizable
-  x_mapping <- m_chr[match("x", names(m_chr))]
-  group_mapping <- m_chr[-match(c("x"), names(m_chr))]
-  # group_mapping <- m_chr[match("group", names(m_chr))]
-
-  # END
-  var_idx <- match(m_chr, names(.data))
-  # col_idx <- match(c("x", "y", "group", "id", "time"), names(m_chr))
-  var_idx <- var_idx[!is.na(var_idx)]
-  col_idx <- c(var_idx, match(c("id", "time"), names(.data)))
-
-  # select only the relevant cols and create dupes for x, group, zB
-  sub_df <- .data[, col_idx]
-  sub_df %>%
-    rename(x_mapping) %>%
-    rename(group_mapping)
-}
-
-generate_summarise_tween_list <- function(states, nframes) {
-  for (i in 1:length(states)) {
-    if (i == 1) {
-      tweens_df <- states[[i]] %>%
-        keep_state(nframes) %>%
-        tween_state(states[[i + 1]], nframes = nframes, ease = "linear")
-    } else if (i == 2) {
-      tweens_df <- tweens_df %>%
-        keep_state(nframes) %>%
-        tween_state(states[[i + 1]], nframes = nframes, ease = "linear")
-    } else if (i == 3) {
-      tweens_df <- tweens_df %>%
-        keep_state(nframes)
-    }
-  }
-
-  split(tweens_df, tweens_df$.frame)
 }

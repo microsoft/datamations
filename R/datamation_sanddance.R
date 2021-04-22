@@ -17,7 +17,6 @@
 datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
                                  output = "output.gif", titles = "",
                                  xlim = c(NA, NA), ylim = c(NA, NA), ...) {
-
   fittings <- pipeline %>%
     parse_expr() %>%
     dismantle()
@@ -44,50 +43,42 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
     }
   )
 
-  saveGIF(
-    {
-      for (i in 2:length(fittings)) {
 
-        # Starts with data in the previous stage
-        data <- data_states[[i - 1]]
-        verb <- tidy_func_arg[[i]][[1]]
+  for (i in 2:length(fittings)) {
 
-        call_verb <-
-          switch(verb,
-            group_by = animate_group_by_sanddance,
-            summarise = animate_summarize_sanddance,
-            summarize = animate_summarize_sanddance
-          )
+    # Starts with data in the previous stage
+    data <- data_states[[i - 1]]
+    verb <- tidy_func_arg[[i]][[1]]
 
-        args <-
-          switch(verb,
-          group_by = tidy_func_arg[[i]][-1],
-          summarise = tidy_func_arg[[i]][[2]],
-          summarize = tidy_func_arg[[i]][[2]]
-        )
+    call_verb <-
+      switch(verb,
+        group_by = animate_group_by_sanddance,
+        summarise = animate_summarize_sanddance,
+        summarize = animate_summarize_sanddance
+      )
 
-        call_args <-
-          switch(verb,
-            group_by = rlang::parse_exprs(args),
-            # TODO: What if calculation in summarise is unnamed? What if there's more than one calculation? Check these cases
-            summarise = rlang::parse_exprs(args),
-            summarize = rlang::parse_exprs(args)
-          )
+    args <-
+      switch(verb,
+        group_by = tidy_func_arg[[i]][-1],
+        summarise = tidy_func_arg[[i]][[2]],
+        summarize = tidy_func_arg[[i]][[2]]
+      )
 
-        caption <-
-          switch(verb,
-            group_by = titles[i - 1],
-            summarise = titles[(i - 1):i],
-            summarize = titles[(i - 1):i]
-          )
+    call_args <-
+      switch(verb,
+        group_by = rlang::parse_exprs(args),
+        # TODO: What if calculation in summarise is unnamed? What if there's more than one calculation? Check these cases
+        summarise = rlang::parse_exprs(args),
+        summarize = rlang::parse_exprs(args)
+      )
 
-        do.call(call_verb, list(data, call_args, titles = caption, ...))
-      }
-    },
-    movie.name = output,
-    interval = 0.1,
-    ani.width = 500,
-    ani.height = 350,
-    ani.res = 100
-  )
+    caption <-
+      switch(verb,
+        group_by = titles[i - 1],
+        summarise = titles[(i - 1):i],
+        summarize = titles[(i - 1):i]
+      )
+
+    do.call(call_verb, list(data, call_args, titles = caption, ...))
+  }
 }

@@ -128,48 +128,11 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     map(~ select(.x, y, x, group, width, offset, .data_stage) %>%
       mutate(group = as.character(group)))
 
-  # Tween between the data states, with nframes as each transition, then split by frame
-  tweens_data_list <- generate_group_by_tween_list(data_tween_states, nframes)
-
-  # Generate plots of the first and last stage to grab limits for tweening
-  p_init <- plot_grouped_dataframe_sanddance(coords_list[[1]])
-  p_final <- plot_grouped_dataframe_sanddance(coords_list[[length(coords_list)]])
-
-  # Pad coordinates to give more space
-  lims_init <- pad_limits(p_init)
-  xlim_init <- lims_init[["xlim"]]
-  ylim_init <- lims_init[["ylim"]]
-
-  lims_final <- pad_limits(p_final)
-  xlim_final <- lims_final[["xlim"]]
-  ylim_final <- lims_final[["ylim"]]
-
-  # Set up the limits into groups to tween between
-  # TODO: this is not quite right / good :)
-  if (n_groups == 2) {
-    limits_tween_states <- build_limits_list(
-      xlims = c(xlim_init, xlim_init, xlim_final, xlim_final, xlim_final),
-      ylims = c(ylim_init, ylim_init, ylim_final, ylim_final, ylim_final),
-      id_name = "lim_id"
-    )
-  } else {
-    limits_tween_states <- build_limits_list(
-      xlims = c(xlim_init, xlim_init, xlim_final),
-      ylims = c(ylim_init, ylim_init, ylim_final),
-      id_name = "lim_id"
-    )
-  }
-
-  # Tween between the limits, with nframes as each transition, then split by frame
-  tweens_limits_list <- generate_group_by_tween_list(limits_tween_states, nframes)
-
-  total_nframes <- length(tweens_limits_list)
-
-  # Generate the frames, one for each tween
+  # Generate the specs, one for each stage
   walk(
-    1:(total_nframes),
+    1:length(data_tween_states),
     function(i) {
-      df <- tweens_data_list[[i]]
+      df <- data_tween_states[[i]]
 
       # Add mapping information to data
       stage <- floor(unique(df[[".data_stage"]]))
@@ -181,17 +144,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
           dplyr::bind_cols(stage_cols)
       }
 
-      lims <- tweens_limits_list[[i]]
-      xlim <- lims$xlim
-      ylim <- lims$ylim
-
-      title <- titles
-
-      p <- plot_grouped_dataframe_sanddance(
-        df, xlim, ylim,
-        mapping = aes_with_group,
-        title = title
-      )
+      p <- generate_vegalite_specs(df, aes_with_group)
 
       print(p)
     }
@@ -265,7 +218,6 @@ waffle_iron_groups <- function(data, mapping, rows = 7, sample_size = 1, na.rm =
     }
   }
 
-
   # find the width of each group
   offsets <- res %>%
     group_by(.data$group) %>%
@@ -337,23 +289,4 @@ aes_d <- function(...) {
   aes_cols <- map(dots, rlang::quo_get_expr)
   as.list(aes_cols)
   # as.list(match.call()[-1])
-}
-
-generate_group_by_tween_list <- function(states, nframes) {
-  for (i in 1:length(states)) {
-    if (i == 1) {
-      tweens_df <- states[[i]] %>%
-        keep_state(nframes) %>%
-        tween_state(states[[i + 1]], nframes = nframes, ease = "linear")
-    } else if (i < length(states)) {
-      tweens_df <- tweens_df %>%
-        keep_state(nframes) %>%
-        tween_state(states[[i + 1]], nframes = nframes, ease = "linear")
-    } else {
-      tweens_df <- tweens_df %>%
-        keep_state(nframes)
-    }
-  }
-
-  split(tweens_df, tweens_df$.frame)
 }
