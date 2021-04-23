@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="../gemini.web.js"></script>
+    <title>Plot-Degree-Workplace</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .container {
+        padding: 10px 0px;
+        width: 80%;
+        margin: 0 auto;
+      }
+
+      .chart-wrapper {
+        width: 60%;
+        margin: 20px auto 0px auto;
+      }
+
+      .control-bar {
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .button-wrapper {
+        padding: 10px;
+      }
+
+      .slider-wrapper {
+        padding: 10px;
+        flex-grow: 1;
+        width: 100%;
+      }
+
+      .slider-wrapper input {
+        width: 100%;
+      }
+
+      details {
+        display: none;
+      }
+
+      .current-frame {
+        white-space: nowrap;
+        padding-left: 20px;
+      }
+
+      #chart_view * {
+        pointer-events: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="control-bar">
+        <div class="button-wrapper">
+          <button onclick="play()">Play</button>
+        </div>
+        <div class="slider-wrapper">
+          <input type="range" min="0" value="0" id="slider" />
+        </div>
+        <div class="current-frame" id="frame"></div>
+      </div>
+      <div class="chart-wrapper">
+        <div id="chart_view"></div>
+      </div>
+    </div>
+
+    <script>
+      const frameDuration = 1200;
+
+      const specFiles = [
+        "01-infogrid_grey.json",
+        "02-infogrid_color.json",
+        "03-infogrid_color_split.json",
+        "04-infogrid_color_split_work.json",
+        "05-distribution.json",
+        "06-mean.json",
+      ];
+
+      const sliderEl = document.getElementById("slider");
+
+      let frames = [];
+      let specsArray = [];
+      let geminiSpecs = [];
+
+      function loadData() {
+        return Promise.all(
+          specFiles.map((d) => {
+            return d3.json("https://raw.githubusercontent.com/jhofman/datamations/vegawidget-exploration/sandbox/vegawidget/work_degree/specs/" + d);
+          })
+        )
+          .then((files) => {
+            // make adjustments here
+            return files.map((d, i) => {
+              if (i === 3) {
+                let obj = {
+                  encoding: {
+                    ...d.encoding,
+                    "facet": {
+                      "field": "work", 
+                      "type": "ordinal", 
+                      "columns": 2
+                    },
+                  }
+                } 
+
+                return {
+                  ...d,
+                  ...obj,
+                  width: 250,
+                  height: 250,
+                }
+                
+              }
+
+              return {
+                ...d,
+                width: 400,
+                height: 250,
+              };
+            });
+          })
+          .catch((e) => {
+            console.error(e.message);
+          });
+      }
+
+      function init() {
+        loadData().then((files) => {
+          specsArray = files.map((d) => gemini.vl2vg4gemini(d));
+          frames = [];
+
+          for (let i = 1; i < specsArray.length; i++) {
+            const prev = specsArray[i - 1];
+            const curr = specsArray[i];
+
+            const recommendations = gemini.recommend(prev, curr, {
+              stageN: 1,
+              scales: {
+                domainDimension: "same",
+              },
+              marks: {
+                change: {
+                  data: ["id"],
+                  encode: {
+                    update: true,
+                    enter: true,
+                    exit: true,
+                  },
+                }
+              },
+              totalDuration: frameDuration
+            });
+            recommendations.then(resp => {
+              frames.push({
+                source: prev,
+                target: curr,
+                gemSpec: resp[0].spec,
+              });
+
+              if (i === specsArray.length - 1) {
+                sliderEl.max = frames.length - 1;
+              }
+            }).catch(e => {
+              
+            });
+          }
+
+          vegaEmbed("#chart_view", specsArray[3], { renderer: "svg" });
+          d3.select("#frame").html(specFiles[3]);
+        });
+      }
+    
+      let animating = false,
+        counter = 0,
+        intervalId;
+
+      function play() {
+        counter = 0;
+        vegaEmbed("#chart_view", specsArray[counter], { renderer: "svg" });
+        d3.select("#frame").html(specFiles[counter]);
+        const tick = () => {
+          animateFrame(counter);
+          counter++;
+        };
+        tick();
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(() => {
+          tick();
+          if (counter >= frames.length) {
+            clearInterval(intervalId);
+            counter = 0;
+          }
+        }, frameDuration + 100);
+      }
+
+      async function animateFrame(index) {
+        if (!frames[index]) return;
+
+        const source = frames[index].source;
+        const target = frames[index].target;
+        const spec = frames[index].gemSpec;
+
+        if (animating) return;
+
+        d3.select("#frame").html(specFiles[index + 1]);
+        sliderEl.value = index;
+
+        animating = true;
+
+        let anim = await gemini.animate(source, target, spec);
+
+        await anim.play("#chart_view");
+
+        animating = false;
+      }
+
+      init();
+    </script>
+  </body>
+</html>
