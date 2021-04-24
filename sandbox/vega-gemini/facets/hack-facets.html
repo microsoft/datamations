@@ -12,17 +12,9 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
   </head>
   <body>
-    <div><strong>Facets:</strong></div>
-    <br>
-
     <div id="vis"></div>
 
-    <br><br>
-
-    <div><strong>Cloned:</strong></div>
-    <br>
-    <div id="vis_clone"></div>
-
+    <script src="./hack.js"></script>
     <script type="text/javascript">
       const spec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -3397,90 +3389,10 @@
           }
         }
       }
-
-      const newSpec = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-        "data": {
-          values: []
-        },
-        width: 600,
-        height: 600,
-        "mark": "point",
-        "encoding": {
-          "x": {
-            "field": "x",
-            "type": "quantitative",
-            // "scale": {
-            //   "type": "linear",
-            //   "domain": [-0.5, 18.5]
-            // },
-            "axis": null
-          },
-          "y": {
-            "field": "y",
-            "type": "quantitative",
-            // "scale": {
-            //   "type": "linear",
-            //   "domain": [0, 8]
-            // },
-            "axis": null
-          }
-        }
-      }
-
-      const rowId = spec.facet.row.field;
-      const colId = spec.facet.column.field;
-      const values = [];
       
-      vegaEmbed("#vis", spec, {renderer: "svg"}).then(resp => {
-        window.vg = resp;
-
-        const view = resp.view;
-
-        const row_header = view.data("row_header");
-        const column_header = view.data("column_header");
-        
-        const colMap = new Map();
-        const rowMap = new Map();
-
-        row_header.forEach(d => {
-          const bounds = d.bounds;
-          const name = d.datum[rowId];
-          rowMap.set(name, bounds.y1);
-        })
-
-        column_header.forEach(d => {
-          const bounds = d.bounds;
-          const name = d.datum[colId];
-          colMap.set(name, bounds.x1);
-        })
-
-        const scaleX = view.scale("x");
-        const scaleY = view.scale("y");
-
-        const source = view.data("source");
-
-        source.forEach(d => {
-
-          const col = d[colId];
-          const row = d[rowId];
-
-          const xStart = colMap.get(col);
-          const yStart = rowMap.get(row);
-
-          values.push({
-            ...d,
-            x: xStart + scaleX(d.x),
-            y: 600 - (yStart + scaleY(d.y)),
-          });
-
-        });
-
-        newSpec.data.values = values;
-        
-        vegaEmbed("#vis_clone", newSpec, {renderer: "svg"})
+      hackFacet(spec).then(newSpec => {
+        vegaEmbed("#vis", newSpec, {renderer: "svg"})
       });
-
     </script>
   </body>
 </html>
