@@ -163,8 +163,6 @@
 
       function play() {
         counter = 0;
-        vegaEmbed("#chart_view", specsArray[counter], { renderer: "svg" });
-        d3.select("#frame").html(specFiles[counter]);
         const tick = () => {
           animateFrame(counter);
           counter++;
@@ -196,7 +194,9 @@
 
         let anim = await gemini.animate(source, target, spec);
 
-        await anim.play("#chart_view");
+        vegaEmbed("#chart_view", source, { renderer: "svg" }).then(() => {
+          anim.play("#chart_view");
+        });
 
         animating = false;
       }

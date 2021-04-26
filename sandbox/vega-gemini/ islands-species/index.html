@@ -82,13 +82,81 @@
       const frameDuration = 1200;
 
       const specFiles = [
-        "01-infogrid_grey.json",
-        "02-infogrid_color.json",
-        "03-infogrid_color_split.json",
-        "04-infogrid_color_split_work.json",
-        "05-distribution.json",
-        "06-mean.json",
+        "01-infogrid.json",
+        "02-col_facet.json",
+        "03-col-row-facet.json",
+        "04-color-row-facet.json",
       ];
+
+      const gemSpec1 = {};
+
+      const gemSpec2 = {
+        timeline: {
+          concat: [
+            {
+              sync: [
+                {
+                  component: { mark: "marks" },
+                  change: {
+                    scale: ["x", "y"],
+                    data: true,
+                    encode: { update: true, enter: true, exit: true },
+                  },
+                  timing: { duration: { ratio: 1 } },
+                },
+                {
+                  component: { axis: "x" },
+                  timing: { duration: { ratio: 1 } },
+                },
+                {
+                  component: { axis: "y" },
+                  timing: { duration: { ratio: 1 } },
+                },
+                {
+                  component: "view",
+                  change: { signal: ["width", "height"] },
+                  timing: { duration: { ratio: 1 } },
+                },
+              ],
+            },
+          ],
+        },
+        totalDuration: 1200,
+      };
+
+      const gemSpec3 = {
+        timeline: {
+          concat: [
+            {
+              sync: [
+                {
+                  component: { mark: "marks" },
+                  change: {
+                    scale: ["color"],
+                    data: true,
+                    encode: { update: true, enter: true, exit: true },
+                  },
+                  timing: { duration: { ratio: 1 } },
+                },
+                {
+                  component: { legend: "legend0" },
+                  timing: { duration: { ratio: 1 } },
+                },
+                {
+                  component: { axis: "y" },
+                  timing: { duration: { ratio: 1 } },
+                },
+                {
+                  component: "view",
+                  change: { signal: ["width"] },
+                  timing: { duration: { ratio: 1 } },
+                },
+              ],
+            },
+          ],
+        },
+        totalDuration: 1200,
+      };
 
       const sliderEl = document.getElementById("slider");
 
@@ -99,38 +167,24 @@
       function loadData() {
         return Promise.all(
           specFiles.map((d) => {
-            return d3.json("https://raw.githubusercontent.com/jhofman/datamations/vegawidget-exploration/sandbox/vegawidget/work_degree/specs/" + d);
+            return d3.json(
+              "https://raw.githubusercontent.com/jhofman/datamations/groups/sandbox/grouping/facet_color_specs/" +
+                d
+            );
           })
         )
           .then((files) => {
             // make adjustments here
             return files.map((d, i) => {
-              if (i >= 3) {
-                const obj = {
-                  $scheme: d.$scheme,
-                  data: {
-                    name: 'source',
-                    values: d.data.values,
-                  },
-                  facet: {
-                    column: {
-                      field: "work",
-                      type: "nominal",
-                      title: null
-                    },
-                  },
-                  spec: {
-                    mark: d.mark,
-                    encoding: d.encoding,
-                  }
-                }
-                return obj;
-              }
+              d.data.name = "source";
+
+              const height = d.facet && d.facet.row ? 500 : 250;
+              const width = d.facet && d.facet.column ? 500 : 400;
 
               return {
                 ...d,
-                width: 400,
-                height: 250,
+                width: width,
+                height: height,
               };
             });
           })
@@ -143,7 +197,11 @@
         loadData().then(async (files) => {
           for (let i = 0; i < files.length; i++) {
             if (files[i].facet) {
-              files[i] = await hackFacet(files[i], 400, 200);
+              files[i] = await hackFacet(
+                files[i],
+                files[i].width,
+                files[i].height
+              );
             }
           }
 
@@ -167,30 +225,33 @@
                     enter: true,
                     exit: true,
                   },
-                }
+                },
               },
-              totalDuration: frameDuration
+              totalDuration: frameDuration,
             });
-            recommendations.then(resp => {
-              frames.push({
-                source: prev,
-                target: curr,
-                gemSpec: resp[0].spec,
-              });
+            const gem = i === 3 ? gemSpec3 : null;
 
-              if (i === specsArray.length - 1) {
-                sliderEl.max = frames.length - 1;
-              }
-            }).catch(e => {
-              
-            });
+            recommendations
+              .then((resp) => {
+                frames.push({
+                  source: prev,
+                  target: curr,
+                  gemSpec: resp[0].spec,
+                });
+
+                if (i === specsArray.length - 1) {
+                  console.log(frames);
+                  sliderEl.max = frames.length - 1;
+                }
+              })
+              .catch((e) => {});
           }
 
-          vegaEmbed("#chart_view", specsArray[3], { renderer: "svg" });
-          d3.select("#frame").html(specFiles[3]);
+          vegaEmbed("#chart_view", specsArray[0], { renderer: "svg" });
+          d3.select("#frame").html(specFiles[0]);
         });
       }
-    
+
       let animating = false,
         counter = 0,
         intervalId;

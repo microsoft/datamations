@@ -1,4 +1,39 @@
-function getSpecTemplate(width, height, axes = { x: true, y: true }) {
+function getSpecTemplate(width, height, axes = { x: true, y: true }, encoding) {
+  if (encoding.x) {
+    encoding.x = {
+      field: "x",
+      type: "quantitative",
+      scale: {},
+      axis: axes.x ? {
+        labelExpr: "",
+        values: [],
+        title: false,
+        grid: false,
+        orient: "top",
+        ticks: false,
+        domain: false,
+        labelPadding: 7
+      } : null,
+    }
+  }
+
+  if (encoding.y) {
+    encoding.y = {
+      field: "y",
+      type: "quantitative",
+      scale: {},
+      axis: axes.y ? {
+        labelExpr: "",
+        values: [],
+        title: false,
+        grid: false,
+        labelAngle: -90,
+        domain: false,
+        ticks: false,
+        labelPadding: 7
+      } : null,
+    }
+  }
 
   return {
     $schema: "https://vega.github.io/schema/vega-lite/v4.json",
@@ -8,42 +43,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }) {
     width: width,
     height: height,
     mark: "point",
-    encoding: {
-      x: {
-        field: "x",
-        type: "quantitative",
-        scale: {},
-        axis: axes.x ? {
-          labelExpr: "",
-          values: [],
-          title: false,
-          grid: false,
-          orient: "top",
-          ticks: false,
-          domain: false,
-          labelPadding: 7
-        } : null,
-      },
-      y: {
-        field: "y",
-        type: "quantitative",
-        scale: {},
-        axis: axes.y ? {
-          labelExpr: "",
-          values: [],
-          title: false,
-          grid: false,
-          labelAngle: -90,
-          domain: false,
-          ticks: false,
-          labelPadding: 7
-        } : null,
-      },
-      color: {
-        field: "group",
-        type: "nominal",
-      },
-    },
+    encoding: encoding
   };
 }
 
@@ -56,7 +56,8 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     {  
       x: colId,
       y: rowId,
-    }
+    },
+    spec.spec.encoding
   );
 
   const yDomain = [height, 0];
