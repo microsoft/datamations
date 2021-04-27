@@ -109,7 +109,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
       encoding = list(
         x = x_encoding,
         y = y_encoding,
-        col = facet_col_encoding,
+        column = facet_col_encoding,
         row = facet_row_encoding,
         color = color_encoding
       )

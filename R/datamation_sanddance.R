@@ -82,5 +82,5 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
 
   res <- unlist(res, recursive  = FALSE)
 
-  invisible(res)
+  res
 }
