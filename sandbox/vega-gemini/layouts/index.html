@@ -46,9 +46,13 @@
     </script>
   </head>
   <body>
+    <p>Grid layout, with faceted view:</p>
     <div id="vis" style="width: 100%"></div>
+    <br><br>
+    <p>Scatterplot, jitter with d3-force:</p>
+    <div id="scatter"></div>
     <script>
-      spec = {
+      const spec = {
         $schema: "https://vega.github.io/schema/vega-lite/v4.json",
         data: {
           values: [
@@ -141,13 +145,13 @@
         }
 
         const xDomain = [
-          d3.min(newValues, (d) => d.x) - 1.5,
-          d3.max(newValues, (d) => d.x) + 1.5,
+          d3.min(newValues, (d) => d.x) - 1,
+          d3.max(newValues, (d) => d.x) + 1,
         ];
-        
+
         const yDomain = [
-          d3.min(newValues, (d) => d.y) - 1.5,
-          d3.max(newValues, (d) => d.y) + 1.5,
+          d3.min(newValues, (d) => d.y) - 2,
+          d3.max(newValues, (d) => d.y) + 2,
         ];
 
         obj.data.values = newValues;
@@ -174,6 +178,80 @@
     <script type="text/javascript">
       const gridSpec = getGridSpec(spec);
       vegaEmbed("#vis", gridSpec);
+    </script>
+
+    <script>
+      const scatterSpec = {
+        $schema: "https://vega.github.io/schema/vega-lite/v4.json",
+        width: 500,
+        height: 500,
+        data: {
+          values: salary
+        },
+        mark: "point",
+        encoding: {
+          x: {
+            field: "x",
+            type: "quantitative",
+            scale: {
+              domain: [0, 400]
+            },
+            axis: {
+              labelExpr: `${JSON.stringify({ 100: 'Masters', 300: 'PhD' })}[datum.label]`,
+              labelAngle: 0,
+              values: [100, 300],
+              title: null,
+            }
+          },
+          y: {
+            field: "Salary",
+            type: "quantitative",
+            axis: {
+              labelAngle: 0,
+              title: null
+            }
+          },
+        },
+      };
+
+      function getCollidedPoints(nodes) {
+        const xScale = d3.scaleBand().domain([...new Set(nodes.map(d => d.Degree))]).range([0, 400])
+        const yScale = d3.scaleLinear().domain(d3.extent(nodes, d => d.Salary)).range([400, 0]);
+        const circleRadius = 3;
+
+        const arr = nodes.slice().map((d, i) => {
+          return {
+            ...d,
+            r: circleRadius,
+            x: xScale(d.Degree) + xScale.bandwidth() / 2,
+            fy: yScale(d.Salary),
+            y: yScale(d.Salary),
+          }
+        });
+
+        const simulation = d3.forceSimulation(arr)
+          .force("collide", d3.forceCollide()
+            .iterations(5)
+            .radius(circleRadius + 5)
+          )
+          .stop();
+
+        return new Promise((res, rej) => {
+          for (let i = 0; i < 120; i++) {
+            simulation.tick();
+          }
+          
+          return res(arr);
+        })
+      }
+
+      getCollidedPoints(scatterSpec.data.values).then(values => {
+        vegaEmbed("#scatter", {
+          ...scatterSpec,
+          data: {values}
+        });
+      });
+      
     </script>
   </body>
 </html>
