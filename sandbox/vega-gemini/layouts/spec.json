@@ -1,0 +1,71 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "values": [
+      {
+        "species": "Adelie",
+        "island": "Biscoe",
+        "n": 10
+      },
+      {
+        "species": "Gentoo",
+        "island": "Biscoe",
+        "n": 8
+      },
+      {
+        "species": "Adelie",
+        "island": "Dream",
+        "n": 9
+      },
+      {
+        "species": "Chinstrap",
+        "island": "Dream",
+        "n": 7
+      },
+      {
+        "species": "Adelie",
+        "island": "Torgersen",
+        "n": 10
+      }
+    ]
+  },
+  "facet": {
+    "column": {
+      "field": "island",
+      "type": "nominal",
+      "title": null
+    },
+    "row": {
+      "field": "species",
+      "type": "nominal",
+      "title": null
+    }
+  },
+  "spec": {
+    "mark": "point",
+    "encoding": {
+      "x": {
+        "field": "x",
+        "type": "quantitative",
+        "scale": {
+          "type": "linear",
+          "domain": [-0.5, 20.5]
+        },
+        "axis": null
+      },
+      "y": {
+        "field": "y",
+        "type": "quantitative",
+        "scale": {
+          "type": "linear",
+          "domain": [0, 8]
+        },
+        "axis": null
+      },
+      "color": {
+        "field": "group",
+        "type": "nominal"
+      }
+    }
+  }
+}

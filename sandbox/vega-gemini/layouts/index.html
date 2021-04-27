@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vega</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
+    <script>
+      const salary = [
+        { Degree: "Masters", Work: "Industry", Salary: 86 },
+        { Degree: "Masters", Work: "Academia", Salary: 71 },
+        { Degree: "PhD", Work: "Industry", Salary: 104 },
+        { Degree: "Masters", Work: "Industry", Salary: 94 },
+        { Degree: "Masters", Work: "Academia", Salary: 93 },
+        { Degree: "Masters", Work: "Academia", Salary: 96 },
+        { Degree: "PhD", Work: "Academia", Salary: 100 },
+        { Degree: "Masters", Work: "Industry", Salary: 86 },
+        { Degree: "PhD", Work: "Academia", Salary: 80 },
+        { Degree: "Masters", Work: "Industry", Salary: 85 },
+        { Degree: "PhD", Work: "Academia", Salary: 95 },
+        { Degree: "Masters", Work: "Industry", Salary: 97 },
+        { Degree: "PhD", Work: "Industry", Salary: 72 },
+        { Degree: "Masters", Work: "Industry", Salary: 98 },
+        { Degree: "Masters", Work: "Industry", Salary: 91 },
+        { Degree: "Masters", Work: "Industry", Salary: 91 },
+        { Degree: "PhD", Work: "Academia", Salary: 96 },
+        { Degree: "Masters", Work: "Industry", Salary: 93 },
+        { Degree: "Masters", Work: "Industry", Salary: 88 },
+        { Degree: "Masters", Work: "Industry", Salary: 97 },
+        { Degree: "Masters", Work: "Industry", Salary: 83 },
+        { Degree: "PhD", Work: "Academia", Salary: 90 },
+        { Degree: "Masters", Work: "Industry", Salary: 89 },
+        { Degree: "Masters", Work: "Industry", Salary: 86 },
+        { Degree: "Masters", Work: "Industry", Salary: 83 },
+        { Degree: "Masters", Work: "Industry", Salary: 99 },
+        { Degree: "Masters", Work: "Industry", Salary: 99 },
+        { Degree: "PhD", Work: "Academia", Salary: 91 },
+        { Degree: "PhD", Work: "Industry", Salary: 101 },
+        { Degree: "Masters", Work: "Industry", Salary: 98 },
+      ];
+    </script>
+  </head>
+  <body>
+    <div id="vis" style="width: 100%"></div>
+    <script>
+      spec = {
+        $schema: "https://vega.github.io/schema/vega-lite/v4.json",
+        data: {
+          values: [
+            {
+              species: "Adelie",
+              island: "Biscoe",
+              n: 43,
+            },
+            {
+              species: "Gentoo",
+              island: "Biscoe",
+              n: 17,
+            },
+            {
+              species: "Adelie",
+              island: "Dream",
+              n: 11,
+            },
+            {
+              species: "Chinstrap",
+              island: "Dream",
+              n: 34,
+            },
+            {
+              species: "Adelie",
+              island: "Torgersen",
+              n: 40,
+            },
+          ],
+        },
+        facet: {
+          column: {
+            field: "island",
+            type: "nominal",
+            title: null,
+          },
+          row: {
+            field: "species",
+            type: "nominal",
+            title: null,
+          },
+        },
+        spec: {
+          mark: "point",
+          encoding: {
+            x: {
+              field: "x",
+              type: "quantitative",
+              scale: {
+                type: "linear",
+                domain: [-1.5, 5.5],
+              },
+              axis: null,
+            },
+            y: {
+              field: "y",
+              scale: {
+                type: "linear",
+                domain: [-1.5, 10.5],
+              },
+              type: "quantitative",
+              axis: null,
+            },
+          },
+        },
+      };
+    </script>
+
+    <script>
+      function getGridSpec(input, rows = 10) {
+        const obj = { ...input };
+        const values = input.data.values;
+        const newValues = [];
+
+        for (let x = 0; x < values.length; x++) {
+          const d = values[x];
+          const n = d.n;
+
+          for (let i = 0; i < n; i++) {
+            const row = i % rows;
+            const col = Math.floor(i / rows);
+
+            newValues.push({
+              ...d,
+              id: i + 1,
+              x: col,
+              y: rows - 1 - row,
+            });
+          }
+        }
+
+        const xDomain = [
+          d3.min(newValues, (d) => d.x) - 1.5,
+          d3.max(newValues, (d) => d.x) + 1.5,
+        ];
+        
+        const yDomain = [
+          d3.min(newValues, (d) => d.y) - 1.5,
+          d3.max(newValues, (d) => d.y) + 1.5,
+        ];
+
+        obj.data.values = newValues;
+
+        const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
+
+        encoding.x.scale = {
+          type: "linear",
+          domain: xDomain,
+        };
+
+        encoding.y.scale = {
+          type: "linear",
+          domain: yDomain,
+        };
+
+        encoding.x.field = "x";
+        encoding.y.field = "y";
+
+        return obj;
+      }
+    </script>
+
+    <script type="text/javascript">
+      const gridSpec = getGridSpec(spec);
+      vegaEmbed("#vis", gridSpec);
+    </script>
+  </body>
+</html>
