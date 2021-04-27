@@ -138,6 +138,7 @@ HTMLWidgets.widget({
         }
 
         init();
+        play();
 
       },
 

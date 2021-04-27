@@ -58,7 +58,7 @@ datamationSandDance_html <- function(...) {
       class = "control-bar",
       htmltools::div(
         class = "button-wrapper",
-        htmltools::tags$button(onclick = htmlwidgets::JS("play()"), "Play")
+        htmltools::tags$button(onclick = "play()", "Play")
       ),
       htmltools::div(
         class = "slider-wrapper",
