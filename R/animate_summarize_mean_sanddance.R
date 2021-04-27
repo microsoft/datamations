@@ -44,7 +44,7 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
   id_df <- tibble(.id = .id)
 
   .data <- .data %>%
-    bind_cols(id_df)
+    dplyr::bind_cols(id_df)
 
   # END: same as animate_group_by_sanddance()
 
@@ -73,7 +73,7 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
 
   # State 1: Scatter plot (with any grouping)
 
-  data_stage1_original <- .data  %>%
+  data_stage1_original <- .data %>%
     mutate(x = 1) %>%
     select(.id, x, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
 
@@ -86,18 +86,24 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
   data_stage1$x <- stage1_quasirandom_data$x
 
   # Set up encoding based on number of groups
-  encoding <- list(x = x_encoding,
-                   y = y_encoding)
+  encoding <- list(
+    x = x_encoding,
+    y = y_encoding
+  )
 
   if (n_groups == 1) {
     encoding <- append(encoding, list(column = facet_col_encoding))
-  }else if (n_groups == 2 ){
-    encoding <- append(encoding, list(column = facet_col_encoding,
-                                      row = facet_row_encoding))
+  } else if (n_groups == 2) {
+    encoding <- append(encoding, list(
+      column = facet_col_encoding,
+      row = facet_row_encoding
+    ))
   } else if (n_groups == 3) {
-    encoding <- append(encoding, list(column = facet_col_encoding,
-                                      row = facet_row_encoding,
-                                      color = color_encoding))
+    encoding <- append(encoding, list(
+      column = facet_col_encoding,
+      row = facet_row_encoding,
+      color = color_encoding
+    ))
   }
 
   specs_list[[1]] <- list(

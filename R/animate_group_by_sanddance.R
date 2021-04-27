@@ -52,6 +52,8 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   facet_row_encoding <- list(field = rlang::quo_name(row_facet_var), type = "nominal", title = NULL)
   color_encoding <- list(field = rlang::quo_name(color_var), type = "quantitative", axis = NULL)
 
+  # TODO: these are not "real specs" as they don't actually have an x or y, only n - the first few frames need to be processed on the JS side into infogrids.
+
   # State 1: Ungrouped icon array
 
   specs_list[[1]] <- list(

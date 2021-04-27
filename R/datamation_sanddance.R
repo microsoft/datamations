@@ -80,7 +80,11 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
     do.call(call_verb, list(data, call_args, titles = caption, ...))
   })
 
-  res <- unlist(res, recursive  = FALSE)
+  # TODO: Not unlisting because it's probably useful to know which verb each set of specs come from
+  # Might be good for titling, but right now I'm thinking because the group_by "specs" need to actually be processed into an infogrid - they do not contain x or y, but just "n" to be processed on the JS side
+  # res <- unlist(res, recursive  = FALSE)
+
+  names(res) <- tidy_functions_list
 
   res
 }
