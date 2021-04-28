@@ -65,7 +65,7 @@ animate_group_by_sanddance <- function(.data, ..., pretty = TRUE) {
   specs_list[[1]] <- list(
     `$schema` = vegawidget::vega_schema(),
     data = list(values = data_1),
-    mark = "point",
+    mark = "infogridpoint",
     encoding = list(
       x = x_encoding,
       y = y_encoding
@@ -87,7 +87,7 @@ animate_group_by_sanddance <- function(.data, ..., pretty = TRUE) {
   specs_list[[2]] <- list(
     `$schema` = vegawidget::vega_schema(),
     data = list(values = data_2),
-    mark = "point",
+    mark = "infogridpoint",
     encoding = list(
       x = x_encoding,
       y = y_encoding,
@@ -110,7 +110,7 @@ animate_group_by_sanddance <- function(.data, ..., pretty = TRUE) {
     specs_list[[3]] <- list(
       `$schema` = vegawidget::vega_schema(),
       data = list(values = data_3),
-      mark = "point",
+      mark = "infogridpoint",
       encoding = list(
         x = x_encoding,
         y = y_encoding,
@@ -135,7 +135,7 @@ animate_group_by_sanddance <- function(.data, ..., pretty = TRUE) {
     specs_list[[4]] <- list(
       `$schema` = vegawidget::vega_schema(),
       data = list(values = data_4),
-      mark = "point",
+      mark = "infogridpoint",
       encoding = list(
         x = x_encoding,
         y = y_encoding,
