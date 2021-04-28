@@ -12,7 +12,7 @@
 #' @importFrom stats setNames
 #' @importFrom tidyr separate
 #' @export
-animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, output = "both", titles = "") {
+animate_summarize_sanddance <- function(.data, summary_operation, pretty = TRUE) {
 
   # START: same as animate_group_by_sanddance
 
@@ -113,7 +113,7 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
     encoding = encoding
   ) %>%
     vegawidget::as_vegaspec() %>%
-    vegawidget::vw_as_json()
+    vegawidget::vw_as_json(pretty = pretty)
 
   # State 2: Summary plot (with any grouping)
   # There should still be a point for each datapoint, just all overlapping
@@ -129,7 +129,7 @@ animate_summarize_sanddance <- function(.data, summary_operation, nframes = 5, o
     encoding = encoding
   ) %>%
     vegawidget::as_vegaspec() %>%
-    vegawidget::vw_as_json()
+    vegawidget::vw_as_json(pretty = pretty)
 
   # Return the specs
   specs_list

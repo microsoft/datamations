@@ -14,9 +14,7 @@
 #' @param envir An environment.
 #' @param output Path to where gif will be saved.
 #' @export
-datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
-                                 output = "output.gif", titles = "",
-                                 xlim = c(NA, NA), ylim = c(NA, NA), ...) {
+datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty = TRUE) {
   fittings <- pipeline %>%
     parse_expr() %>%
     dismantle()
@@ -70,14 +68,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(),
         summarize = rlang::parse_exprs(args)
       )
 
-    caption <-
-      switch(verb,
-        group_by = titles[i - 1],
-        summarise = titles[(i - 1):i],
-        summarize = titles[(i - 1):i]
-      )
-
-    do.call(call_verb, list(data, call_args, titles = caption, ...))
+    do.call(call_verb, list(data, call_args, pretty = pretty))
   })
 
   # TODO: Not unlisting because it's probably useful to know which verb each set of specs come from

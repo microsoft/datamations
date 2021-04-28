@@ -12,7 +12,7 @@
 #' @importFrom tidyr unite unnest
 #' @importFrom ggplot2 layer_scales
 #' @export
-animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE, titles = "") {
+animate_group_by_sanddance <- function(.data, ..., pretty = TRUE) {
 
   # Map grouping variables
   group_vars <- c(...)
@@ -72,7 +72,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     )
   ) %>%
     vegawidget::as_vegaspec() %>%
-    vegawidget::vw_as_json()
+    vegawidget::vw_as_json(pretty = pretty)
 
   # State 2: Grouped icon aray, first grouping in column facets
 
@@ -95,7 +95,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
     )
   ) %>%
     vegawidget::as_vegaspec() %>%
-    vegawidget::vw_as_json()
+    vegawidget::vw_as_json(pretty = pretty)
 
   # State 3: Grouped icon array, first group in col and second in row facets
 
@@ -119,7 +119,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
       )
     ) %>%
       vegawidget::as_vegaspec() %>%
-      vegawidget::vw_as_json()
+      vegawidget::vw_as_json(pretty = pretty)
   }
 
   # State 4: Grouped icon array, first group in col, second in row facets, third in colour
@@ -145,7 +145,7 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
       )
     ) %>%
       vegawidget::as_vegaspec() %>%
-      vegawidget::vw_as_json()
+      vegawidget::vw_as_json(pretty = pretty)
   }
 
   # Return the specs
