@@ -19,3 +19,7 @@ dependencies:
    version: 0.1.0
    src: htmlwidgets/gemini
    script: gemini.web.js
+ - name: datamationFunctions
+   version: 0.1.0
+   src: htmlwidgets/js
+   script: datamationsFunctions.js
