@@ -52,11 +52,17 @@ renderDatamationSandDance <- function(expr, env = parent.frame(), quoted = FALSE
 }
 
 datamationSandDance_html <- function(...) {
+
+  id <- c(...)[["id"]]
+
   htmltools::div(
     class = "container",
     htmltools::div(
-      class = "button-wrapper",
-      htmltools::tags$button(onclick = htmlwidgets::JS("play()"), "Play")
+      class = "control-bar",
+      htmltools::div(
+        class = "button-wrapper",
+        htmltools::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Play")
+      )
     ),
     htmltools::div(
       class = "chart-wrapper",
