@@ -55,16 +55,8 @@ datamationSandDance_html <- function(...) {
   htmltools::div(
     class = "container",
     htmltools::div(
-      class = "control-bar",
-      htmltools::div(
-        class = "button-wrapper",
-        htmltools::tags$button(onclick = htmlwidgets::JS("play()"), "Play")
-      ),
-      htmltools::div(
-        class = "slider-wrapper",
-        htmltools::tags$input(type = "range", min = "0", value = "0", id = "slider")
-      ),
-      htmltools::div(class = "current-frame", id = "frame") # TODO: element ID namespacing
+      class = "button-wrapper",
+      htmltools::tags$button(onclick = htmlwidgets::JS("play()"), "Play")
     ),
     htmltools::div(
       class = "chart-wrapper",

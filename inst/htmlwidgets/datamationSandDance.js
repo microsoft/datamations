@@ -1,15 +1,12 @@
 HTMLWidgets.widget({
+  name: "datamationSandDance",
 
-  name: 'datamationSandDance',
-
-  type: 'output',
+  type: "output",
 
   factory: function (el, width, height) {
-
     return {
-
       renderValue: function (x) {
-
+        const dataUrl =  "https://raw.githubusercontent.com/jhofman/datamations/vegawidget-exploration/sandbox/vegawidget/work_degree/specs/";
         const frameDuration = 1200;
 
         const specFiles = [
@@ -21,18 +18,11 @@ HTMLWidgets.widget({
           "06-mean.json",
         ];
 
-        const sliderEl = document.getElementById("slider");
-
         let frames = [];
         let specsArray = [];
-        let geminiSpecs = [];
 
         function loadData() {
-          return Promise.all(
-            specFiles.map((d) => {
-              return d3.json("https://raw.githubusercontent.com/jhofman/datamations/vegawidget-exploration/sandbox/vegawidget/work_degree/specs/" + d);
-            })
-          )
+          return Promise.all(specFiles.map((d) => d3.json(dataUrl + d)))
             .then((files) => {
               // make adjustments here
               return files.map((d) => {
@@ -70,26 +60,21 @@ HTMLWidgets.widget({
                       enter: true,
                       exit: true,
                     },
-                  }
+                  },
                 },
-                totalDuration: frameDuration
+                totalDuration: frameDuration,
               });
-              recommendations.then(resp => {
+
+              recommendations.then((resp) => {
                 frames.push({
                   source: prev,
                   target: curr,
                   gemSpec: resp[0].spec,
                 });
-
-                if (i === specsArray.length - 1) {
-                  console.log(frames);
-                  sliderEl.max = frames.length - 1;
-                }
               });
             }
 
             vegaEmbed("#" + el.id, specsArray[0], { renderer: "svg" });
-            d3.select("#frame").html(specFiles[0]);
           });
         }
 
@@ -100,12 +85,14 @@ HTMLWidgets.widget({
         function play() {
           counter = 0;
           vegaEmbed("#" + el.id, specsArray[counter], { renderer: "svg" });
-          d3.select("#frame").html(specFiles[counter]);
+
           const tick = () => {
             animateFrame(counter);
             counter++;
           };
+
           tick();
+
           if (intervalId) clearInterval(intervalId);
           intervalId = setInterval(() => {
             tick();
@@ -125,9 +112,6 @@ HTMLWidgets.widget({
 
           if (animating) return;
 
-          d3.select("#frame").html(specFiles[index + 1]);
-          sliderEl.value = index;
-
           animating = true;
 
           let anim = await gemini.animate(source, target, spec);
@@ -138,13 +122,14 @@ HTMLWidgets.widget({
         }
 
         init();
-
+        play();
       },
 
-      resize: function (width, height) {
+      resize: function (width, height) {},
 
+      play: function() {
+        console.log("play")
       }
-
     };
-  }
+  },
 });
