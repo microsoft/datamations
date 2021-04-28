@@ -41,32 +41,38 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     }
   )
 
-  res <- map(2:length(fittings), function(i) {
-    # Starts with data in the previous stage
-    data <- data_states[[i - 1]]
-    verb <- tidy_func_arg[[i]][[1]]
+  res <- map(1:length(fittings), function(i) {
 
-    call_verb <-
-      switch(verb,
-        group_by = animate_group_by_sanddance,
-        summarise = animate_summarize_sanddance,
-        summarize = animate_summarize_sanddance
-      )
+    # Starts with data in the previous stage, unless it is the first stage (the data itself)
+    if (i == 1) {
+      data <- data_states[[1]]
+      verb <- "data"
+    } else {
+      data <- data_states[[i - 1]]
+      verb <- tidy_func_arg[[i]][[1]]
+    }
 
-    args <-
-      switch(verb,
-        group_by = tidy_func_arg[[i]][-1],
-        summarise = tidy_func_arg[[i]][[2]],
-        summarize = tidy_func_arg[[i]][[2]]
-      )
+    call_verb <- switch(verb,
+      data = animate_data_sanddance,
+      group_by = animate_group_by_sanddance,
+      summarise = animate_summarize_sanddance,
+      summarize = animate_summarize_sanddance
+    )
 
-    call_args <-
-      switch(verb,
-        group_by = rlang::parse_exprs(args),
-        # TODO: What if calculation in summarise is unnamed? What if there's more than one calculation? Check these cases
-        summarise = rlang::parse_exprs(args),
-        summarize = rlang::parse_exprs(args)
-      )
+    args <- switch(verb,
+      data = NA_character_,
+      group_by = tidy_func_arg[[i]][-1],
+      summarise = tidy_func_arg[[i]][[2]],
+      summarize = tidy_func_arg[[i]][[2]]
+    )
+
+    call_args <- switch(verb,
+      data = NA_character_,
+      group_by = rlang::parse_exprs(args),
+      # TODO: What if calculation in summarise is unnamed? What if there's more than one calculation? Check these cases
+      summarise = rlang::parse_exprs(args),
+      summarize = rlang::parse_exprs(args)
+    )
 
     do.call(call_verb, list(data, call_args, pretty = pretty))
   })
@@ -75,7 +81,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   # Might be good for titling, but right now I'm thinking because the group_by "specs" need to actually be processed into an infogrid - they do not contain x or y, but just "n" to be processed on the JS side
   # res <- unlist(res, recursive  = FALSE)
 
-  names(res) <- tidy_functions_list
+  names(res) <- c("data", tidy_functions_list)
 
   res
 }

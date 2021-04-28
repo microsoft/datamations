@@ -29,9 +29,6 @@ animate_group_by_sanddance <- function(.data, ..., pretty = TRUE) {
   # Convert grouping variables to character
   group_vars_chr <- map_chr(group_vars, rlang::quo_name)
 
-  # Keep an unaltered copy of the data to return later
-  df <- .data
-
   # Convert grouping variables to character - useful if there are binary variables or with a small number of (numeric) options, since you can't map shape to a continuous variable
   # But we should be careful about too many categories and e.g. stop if there are too many
   .data <- .data %>%
@@ -42,7 +39,7 @@ animate_group_by_sanddance <- function(.data, ..., pretty = TRUE) {
     mutate(.id = row_number())
 
   # Generate the data and specs for each state
-  specs_list <- vector("list", length = n_groups + 1)
+  specs_list <- vector("list", length = n_groups)
 
   # Prep encoding
 
@@ -54,39 +51,19 @@ animate_group_by_sanddance <- function(.data, ..., pretty = TRUE) {
 
   # TODO: these are not "real specs" as they don't actually have an x or y, only n - the first few frames need to be processed on the JS side into infogrids.
 
-  # State 1: Ungrouped icon array
-
-  # Add a count (total) to each record
-
-  data_1 <- .data %>%
-    dplyr::add_count() %>%
-    select(.id, n, tidyselect::any_of(group_vars_chr))
-
-  specs_list[[1]] <- list(
-    `$schema` = vegawidget::vega_schema(),
-    data = list(values = data_1),
-    mark = "infogridpoint",
-    encoding = list(
-      x = x_encoding,
-      y = y_encoding
-    )
-  ) %>%
-    vegawidget::as_vegaspec() %>%
-    vegawidget::vw_as_json(pretty = pretty)
-
-  # State 2: Grouped icon aray, first grouping in column facets
+  # State 1: Grouped icon aray, first grouping in column facets
 
   # Add a count (grouped) to each record
 
-  data_2 <- .data %>%
+  data_1 <- .data %>%
     group_by({{ col_facet_var }}) %>%
     dplyr::add_count() %>%
     ungroup() %>%
     select(.id, n, tidyselect::any_of(group_vars_chr))
 
-  specs_list[[2]] <- list(
+  specs_list[[1]] <- list(
     `$schema` = vegawidget::vega_schema(),
-    data = list(values = data_2),
+    data = list(values = data_1),
     mark = "infogridpoint",
     encoding = list(
       x = x_encoding,
@@ -97,19 +74,19 @@ animate_group_by_sanddance <- function(.data, ..., pretty = TRUE) {
     vegawidget::as_vegaspec() %>%
     vegawidget::vw_as_json(pretty = pretty)
 
-  # State 3: Grouped icon array, first group in col and second in row facets
+  # State 2: Grouped icon array, first group in col and second in row facets
 
   if (n_groups %in% c(2, 3)) {
 
-    data_3 <- .data %>%
+    data_2 <- .data %>%
       group_by({{ col_facet_var }}, {{ row_facet_var }}) %>%
       dplyr::add_count() %>%
       ungroup() %>%
       select(.id, n, tidyselect::any_of(group_vars_chr))
 
-    specs_list[[3]] <- list(
+    specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      data = list(values = data_3),
+      data = list(values = data_2),
       mark = "infogridpoint",
       encoding = list(
         x = x_encoding,
@@ -122,19 +99,19 @@ animate_group_by_sanddance <- function(.data, ..., pretty = TRUE) {
       vegawidget::vw_as_json(pretty = pretty)
   }
 
-  # State 4: Grouped icon array, first group in col, second in row facets, third in colour
+  # State 3: Grouped icon array, first group in col, second in row facets, third in colour
 
   if (n_groups == 3) {
 
-    data_4 <- .data %>%
+    data_3 <- .data %>%
       group_by({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }}) %>%
       dplyr::add_count() %>%
       ungroup() %>%
       select(.id, n, tidyselect::any_of(group_vars_chr))
 
-    specs_list[[4]] <- list(
+    specs_list[[3]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      data = list(values = data_4),
+      data = list(values = data_3),
       mark = "infogridpoint",
       encoding = list(
         x = x_encoding,
