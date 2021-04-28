@@ -83,7 +83,17 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
 
   # Use values from quasirandom
   data_stage1 <- data_stage1_original
-  data_stage1$x <- stage1_quasirandom_data$x
+
+  # Fill in NAs from original data that are missing from quasirandom
+  quasirandom_index <- data_stage1 %>%
+    ungroup() %>%
+    mutate(na_y = is.na(y),
+           n_na_y = cumsum(na_y),
+           .x_id = .id - n_na_y,
+           .x_id = ifelse(na_y, NA_integer_, .x_id)) %>%
+    pull(.x_id)
+
+  data_stage1$x <- stage1_quasirandom_data$x[quasirandom_index]
 
   # Set up encoding based on number of groups
   encoding <- list(
