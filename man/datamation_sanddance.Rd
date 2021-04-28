@@ -4,15 +4,7 @@
 \alias{datamation_sanddance}
 \title{Create a tibble datamation}
 \usage{
-datamation_sanddance(
-  pipeline,
-  envir = rlang::global_env(),
-  output = "output.gif",
-  titles = "",
-  xlim = c(NA, NA),
-  ylim = c(NA, NA),
-  ...
-)
+datamation_sanddance(pipeline, envir = rlang::global_env(), pretty = TRUE)
 }
 \arguments{
 \item{pipeline}{A tidyverse pipeline.}

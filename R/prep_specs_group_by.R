@@ -12,7 +12,7 @@
 #' @importFrom tidyr unite unnest
 #' @importFrom ggplot2 layer_scales
 #' @export
-animate_group_by_sanddance <- function(.data, ..., pretty = TRUE) {
+prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
 
   # Map grouping variables
   group_vars <- c(...)

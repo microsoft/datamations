@@ -12,7 +12,7 @@
 #' @importFrom stats setNames
 #' @importFrom tidyr separate
 #' @export
-animate_summarize_sanddance <- function(.data, summary_operation, pretty = TRUE) {
+prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
 
   # START: same as animate_group_by_sanddance
 

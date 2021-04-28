@@ -1,4 +1,4 @@
-animate_data_sanddance <- function(.data, ..., pretty = TRUE) {
+prep_specs_data <- function(.data, ..., pretty = TRUE) {
 
   # Add an ID to the data to be used across frames
   .data <- .data %>%

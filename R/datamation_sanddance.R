@@ -53,10 +53,10 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     }
 
     call_verb <- switch(verb,
-      data = animate_data_sanddance,
-      group_by = animate_group_by_sanddance,
-      summarise = animate_summarize_sanddance,
-      summarize = animate_summarize_sanddance
+      data = prep_specs_data,
+      group_by = prep_specs_group_by,
+      summarise = prep_specs_summarize,
+      summarize = prep_specs_summarize
     )
 
     args <- switch(verb,
