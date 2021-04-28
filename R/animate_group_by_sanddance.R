@@ -56,9 +56,15 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 
   # State 1: Ungrouped icon array
 
+  # Add a count (total) to each record
+
+  data_1 <- .data %>%
+    dplyr::add_count() %>%
+    select(.id, n, tidyselect::any_of(group_vars_chr))
+
   specs_list[[1]] <- list(
     `$schema` = vegawidget::vega_schema(),
-    data = list(values = .data),
+    data = list(values = data_1),
     mark = "point",
     encoding = list(
       x = x_encoding,
@@ -70,14 +76,22 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
 
   # State 2: Grouped icon aray, first grouping in column facets
 
+  # Add a count (grouped) to each record
+
+  data_2 <- .data %>%
+    group_by({{ col_facet_var }}) %>%
+    dplyr::add_count() %>%
+    ungroup() %>%
+    select(.id, n, tidyselect::any_of(group_vars_chr))
+
   specs_list[[2]] <- list(
     `$schema` = vegawidget::vega_schema(),
-    data = list(values = .data),
+    data = list(values = data_2),
     mark = "point",
     encoding = list(
       x = x_encoding,
       y = y_encoding,
-      col = facet_col_encoding
+      column = facet_col_encoding
     )
   ) %>%
     vegawidget::as_vegaspec() %>%
@@ -86,14 +100,21 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   # State 3: Grouped icon array, first group in col and second in row facets
 
   if (n_groups %in% c(2, 3)) {
+
+    data_3 <- .data %>%
+      group_by({{ col_facet_var }}, {{ row_facet_var }}) %>%
+      dplyr::add_count() %>%
+      ungroup() %>%
+      select(.id, n, tidyselect::any_of(group_vars_chr))
+
     specs_list[[3]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      data = list(values = .data),
+      data = list(values = data_3),
       mark = "point",
       encoding = list(
         x = x_encoding,
         y = y_encoding,
-        col = facet_col_encoding,
+        column = facet_col_encoding,
         row = facet_row_encoding
       )
     ) %>%
@@ -104,9 +125,16 @@ animate_group_by_sanddance <- function(.data, ..., nframes = 5, is_last = FALSE,
   # State 4: Grouped icon array, first group in col, second in row facets, third in colour
 
   if (n_groups == 3) {
+
+    data_4 <- .data %>%
+      group_by({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }}) %>%
+      dplyr::add_count() %>%
+      ungroup() %>%
+      select(.id, n, tidyselect::any_of(group_vars_chr))
+
     specs_list[[4]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      data = list(values = .data),
+      data = list(values = data_4),
       mark = "point",
       encoding = list(
         x = x_encoding,
