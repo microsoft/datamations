@@ -2,8 +2,7 @@ test_that("parse_functions identifies functions used in a pipeline", {
   pipeline <- "small_salary %>% group_by(Degree) %>% summarise(mean = mean(Salary))"
 
   fittings <- pipeline %>%
-    parse_expr() %>%
-    dismantle()
+    parse_pipeline()
 
   functions <- parse_functions(fittings)
 

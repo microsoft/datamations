@@ -15,9 +15,11 @@
 #' @param output Path to where gif will be saved.
 #' @export
 datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty = TRUE) {
+
+  supported_tidy_functions <- c("group_by", "summarize", "summarise")
+
   fittings <- pipeline %>%
-    parse_expr() %>%
-    dismantle()
+    parse_pipeline()
 
   data_states <- fittings %>%
     snake(envir = envir)
@@ -31,8 +33,6 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   tidy_func_arg <- fittings %>%
     map(as.list) %>%
     map(as.character)
-
-  supported_tidy_functions <- c("group_by", "summarize", "summarise")
 
   map(
     tidy_functions_list,
