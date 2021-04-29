@@ -73,7 +73,7 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
 
   # State 1: Scatter plot (with any grouping)
 
-  data_stage1_original <- .data %>%
+  data_1 <- .data %>%
     mutate(x = 1) %>%
     select(.id, x, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
 
@@ -105,7 +105,7 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
     specs_list[[1]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(parse = "jitter"),
-      data = list(values = data_stage1),
+      data = list(values = data_1),
       mark = "point",
       encoding = encoding
     ) %>%
@@ -115,7 +115,7 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
     specs_list[[1]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(parse = "jitter"),
-      data = list(values = data_stage1),
+      data = list(values = data_1),
       facet = facet,
       spec = list(
         mark = "point",
@@ -130,24 +130,24 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
   # There should still be a point for each datapoint, just all overlapping
   # None should disappear, otherwise makes animating
 
-  data_stage2 <- data_stage1_original %>%
+  data_2 <- data_1 %>%
     dplyr::mutate(across(y, !!summary_function, na.rm = TRUE))
 
   if (n_groups == 0) {
-    specs_list[[1]] <- list(
+    specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(),
-      data = list(values = data_stage1),
+      data = list(values = data_2),
       mark = "point",
       encoding = encoding
     ) %>%
       vegawidget::as_vegaspec() %>%
       vegawidget::vw_as_json(pretty = pretty)
   } else {
-    specs_list[[1]] <- list(
+    specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(),
-      data = list(values = data_stage1),
+      data = list(values = data_2),
       facet = facet,
       spec = list(
         mark = "point",
