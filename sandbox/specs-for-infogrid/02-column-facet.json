@@ -1,5 +1,8 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "meta": {
+    "parse": "grid"
+  },
   "data": {
     "values": [
       {
@@ -2401,22 +2404,26 @@
       }
     ]
   },
-  "mark": "infogridpoint",
-  "encoding": {
-    "x": {
-      "field": "x",
-      "type": "quantitative",
-      "axis": null
-    },
-    "y": {
-      "field": "y",
-      "type": "quantitative",
-      "axis": null
-    },
+  "facet": {
     "column": {
       "field": "island",
       "type": "nominal",
       "title": null
+    }
+  },
+  "spec": {
+    "mark": "point",
+    "encoding": {
+      "x": {
+        "field": "x",
+        "type": "quantitative",
+        "axis": null
+      },
+      "y": {
+        "field": "y",
+        "type": "quantitative",
+        "axis": null
+      }
     }
   }
 }

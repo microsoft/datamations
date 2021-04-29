@@ -24,8 +24,9 @@ prep_specs_data <- function(.data, ..., pretty = TRUE) {
 
   specs_list[[1]] <- list(
     `$schema` = vegawidget::vega_schema(),
+    meta = list(parse = "grid"),
     data = list(values = data_1),
-    mark = "infogridpoint",
+    mark = "point",
     encoding = list(
       x = x_encoding,
       y = y_encoding

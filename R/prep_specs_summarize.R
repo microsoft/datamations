@@ -67,9 +67,9 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
 
   x_encoding <- list(field = "x", type = "quantitative", axis = NULL)
   y_encoding <- list(field = "y", type = "quantitative", axis = NULL)
+  color_encoding <- list(field = rlang::quo_name(color_var), type = "nominal", axis = NULL)
   facet_col_encoding <- list(field = rlang::quo_name(col_facet_var), type = "nominal", title = NULL)
   facet_row_encoding <- list(field = rlang::quo_name(row_facet_var), type = "nominal", title = NULL)
-  color_encoding <- list(field = rlang::quo_name(color_var), type = "quantitative", axis = NULL)
 
   # State 1: Scatter plot (with any grouping)
 
@@ -77,53 +77,54 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
     mutate(x = 1) %>%
     select(.id, x, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
 
-  # Create quasirandom plot to scatter points horizontally only
-  stage1_quasirandom_plot <- plot_grouped_dataframe_withresponse_sanddance(data_stage1_original)
-  stage1_quasirandom_data <- layer_data(stage1_quasirandom_plot)
-
-  # Use values from quasirandom
-  data_stage1 <- data_stage1_original
-
-  # Fill in NAs from original data that are missing from quasirandom
-  quasirandom_index <- data_stage1 %>%
-    ungroup() %>%
-    mutate(na_y = is.na(y),
-           n_na_y = cumsum(na_y),
-           .x_id = .id - n_na_y,
-           .x_id = ifelse(na_y, NA_integer_, .x_id)) %>%
-    pull(.x_id)
-
-  data_stage1$x <- stage1_quasirandom_data$x[quasirandom_index]
-
-  # Set up encoding based on number of groups
+  # Set up specs based on number of groups
   encoding <- list(
     x = x_encoding,
     y = y_encoding
   )
 
   if (n_groups == 1) {
-    encoding <- append(encoding, list(column = facet_col_encoding))
+    facet <- list(column = facet_col_encoding)
   } else if (n_groups == 2) {
-    encoding <- append(encoding, list(
+    facet <- list(
       column = facet_col_encoding,
       row = facet_row_encoding
-    ))
+    )
   } else if (n_groups == 3) {
     encoding <- append(encoding, list(
-      column = facet_col_encoding,
-      row = facet_row_encoding,
       color = color_encoding
     ))
+
+    facet <- list(
+      column = facet_col_encoding,
+      row = facet_row_encoding
+    )
   }
 
-  specs_list[[1]] <- list(
-    `$schema` = vegawidget::vega_schema(),
-    data = list(values = data_stage1),
-    mark = "point",
-    encoding = encoding
-  ) %>%
-    vegawidget::as_vegaspec() %>%
-    vegawidget::vw_as_json(pretty = pretty)
+  if (n_groups == 0) {
+    specs_list[[1]] <- list(
+      `$schema` = vegawidget::vega_schema(),
+      meta = list(parse = "jitter"),
+      data = list(values = data_stage1),
+      mark = "point",
+      encoding = encoding
+    ) %>%
+      vegawidget::as_vegaspec() %>%
+      vegawidget::vw_as_json(pretty = pretty)
+  } else {
+    specs_list[[1]] <- list(
+      `$schema` = vegawidget::vega_schema(),
+      meta = list(parse = "jitter"),
+      data = list(values = data_stage1),
+      facet = facet,
+      spec = list(
+        mark = "point",
+        encoding = encoding
+      )
+    ) %>%
+      vegawidget::as_vegaspec() %>%
+      vegawidget::vw_as_json(pretty = pretty)
+  }
 
   # State 2: Summary plot (with any grouping)
   # There should still be a point for each datapoint, just all overlapping
@@ -132,14 +133,30 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
   data_stage2 <- data_stage1_original %>%
     dplyr::mutate(across(y, !!summary_function, na.rm = TRUE))
 
-  specs_list[[2]] <- list(
-    `$schema` = vegawidget::vega_schema(),
-    data = list(values = data_stage2),
-    mark = "point",
-    encoding = encoding
-  ) %>%
-    vegawidget::as_vegaspec() %>%
-    vegawidget::vw_as_json(pretty = pretty)
+  if (n_groups == 0) {
+    specs_list[[1]] <- list(
+      `$schema` = vegawidget::vega_schema(),
+      meta = list(),
+      data = list(values = data_stage1),
+      mark = "point",
+      encoding = encoding
+    ) %>%
+      vegawidget::as_vegaspec() %>%
+      vegawidget::vw_as_json(pretty = pretty)
+  } else {
+    specs_list[[1]] <- list(
+      `$schema` = vegawidget::vega_schema(),
+      meta = list(),
+      data = list(values = data_stage1),
+      facet = facet,
+      spec = list(
+        mark = "point",
+        encoding = encoding
+      )
+    ) %>%
+      vegawidget::as_vegaspec() %>%
+      vegawidget::vw_as_json(pretty = pretty)
+  }
 
   # Return the specs
   specs_list

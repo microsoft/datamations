@@ -45,9 +45,9 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
 
   x_encoding <- list(field = "x", type = "quantitative", axis = NULL)
   y_encoding <- list(field = "y", type = "quantitative", axis = NULL)
+  color_encoding <- list(field = rlang::quo_name(color_var), type = "nominal", axis = NULL)
   facet_col_encoding <- list(field = rlang::quo_name(col_facet_var), type = "nominal", title = NULL)
   facet_row_encoding <- list(field = rlang::quo_name(row_facet_var), type = "nominal", title = NULL)
-  color_encoding <- list(field = rlang::quo_name(color_var), type = "quantitative", axis = NULL)
 
   # TODO: these are not "real specs" as they don't actually have an x or y, only n - the first few frames need to be processed on the JS side into infogrids.
 
@@ -63,12 +63,15 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
 
   specs_list[[1]] <- list(
     `$schema` = vegawidget::vega_schema(),
+    meta = list(parse = "grid"),
     data = list(values = data_1),
-    mark = "infogridpoint",
-    encoding = list(
-      x = x_encoding,
-      y = y_encoding,
-      column = facet_col_encoding
+    facet = list(column = facet_col_encoding),
+    spec = list(
+      mark = "point",
+      encoding = list(
+        x = x_encoding,
+        y = y_encoding
+      )
     )
   ) %>%
     vegawidget::as_vegaspec() %>%
@@ -77,7 +80,6 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
   # State 2: Grouped icon array, first group in col and second in row facets
 
   if (n_groups %in% c(2, 3)) {
-
     data_2 <- .data %>%
       group_by({{ col_facet_var }}, {{ row_facet_var }}) %>%
       dplyr::add_count() %>%
@@ -86,13 +88,18 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
 
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
+      meta = list(parse = "grid"),
       data = list(values = data_2),
-      mark = "infogridpoint",
-      encoding = list(
-        x = x_encoding,
-        y = y_encoding,
+      facet = list(
         column = facet_col_encoding,
         row = facet_row_encoding
+      ),
+      spec = list(
+        mark = "point",
+        encoding = list(
+          x = x_encoding,
+          y = y_encoding
+        )
       )
     ) %>%
       vegawidget::as_vegaspec() %>%
@@ -102,7 +109,6 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
   # State 3: Grouped icon array, first group in col, second in row facets, third in colour
 
   if (n_groups == 3) {
-
     data_3 <- .data %>%
       group_by({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }}) %>%
       dplyr::add_count() %>%
@@ -111,14 +117,19 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
 
     specs_list[[3]] <- list(
       `$schema` = vegawidget::vega_schema(),
+      meta = list(parse = "grid"),
       data = list(values = data_3),
-      mark = "infogridpoint",
-      encoding = list(
-        x = x_encoding,
-        y = y_encoding,
+      facet = list(
         column = facet_col_encoding,
-        row = facet_row_encoding,
-        color = color_encoding
+        row = facet_row_encoding
+      ),
+      spec = list(
+        mark = "point",
+        encoding = list(
+          x = x_encoding,
+          y = y_encoding,
+          color = color_encoding
+        )
       )
     ) %>%
       vegawidget::as_vegaspec() %>%
