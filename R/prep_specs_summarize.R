@@ -101,6 +101,8 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
     )
   }
 
+  # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
+
   if (n_groups == 0) {
     specs_list[[1]] <- list(
       `$schema` = vegawidget::vega_schema(),

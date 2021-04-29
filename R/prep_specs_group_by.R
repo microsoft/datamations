@@ -45,7 +45,8 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
   facet_col_encoding <- list(field = rlang::quo_name(col_facet_var), type = "nominal", title = NULL)
   facet_row_encoding <- list(field = rlang::quo_name(row_facet_var), type = "nominal", title = NULL)
 
-  # TODO: these are not "real specs" as they don't actually have an x or y, only n - the first few frames need to be processed on the JS side into infogrids.
+  # These are not "real specs" as they don't actually have an x or y, only n
+  # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
 
   # State 1: Grouped icon aray, first grouping in column facets
 
