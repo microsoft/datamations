@@ -56,10 +56,7 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
   # Add a count (grouped) to each record
 
   data_1 <- .data %>%
-    group_by({{ col_facet_var }}) %>%
-    dplyr::add_count() %>%
-    ungroup() %>%
-    select(.id, n, tidyselect::any_of(group_vars_chr))
+    dplyr::count({{ col_facet_var }})
 
   specs_list[[1]] <- list(
     `$schema` = vegawidget::vega_schema(),
@@ -81,10 +78,7 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
 
   if (n_groups %in% c(2, 3)) {
     data_2 <- .data %>%
-      group_by({{ col_facet_var }}, {{ row_facet_var }}) %>%
-      dplyr::add_count() %>%
-      ungroup() %>%
-      select(.id, n, tidyselect::any_of(group_vars_chr))
+      dplyr::count({{ col_facet_var }}, {{ row_facet_var }})
 
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
@@ -110,10 +104,7 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
 
   if (n_groups == 3) {
     data_3 <- .data %>%
-      group_by({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }}) %>%
-      dplyr::add_count() %>%
-      ungroup() %>%
-      select(.id, n, tidyselect::any_of(group_vars_chr))
+      dplyr::count({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }})
 
     specs_list[[3]] <- list(
       `$schema` = vegawidget::vega_schema(),

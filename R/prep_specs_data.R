@@ -19,8 +19,7 @@ prep_specs_data <- function(.data, ..., pretty = TRUE) {
   # Add a count (total) to each record
 
   data_1 <- .data %>%
-    dplyr::add_count() %>%
-    select(.id, n)
+    dplyr::count()
 
   specs_list[[1]] <- list(
     `$schema` = vegawidget::vega_schema(),
