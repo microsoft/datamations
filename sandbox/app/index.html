@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Datamations</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
+    <script src="./libs/gemini.web.js"></script>
+    <style>
+      #vis * {
+        pointer-events: none !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="button-wrapper">
+      <button onclick="app.play()">Play</button>
+    </div>
+    <div id="vis"></div>
+    <script src="./scripts/layout.js"></script>
+    <script src="./scripts/hack.js"></script>
+    <script src="./scripts/app.js"></script>
+    <script>
+
+      const dataUrl = "https://raw.githubusercontent.com/jhofman/datamations/refactor-test/sandbox/specs-for-infogrid/";
+
+      const app = App({
+        specUrls: [
+          dataUrl + "01-ungrouped.json",
+          dataUrl + "02-column-facet.json",
+          dataUrl + "03-column-row-facet.json",
+          dataUrl + "04-column-row-facet-color.json",
+          dataUrl + "05-jitter.json",
+          dataUrl + "06-summary.json",
+        ]
+      })
+    </script>
+  </body>
+</html>
