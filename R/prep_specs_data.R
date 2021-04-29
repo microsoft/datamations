@@ -1,9 +1,5 @@
 prep_specs_data <- function(.data, ..., pretty = TRUE) {
 
-  # Add an ID to the data to be used across frames
-  .data <- .data %>%
-    mutate(.id = row_number())
-
   # Generate the data and specs for each state
   specs_list <- vector("list", length = 1)
 

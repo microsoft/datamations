@@ -40,8 +40,8 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
     dplyr::mutate_at(dplyr::all_of(group_vars_chr), as.character)
 
   # Add an ID to the data to be used across frames
-  .id <- 1:nrow(.data)
-  id_df <- tibble(.id = .id)
+  gemini_id <- 1:nrow(.data)
+  id_df <- tibble(gemini_id = gemini_id)
 
   .data <- .data %>%
     dplyr::bind_cols(id_df)
@@ -75,7 +75,7 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
 
   data_1 <- .data %>%
     mutate(x = 1) %>%
-    select(.id, x, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
+    select(gemini_id, x, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
 
   # Set up specs based on number of groups
   encoding <- list(
