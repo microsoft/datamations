@@ -116,6 +116,12 @@ function App({
     });
   }
 
+  function drawFrame(index) {
+    vegaEmbed(container, specsArray[index], {
+      renderer: "svg",
+    });
+  }
+
   function loadData() {
     return Promise.all(
       specUrls.map((url) => {
@@ -142,5 +148,6 @@ function App({
   return {
     play,
     animateFrame,
+    drawFrame,
   };
 }
