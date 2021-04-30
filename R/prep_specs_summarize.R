@@ -74,8 +74,20 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
   # State 1: Scatter plot (with any grouping)
 
   data_1 <- .data %>%
-    mutate(x = 1) %>%
-    select(gemini_id, x, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
+    select(gemini_id, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
+
+  # Add an x variable to use as the center of jittering
+  # It can just be 1, except if there are three grouping variables (since then there's facet, row, and colour grouping, and the colour is also offset)
+  if (n_groups == 3) {
+    data_1 <- data_1 %>%
+      dplyr::mutate(
+        x = forcats::fct_explicit_na({{ color_var }}),
+        x = as.numeric(x)
+      )
+  } else {
+    data_1 <- data_1 %>%
+      dplyr::mutate(x = 1)
+  }
 
   # Set up specs based on number of groups
   encoding <- list(
@@ -134,6 +146,19 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
 
   data_2 <- data_1 %>%
     dplyr::mutate(across(y, !!summary_function, na.rm = TRUE))
+
+  # Add an x variable to place the point
+  # It can just be 1, except if there are three grouping variables (since then there's facet, row, and colour grouping, and the colour is also offset)
+  if (n_groups == 3) {
+    data_1 <- data_1 %>%
+      dplyr::mutate(
+        x = forcats::fct_explicit_na({{ color_var }}),
+        x = as.numeric(x)
+      )
+  } else {
+    data_1 <- data_1 %>%
+      dplyr::mutate(x = 1)
+  }
 
   if (n_groups == 0) {
     specs_list[[2]] <- list(
