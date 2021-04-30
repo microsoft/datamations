@@ -135,31 +135,51 @@ function getGridSpec(spec, rows = 10) {
 /**
  * Generates jittered specification
  * @param {Object} spec vega-lite specification
+ * @param {String} xField xField
  * @returns jittered spec
  */
-function getJitterSpec(spec) {
+function getJitterSpec(spec, xField) {
   const width = spec.width;
-  // const height = spec.height;
-  const xField = spec.facet.column.field;
-
+  const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
+  const colorField = encoding.color ? encoding.color.field : null;
   const nodes = spec.data.values;
+
+  let colorOptions = [];
+
+  if (colorField) {
+    colorOptions = [...new Set(nodes.map((d) => {
+      return d[colorField];
+    }))];
+  }
 
   const xScale = d3
     .scaleBand()
-    .domain([...new Set(nodes.map((d) => d[xField]))])
+    .domain([...new Set(nodes.map((d) => d[xField]))].sort())
     .range([0, width]);
 
-  // const yScale = d3.scaleLinear()
-  //   .domain(d3.extent(nodes, d => d.Salary))
-  //   .range([height, 0]);
+  let xScaleInner;
+  if (colorField) {
+    xScaleInner = d3
+      .scaleBand()
+      .domain(colorOptions)
+      .range([10, xScale.bandwidth() - 10])
+  }
 
   const circleRadius = 3;
 
   const arr = nodes.slice().map((d, i) => {
+    let x;
+
+    if (colorField) {
+      x = xScale(d[xField]) + xScaleInner(d[colorField]) + xScaleInner.bandwidth() / 2 + xScale.bandwidth() * 0.18;
+    } else {
+      x = xScale(d[xField]) + xScale.bandwidth() / 2;
+    }
+
     return {
       ...d,
       r: circleRadius,
-      x: xScale(d[xField]) + xScale.bandwidth() / 2,
+      x: x,
       fy: d.y,
     };
   });
@@ -170,8 +190,8 @@ function getJitterSpec(spec) {
       "collide",
       d3
         .forceCollide()
-        .iterations(5)
-        .radius(circleRadius + 5)
+        .iterations(2)
+        .radius(circleRadius)
     )
     .stop();
 
