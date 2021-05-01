@@ -17,3 +17,26 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+
+- task: CredScan@2
+  inputs:
+    toolMajorVersion: 'V1'
+
+- task: Semmle@1
+  inputs:
+    sourceCodeDirectory: '$(Build.SourcesDirectory)'
+    language: 'csharp'
+    querySuite: 'Recommended'
+    timeout: '1800'
+    ram: '16384'
+    addProjectDirToScanningExclusionList: true
+
+- task: ComponentGovernanceComponentDetection@0
+  inputs:
+    scanType: 'Register'
+    verbosity: 'Verbose'
+    alertWarningLevel: 'High'
+
+- task: BinSkim@3
+  inputs:
+    InputType: 'CommandLine'
