@@ -20,19 +20,3 @@ steps:
     scanType: 'Register'
     verbosity: 'Verbose'
     alertWarningLevel: 'High'
-
-- task: BinSkim@3
-  inputs:
-    InputType: 'Basic'
-    Function: 'analyze'
-    AnalyzeTarget: '*.dll;*.exe'
-
-- task: Semmle@1
-  inputs:
-    sourceCodeDirectory: '$(Build.SourcesDirectory)'
-    language: 'csharp'
-    querySuite: 'Recommended'
-    timeout: '1800'
-    ram: '16384'
-    addProjectDirToScanningExclusionList: true
-
