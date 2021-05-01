@@ -15,15 +15,6 @@ steps:
   inputs:
     toolMajorVersion: 'V1'
 
-- task: Semmle@1
-  inputs:
-    sourceCodeDirectory: '$(Build.SourcesDirectory)'
-    language: 'csharp'
-    querySuite: 'Recommended'
-    timeout: '1800'
-    ram: '16384'
-    addProjectDirToScanningExclusionList: true
-
 - task: ComponentGovernanceComponentDetection@0
   inputs:
     scanType: 'Register'
@@ -33,3 +24,13 @@ steps:
 - task: BinSkim@3
   inputs:
     InputType: 'CommandLine'
+  
+- task: Semmle@1
+  inputs:
+    sourceCodeDirectory: '$(Build.SourcesDirectory)'
+    language: 'csharp'
+    querySuite: 'Recommended'
+    timeout: '1800'
+    ram: '16384'
+    addProjectDirToScanningExclusionList: true
+
