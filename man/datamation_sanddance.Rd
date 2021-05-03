@@ -2,17 +2,17 @@
 % Please edit documentation in R/datamation_sanddance.R
 \name{datamation_sanddance}
 \alias{datamation_sanddance}
-\title{Create a tibble datamation}
+\title{Generate a plot datamation}
 \usage{
 datamation_sanddance(pipeline, envir = rlang::global_env(), pretty = TRUE)
 }
 \arguments{
-\item{pipeline}{A tidyverse pipeline.}
+\item{pipeline}{Tidyverse pipeline}
 
-\item{envir}{An environment.}
+\item{envir}{Environment where code is evaluated. Defaults to the global environment.}
 
-\item{output}{Path to where gif will be saved.}
+\item{pretty}{Whether to pretty the JSON output. Defaults to TRUE.}
 }
 \description{
-Create a tibble datamation
+Generates the vega lite specs necessary for a plot datamation, based on a tidyverse pipeline.
 }

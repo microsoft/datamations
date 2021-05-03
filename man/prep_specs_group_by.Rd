@@ -2,24 +2,17 @@
 % Please edit documentation in R/prep_specs_group_by.R
 \name{prep_specs_group_by}
 \alias{prep_specs_group_by}
-\title{Produces frames (plots) of transition from ungrouped to grouped icon arrays}
+\title{Generate specs of data in grouped icon array}
 \usage{
 prep_specs_group_by(.data, ..., pretty = TRUE)
 }
 \arguments{
-\item{.data}{grouped dataframe}
+\item{.data}{Input data}
 
-\item{...}{grouping variables}
+\item{...}{Grouping variables}
 
-\item{nframes}{number of frames per animation stage}
-
-\item{is_last}{flag for whether this is the last stage of the pipeline. Defaults to \code{FALSE}}
-
-\item{titles}{titles for animation stage}
-}
-\value{
-ggplot object
+\item{pretty}{Whether to pretty the JSON output of the spec. Defaults to TRUE.}
 }
 \description{
-Produces frames (plots) of transition from ungrouped to grouped icon arrays
+Generate specs of data in grouped icon array
 }

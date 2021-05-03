@@ -1,17 +1,8 @@
-#' Produces frames (plots) of transition from ungrouped to grouped icon arrays
+#' Generate specs of data in grouped icon array
 #'
-#' @param .data grouped dataframe
-#' @param ... grouping variables
-#' @param nframes number of frames per animation stage
-#' @param is_last flag for whether this is the last stage of the pipeline. Defaults to \code{FALSE}
-#' @param titles titles for animation stage
-#' @return ggplot object
-#' @importFrom rlang enquos sym .data :=
-#' @importFrom purrr map_chr map_df walk
-#' @importFrom dplyr first row_number tribble lag
-#' @importFrom tidyr unite unnest
-#' @importFrom ggplot2 layer_scales
-#' @export
+#' @param .data Input data
+#' @param ... Grouping variables
+#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE.
 prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
 
   # Map grouping variables
@@ -20,14 +11,14 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
   n_groups <- length(group_vars)
 
   # Use the first grouping variable for column facet
-  col_facet_var <- first(group_vars)
+  col_facet_var <- dplyr::first(group_vars)
   # And the second for the row facet
   row_facet_var <- dplyr::nth(group_vars, n = 2)
   # And the third for color
   color_var <- dplyr::nth(group_vars, n = 3)
 
   # Convert grouping variables to character
-  group_vars_chr <- map_chr(group_vars, rlang::quo_name)
+  group_vars_chr <- purrr::map_chr(group_vars, rlang::quo_name)
 
   # Convert grouping variables to character - useful if there are binary variables or with a small number of (numeric) options, since you can't map shape to a continuous variable
   # But we should be careful about too many categories and e.g. stop if there are too many

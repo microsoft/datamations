@@ -1,21 +1,12 @@
-#' Create a tibble datamation
-#' @importFrom dplyr any_of arrange bind_rows filter group_by group_size group_split group_vars is_grouped_df left_join mutate n n_groups pull select summarize ungroup group_indices
-#' @importFrom gganimate anim_save ease_aes transition_states view_follow
-#' @importFrom ggplot2 aes element_blank geom_point ggplot ggtitle scale_color_manual theme
-#' @importFrom magick image_read image_write
-#' @importFrom purrr accumulate map map2 map2_dbl map2_dfr map_chr map_dbl map_dfr map_if pmap_dbl pmap_dfr reduce
-#' @importFrom rlang parse_expr
-#' @importFrom stats median
-#' @importFrom tibble as_tibble tibble
-#' @importFrom magrittr "%>%"
-#' @importFrom purrr map map_chr
-#' @importFrom animation saveGIF
-#' @param pipeline A tidyverse pipeline.
-#' @param envir An environment.
-#' @param output Path to where gif will be saved.
+#' Generate a plot datamation
+#'
+#' Generates the vega lite specs necessary for a plot datamation, based on a tidyverse pipeline.
+#'
+#' @param pipeline Tidyverse pipeline
+#' @param envir Environment where code is evaluated. Defaults to the global environment.
+#' @param pretty Whether to pretty the JSON output. Defaults to TRUE.
 #' @export
 datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty = TRUE) {
-
   supported_tidy_functions <- c("group_by", "summarize", "summarise")
 
   fittings <- pipeline %>%
@@ -31,17 +22,17 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   tidy_functions_list <- parse_functions(fittings)
 
   tidy_func_arg <- fittings %>%
-    map(as.list) %>%
-    map(as.character)
+    purrr::map(as.list) %>%
+    purrr::map(as.character)
 
-  map(
+  purrr::map(
     tidy_functions_list,
     ~ if (!(.x %in% supported_tidy_functions)) {
       stop(paste(.x, "is not supported by `datamation_sanddance`"), call. = FALSE)
     }
   )
 
-  res <- map(1:length(fittings), function(i) {
+  res <- purrr::map(1:length(fittings), function(i) {
 
     # Starts with data in the previous stage, unless it is the first stage (the data itself)
     if (i == 1) {

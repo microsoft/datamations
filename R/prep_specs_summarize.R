@@ -1,17 +1,8 @@
-#' @param .data
-#' @param summary_operation quoted
-#' @param nframes number of frames per animation "stage"
-#' @param output returns the first step, the second step, or both
-#' @importFrom tweenr keep_state tween_state
-#' @importFrom ggbeeswarm geom_beeswarm geom_quasirandom
-#' @importFrom scales label_dollar comma_format label_number
-#' @importFrom stringr str_replace
-#' @importFrom rlang enexpr is_empty
-#' @importFrom dplyr mutate_all funs rename right_join group_keys
-#' @importFrom ggplot2 layer_data geom_pointrange coord_cartesian scale_y_continuous element_rect xlab scale_x_discrete labs
-#' @importFrom stats setNames
-#' @importFrom tidyr separate
-#' @export
+#' Generate specs of data distribution and summarized data
+#'
+#' @param .data Optionally grouped input data
+#' @param summary_operation Summary operation including summary function and column operated on.
+#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE.
 prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
 
   # START: same as animate_group_by_sanddance
@@ -22,14 +13,14 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
   n_groups <- length(group_vars)
 
   # Use the first grouping variable for column facet
-  col_facet_var <- first(group_vars)
+  col_facet_var <- dplyr::first(group_vars)
   # And the second for the row facet
   row_facet_var <- dplyr::nth(group_vars, n = 2)
   # And the third for color
   color_var <- dplyr::nth(group_vars, n = 3)
 
   # Convert grouping variables to character
-  group_vars_chr <- map_chr(group_vars, rlang::quo_name)
+  group_vars_chr <- purrr::map_chr(group_vars, rlang::quo_name)
 
   # Keep an unaltered copy of the data to return later
   df <- .data
@@ -41,7 +32,7 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
 
   # Add an ID to the data to be used across frames
   gemini_id <- 1:nrow(.data)
-  id_df <- tibble(gemini_id = gemini_id)
+  id_df <- dplyr::tibble(gemini_id = gemini_id)
 
   .data <- .data %>%
     dplyr::bind_cols(id_df)
@@ -74,7 +65,7 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
   # State 1: Scatter plot (with any grouping)
 
   data_1 <- .data %>%
-    select(gemini_id, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
+    dplyr::select(gemini_id, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
 
   # Add an x variable to use as the center of jittering
   # It can just be 1, except if there are three grouping variables (since then there's facet, row, and colour grouping, and the colour is also offset)
@@ -145,7 +136,7 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
   # None should disappear, otherwise makes animating
 
   data_2 <- data_1 %>%
-    dplyr::mutate(across(y, !!summary_function, na.rm = TRUE))
+    dplyr::mutate(dplyr::across(y, !!summary_function, na.rm = TRUE))
 
   # Add an x variable to place the point
   # It can just be 1, except if there are three grouping variables (since then there's facet, row, and colour grouping, and the colour is also offset)

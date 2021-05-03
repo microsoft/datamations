@@ -1,3 +1,8 @@
+#' Generate spec of data in ungrouped icon array
+#'
+#' @param .data Input data
+#' @param ... Additional arguments, unused.
+#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE.
 prep_specs_data <- function(.data, ..., pretty = TRUE) {
 
   # Generate the data and specs for each state
