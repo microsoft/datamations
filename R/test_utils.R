@@ -1,3 +1,4 @@
+# Test that for a specific value of meta.parse
 expect_meta_parse_value <- function(specs, parse_value) {
   meta_parse <- specs %>%
     purrr::map(jsonlite::fromJSON) %>%
@@ -7,21 +8,23 @@ expect_meta_parse_value <- function(specs, parse_value) {
     purrr::pluck("parse") %>%
     unlist()
 
-  expect_true(all(meta_parse == parse_value))
+  expect_true(identical(unique(meta_parse), parse_value))
 }
 
-expect_data_values_n <- function(single_spec, df_n) {
-  df_n <- df_n %>%
+# Test that the data.values are the same as the passed data frame
+expect_data_values <- function(single_spec, df) {
+  df <- df %>%
     dplyr::mutate_if(is.factor, as.character)
 
-  spec_count <- single_spec %>%
+  spec_data <- single_spec %>%
     jsonlite::fromJSON() %>%
     purrr::pluck("data") %>%
     purrr::pluck("values")
 
-  expect_equivalent(spec_count, df_n)
+  expect_equivalent(spec_data, df)
 }
 
+# Test that "mark" and "encoding" are within `spec` - this happens when there is a facet (any grouping)
 expect_spec_contains_mark_encoding <- function(specs) {
   spec_names <- specs %>%
     purrr::map(function(x) {
@@ -37,8 +40,23 @@ expect_spec_contains_mark_encoding <- function(specs) {
   expect_true(all(mark_encoding_in_spec))
 }
 
-expect_grouping_order <- function(specs){
+# Test that "mark" and "encoding" are at the top level - when there is no faceting / grouping
+expect_mark_encoding_top_level <- function(specs) {
+  spec_names <- specs %>%
+    purrr::map(function(x) {
+      jsonlite::fromJSON(x) %>%
+        names()
+    })
 
+  mark_encoding_in_spec <- spec_names %>%
+    purrr::map(~ all(c("mark", "encoding") %in% .x)) %>%
+    unlist()
+
+  expect_true(all(mark_encoding_in_spec))
+}
+
+# Test that grouped specs are in a specific order - 1 group, 2 groups, then 3 groups
+expect_grouping_order <- function(specs) {
   expect_grouping_order_1(specs[[1]])
 
   if (length(specs) %in% c(2, 3)) {
@@ -50,6 +68,7 @@ expect_grouping_order <- function(specs){
   }
 }
 
+# Test 1 grouping variable case - column facet, no color encoding
 expect_grouping_order_1 <- function(first_spec) {
   # Expect column facet only
   facet <- first_spec %>%
@@ -67,6 +86,7 @@ expect_grouping_order_1 <- function(first_spec) {
   expect_false("color" %in% names(encoding))
 }
 
+# Test 2 grouping variable case - column and row facet, no color encoding
 expect_grouping_order_2 <- function(second_spec) {
   # Expect column and row facet
   facet <- second_spec %>%
@@ -84,6 +104,7 @@ expect_grouping_order_2 <- function(second_spec) {
   expect_false("color" %in% names(encoding))
 }
 
+# Test 3 grouping variable case - column and row facet, color encoding
 expect_grouping_order_3 <- function(third_spec) {
   # Expect column and row facet
   facet <- third_spec %>%
@@ -99,4 +120,30 @@ expect_grouping_order_3 <- function(third_spec) {
     purrr::pluck("encoding")
 
   expect_true("color" %in% names(encoding))
+}
+
+# Expect that there isn't any grouping - no facets, no color encoding
+expect_no_grouping <- function(specs) {
+  no_facets <- specs %>%
+    purrr::map(function(x) {
+      spec_names <- jsonlite::fromJSON(x) %>%
+        names()
+
+      !"facet" %in% spec_names
+    }) %>%
+    unlist()
+
+  expect_true(all(no_facets))
+
+  no_color_encoding <- specs %>%
+    purrr::map(function(x) {
+      encoding_names <- jsonlite::fromJSON(x) %>%
+        purrr::pluck("encoding") %>%
+        names()
+
+      !"color" %in% encoding_names
+    }) %>%
+    unlist()
+
+  expect_true(all(no_color_encoding))
 }
