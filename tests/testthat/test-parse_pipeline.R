@@ -34,3 +34,13 @@ test_that("split_pipeline can handle data in first function, when data is namesp
   sp <- split_pipeline("summarise(palmerpenguins::penguins, mean = mean(x))")
   expect_identical(sp, c("palmerpenguins::penguins", "summarise( mean = mean(x))"))
 })
+
+test_that("split_pipeline errors if first element is function, but there is no data", {
+  expect_error(split_pipeline("group_by(species)"), "No data detected")
+  expect_error(split_pipeline("group_by(species, island)"), "No data detected")
+})
+
+test_that("split_pipeline errors if first element is a function containing data, but it is not a data frame", {
+  df <- list(palmerpenguins::penguins)
+  expect_error(split_pipeline("group_by(df, species)"), "not a data frame")
+  })

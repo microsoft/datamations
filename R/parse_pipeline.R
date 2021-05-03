@@ -22,8 +22,12 @@ parse_data_from_first_function <- function(pipeline, supported_tidy_functions = 
     first_function_data <- stringr::str_extract(pipeline[[1]], pattern = "(?<=\\()(.*?)(?=,)") # Regex is everything between ( and ,
     first_function_data_expr <- rlang::parse_expr(first_function_data)
 
+    if (is.na(first_function_data)) {
+      stop("No data detected in pipeline.", call. = FALSE)
+    }
+
     # Check that the data exists
-    data_exists <- try(eval(first_function_data_expr))
+    data_exists <- try(eval(first_function_data_expr), silent = TRUE)
     data_exists <- all(class(data_exists) != "try-error")
 
     if (!data_exists) {
