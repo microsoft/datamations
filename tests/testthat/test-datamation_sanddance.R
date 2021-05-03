@@ -35,3 +35,15 @@ test_that("datamation_sanddance errors when no data transformation is present", 
 test_that("datamation_sanddance errors when an unsupported function is passed", {
   expect_error(datamation_sanddance("palmerpenguins::penguins %>% group_by(species) %>% ungroup()", "not supported by"))
 })
+
+test_that("Results are identical when data is contained in first function versus when it is piped in as first step", {
+  data_piped <- datamation_sanddance("penguins %>% group_by(species, island) %>% summarize(mean = mean(bill_length_mm))")
+  data_arg <- datamation_sanddance("group_by(penguins, species, island) %>% summarize(mean = mean(bill_length_mm))")
+
+  expect_identical(data_piped, data_arg)
+
+  data_piped <- datamation_sanddance("palmerpenguins::penguins %>% group_by(species, island) %>% summarize(mean = mean(bill_length_mm))")
+  data_arg <- datamation_sanddance("group_by(palmerpenguins::penguins, species, island) %>% summarize(mean = mean(bill_length_mm))")
+
+  expect_identical(data_piped, data_arg)
+})
