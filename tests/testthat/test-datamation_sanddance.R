@@ -27,3 +27,11 @@ test_that("datamation_sanddance returns a frame for the data, one for each group
   expect_length(specs[["group_by"]], 2)
   expect_length(specs[["summarize"]], 2)
 })
+
+test_that("datamation_sanddance errors when no data transformation is present", {
+  expect_error(datamation_sanddance("mtcars"), "data transformation")
+})
+
+test_that("datamation_sanddance errors when an unsupported function is passed", {
+  expect_error(datamation_sanddance("palmerpenguins::penguins %>% group_by(species) %>% ungroup()", "not supported by"))
+})

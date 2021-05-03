@@ -19,13 +19,13 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   supported_tidy_functions <- c("group_by", "summarize", "summarise")
 
   fittings <- pipeline %>%
-    parse_pipeline()
+    parse_pipeline(supported_tidy_functions)
 
   data_states <- fittings %>%
     snake(envir = envir)
 
   if (length(data_states) < 2) {
-    stop("No data transformation detected by datamation_tibble", call. = FALSE)
+    stop("No data transformation detected by `datamation_sanddance`.", call. = FALSE)
   }
 
   tidy_functions_list <- parse_functions(fittings)
@@ -37,7 +37,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   map(
     tidy_functions_list,
     ~ if (!(.x %in% supported_tidy_functions)) {
-      stop(paste(.x, "not supported by datamation_sanddance"), call. = FALSE)
+      stop(paste(.x, "is not supported by `datamation_sanddance`"), call. = FALSE)
     }
   )
 
