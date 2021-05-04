@@ -60,7 +60,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     call_args <- switch(verb,
       data = NA_character_,
       group_by = rlang::parse_exprs(args),
-      # TODO: What if calculation in summarise is unnamed? What if there's more than one calculation? Check these cases
+      # TODO: What if there's more than one calculation??
       summarise = rlang::parse_exprs(args),
       summarize = rlang::parse_exprs(args)
     )

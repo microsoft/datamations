@@ -47,3 +47,10 @@ test_that("Results are identical when data is contained in first function versus
 
   expect_identical(data_piped, data_arg)
 })
+
+test_that("Results are identical regardless of whether summary operation is named or not", {
+  summary_named <- datamation_sanddance("small_salary_data %>% summarize(mean = mean(Salary))")
+  summary_not_named <- datamation_sanddance("small_salary_data %>% summarize(mean(Salary))")
+
+  expect_identical(summary_named, summary_not_named)
+})
