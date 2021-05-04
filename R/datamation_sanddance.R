@@ -65,7 +65,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
       summarize = rlang::parse_exprs(args)
     )
 
-    do.call(call_verb, list(data, call_args, toJSON = TRUE, pretty = pretty))
+    do.call(call_verb, list(data, call_args, toJSON = FALSE, pretty = pretty))
   })
 
   # TODO: Not unlisting because it's probably useful to know which verb each set of specs come from
@@ -73,6 +73,9 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   # res <- unlist(res, recursive  = FALSE)
 
   names(res) <- c("data", tidy_functions_list)
+
+  # Convert to JSON
+  res <- jsonlite::toJSON(res, auto_unbox = TRUE, pretty = pretty, null = "null", digits = NA)
 
   res
 }
