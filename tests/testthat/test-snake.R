@@ -1,5 +1,3 @@
-library(dplyr)
-
 test_that("snake properly evaluates the pipeline at each stage", {
   pipeline <- "small_salary %>% group_by(Degree) %>% summarise(mean = mean(Salary))"
 

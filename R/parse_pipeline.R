@@ -5,7 +5,6 @@
 #' @param pipeline Input pipeline, as a string.
 #' @param supported_tidy_functions Functions that are supported by datamations: \code{group_by} and \code{summarize}/\code{summarise}.
 #'
-#' @return
 #' @export
 #'
 #' @examples

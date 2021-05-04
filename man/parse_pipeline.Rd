@@ -14,9 +14,6 @@ parse_pipeline(
 
 \item{supported_tidy_functions}{Functions that are supported by datamations: \code{group_by} and \code{summarize}/\code{summarise}.}
 }
-\value{
-
-}
 \description{
 Parses a tidyverse pipeline, input as a string, into a list of its components as expressions for parsing later on in the datamations process.
 }

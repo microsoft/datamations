@@ -1,7 +1,4 @@
 test_that("datamation_sanddance returns a frame for the data, one for each group, and two for a summarise step", {
-  library(palmerpenguins)
-  library(dplyr)
-
   pipeline <- "penguins %>% group_by(species)"
   specs <- datamation_sanddance(pipeline)
   expect_named(specs, c("data", "group_by"))

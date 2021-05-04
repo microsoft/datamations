@@ -30,8 +30,12 @@ Imports:
     ggbeeswarm,
     shiny,
     vegawidget,
-    palmerpenguins
+    palmerpenguins,
+    forcats,
+    glue,
+    tidyselect
 Suggests: 
+    jsonlite,
     testthat (>= 2.1.0)
 Depends: 
     R (>= 3.5.0)
