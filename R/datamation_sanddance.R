@@ -65,7 +65,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
       summarize = rlang::parse_exprs(args)
     )
 
-    do.call(call_verb, list(data, call_args, pretty = pretty))
+    do.call(call_verb, list(data, call_args, toJSON = TRUE, pretty = pretty))
   })
 
   # TODO: Not unlisting because it's probably useful to know which verb each set of specs come from

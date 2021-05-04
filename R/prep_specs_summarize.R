@@ -2,8 +2,9 @@
 #'
 #' @param .data Optionally grouped input data
 #' @param summary_operation Summary operation including summary function and column operated on.
-#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE.
-prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
+#' @param toJSON Whether to converts the spec to JSON. Defaults to TRUE.
+#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE, and only relevant when \code{toJSON} is TRUE.
+prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty = TRUE) {
 
   # START: same as animate_group_by_sanddance
 
@@ -114,8 +115,7 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
       mark = "point",
       encoding = encoding
     ) %>%
-      vegawidget::as_vegaspec() %>%
-      vegawidget::vw_as_json(pretty = pretty)
+      vegawidget::as_vegaspec()
   } else {
     specs_list[[1]] <- list(
       `$schema` = vegawidget::vega_schema(),
@@ -127,8 +127,7 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
         encoding = encoding
       )
     ) %>%
-      vegawidget::as_vegaspec() %>%
-      vegawidget::vw_as_json(pretty = pretty)
+      vegawidget::as_vegaspec()
   }
 
   # State 2: Summary plot (with any grouping)
@@ -159,8 +158,7 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
       mark = "point",
       encoding = encoding
     ) %>%
-      vegawidget::as_vegaspec() %>%
-      vegawidget::vw_as_json(pretty = pretty)
+      vegawidget::as_vegaspec()
   } else {
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
@@ -172,8 +170,13 @@ prep_specs_summarize <- function(.data, summary_operation, pretty = TRUE) {
         encoding = encoding
       )
     ) %>%
-      vegawidget::as_vegaspec() %>%
-      vegawidget::vw_as_json(pretty = pretty)
+      vegawidget::as_vegaspec()
+  }
+
+  # Convert specs to JSON
+  if (toJSON) {
+    specs_list <- specs_list %>%
+      purrr::map(vegawidget::vw_as_json, pretty = pretty)
   }
 
   # Return the specs

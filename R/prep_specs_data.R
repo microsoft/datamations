@@ -2,8 +2,9 @@
 #'
 #' @param .data Input data
 #' @param ... Additional arguments, unused.
-#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE.
-prep_specs_data <- function(.data, ..., pretty = TRUE) {
+#' @param toJSON Whether to converts the spec to JSON. Defaults to TRUE.
+#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE, and only relevant when \code{toJSON} is TRUE.
+prep_specs_data <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
 
   # Generate the data and specs for each state
   specs_list <- vector("list", length = 1)
@@ -33,8 +34,13 @@ prep_specs_data <- function(.data, ..., pretty = TRUE) {
       y = y_encoding
     )
   ) %>%
-    vegawidget::as_vegaspec() %>%
-    vegawidget::vw_as_json(pretty = pretty)
+    vegawidget::as_vegaspec()
+
+  # Convert specs to JSON
+  if (toJSON) {
+    specs_list <- specs_list %>%
+      purrr::map(vegawidget::vw_as_json, pretty = pretty)
+  }
 
   specs_list
 

@@ -2,8 +2,9 @@
 #'
 #' @param .data Input data
 #' @param ... Grouping variables
-#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE.
-prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
+#' @param toJSON Whether to converts the spec to JSON. Defaults to TRUE.
+#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE, and only relevant when \code{toJSON} is TRUE.
+prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
 
   # Map grouping variables
   group_vars <- c(...)
@@ -59,8 +60,7 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
       )
     )
   ) %>%
-    vegawidget::as_vegaspec() %>%
-    vegawidget::vw_as_json(pretty = pretty)
+    vegawidget::as_vegaspec()
 
   # State 2: Grouped icon array, first group in col and second in row facets
 
@@ -84,8 +84,7 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
         )
       )
     ) %>%
-      vegawidget::as_vegaspec() %>%
-      vegawidget::vw_as_json(pretty = pretty)
+      vegawidget::as_vegaspec()
   }
 
   # State 3: Grouped icon array, first group in col, second in row facets, third in colour
@@ -111,8 +110,13 @@ prep_specs_group_by <- function(.data, ..., pretty = TRUE) {
         )
       )
     ) %>%
-      vegawidget::as_vegaspec() %>%
-      vegawidget::vw_as_json(pretty = pretty)
+      vegawidget::as_vegaspec()
+  }
+
+  # Convert specs to JSON
+  if (toJSON) {
+    specs_list <- specs_list %>%
+      purrr::map(vegawidget::vw_as_json, pretty = pretty)
   }
 
   # Return the specs
