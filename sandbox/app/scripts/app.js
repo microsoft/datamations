@@ -21,6 +21,8 @@ function App({
       // parsing
       if (parse === "grid") {
         files[i] = await getGridSpec(files[i]);
+      } else if (parse === "jitter") {
+        files[i] = await getJitterSpec(files[i]);
       }
 
       const facet = files[i].facet;
@@ -33,15 +35,6 @@ function App({
 
         files[i].data.name = "source";
         files[i] = await hackFacet(files[i], width, height);
-
-        let xField = null;
-        if (facet.column) xField = facet.column.field;
-        else xField = facet.row.field;
-
-        // TODO: support jitter on non faceted view.
-        if (parse === "jitter") {
-          files[i] = await getJitterSpec(files[i], xField);
-        }
       }
     }
 
@@ -81,14 +74,12 @@ function App({
         .catch((e) => {});
     }
 
-    vegaEmbed(container, specsArray[0], {
+    vegaEmbed(container, specsArray[4], {
       renderer: "svg",
     });
   }
 
-  let animating = false,
-    counter = 0,
-    intervalId;
+  let counter = 0, intervalId;
 
   function play() {
     counter = 0;
