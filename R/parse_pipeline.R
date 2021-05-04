@@ -1,3 +1,20 @@
+#' Parse a tidyverse pipeline
+#'
+#' Parses a tidyverse pipeline, input as a string, into a list of its components as expressions for parsing later on in the datamations process.
+#'
+#' @param pipeline Input pipeline, as a string.
+#' @param supported_tidy_functions Functions that are supported by datamations: \code{group_by} and \code{summarize}/\code{summarise}.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
+#'   parse_pipeline()
+#'
+#' "group_by(small_salary, Degree) %>% summarize(mean = mean(Salary))" %>%
+#'   parse_pipeline()
+#'
 parse_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "summarize", "summarise")) {
   pipeline %>%
     split_pipeline(supported_tidy_functions = supported_tidy_functions) %>%
