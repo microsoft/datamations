@@ -43,9 +43,11 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
   # State 1: Grouped icon aray, first grouping in column facets
 
   # Add a count (grouped) to each record
+  # order by the grouping variable so that IDs are consistent across frames
 
   data_1 <- .data %>%
-    dplyr::count({{ col_facet_var }})
+    dplyr::count({{ col_facet_var }}) %>%
+    dplyr::arrange({{ col_facet_var }})
 
   specs_list[[1]] <- list(
     `$schema` = vegawidget::vega_schema(),
@@ -63,10 +65,12 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
     vegawidget::as_vegaspec()
 
   # State 2: Grouped icon array, first group in col and second in row facets
+  # order by the grouping variables so that IDs are consistent across frames
 
   if (n_groups %in% c(2, 3)) {
     data_2 <- .data %>%
-      dplyr::count({{ col_facet_var }}, {{ row_facet_var }})
+      dplyr::count({{ col_facet_var }}, {{ row_facet_var }}) %>%
+      dplyr::arrange({{ col_facet_var }}, {{ row_facet_var }})
 
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
@@ -88,10 +92,12 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
   }
 
   # State 3: Grouped icon array, first group in col, second in row facets, third in colour
+  # order by the grouping variables so that IDs are consistent across frames
 
   if (n_groups == 3) {
     data_3 <- .data %>%
-      dplyr::count({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }})
+      dplyr::count({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }}) %>%
+      dplyr::arrange({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }})
 
     specs_list[[3]] <- list(
       `$schema` = vegawidget::vega_schema(),

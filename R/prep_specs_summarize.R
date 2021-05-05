@@ -107,11 +107,16 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
 
   # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
 
+  # Arrange by grouping variables so IDs are the same across frames
+  data_1_arranged <- data_1 %>%
+    dplyr::ungroup() %>%
+    dplyr::arrange(!!!group_vars)
+
   if (n_groups == 0) {
     specs_list[[1]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(parse = "jitter"),
-      data = list(values = data_1),
+      data = list(values = data_1_arranged),
       mark = "point",
       encoding = encoding
     ) %>%
@@ -120,7 +125,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
     specs_list[[1]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(parse = "jitter"),
-      data = list(values = data_1),
+      data = list(values = data_1_arranged),
       facet = facet,
       spec = list(
         mark = "point",
@@ -140,21 +145,26 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   # Add an x variable to place the point
   # It can just be 1, except if there are three grouping variables (since then there's facet, row, and colour grouping, and the colour is also offset)
   if (n_groups == 3) {
-    data_1 <- data_1 %>%
+    data_2 <- data_2 %>%
       dplyr::mutate(
         x = forcats::fct_explicit_na({{ color_var }}),
         x = as.numeric(x)
       )
   } else {
-    data_1 <- data_1 %>%
+    data_2 <- data_2 %>%
       dplyr::mutate(x = 1)
   }
+
+  # Arrange by grouping variables so IDs are the same across frames
+  data_2_arranged <- data_2 %>%
+    dplyr::ungroup() %>%
+    dplyr::arrange(!!!group_vars)
 
   if (n_groups == 0) {
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(),
-      data = list(values = data_2),
+      data = list(values = data_2_arranged),
       mark = "point",
       encoding = encoding
     ) %>%
@@ -163,7 +173,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(),
-      data = list(values = data_2),
+      data = list(values = data_2_arranged),
       facet = facet,
       spec = list(
         mark = "point",
