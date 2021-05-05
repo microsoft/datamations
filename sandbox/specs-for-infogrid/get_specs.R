@@ -3,6 +3,13 @@ library(palmerpenguins)
 library(purrr)
 
 specs <- datamation_sanddance("penguins %>% group_by(island, species, sex) %>% summarize(mean = mean(bill_length_mm))")
+
+# Write full specs
+
+write(specs, here::here("sandbox", "specs-for-infogrid", "00-full-specs.json"))
+
+# Transform so specs at each stage can be written
+
 specs <- jsonlite::fromJSON(specs, simplifyDataFrame = FALSE)
 specs <- specs %>%
   purrr::map(vegawidget::vw_as_json)
