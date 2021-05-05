@@ -3,8 +3,20 @@ const dataUrl = "https://raw.githubusercontent.com/jhofman/datamations/refactor-
 const frameDuration = 1200;
 let specsArray, frames;
 
-async function init(id, specUrls) {
-  let files = await loadData(specUrls);
+async function init(id, { specUrls, specs }) {
+  let files = [];
+
+  if (specs) {
+    files = specs.map(d => {
+      return {
+        ...d,
+        width: 600,
+        height: 600,
+      }
+    });
+  } else if (specUrls) {
+    files = await loadData(specUrls);
+  }
 
   for (let i = 0; i < files.length; i++) {
     const parse = files[i].meta.parse;
