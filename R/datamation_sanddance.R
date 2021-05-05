@@ -68,11 +68,8 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     do.call(call_verb, list(data, call_args, toJSON = FALSE, pretty = pretty))
   })
 
-  # TODO: Not unlisting because it's probably useful to know which verb each set of specs come from
-  # Might be good for titling, but right now I'm thinking because the group_by "specs" need to actually be processed into an infogrid - they do not contain x or y, but just "n" to be processed on the JS side
-  # res <- unlist(res, recursive  = FALSE)
-
-  names(res) <- c("data", tidy_functions_list)
+  # Unlist into a single list
+  res <- unlist(res, recursive  = FALSE)
 
   # Convert to JSON
   res <- jsonlite::toJSON(res, auto_unbox = TRUE, pretty = pretty, null = "null", digits = NA)

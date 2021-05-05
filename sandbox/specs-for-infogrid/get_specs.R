@@ -5,7 +5,7 @@ library(purrr)
 specs <- datamation_sanddance("penguins %>% group_by(island, species, sex) %>% summarize(mean = mean(bill_length_mm))")
 specs <- jsonlite::fromJSON(specs, simplifyDataFrame = FALSE)
 specs <- specs %>%
-  purrr::map_depth(.depth = 2, vegawidget::vw_as_json)
+  purrr::map(vegawidget::vw_as_json)
 specs <- unlist(specs, recursive = FALSE)
 
 # Write the specs from each stage
