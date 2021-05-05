@@ -4,14 +4,16 @@
 \alias{prep_specs_data}
 \title{Generate spec of data in ungrouped icon array}
 \usage{
-prep_specs_data(.data, ..., pretty = TRUE)
+prep_specs_data(.data, ..., toJSON = TRUE, pretty = TRUE)
 }
 \arguments{
 \item{.data}{Input data}
 
 \item{...}{Additional arguments, unused.}
 
-\item{pretty}{Whether to pretty the JSON output of the spec. Defaults to TRUE.}
+\item{toJSON}{Whether to converts the spec to JSON. Defaults to TRUE.}
+
+\item{pretty}{Whether to pretty the JSON output of the spec. Defaults to TRUE, and only relevant when \code{toJSON} is TRUE.}
 }
 \description{
 Generate spec of data in ungrouped icon array

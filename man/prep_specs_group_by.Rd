@@ -4,14 +4,16 @@
 \alias{prep_specs_group_by}
 \title{Generate specs of data in grouped icon array}
 \usage{
-prep_specs_group_by(.data, ..., pretty = TRUE)
+prep_specs_group_by(.data, ..., toJSON = TRUE, pretty = TRUE)
 }
 \arguments{
 \item{.data}{Input data}
 
 \item{...}{Grouping variables}
 
-\item{pretty}{Whether to pretty the JSON output of the spec. Defaults to TRUE.}
+\item{toJSON}{Whether to converts the spec to JSON. Defaults to TRUE.}
+
+\item{pretty}{Whether to pretty the JSON output of the spec. Defaults to TRUE, and only relevant when \code{toJSON} is TRUE.}
 }
 \description{
 Generate specs of data in grouped icon array

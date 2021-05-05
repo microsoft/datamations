@@ -33,7 +33,8 @@ Imports:
     palmerpenguins,
     forcats,
     glue,
-    tidyselect
+    tidyselect,
+    reactable
 Suggests: 
     jsonlite,
     testthat (>= 2.1.0)

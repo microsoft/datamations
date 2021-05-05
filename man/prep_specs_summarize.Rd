@@ -4,14 +4,16 @@
 \alias{prep_specs_summarize}
 \title{Generate specs of data distribution and summarized data}
 \usage{
-prep_specs_summarize(.data, summary_operation, pretty = TRUE)
+prep_specs_summarize(.data, summary_operation, toJSON = TRUE, pretty = TRUE)
 }
 \arguments{
 \item{.data}{Optionally grouped input data}
 
 \item{summary_operation}{Summary operation including summary function and column operated on.}
 
-\item{pretty}{Whether to pretty the JSON output of the spec. Defaults to TRUE.}
+\item{toJSON}{Whether to converts the spec to JSON. Defaults to TRUE.}
+
+\item{pretty}{Whether to pretty the JSON output of the spec. Defaults to TRUE, and only relevant when \code{toJSON} is TRUE.}
 }
 \description{
 Generate specs of data distribution and summarized data
