@@ -74,5 +74,6 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   # Convert to JSON
   res <- jsonlite::toJSON(res, auto_unbox = TRUE, pretty = pretty, null = "null", digits = NA)
 
-  res
+  # Create widget
+  datamationSandDance(res)
 }
