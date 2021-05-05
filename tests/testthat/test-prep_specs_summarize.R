@@ -9,9 +9,11 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
   expect_meta_parse_value(specs[1], "jitter") # First element meta.parse is jitter
   expect_meta_parse_value(specs[2], NULL) # Second element meta is empty
   expect_data_values(specs[[1]], palmerpenguins::penguins %>%
+    dplyr::arrange(species) %>%
     dplyr::mutate(x = 1, gemini_id = dplyr::row_number()) %>%
     dplyr::select(gemini_id, y = bill_length_mm, species, x)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
   expect_data_values(specs[[2]], palmerpenguins::penguins %>%
+    dplyr::arrange(species) %>%
     dplyr::mutate(x = 1, gemini_id = dplyr::row_number()) %>%
     dplyr::group_by(species) %>%
     dplyr::mutate(y = mean(bill_length_mm, na.rm = TRUE)) %>%
@@ -31,6 +33,7 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
   expect_meta_parse_value(specs[1], "jitter") # First element meta.parse is jitter
   expect_meta_parse_value(specs[2], NULL) # Second element meta is empty
   expect_data_values(specs[[1]], palmerpenguins::penguins %>%
+    dplyr::arrange(species, island, sex) %>%
     dplyr::mutate(
       gemini_id = dplyr::row_number(),
       x_var = forcats::fct_explicit_na(sex),
@@ -38,6 +41,7 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
     ) %>%
     dplyr::select(gemini_id, y = bill_length_mm, species, island, sex, x)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
   expect_data_values(specs[[2]], palmerpenguins::penguins %>%
+    dplyr::arrange(species, island, sex) %>%
     dplyr::mutate(
       gemini_id = dplyr::row_number(),
       x_var = forcats::fct_explicit_na(sex),
