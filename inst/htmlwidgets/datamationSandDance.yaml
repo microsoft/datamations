@@ -1,0 +1,33 @@
+dependencies:
+ - name: vega
+   version: 5.20.2
+   src: htmlwidgets/vega
+   script: vega.js
+ - name: vega-lite
+   version: 5.1.0
+   src: htmlwidgets/vega-lite
+   script: vega-lite.js
+ - name: vega-embed
+   version: 6.17.0
+   src: htmlwidgets/vega-embed
+   script: vega-embed.js
+ - name: d3
+   version: 6.7.0
+   src: htmlwidgets/d3
+   script: d3.js
+ - name: gemini
+   version: 0.1.0
+   src: htmlwidgets/gemini
+   script: gemini.web.js
+ - name: app
+   version: 0.0.1
+   src: htmlwidgets/js
+   script: app.js
+ - name: hack
+   version: 0.0.1
+   src: htmlwidgets/js
+   script: hack.js
+ - name: layout
+   version: 0.0.1
+   src: htmlwidgets/js
+   script: layout.js
