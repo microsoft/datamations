@@ -74,7 +74,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
 
   // need y axis
   if (rowId) {
-    const row_header = view.data("row_header");
+    const row_header = view.data("row_header") || [];
     const yAxisValues = [];
     const yAxisExpr = {};
 
@@ -101,7 +101,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
 
   // need x axis
   if (colId) {
-    const column_header = view.data("column_header");
+    const column_header = view.data("column_header") || [];
     const xAxisValues = [];
     const xAxisExpr = {};
 
