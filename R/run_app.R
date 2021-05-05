@@ -21,35 +21,30 @@ run_app <- function() {
         shiny::uiOutput("group_by")
       ),
       shiny::column(
-        width = 3,
+        width = 2,
         shiny::uiOutput("summary_var")
       ),
       shiny::column(
-        width = 3,
-        shiny::uiOutput("summary_function")
+        width = 2,
+        shiny::selectInput(
+          "summary_function",
+          "Summary function",
+          choices = c("mean", "median", "min", "max")
+        )
+      ),
+      shiny::column(
+        width = 2,
+        shiny::actionButton("go", "Go", width = "100%", style = "background-color: pink;")
       )
     ),
-    shiny::fluidRow(
-      shiny::h2("Tidyverse pipeline"),
-      shiny::verbatimTextOutput("pipeline")
-    ),
-    shiny::tabsetPanel(
-      shiny::tabPanel(
-        title = "Initial data",
-        reactable::reactableOutput("data_start")
-      ),
-      shiny::tabPanel(
-        title = "Transformed data",
-        reactable::reactableOutput("data_transformed")
-      ),
-      shiny::tabPanel(
-        title = "Plot",
-        shiny::plotOutput("final_plot")
-      )
-    )
+    shiny::uiOutput("pipeline_ui"),
+    shiny::uiOutput("datamation_ui")
   )
 
   server <- function(input, output, session) {
+
+    # Select dataset ----
+
     dataset <- shiny::reactive({
       switch(input$dataset,
         mtcars = mtcars,
@@ -57,6 +52,8 @@ run_app <- function() {
         small_salary_data = datamations::small_salary_data
       )
     })
+
+    # Update group by variables based on dataset ----
 
     output$group_by <- shiny::renderUI({
       group_by_vars <- dataset() %>%
@@ -72,6 +69,8 @@ run_app <- function() {
       )
     })
 
+    # Update summary variables based on dataset ----
+
     output$summary_var <- shiny::renderUI({
       summarise_vars <- dataset() %>%
         dplyr::select_if(is.numeric) %>%
@@ -83,16 +82,9 @@ run_app <- function() {
         choices = summarise_vars
       )
     })
+    # Generate pipeline -----
 
-    output$summary_function <- shiny::renderUI({
-      shiny::selectInput(
-        "summary_function",
-        "Summary function",
-        choices = c("mean", "median", "min", "max")
-      )
-    })
-
-    pipeline <- shiny::reactive({
+    pipeline <- shiny::eventReactive(input$go, {
       pipeline_group_by <- !is.null(input$group_by)
       if (pipeline_group_by) {
         glue::glue("{input$dataset} %>% group_by({paste0(input$group_by, collapse = ', ')}) %>% summarize({input$summary_function} = {input$summary_function}({input$summary_var}, na.rm = TRUE))")
@@ -101,78 +93,45 @@ run_app <- function() {
       }
     })
 
+    # Evaluate pipeline ----
+
+    pipeline_res <- shiny::reactive({
+      eval(rlang::parse_expr(pipeline()))
+    })
+
+    # Generate datamation -----
+
+    datamation <- shiny::reactive({
+      datamation_sanddance(pipeline())
+    })
+
+    # Outputs -----
+
     output$pipeline <- shiny::renderText({
       pipeline()
     })
 
-    datamation <- shiny::reactive({
-      shiny::req(pipeline())
-      datamation_sanddance(pipeline())
-    })
+    output$datamation <- datamations::renderDatamationSandDance(
+      datamation()
+    )
 
-    output$data_start <- reactable::renderReactable({
-      req(input$group_by)
+    # Render UIs
+    shiny::observeEvent(input$go, {
+      output$pipeline_ui <- shiny::renderUI({
+        shiny::fluidRow(
+          h2("tidyverse pipeline"),
+          shiny::verbatimTextOutput("pipeline")
+        )
+      })
 
-      eval(rlang::parse_expr(input$dataset)) %>%
-        dplyr::select(tidyselect::any_of(c(input$group_by, input$summary_var))) %>%
-        reactable::reactable(defaultPageSize = 5)
-    })
-
-    pipeline_res <- reactive({
-      eval(rlang::parse_expr(pipeline()))
-    })
-
-    output$data_transformed <- reactable::renderReactable({
-      pipeline_res() %>%
-        dplyr::mutate_if(is.numeric, round, 3) %>%
-        reactable::reactable(defaultPageSize = 5)
-    })
-
-    output$final_plot <- shiny::renderPlot({
-      pipeline_res() %>%
-        create_final_plot(input$group_by, input$summary_var, input$summary_function)
+      output$datamation_ui <- shiny::renderUI({
+        shiny::fluidRow(
+          h2("datamation"),
+          datamations::datamationSandDanceOutput("datamation")
+        )
+      })
     })
   }
 
   shiny::shinyApp(ui, server)
-}
-
-create_final_plot <- function(data, group_by_var, summary_var, summary_function) {
-
-  n_groups <- length(group_by_var)
-
-  if (n_groups == 3) {
-    data <- data %>%
-      dplyr::rename_at(group_by_var[[3]], ~ paste0("x"))
-  } else {
-    data <- data %>%
-      dplyr::mutate(x = 1)
-  }
-
-  p <- ggplot2::ggplot(data, ggplot2::aes_string(x = "x", y = summary_function))
-
-  if (n_groups == 1) {
-    p <- p +
-      ggplot2::facet_grid(reformulate(group_by_var[[1]], "."))
-  } else if (n_groups %in% 2:3) {
-    p <- p +
-      ggplot2::facet_grid(reformulate(group_by_var[[1]], group_by_var[[2]]))
-  }
-
-  if (n_groups == 3) {
-    p <- p +
-      ggplot2::geom_point(ggplot2::aes_string(color = "x"), size = 5)
-
-    labs <- ggplot2::labs(x = NULL, y = glue::glue("{summary_function}({summary_var})"), color = group_by_var[[3]])
-  } else {
-    p <- p +
-      ggplot2::geom_point(size = 5)
-
-    labs <- ggplot2::labs(x = NULL, y = glue::glue("{summary_function}({summary_var})"))
-  }
-
-  p +
-    labs +
-    ggplot2::theme_minimal(base_size = 24) +
-    ggplot2::theme(axis.text.x = ggplot2::element_blank())
 }

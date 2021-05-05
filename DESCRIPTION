@@ -34,7 +34,8 @@ Imports:
     forcats,
     glue,
     tidyselect,
-    reactable
+    reactable,
+    htmlwidgets
 Suggests: 
     jsonlite,
     testthat (>= 2.1.0)
