@@ -83,6 +83,7 @@ function getGridSpec(spec, rows = 10) {
   const newValues = [];
 
   return new Promise((res) => {
+    let counter = 1;
     for (let x = 0; x < values.length; x++) {
       const d = values[x];
       const n = d.n;
@@ -96,10 +97,11 @@ function getGridSpec(spec, rows = 10) {
 
         newValues.push({
           ...d,
-          gemini_id: i + 1,
+          gemini_id: counter,
           x: col + (shiftCol > 0 ? shiftCol + shiftCounter : 0),
           y: rows - 1 - row,
         });
+        counter++;
       }
     }
 
@@ -163,31 +165,50 @@ function getJitterSpec(spec) {
   const facetSize = width / rootGroupCount;
   const gapSize = facetSize / innerGroupCount * 0.9;
 
+  const xScale = d3.scaleBand()
+    .domain(d3.range(1, innerGroupCount + 1))
+    .range([0, facetSize]);
+
   const arr = nodes.slice().map((d, i) => {
-    let x = d.x * gapSize;
+    d.oldX = d.x;
+    d.oldY = d.y;
+    let x = xScale(d.x) + xScale.bandwidth() / 2;
+    let y = d.y || 0;
 
     return {
       ...d,
-      r: circleRadius,
       x: x,
-      fy: d.y,
+      y: y,
     };
   });
 
   const simulation = d3
     .forceSimulation(arr)
+    .force("x", d3.forceX().x(d => d.x).strength(0.002))
+    .force("y", d3.forceY().y(d => d.y).strength(1))
     .force(
       "collide",
       d3
         .forceCollide()
-        .iterations(5)
+        .iterations(2)
+        .strength(0.2)
         .radius(circleRadius)
     )
     .stop();
 
   return new Promise((res) => {
+    const bandwidth = xScale.bandwidth() * 0.8;
+
     for (let i = 0; i < 120; i++) {
       simulation.tick();
+      arr.forEach(d => {
+        const x = xScale(d.oldX);
+        d.y = d.oldY;
+        d.x = Math.max(
+          x + xScale.bandwidth() * 0.1, 
+          Math.min(x + bandwidth, d.x)
+        );
+      })
     }
 
     return res({

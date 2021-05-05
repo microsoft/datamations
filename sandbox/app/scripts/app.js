@@ -127,7 +127,7 @@ function App({
     )
       .then((files) => {
         // make adjustments here if needed
-        return files.map((d) => {
+        return files.map((d, i) => {
           return {
             ...d,
             width: 600,
