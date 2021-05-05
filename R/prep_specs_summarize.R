@@ -31,14 +31,16 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   .data <- .data %>%
     dplyr::mutate_at(dplyr::all_of(group_vars_chr), as.character)
 
-  # Add an ID to the data to be used across frames
-  gemini_id <- 1:nrow(.data)
-  id_df <- dplyr::tibble(gemini_id = gemini_id)
-
-  .data <- .data %>%
-    dplyr::bind_cols(id_df)
-
   # END: same as animate_group_by_sanddance()
+
+  # Arrange by grouping variables so IDs are the same across frames, and add ID
+  .data <- .data %>%
+    # Ungroup for arranging
+    dplyr::ungroup() %>%
+    dplyr::arrange(!!!group_vars) %>%
+    dplyr::mutate(gemini_id = dplyr::row_number()) %>%
+    # Add groups back in
+    dplyr::group_by(!!!group_vars)
 
   # Get summary function and variable
 
@@ -107,16 +109,11 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
 
   # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
 
-  # Arrange by grouping variables so IDs are the same across frames
-  data_1_arranged <- data_1 %>%
-    dplyr::ungroup() %>%
-    dplyr::arrange(!!!group_vars)
-
   if (n_groups == 0) {
     specs_list[[1]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(parse = "jitter"),
-      data = list(values = data_1_arranged),
+      data = list(values = data_1),
       mark = "point",
       encoding = encoding
     ) %>%
@@ -125,7 +122,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
     specs_list[[1]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(parse = "jitter"),
-      data = list(values = data_1_arranged),
+      data = list(values = data_1),
       facet = facet,
       spec = list(
         mark = "point",
@@ -155,16 +152,11 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       dplyr::mutate(x = 1)
   }
 
-  # Arrange by grouping variables so IDs are the same across frames
-  data_2_arranged <- data_2 %>%
-    dplyr::ungroup() %>%
-    dplyr::arrange(!!!group_vars)
-
   if (n_groups == 0) {
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(),
-      data = list(values = data_2_arranged),
+      data = list(values = data_2),
       mark = "point",
       encoding = encoding
     ) %>%
@@ -173,7 +165,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
       meta = list(),
-      data = list(values = data_2_arranged),
+      data = list(values = data_2),
       facet = facet,
       spec = list(
         mark = "point",
