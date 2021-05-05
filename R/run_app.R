@@ -34,7 +34,7 @@ run_app <- function() {
       ),
       shiny::column(
         width = 2,
-        shiny::actionButton("go", "Go", width = "100%", style = "background-color: pink;")
+        shiny::actionButton("go", "Go", width = "100%", style = "margin-top: 25px;")
       )
     ),
     shiny::uiOutput("pipeline_ui"),
@@ -47,7 +47,7 @@ run_app <- function() {
 
     dataset <- shiny::reactive({
       switch(input$dataset,
-        mtcars = mtcars,
+        mtcars = datasets::mtcars,
         penguins = palmerpenguins::penguins,
         small_salary_data = datamations::small_salary_data
       )
@@ -119,14 +119,14 @@ run_app <- function() {
     shiny::observeEvent(input$go, {
       output$pipeline_ui <- shiny::renderUI({
         shiny::fluidRow(
-          h2("tidyverse pipeline"),
+          shiny::h2("tidyverse pipeline"),
           shiny::verbatimTextOutput("pipeline")
         )
       })
 
       output$datamation_ui <- shiny::renderUI({
         shiny::fluidRow(
-          h2("datamation"),
+          shiny::h2("datamation"),
           datamations::datamationSandDanceOutput("datamation")
         )
       })

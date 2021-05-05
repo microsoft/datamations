@@ -1,6 +1,9 @@
 #' datamations SandDance html widget
 #'
-#' @import htmlwidgets
+#' @param specs JSON specs for pipeline
+#' @param width Width of widget. Not currently used
+#' @param height Height of widget. Not currently used
+#' @param elementId Optional element ID for widget
 #'
 #' @export
 datamationSandDance <- function(specs, width = NULL, height = NULL, elementId = NULL) {
@@ -55,18 +58,18 @@ datamationSandDance_html <- function(...) {
 
   id <- c(...)[["id"]]
 
-  htmltools::div(
+  shiny::div(
     class = "container",
-    htmltools::div(
+    shiny::div(
       class = "control-bar",
-      htmltools::div(
+      shiny::div(
         class = "button-wrapper",
-        htmltools::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Play")
+        shiny::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Play")
       )
     ),
-    htmltools::div(
+    shiny::div(
       class = "chart-wrapper",
-      htmltools::div(
+      shiny::div(
         ...
       )
     )

@@ -22,22 +22,18 @@ Imports:
     purrr,
     scales,
     ggimage,
-    boot,
     stringr,
     tidyr,
-    tweenr,
     animation,
-    ggbeeswarm,
     shiny,
     vegawidget,
-    palmerpenguins,
     forcats,
     glue,
     tidyselect,
-    reactable,
     htmlwidgets
 Suggests: 
     jsonlite,
+    palmerpenguins,
     testthat (>= 2.1.0)
 Depends: 
     R (>= 3.5.0)

@@ -9,3 +9,5 @@ start-up.R
 ^README_cache$
 ^data-raw$
 ^app\.R$
+^rsconnect$
+^sandbox$

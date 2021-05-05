@@ -68,7 +68,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   # State 1: Scatter plot (with any grouping)
 
   data_1 <- .data %>%
-    dplyr::select(gemini_id, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
+    dplyr::select(.data$gemini_id, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
 
   # Add an x variable to use as the center of jittering
   # It can just be 1, except if there are three grouping variables (since then there's facet, row, and colour grouping, and the colour is also offset)
@@ -76,7 +76,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
     data_1 <- data_1 %>%
       dplyr::mutate(
         x = forcats::fct_explicit_na({{ color_var }}),
-        x = as.numeric(x)
+        x = as.numeric(.data$x)
       )
   } else {
     data_1 <- data_1 %>%
@@ -137,7 +137,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   # None should disappear, otherwise makes animating
 
   data_2 <- data_1 %>%
-    dplyr::mutate(dplyr::across(y, !!summary_function, na.rm = TRUE))
+    dplyr::mutate(dplyr::across(.data$y, !!summary_function, na.rm = TRUE))
 
   # Add an x variable to place the point
   # It can just be 1, except if there are three grouping variables (since then there's facet, row, and colour grouping, and the colour is also offset)
@@ -145,7 +145,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
     data_2 <- data_2 %>%
       dplyr::mutate(
         x = forcats::fct_explicit_na({{ color_var }}),
-        x = as.numeric(x)
+        x = as.numeric(.data$x)
       )
   } else {
     data_2 <- data_2 %>%

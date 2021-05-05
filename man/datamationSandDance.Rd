@@ -6,6 +6,15 @@
 \usage{
 datamationSandDance(specs, width = NULL, height = NULL, elementId = NULL)
 }
+\arguments{
+\item{specs}{JSON specs for pipeline}
+
+\item{width}{Width of widget. Not currently used}
+
+\item{height}{Height of widget. Not currently used}
+
+\item{elementId}{Optional element ID for widget}
+}
 \description{
 datamations SandDance html widget
 }
