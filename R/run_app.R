@@ -13,7 +13,7 @@ run_app <- function() {
         width = 3,
         shiny::selectInput("dataset",
           "Dataset",
-          choices = c("penguins", "small_salary_data")
+          choices = c("small_salary_data", "penguins")
         )
       ),
       shiny::column(
