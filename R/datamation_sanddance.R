@@ -5,8 +5,9 @@
 #' @param pipeline Tidyverse pipeline
 #' @param envir Environment where code is evaluated. Defaults to the global environment.
 #' @param pretty Whether to pretty the JSON output. Defaults to TRUE.
+#' @param elementId Optional ID for the widget element.
 #' @export
-datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty = TRUE) {
+datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty = TRUE, elementId = NULL) {
   supported_tidy_functions <- c("group_by", "summarize", "summarise")
 
   fittings <- pipeline %>%
@@ -75,5 +76,5 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   res <- jsonlite::toJSON(res, auto_unbox = TRUE, pretty = pretty, null = "null", digits = NA)
 
   # Create widget
-  datamationSandDance(res)
+  datamationSandDance(res, elementId = elementId)
 }
