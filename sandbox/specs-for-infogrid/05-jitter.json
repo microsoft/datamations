@@ -1,7 +1,8 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "meta": {
-    "parse": "jitter"
+    "parse": "jitter",
+    "axes": true
   },
   "data": {
     "values": [
@@ -2750,16 +2751,19 @@
     "column": {
       "field": "island",
       "type": "nominal",
-      "title": null
+      "title": "island"
     },
     "row": {
       "field": "species",
       "type": "nominal",
-      "title": null
+      "title": "species"
     }
   },
   "spec": {
-    "mark": "point",
+    "mark": {
+      "type": "point",
+      "filled": true
+    },
     "encoding": {
       "x": {
         "field": "x",

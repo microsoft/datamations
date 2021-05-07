@@ -4,6 +4,8 @@ library(purrr)
 
 specs <- datamation_sanddance("penguins %>% group_by(island, species, sex) %>% summarize(mean = mean(bill_length_mm))")
 
+specs <- specs$x$specs
+
 # Write full specs
 
 write(specs, here::here("sandbox", "specs-for-infogrid", "00-full-specs.json"))

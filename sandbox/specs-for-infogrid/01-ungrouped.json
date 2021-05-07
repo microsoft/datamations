@@ -10,7 +10,10 @@
       }
     ]
   },
-  "mark": "point",
+  "mark": {
+    "type": "point",
+    "filled": true
+  },
   "encoding": {
     "x": {
       "field": "x",
