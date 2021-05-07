@@ -61,8 +61,8 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
 
   # Prep encoding
 
-  x_encoding <- list(field = "x", type = "quantitative", axis = NULL)
-  y_encoding <- list(field = "y", type = "quantitative", axis = NULL)
+  x_encoding <- list(field = "x", type = "quantitative")
+  y_encoding <- list(field = "y", type = "quantitative")
   color_encoding <- list(field = rlang::quo_name(color_var), type = "nominal", axis = NULL)
   facet_col_encoding <- list(field = col_facet_var_chr, type = "nominal", title = col_facet_var_chr)
   facet_row_encoding <- list(field = row_facet_var_chr, type = "nominal", title = row_facet_var_chr)
