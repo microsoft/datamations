@@ -74,18 +74,30 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
 
   # Add an x variable to use as the center of jittering
   # It can just be 1, except if there are three grouping variables (since then there's facet, row, and colour grouping, and the colour is also offset)
+
+  # Generate the labels for these too - label by colour grouping variable or not at all
+
   if (n_groups == 3) {
     data_1 <- data_1 %>%
       dplyr::mutate(
         x = forcats::fct_explicit_na({{ color_var }}),
         x = as.numeric(.data$x)
       )
+
+    x_labels <- data_1 %>%
+      dplyr::ungroup() %>%
+      dplyr::distinct(x, label = {{ color_var }}) %>%
+      generate_labelsExpr()
   } else {
     data_1 <- data_1 %>%
       dplyr::mutate(x = 1)
+
+    x_labels <- generate_labelsExpr(NULL)
   }
 
   # Set up specs based on number of groups
+  x_encoding <- append(x_encoding, list(axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]]), title = NULL))
+
   encoding <- list(
     x = x_encoding,
     y = y_encoding
@@ -191,4 +203,24 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
 
   # Return the specs
   specs_list
+}
+
+generate_labelsExpr <- function(data) {
+  if (is.null(data)) {
+    return(list(
+      breaks = 1,
+      labelExpr = ""
+    ))
+  }
+
+  data <- data %>%
+    dplyr::mutate(label = dplyr::coalesce(label, "unknown"))
+
+  n_breaks <- nrow(data)
+  breaks <- data[["x"]]
+  labels <- data[["label"]]
+
+  labelExpr <- c(glue::glue("datum.label == {breaks[1:(n_breaks - 1)]} ? '{labels[1:(n_breaks - 1)]}'"), glue::glue("'{labels[n_breaks]}'")) %>% paste0(collapse = " : ")
+
+  list(breaks = breaks, labelExpr = labelExpr)
 }
