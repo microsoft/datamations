@@ -1,24 +1,30 @@
-
-const dataUrl = "https://raw.githubusercontent.com/jhofman/datamations/refactor-test/sandbox/specs-for-infogrid/";
+const repoUrl = "https://raw.githubusercontent.com/jhofman/datamations";
+const dataUrl = repoUrl + "/refactor-test/sandbox/specs-for-infogrid/";
 const frameDuration = 1200;
-let specsArray, frames, metas;
+
+let specsArray, frames, metas, files, rawFiles;
 
 async function init(id, { specUrls, specs }) {
-  let files = [];
+  files = [];
+  rawFiles = [];
 
   if (specs) {
-    files = specs.map(d => {
+    files = specs.map((d) => {
       return {
         ...d,
         width: 600,
         height: 600,
-      }
+      };
     });
   } else if (specUrls) {
     files = await loadData(specUrls);
   }
 
-  metas = files.map(d => d.meta);
+  files.forEach((d) => {
+    rawFiles.push(JSON.parse(JSON.stringify(d)));
+  });
+
+  metas = files.map((d) => d.meta);
 
   for (let i = 0; i < files.length; i++) {
     const parse = files[i].meta.parse;
@@ -35,25 +41,25 @@ async function init(id, { specUrls, specs }) {
 
     // fake facets
     if (facet && spec) {
-      const width = facet.column ? 654 : 200;
-      const height = facet.row ? 649 : 200;
       const meta = files[i].meta;
       const withAxes = meta && meta.axes;
 
       files[i].data.name = "source";
 
-      const { newSpec, view } = await hackFacet(files[i], {
-        width, 
-        height,
-        container: withAxes ? '#vis_axis' : null
-      });
+      const { newSpec, view } = await hackFacet(files[i]);
+
+      // hacky, but don't know why this is needed.
+      if (i === 4) {
+        newSpec.width += 10;
+        newSpec.height -= 10;
+      }
 
       files[i] = newSpec;
 
       if (withAxes) {
         const vis = document.querySelector("#vis");
         const origin = view._origin;
-        vis.style.left = origin[0] + 'px';
+        vis.style.left = origin[0] + "px";
       }
     }
   }
@@ -65,7 +71,7 @@ async function init(id, { specUrls, specs }) {
     const prev = specsArray[i - 1];
     const curr = specsArray[i];
     const meta = metas[i - 1];
-    
+
     const prevMeta = metas[i - 1];
     const currMeta = metas[i];
 
@@ -103,7 +109,8 @@ async function init(id, { specUrls, specs }) {
   drawFrame(id, 0);
 }
 
-let counter = 0, intervalId;
+let counter = 0,
+  intervalId;
 
 function play(id) {
   counter = 0;
@@ -128,46 +135,47 @@ function drawFrame(id, index) {
 
   const meta = metas[index];
 
-  vegaEmbed("#" + id, specsArray[index], {
+  d3.select("#vis_axis").style("opacity", meta.axes ? 1 : 0);
+  d3.select("#" + id).classed("with-axes", meta.axes);
+
+  if (meta.axes) {
+    d3.select("#vis_axis").html("");
+    vegaEmbed("#vis_axis", rawFiles[index], {
+      renderer: "svg",
+    });
+  }
+
+  return vegaEmbed("#" + id, specsArray[index], {
     renderer: "svg",
   });
-
-  d3.select('#vis_axis').style("opacity", meta.axes ? 1 : 0);
-  d3.select('#' + id).classed('with-axes', meta.axes);
 }
 
 async function animateFrame(index, id) {
   if (!frames[index]) return;
 
-  const {
-    source,
-    target,
-    gemSpec,
-    prevMeta,
-    currMeta,
-  } = frames[index];
+  const { source, target, gemSpec, prevMeta, currMeta } = frames[index];
 
   let anim = await gemini.animate(source, target, gemSpec);
 
   let prevHasAxes = prevMeta.axes;
   let currHasAxes = currMeta.axes;
 
-  if (prevHasAxes && !currHasAxes) {
-    d3.select('#vis_axis')
-      .transition()
-      .duration(frameDuration)
-      .style("opacity", 0);
-    d3.select('#' + id).classed('with-axes', false);
-  } else if (!prevHasAxes && currHasAxes) {
-    d3.select('#vis_axis')
-      .transition()
-      .duration(frameDuration)
-      .style("opacity", 1);
-    d3.select('#' + id).classed('with-axes', true);
-  }
-
-  vegaEmbed('#' + id, source, { renderer: "svg" }).then(() => {
-    anim.play('#' + id);
+  drawFrame(id, index).then(() => {
+    anim.play("#" + id);
+    // show/hide axis vega chart
+    if (prevHasAxes && !currHasAxes) {
+      d3.select("#vis_axis")
+        .transition()
+        .duration(1000)
+        .style("opacity", 0);
+      d3.select("#" + id).classed("with-axes", false);
+    } else if (!prevHasAxes && currHasAxes) {
+      d3.select("#vis_axis")
+        .transition()
+        .duration(100)
+        .style("opacity", 1);
+      d3.select("#" + id).classed("with-axes", true);
+    }
   });
 }
 
@@ -180,6 +188,14 @@ function loadData(specUrls) {
     .then((files) => {
       // make adjustments here if needed
       return files.map((d, i) => {
+        // if (d.facet) {
+        //   d.config = {
+        //     ...d.config,
+        //     facet: {
+        //       spacing: 12
+        //     }
+        //   }
+        // }
         // todo: ask sharla to remove axis: null and use them to define which axis needs to be rendered
         if (i >= 4) {
           d.meta = {
@@ -211,5 +227,5 @@ init("vis", {
     dataUrl + "04-column-row-facet-color.json",
     dataUrl + "05-jitter.json",
     dataUrl + "06-summary.json",
-  ]}
-);
+  ],
+});
