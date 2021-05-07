@@ -57,7 +57,7 @@ async function init(id, { specUrls, specs }) {
       files[i] = newSpec;
 
       if (withAxes) {
-        const vis = document.querySelector("#vis");
+        const vis = document.querySelector("#" + id + " .vega-vis");
         const origin = view._origin;
         vis.style.left = origin[0] + "px";
       }
