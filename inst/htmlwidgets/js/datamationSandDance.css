@@ -1,0 +1,37 @@
+.vis-wrapper {
+  position: relative;
+}
+
+.vis-wrapper > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#vis * {
+pointer-events: none !important;
+}
+
+#vis svg {
+background-color: transparent !important;
+}
+
+#vis.with-axes .background {
+stroke: none !important;
+}
+
+#vis.with-axes details {
+display: none;
+}
+
+#vis_axis {
+opacity: 0;
+}
+
+#vis_axis .mark-group.cell .mark-symbol {
+display: none;
+}
+
+#vis_axis .role-title {
+display: none;
+}

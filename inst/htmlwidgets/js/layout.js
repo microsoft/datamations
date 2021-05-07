@@ -163,17 +163,18 @@ function getJitterSpec(spec) {
   }
 
   const facetSize = width / rootGroupCount;
-  const gapSize = facetSize / innerGroupCount * 0.9;
+  const yExtent = d3.extent(nodes, d => d.y);
 
   const xScale = d3.scaleBand()
     .domain(d3.range(1, innerGroupCount + 1))
     .range([0, facetSize]);
 
-  const arr = nodes.slice().map((d, i) => {
+  const arr = nodes.slice().filter(d => d.y !== undefined).map((d, i) => {
     d.oldX = d.x;
     d.oldY = d.y;
-    let x = xScale(d.x) + xScale.bandwidth() / 2;
-    let y = d.y || 0;
+
+    let x = xScale(d.x) + xScale.bandwidth() / 2 + Math.random() * 4 - 2;
+    let y = d.y;
 
     return {
       ...d,
@@ -184,15 +185,12 @@ function getJitterSpec(spec) {
 
   const simulation = d3
     .forceSimulation(arr)
-    .force("x", d3.forceX().x(d => d.x).strength(0.002))
-    .force("y", d3.forceY().y(d => d.y).strength(1))
-    .force(
-      "collide",
-      d3
-        .forceCollide()
-        .iterations(2)
-        .strength(0.2)
-        .radius(circleRadius)
+    .force("x", d3.forceX().strength(0.001))
+    .force("y", d3.forceY().strength(0.002).y(d => d.y))
+    .force("collide", d3
+      .forceCollide()
+      .strength(0.002)
+      .radius(circleRadius)
     )
     .stop();
 
@@ -201,14 +199,19 @@ function getJitterSpec(spec) {
 
     for (let i = 0; i < 120; i++) {
       simulation.tick();
+
       arr.forEach(d => {
         const x = xScale(d.oldX);
         d.y = d.oldY;
         d.x = Math.max(
-          x + xScale.bandwidth() * 0.1,
+          x + xScale.bandwidth() * 0.05,
           Math.min(x + bandwidth, d.x)
         );
       })
+    }
+
+    encoding.y.scale = {
+      domain: yExtent
     }
 
     return res({

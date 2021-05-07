@@ -4,7 +4,12 @@
 \alias{datamation_sanddance}
 \title{Generate a plot datamation}
 \usage{
-datamation_sanddance(pipeline, envir = rlang::global_env(), pretty = TRUE)
+datamation_sanddance(
+  pipeline,
+  envir = rlang::global_env(),
+  pretty = TRUE,
+  elementId = NULL
+)
 }
 \arguments{
 \item{pipeline}{Tidyverse pipeline}
@@ -12,6 +17,8 @@ datamation_sanddance(pipeline, envir = rlang::global_env(), pretty = TRUE)
 \item{envir}{Environment where code is evaluated. Defaults to the global environment.}
 
 \item{pretty}{Whether to pretty the JSON output. Defaults to TRUE.}
+
+\item{elementId}{Optional ID for the widget element.}
 }
 \description{
 Generates the vega lite specs necessary for a plot datamation, based on a tidyverse pipeline.

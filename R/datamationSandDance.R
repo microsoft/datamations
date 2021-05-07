@@ -55,20 +55,17 @@ renderDatamationSandDance <- function(expr, env = parent.frame(), quoted = FALSE
 }
 
 datamationSandDance_html <- function(...) {
-
   id <- c(...)[["id"]]
 
   shiny::div(
     class = "container",
     shiny::div(
-      class = "control-bar",
-      shiny::div(
-        class = "button-wrapper",
-        shiny::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Play")
-      )
+      class = "button-wrapper",
+      shiny::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Play")
     ),
     shiny::div(
-      class = "chart-wrapper",
+      class = "vis-wrapper",
+      shiny::div(id = "vis_axis"),
       shiny::div(
         ...
       )

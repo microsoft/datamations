@@ -23,11 +23,12 @@ dependencies:
    version: 0.0.1
    src: htmlwidgets/js
    script: app.js
- - name: hack
+ - name: hack-facet-view
    version: 0.0.1
    src: htmlwidgets/js
-   script: hack.js
+   script: hack-facet-view.js
  - name: layout
    version: 0.0.1
    src: htmlwidgets/js
    script: layout.js
+   stylesheet: datamationSandDance.css
