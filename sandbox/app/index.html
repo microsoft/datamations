@@ -12,8 +12,42 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
     <script src="./libs/gemini.web.js"></script>
     <style>
+      .vis-wrapper {
+        position: relative;
+      }
+
+      .vis-wrapper > div {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
       #vis * {
         pointer-events: none !important;
+      }
+
+      #vis.with-axes svg {
+        background-color: transparent !important  ;
+      }
+
+      #vis.with-axes .background {
+        stroke: none;
+      }
+
+      #vis.with-axes details {
+        display: none;
+      }
+
+      #vis_axis {
+        opacity: 0;
+      }
+
+      #vis_axis .mark-group.cell .mark-symbol {
+        display: none ;
+      }
+
+      #vis_axis .role-title {
+        display: none;
       }
     </style>
   </head>
@@ -22,9 +56,13 @@
     <div class="button-wrapper">
       <button onclick="play('vis')">Play</button>
     </div>
-    <div id="vis"></div>
+    
+    <div class="vis-wrapper">
+      <div id="vis_axis"></div>
+      <div id="vis"></div>
+    </div>
     <script src="./scripts/layout.js"></script>
-    <script src="./scripts/hack.js"></script>
+    <script src="./scripts/hack-facet-view.js"></script>
     <script src="./scripts/app.js"></script>
   </body>
 </html>

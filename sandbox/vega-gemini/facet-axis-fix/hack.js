@@ -12,7 +12,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, encoding) {
         orient: "top",
         ticks: false,
         domain: false,
-        labelPadding: 12
+        labelPadding: 10
       } : null,
     }
   }
@@ -27,10 +27,11 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, encoding) {
         values: [],
         title: false,
         grid: false,
-        labelAngle: -90,
+        labelAngle: 90,
         domain: false,
         ticks: false, 
-        labelPadding: 43
+        labelPadding: 10,
+        orient: "right"
       } : null,
     }
   }
@@ -59,10 +60,10 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     width, 
     height, 
     {  
-      // x: colId,
-      // y: rowId,
-      x: null,
-      y: null
+      x: colId,
+      y: rowId,
+      // x: null,
+      // y: null
     },
     spec.spec.encoding
   );
@@ -90,7 +91,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
       const name = d.datum[rowId];
       const y1 = bounds.y1;
       const y2 = bounds.y2;
-      console.log(bounds);
+
       rowMap.set(name, y1);
   
       const yCoord = Math.round(y1 + (y2 - y1) / 2);
@@ -99,11 +100,11 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
       yAxisExpr[yCoord] = name;
     });
 
-    yDomain[1] = d3.min(row_header, d => d.bounds.y1) - 20;
-    yDomain[0] = d3.max(row_header, d => d.bounds.y2) + 20;
+    yDomain[1] = d3.min(row_header, d => d.bounds.y1);
+    yDomain[0] = d3.max(row_header, d => d.bounds.y2);
 
-    // newSpec.encoding.y.axis.values = yAxisValues;
-    // newSpec.encoding.y.axis.labelExpr = `${JSON.stringify(yAxisExpr)}[datum.label]`;
+    newSpec.encoding.y.axis.values = yAxisValues;
+    newSpec.encoding.y.axis.labelExpr = `${JSON.stringify(yAxisExpr)}[datum.label]`;
   }
 
   // need x axis
@@ -124,11 +125,11 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
       xAxisExpr[xCoord] = name;
     });
 
-    xDomain[0] = d3.min(column_header, d => d.bounds.x1) - 20
-    xDomain[1] = d3.max(column_header, d => d.bounds.x2) + 20;
+    xDomain[0] = d3.min(column_header, d => d.bounds.x1) 
+    xDomain[1] = d3.max(column_header, d => d.bounds.x2);
 
-    // newSpec.encoding.x.axis.values = xAxisValues;
-    // newSpec.encoding.x.axis.labelExpr = `${JSON.stringify(xAxisExpr)}[datum.label]`;
+    newSpec.encoding.x.axis.values = xAxisValues;
+    newSpec.encoding.x.axis.labelExpr = `${JSON.stringify(xAxisExpr)}[datum.label]`;
   }
 
   source.forEach((d) => {
@@ -152,8 +153,12 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   return newSpec;
 }
 
-function hackFacet(spec, width = 600, height = 600) {
-  const div = document.createElement("div");
+function hackFacet(spec, {
+  width = 600, 
+  height = 600,
+  container
+}) {
+  const div = container ? document.querySelector(container) : document.createElement("div");
 
   return vegaEmbed(div, spec, {renderer: "svg"}).then(resp => {
     const newSpec = getHackedSpec({
@@ -162,7 +167,9 @@ function hackFacet(spec, width = 600, height = 600) {
       height: height
     });
     newSpec.config = spec.config;
-   console.log(resp.view);
-    return newSpec;
+    return {
+      newSpec: newSpec,
+      view: resp.view,
+    };
   });
 }
