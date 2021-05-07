@@ -12,41 +12,41 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
     <script src="./libs/gemini.web.js"></script>
     <style>
-      .vis-wrapper {
+      .vega-vis-wrapper {
         position: relative;
       }
 
-      .vis-wrapper > div {
+      .vega-vis-wrapper > div {
         position: absolute;
         top: 0;
         left: 0;
       }
 
-      #vis * {
+      .vega-vis-wrapper * {
         pointer-events: none !important;
       }
 
-      #vis svg {
+      .vega-vis-wrapper .vega-vis svg {
         background-color: transparent !important;
       }
 
-      #vis.with-axes .background {
+      .vega-vis-wrapper .vega-vis.with-axes .background {
         stroke: none !important;
       }
 
-      #vis.with-axes details {
+      .vega-vis-wrapper .vega-vis.with-axes details {
         display: none;
       }
 
-      #vis_axis {
+      .vega-vis-wrapper .vega-for-axis {
         opacity: 0;
       }
 
-      #vis_axis .mark-group.cell .mark-symbol {
+      .vega-vis-wrapper .vega-for-axis .mark-group.cell .mark-symbol {
         display: none;
       }
 
-      #vis_axis .role-title {
+      .vega-vis-wrapper .vega-for-axis .role-title {
         display: none;
       }
     </style>
@@ -57,10 +57,11 @@
       <button onclick="play('vis')">Play</button>
     </div>
     
-    <div class="vis-wrapper">
-      <div id="vis_axis"></div>
-      <div id="vis"></div>
+    <div class="vega-vis-wrapper" id="vis">
+      <div class="vega-for-axis"></div>
+      <div class="vega-vis"></div>
     </div>
+
     <script src="./scripts/layout.js"></script>
     <script src="./scripts/hack-facet-view.js"></script>
     <script src="./scripts/app.js"></script>

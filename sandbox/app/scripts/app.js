@@ -70,7 +70,6 @@ async function init(id, { specUrls, specs }) {
   for (let i = 1; i < specsArray.length; i++) {
     const prev = specsArray[i - 1];
     const curr = specsArray[i];
-    const meta = metas[i - 1];
 
     const prevMeta = metas[i - 1];
     const currMeta = metas[i];
@@ -106,7 +105,7 @@ async function init(id, { specUrls, specs }) {
       .catch((e) => {});
   }
 
-  drawFrame(id, 0);
+  drawFrame(0, id);
 }
 
 let counter = 0,
@@ -130,29 +129,32 @@ function play(id) {
   }, frameDuration + 100);
 }
 
-function drawFrame(id, index) {
+function drawFrame(index, id) {
   if (!specsArray[index]) return;
 
   const meta = metas[index];
+  const axisSelector = "#" + id + " .vega-for-axis";
+  const visSelector = "#" + id + " .vega-vis";
 
-  d3.select("#vis_axis").style("opacity", meta.axes ? 1 : 0);
-  d3.select("#" + id).classed("with-axes", meta.axes);
+  d3.select(axisSelector)
+    .style("opacity", meta.axes ? 1 : 0)
+    .html("");
+  d3.select(visSelector).classed("with-axes", meta.axes);
 
-  d3.select("#vis_axis").html("");
+  // draw axis
   if (meta.axes) {
-    vegaEmbed("#vis_axis", rawFiles[index], {
-      renderer: "svg",
-    });
+    vegaEmbed(axisSelector, rawFiles[index], { renderer: "svg" });
   }
 
-  return vegaEmbed("#" + id, specsArray[index], {
-    renderer: "svg",
-  });
+  // draw vis
+  return vegaEmbed(visSelector, specsArray[index], { renderer: "svg" });
 }
 
 async function animateFrame(index, id) {
   if (!frames[index]) return;
 
+  const axisSelector = "#" + id + " .vega-for-axis";
+  const visSelector = "#" + id + " .vega-vis";
   const { source, target, gemSpec, prevMeta, currMeta } = frames[index];
 
   let anim = await gemini.animate(source, target, gemSpec);
@@ -160,21 +162,18 @@ async function animateFrame(index, id) {
   let prevHasAxes = prevMeta.axes;
   let currHasAxes = currMeta.axes;
 
-  drawFrame(id, index).then(() => {
-    anim.play("#" + id);
+  drawFrame(index, id).then(() => {
+    anim.play(visSelector);
+
     // show/hide axis vega chart
     if (prevHasAxes && !currHasAxes) {
-      d3.select("#vis_axis")
-        .transition()
-        .duration(1000)
-        .style("opacity", 0);
-      d3.select("#" + id).classed("with-axes", false);
+      d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
+
+      d3.select(visSelector).classed("with-axes", false);
     } else if (!prevHasAxes && currHasAxes) {
-      d3.select("#vis_axis")
-        .transition()
-        .duration(100)
-        .style("opacity", 1);
-      d3.select("#" + id).classed("with-axes", true);
+      d3.select(axisSelector).transition().duration(100).style("opacity", 1);
+
+      d3.select(visSelector).classed("with-axes", true);
     }
   });
 }
@@ -188,14 +187,6 @@ function loadData(specUrls) {
     .then((files) => {
       // make adjustments here if needed
       return files.map((d, i) => {
-        // if (d.facet) {
-        //   d.config = {
-        //     ...d.config,
-        //     facet: {
-        //       spacing: 12
-        //     }
-        //   }
-        // }
         // todo: ask sharla to remove axis: null and use them to define which axis needs to be rendered
         if (i >= 4) {
           d.meta = {
