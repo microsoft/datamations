@@ -31,4 +31,7 @@ dependencies:
    version: 0.0.1
    src: htmlwidgets/js
    script: layout.js
+ - name: css
+   version: 0.0.1
+   src: htmlwidgets/css
    stylesheet: datamationSandDance.css
