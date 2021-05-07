@@ -138,8 +138,8 @@ function drawFrame(id, index) {
   d3.select("#vis_axis").style("opacity", meta.axes ? 1 : 0);
   d3.select("#" + id).classed("with-axes", meta.axes);
 
+  d3.select("#vis_axis").html("");
   if (meta.axes) {
-    d3.select("#vis_axis").html("");
     vegaEmbed("#vis_axis", rawFiles[index], {
       renderer: "svg",
     });
