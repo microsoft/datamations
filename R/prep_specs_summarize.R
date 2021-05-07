@@ -112,7 +112,10 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   if (n_groups == 0) {
     specs_list[[1]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      meta = list(parse = "jitter"),
+      meta = list(
+        parse = "jitter",
+        axes = TRUE
+      ),
       data = list(values = data_1),
       mark = "point",
       encoding = encoding
@@ -121,7 +124,10 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   } else {
     specs_list[[1]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      meta = list(parse = "jitter"),
+      meta = list(
+        parse = "jitter",
+        axes = TRUE
+      ),
       data = list(values = data_1),
       facet = facet,
       spec = list(
@@ -155,7 +161,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   if (n_groups == 0) {
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      meta = list(),
+      meta = list(axes = TRUE),
       data = list(values = data_2),
       mark = "point",
       encoding = encoding
@@ -164,7 +170,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   } else {
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      meta = list(),
+      meta = list(axes = TRUE),
       data = list(values = data_2),
       facet = facet,
       spec = list(
