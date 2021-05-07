@@ -117,7 +117,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
         axes = TRUE
       ),
       data = list(values = data_1),
-      mark = "point",
+      mark = list(type = "point", filled = TRUE),
       encoding = encoding
     ) %>%
       vegawidget::as_vegaspec()
@@ -131,7 +131,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       data = list(values = data_1),
       facet = facet,
       spec = list(
-        mark = "point",
+        mark = list(type = "point", filled = TRUE),
         encoding = encoding
       )
     ) %>%
@@ -163,7 +163,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       `$schema` = vegawidget::vega_schema(),
       meta = list(axes = TRUE),
       data = list(values = data_2),
-      mark = "point",
+      mark = list(type = "point", filled = TRUE),
       encoding = encoding
     ) %>%
       vegawidget::as_vegaspec()
@@ -174,7 +174,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       data = list(values = data_2),
       facet = facet,
       spec = list(
-        mark = "point",
+        mark = list(type = "point", filled = TRUE),
         encoding = encoding
       )
     ) %>%

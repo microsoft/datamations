@@ -28,7 +28,7 @@ prep_specs_data <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
     `$schema` = vegawidget::vega_schema(),
     meta = list(parse = "grid"),
     data = list(values = data_1),
-    mark = "point",
+    mark = list(type = "point", filled = TRUE),
     encoding = list(
       x = x_encoding,
       y = y_encoding

@@ -55,7 +55,7 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
     data = list(values = data_1),
     facet = list(column = facet_col_encoding),
     spec = list(
-      mark = "point",
+      mark = list(type = "point", filled = TRUE),
       encoding = list(
         x = x_encoding,
         y = y_encoding
@@ -81,7 +81,7 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
         row = facet_row_encoding
       ),
       spec = list(
-        mark = "point",
+        mark = list(type = "point", filled = TRUE),
         encoding = list(
           x = x_encoding,
           y = y_encoding
@@ -108,7 +108,7 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
         row = facet_row_encoding
       ),
       spec = list(
-        mark = "point",
+        mark = list(type = "point", filled = TRUE),
         encoding = list(
           x = x_encoding,
           y = y_encoding,
