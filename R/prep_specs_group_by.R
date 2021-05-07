@@ -13,8 +13,10 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
 
   # Use the first grouping variable for column facet
   col_facet_var <- dplyr::first(group_vars)
+  col_facet_var_chr <- rlang::quo_name(col_facet_var)
   # And the second for the row facet
   row_facet_var <- dplyr::nth(group_vars, n = 2)
+  row_facet_var_chr <- rlang::quo_name(row_facet_var)
   # And the third for color
   color_var <- dplyr::nth(group_vars, n = 3)
 
@@ -34,8 +36,8 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
   x_encoding <- list(field = "x", type = "quantitative", axis = NULL)
   y_encoding <- list(field = "y", type = "quantitative", axis = NULL)
   color_encoding <- list(field = rlang::quo_name(color_var), type = "nominal", axis = NULL)
-  facet_col_encoding <- list(field = rlang::quo_name(col_facet_var), type = "nominal", title = NULL)
-  facet_row_encoding <- list(field = rlang::quo_name(row_facet_var), type = "nominal", title = NULL)
+  facet_col_encoding <- list(field = col_facet_var_chr, type = "nominal", title = col_facet_var_chr)
+  facet_row_encoding <- list(field = row_facet_var_chr, type = "nominal", title = row_facet_var_chr)
 
   # These are not "real specs" as they don't actually have an x or y, only n
   # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
