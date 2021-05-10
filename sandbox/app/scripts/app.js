@@ -105,7 +105,7 @@ async function init(id, { specUrls, specs }) {
       .catch((e) => {});
   }
 
-  drawFrame(0, id);
+  drawFrame(1, id);
 }
 
 let counter = 0,

@@ -1,5 +1,11 @@
-function getSpecTemplate(width, height, axes = { x: true, y: true }, encoding) {
+function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
+  const encoding = spec.spec.encoding;
+  const mark = spec.spec.mark;
+  const facet = spec.facet;
+  
   if (encoding.x) {
+    const title = facet && facet.column ? facet.column.title : null;
+
     encoding.x = {
       field: "x",
       type: "quantitative",
@@ -7,7 +13,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, encoding) {
       axis: axes.x ? {
         labelExpr: "",
         values: [],
-        title: false,
+        title: title,
         grid: false,
         orient: "top",
         ticks: false,
@@ -18,6 +24,8 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, encoding) {
   }
 
   if (encoding.y) {
+    const title = facet && facet.row ? facet.row.title : null;
+
     encoding.y = {
       field: "y",
       type: "quantitative",
@@ -25,7 +33,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, encoding) {
       axis: axes.y ? {
         labelExpr: "",
         values: [],
-        title: false,
+        title: title,
         grid: false,
         labelAngle: 90,
         domain: false,
@@ -47,7 +55,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, encoding) {
     },
     width: width,
     height: height,
-    mark: "point",
+    mark: mark,
     encoding: encoding
   };
 }
@@ -63,7 +71,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
       x: colId,
       y: rowId,
     },
-    spec.spec.encoding
+    spec
   );
 
   const yDomain = [height, 0];
