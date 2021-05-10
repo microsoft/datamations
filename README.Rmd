@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE
 )
-
+  
 # Specific options
 knitr::opts_template$set(
   # Actually generating the datamations - don't show the code or results (returns FALSE right now), and cache the image so it's not regenerated each time
@@ -45,11 +45,11 @@ devtools::install_github("jhofman/datamations)
 
 ## Usage
 
-To get started, load datamations and the tidyverse:
+To get started, load datamations and dplyr:
 
 ```{r load-libraries}
 library(datamations)
-library(tidyverse)
+library(dplyr)
 ```
 
 ### Plot-based datamations
@@ -58,7 +58,7 @@ A plot-based datamation shows a plot of what the data looks like at each step of
 
 First, define the code for the pipeline, then generate the datamation with `datamation_sanddance()`:
 
-```{r mean-salary-degree-plot-setup}
+```{r mean-salary-degree-plot-setup, eval = FALSE}
 "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
   datamation_sanddance()
 ```
@@ -69,7 +69,7 @@ knitr::include_graphics("man/figures/README-mean_salary_group_by_degree.gif")
 
 You can group by multiple variables, as in this example, grouping by `Degree` and `Work` before calculating the mean `Salary`:
 
-```{r mean-salary-degree-plot-work-setup}
+```{r mean-salary-degree-plot-work-setup, eval = FALSE}
 "small_salary %>% group_by(Degree, Work) %>% summarize(mean = mean(Salary))" %>%
   datamation_sanddance()
 ```
@@ -86,7 +86,7 @@ You can generate a table-based datamation with `datamation_tibble()`:
 
 ```{r mean-salary-degree-work-table-datamations, eval = FALSE}
 datamation_tibble(
-  pipeline = mean_salary_by_degree_pipe,
+  pipeline = "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))",
   output = "mean_salary_group_by_degree.gif"
 )
 ```
@@ -99,7 +99,7 @@ datamation_tibble(
 #   )
 
 datamation_tibble(
-  pipeline = mean_salary_by_degree_pipe,
+  pipeline = "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))",
   output = here::here("man", "figures", "README-mean_salary_group_by_degree-table.gif")
 )
 ```
