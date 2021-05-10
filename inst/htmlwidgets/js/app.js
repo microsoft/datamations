@@ -1,4 +1,4 @@
-const frameDuration = 1200;
+const frameDuration = 2500;
 
 let specsArray, frames, metas, files, rawFiles;
 
@@ -8,8 +8,8 @@ async function init(id, { specUrls, specs }) {
 
   if (specs) {
     files = specs.map((d) => {
-      if (!d.width) d.width = 600;
-      if (!d.height) d.height = 600;
+      if (!d.width) d.width = 400;
+      if (!d.height) d.height = 400;
       return { ...d };
     });
   } else if (specUrls) {
@@ -116,7 +116,7 @@ function play(id) {
       clearInterval(intervalId);
       counter = 0;
     }
-  }, frameDuration + 100);
+  }, frameDuration + 1500);
 }
 
 function drawFrame(index, id) {
