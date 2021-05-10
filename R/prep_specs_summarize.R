@@ -220,9 +220,6 @@ generate_labelsExpr <- function(data) {
   breaks <- data[["x"]]
   labels <- data[["label"]]
 
-# prep_specs_summarize ----------------------------------------------------
-
-
   labelExpr <- c(glue::glue("datum.label == {breaks[1:(n_breaks - 1)]} ? '{labels[1:(n_breaks - 1)]}'"), glue::glue("'{labels[n_breaks]}'")) %>% paste0(collapse = " : ")
 
   list(breaks = breaks, labelExpr = labelExpr)

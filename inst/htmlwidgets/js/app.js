@@ -8,11 +8,9 @@ async function init(id, { specUrls, specs }) {
 
   if (specs) {
     files = specs.map((d) => {
-      return {
-        ...d,
-        width: 600,
-        height: 600,
-      };
+      if (!d.width) d.width = 600;
+      if (!d.height) d.height = 600;
+      return { ...d };
     });
   } else if (specUrls) {
     files = await loadData(specUrls);
@@ -45,12 +43,6 @@ async function init(id, { specUrls, specs }) {
       files[i].data.name = "source";
 
       const { newSpec, view } = await hackFacet(files[i]);
-
-      // hacky, but don't know why this is needed.
-      if (i === 4) {
-        newSpec.width += 10;
-        newSpec.height -= 10;
-      }
 
       files[i] = newSpec;
 
@@ -137,11 +129,23 @@ function drawFrame(index, id) {
   d3.select(axisSelector)
     .style("opacity", meta.axes ? 1 : 0)
     .html("");
+
   d3.select(visSelector).classed("with-axes", meta.axes);
 
   // draw axis
   if (meta.axes) {
-    vegaEmbed(axisSelector, rawFiles[index], { renderer: "svg" });
+    const spec = rawFiles[index];
+    const columnFacet = (spec.facet && spec.facet.column);
+
+    vegaEmbed(axisSelector, rawFiles[index], { renderer: "svg" }).then(() => {
+        if (columnFacet && columnFacet.title) {
+            d3.select(axisSelector + ' svg > g').attr('transform', function() {
+                const transform = d3.select(this).attr('transform');
+                const x = transform.split("(")[1].split(",")[0];
+                return `translate(${x}, 40)`;
+            })
+        }
+    });
   }
 
   // draw vis
@@ -186,19 +190,19 @@ function loadData(specUrls) {
       // make adjustments here if needed
       return files.map((d, i) => {
         // todo: ask sharla to remove axis: null and use them to define which axis needs to be rendered
-        if (i >= 4) {
-          d.meta = {
-            ...d.meta,
-            axes: true,
-          };
-          delete d.spec.encoding.x.axis;
-          delete d.spec.encoding.y.axis;
-        }
+        // if (i >= 4) {
+        //   d.meta = {
+        //     ...d.meta,
+        //     axes: true,
+        //   };
+        //   delete d.spec.encoding.x.axis;
+        //   delete d.spec.encoding.y.axis;
+        // }
 
         return {
           ...d,
           width: 600,
-          height: 600,
+          height: 300,
         };
       });
     })
