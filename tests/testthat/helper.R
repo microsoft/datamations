@@ -1,4 +1,4 @@
-# Test that for a specific value of meta.parse
+# Test for a specific value of meta.parse
 expect_meta_parse_value <- function(specs, parse_value) {
   meta_parse <- specs %>%
     purrr::map(jsonlite::fromJSON) %>%
@@ -9,6 +9,19 @@ expect_meta_parse_value <- function(specs, parse_value) {
     unlist()
 
   expect_true(identical(unique(meta_parse), parse_value))
+}
+
+# Test that meta.axes is true or false
+expect_meta_axes <- function(specs, axes_value) {
+  meta_axes <- specs %>%
+    purrr::map(jsonlite::fromJSON) %>%
+    purrr::transpose() %>%
+    purrr::pluck("meta") %>%
+    purrr::transpose() %>%
+    purrr::pluck("axes") %>%
+    unlist()
+
+  expect_true(identical(unique(meta_axes), axes_value))
 }
 
 # Test that the data.values are the same as the passed data frame

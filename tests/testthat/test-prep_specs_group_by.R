@@ -8,6 +8,7 @@ test_that("prep_specs_group_by returns a list, with one element for each groupin
   expect_data_values(specs[[1]], dplyr::count(palmerpenguins::penguins, species)) # one data value for each group combination,  containing group levels and n
   expect_spec_contains_mark_encoding(specs) # mark and encoding within spec
   expect_meta_parse_value(specs, "grid") # meta.parse specifies grid
+  expect_meta_axes(specs, NULL) # Axes are not shown
   expect_grouping_order(specs) # order of grouping is column, row, colour
 
   # two groups ----
@@ -19,6 +20,7 @@ test_that("prep_specs_group_by returns a list, with one element for each groupin
   expect_data_values(specs[[2]], dplyr::count(palmerpenguins::penguins, species, island))
   expect_spec_contains_mark_encoding(specs) # mark and encoding within spec
   expect_meta_parse_value(specs, "grid") # meta.parse specifies grid
+  expect_meta_axes(specs, NULL) # Axes are not shown
   expect_grouping_order(specs) # order of grouping is column, row, colour
 
   # three groups
@@ -31,6 +33,7 @@ test_that("prep_specs_group_by returns a list, with one element for each groupin
   expect_data_values(specs[[3]], dplyr::count(palmerpenguins::penguins, species, island, sex))
   expect_spec_contains_mark_encoding(specs) # mark and encoding within spec
   expect_meta_parse_value(specs, "grid") # meta.parse specifies grid
+  expect_meta_axes(specs, NULL) # Axes are not shown
   expect_grouping_order(specs) # order of grouping is column, row, colour
 })
 
