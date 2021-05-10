@@ -86,7 +86,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
 
     x_labels <- data_1 %>%
       dplyr::ungroup() %>%
-      dplyr::distinct(x, label = {{ color_var }}) %>%
+      dplyr::distinct(.data$x, label = {{ color_var }}) %>%
       generate_labelsExpr()
   } else {
     data_1 <- data_1 %>%
@@ -208,17 +208,20 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
 generate_labelsExpr <- function(data) {
   if (is.null(data)) {
     return(list(
-      breaks = 1,
+      breaks = c(1, 1), # Do 1 twice, otherwise it gets auto unboxed which doesn't actually work!
       labelExpr = ""
     ))
   }
 
   data <- data %>%
-    dplyr::mutate(label = dplyr::coalesce(label, "unknown"))
+    dplyr::mutate(label = dplyr::coalesce(.data$label, "unknown"))
 
   n_breaks <- nrow(data)
   breaks <- data[["x"]]
   labels <- data[["label"]]
+
+# prep_specs_summarize ----------------------------------------------------
+
 
   labelExpr <- c(glue::glue("datum.label == {breaks[1:(n_breaks - 1)]} ? '{labels[1:(n_breaks - 1)]}'"), glue::glue("'{labels[n_breaks]}'")) %>% paste0(collapse = " : ")
 
