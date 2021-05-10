@@ -167,6 +167,8 @@ function hackFacet(spec) {
   return vegaEmbed(div, spec, {renderer: "svg"}).then(resp => {
     const newSpec = getHackedSpec({
       ...resp,
+      width: spec.width,
+      height: spec.height,
     });
 
     if (spec.config) {
