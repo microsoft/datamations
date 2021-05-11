@@ -66,7 +66,7 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
   expect_length(specs, 2) # Returns a list with two elements
   expect_meta_parse_value(specs[1], "jitter") # First element meta.parse is jitter
   expect_meta_parse_value(specs[2], NULL) # Second element meta is empty
-  expect_meta_axes(specs, TRUE) # Axes are set to TRUE to be shown
+  expect_meta_axes(specs, FALSE) # Additional axes are NOT shown when there's no groups
   expect_data_values(specs[[1]], palmerpenguins::penguins %>%
     dplyr::mutate(x = 1, gemini_id = dplyr::row_number()) %>%
     dplyr::select(gemini_id, y = bill_length_mm, x)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3

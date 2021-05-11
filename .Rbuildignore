@@ -11,3 +11,4 @@ start-up.R
 ^app\.R$
 ^rsconnect$
 ^sandbox$
+azure-pipelines.yml
