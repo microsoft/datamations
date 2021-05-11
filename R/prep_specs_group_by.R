@@ -63,7 +63,7 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
   # These are not "real specs" as they don't actually have an x or y, only n
   # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
 
-  # State 1: Grouped icon aray, first grouping in column facets
+  # State 1: Grouped icon aray, first grouping in column facets ----
 
   # Add a count (grouped) to each record
   # order by the grouping variable so that IDs are consistent across frames
@@ -87,7 +87,7 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
   ) %>%
     vegawidget::as_vegaspec()
 
-  # State 2: Grouped icon array, first group in col and second in row facets
+  # State 2: Grouped icon array, first group in col and second in row facets ----
   # order by the grouping variables so that IDs are consistent across frames
 
   if (n_groups %in% c(2, 3)) {
@@ -114,7 +114,7 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
       vegawidget::as_vegaspec()
   }
 
-  # State 3: Grouped icon array, first group in col, second in row facets, third in colour
+  # State 3: Grouped icon array, first group in col, second in row facets, third in colour -----
   # order by the grouping variables so that IDs are consistent across frames
 
   if (n_groups == 3) {
