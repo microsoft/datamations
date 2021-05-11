@@ -1,4 +1,4 @@
-const frameDuration = 1200;
+const frameDuration = 2500;
 
 let specsArray, frames, metas, files, rawFiles;
 
