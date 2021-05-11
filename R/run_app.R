@@ -21,19 +21,29 @@ run_app <- function() {
         shiny::uiOutput("group_by")
       ),
       shiny::column(
-        width = 2,
+        width = 3,
         shiny::uiOutput("summary_var")
       ),
       shiny::column(
-        width = 2,
+        width = 3,
         shiny::selectInput(
           "summary_function",
           "Summary function",
           choices = c("mean", "median", "min", "max")
         )
+      )
+    ),
+    shiny::fluidRow(
+      shiny::column(
+        width = 3,
+        shiny::numericInput("height", "Height", min = 200, max = 600, value = 300)
       ),
       shiny::column(
-        width = 2,
+        width = 3,
+        shiny::numericInput("width", "Width", min = 200, max = 600, value = 300)
+      ),
+      shiny::column(
+        width = 3,
         shiny::actionButton("go", "Go", width = "100%", style = "margin-top: 25px;")
       )
     ),
@@ -102,7 +112,7 @@ run_app <- function() {
     # Generate datamation -----
 
     datamation <- shiny::reactive({
-      datamation_sanddance(pipeline())
+      datamation_sanddance(pipeline(), height = input$height, width = input$width)
     })
 
     # Outputs -----
