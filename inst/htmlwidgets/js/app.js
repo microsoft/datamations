@@ -8,8 +8,8 @@ async function init(id, { specUrls, specs }) {
 
   if (specs) {
     files = specs.map((d) => {
-      if (!d.width) d.width = 400;
-      if (!d.height) d.height = 400;
+      if (!d.width) d.width = 600;
+      if (!d.height) d.height = 600;
       return { ...d };
     });
   } else if (specUrls) {
@@ -137,6 +137,11 @@ function drawFrame(index, id) {
     const spec = rawFiles[index];
     const columnFacet = (spec.facet && spec.facet.column);
 
+    // update axis domain to matched hacked facet view
+    const extentY = d3.extent(spec.data.values, d => d.y);
+    const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
+    encoding.y.scale = { domain: extentY };
+
     vegaEmbed(axisSelector, rawFiles[index], { renderer: "svg" }).then(() => {
         if (columnFacet && columnFacet.title) {
             d3.select(axisSelector + ' svg > g').attr('transform', function() {
@@ -190,14 +195,14 @@ function loadData(specUrls) {
       // make adjustments here if needed
       return files.map((d, i) => {
         // todo: ask sharla to remove axis: null and use them to define which axis needs to be rendered
-        // if (i >= 4) {
-        //   d.meta = {
-        //     ...d.meta,
-        //     axes: true,
-        //   };
-        //   delete d.spec.encoding.x.axis;
-        //   delete d.spec.encoding.y.axis;
-        // }
+        if (i >= 4) {
+          d.meta = {
+            ...d.meta,
+            axes: true,
+          };
+          delete d.spec.encoding.x.axis;
+          delete d.spec.encoding.y.axis;
+        }
 
         return {
           ...d,
