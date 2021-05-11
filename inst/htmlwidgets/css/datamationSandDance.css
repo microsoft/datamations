@@ -1,0 +1,37 @@
+      .vega-vis-wrapper {
+        position: relative;
+      }
+
+      .vega-vis-wrapper > div {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .vega-vis-wrapper * {
+        pointer-events: none !important;
+      }
+
+      .vega-vis-wrapper .vega-vis svg {
+        background-color: transparent !important;
+      }
+
+      .vega-vis-wrapper .vega-vis.with-axes .background {
+        stroke: none !important;
+      }
+
+      .vega-vis-wrapper .vega-vis.with-axes details {
+        display: none;
+      }
+
+      .vega-vis-wrapper .vega-for-axis {
+        opacity: 0;
+      }
+
+      .vega-vis-wrapper .vega-for-axis .mark-group.cell .mark-symbol {
+        display: none;
+      }
+
+      .vega-vis-wrapper .vega-for-axis .role-title {
+        display: none;
+      }

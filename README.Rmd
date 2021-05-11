@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE
 )
-
+  
 # Specific options
 knitr::opts_template$set(
   # Actually generating the datamations - don't show the code or results (returns FALSE right now), and cache the image so it's not regenerated each time
@@ -45,45 +45,22 @@ devtools::install_github("jhofman/datamations)
 
 ## Usage
 
-To get started, load datamations and the tidyverse:
+To get started, load datamations and dplyr:
 
 ```{r load-libraries}
 library(datamations)
-library(tidyverse)
+library(dplyr)
 ```
 
 ### Plot-based datamations
 
 A plot-based datamation shows a plot of what the data looks like at each step of a pipeline, animated by the transitions that lead to each state. The following shows an example taking the built-in `small_salary` data set, grouping by `Degree`, and calculating the mean `Salary`.
 
-First, define the code for the pipeline, and titles for each of the steps:
+First, define the code for the pipeline, then generate the datamation with `datamation_sanddance()`:
 
-```{r mean-salary-degree-plot-setup}
-mean_salary_by_degree_pipe <- "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))"
-
-degree_title_step1 <- "Step 1: Each dot shows one person\n and each group shows degree type"
-degree_title_step2 <- "Step 2: Next you plot the salary of each person\n within each group"
-degree_title_step3 <- "Step 3: Lastly you plot the average salary \n of each group and zoom in"
-```
-
-And generate the datamation with `datamation_sanddance()`:
-
-```{r mean-salary-degree-plot-datamations, eval = FALSE}
-datamation_sanddance(
-  pipeline = mean_salary_by_degree_pipe,
-  output = "mean_salary_group_by_degree.gif",
-  titles = c(degree_title_step1, degree_title_step2, degree_title_step3),
-  nframes = 30
-)
-```
-
-```{r mean-salary-degree-plot-datamations-generate, opts.label = 'datamations_generate'}
-datamation_sanddance(
-  pipeline = mean_salary_by_degree_pipe,
-  output = here::here("man", "figures", "README-mean_salary_group_by_degree.gif"),
-  titles = c(degree_title_step1, degree_title_step2, degree_title_step3),
-  nframes = 30
-)
+```{r mean-salary-degree-plot-setup, eval = FALSE}
+"small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
+  datamation_sanddance()
 ```
 
 ```{r mean-salary-degree-plot-datamations-gif, echo = FALSE}
@@ -92,27 +69,9 @@ knitr::include_graphics("man/figures/README-mean_salary_group_by_degree.gif")
 
 You can group by multiple variables, as in this example, grouping by `Degree` and `Work` before calculating the mean `Salary`:
 
-```{r mean-salary-degree-plot-work-setup}
-mean_salary_by_degree_work <- "small_salary %>% group_by(Degree, Work) %>% summarize(mean = mean(Salary))"
-work_degree_title_step1 <- "Step 1: Each dot shows one person and each group\n shows degree type AND work setting"
-```
-
-```{r mean-salary-degree-work-plot-datamations, eval = FALSE}
-datamation_sanddance(
-  pipeline = mean_salary_by_degree_work,
-  output = "mean_salary_group_by_degree_work.gif",
-  titles = c(work_degree_title_step1, degree_title_step2, degree_title_step3),
-  nframes = 30
-)
-```
-
-```{r mean-salary-degree-work-plot-datamations-generate, opts.label = 'datamations_generate'}
-datamation_sanddance(
-  pipeline = mean_salary_by_degree_work,
-  output = here::here("man", "figures", "README-mean_salary_group_by_degree_work.gif"),
-  titles = c(work_degree_title_step1, degree_title_step2, degree_title_step3),
-  nframes = 30
-)
+```{r mean-salary-degree-plot-work-setup, eval = FALSE}
+"small_salary %>% group_by(Degree, Work) %>% summarize(mean = mean(Salary))" %>%
+  datamation_sanddance()
 ```
 
 ```{r mean-salary-degree-work-plot-datamations-gif, echo = FALSE}
@@ -127,7 +86,7 @@ You can generate a table-based datamation with `datamation_tibble()`:
 
 ```{r mean-salary-degree-work-table-datamations, eval = FALSE}
 datamation_tibble(
-  pipeline = mean_salary_by_degree_pipe,
+  pipeline = "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))",
   output = "mean_salary_group_by_degree.gif"
 )
 ```
@@ -140,7 +99,7 @@ datamation_tibble(
 #   )
 
 datamation_tibble(
-  pipeline = mean_salary_by_degree_pipe,
+  pipeline = "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))",
   output = here::here("man", "figures", "README-mean_salary_group_by_degree-table.gif")
 )
 ```

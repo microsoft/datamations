@@ -1,0 +1,120 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "meta": {
+    "parse": "grid"
+  },
+  "data": {
+    "values": [
+      {
+        "island": "Biscoe",
+        "species": "Adelie",
+        "sex": "female",
+        "n": 22
+      },
+      {
+        "island": "Biscoe",
+        "species": "Adelie",
+        "sex": "male",
+        "n": 22
+      },
+      {
+        "island": "Biscoe",
+        "species": "Gentoo",
+        "sex": "female",
+        "n": 58
+      },
+      {
+        "island": "Biscoe",
+        "species": "Gentoo",
+        "sex": "male",
+        "n": 61
+      },
+      {
+        "island": "Biscoe",
+        "species": "Gentoo",
+        "n": 5
+      },
+      {
+        "island": "Dream",
+        "species": "Adelie",
+        "sex": "female",
+        "n": 27
+      },
+      {
+        "island": "Dream",
+        "species": "Adelie",
+        "sex": "male",
+        "n": 28
+      },
+      {
+        "island": "Dream",
+        "species": "Adelie",
+        "n": 1
+      },
+      {
+        "island": "Dream",
+        "species": "Chinstrap",
+        "sex": "female",
+        "n": 34
+      },
+      {
+        "island": "Dream",
+        "species": "Chinstrap",
+        "sex": "male",
+        "n": 34
+      },
+      {
+        "island": "Torgersen",
+        "species": "Adelie",
+        "sex": "female",
+        "n": 24
+      },
+      {
+        "island": "Torgersen",
+        "species": "Adelie",
+        "sex": "male",
+        "n": 23
+      },
+      {
+        "island": "Torgersen",
+        "species": "Adelie",
+        "n": 5
+      }
+    ]
+  },
+  "facet": {
+    "column": {
+      "field": "island",
+      "type": "nominal",
+      "title": "island"
+    },
+    "row": {
+      "field": "species",
+      "type": "nominal",
+      "title": "species"
+    }
+  },
+  "spec": {
+    "mark": {
+      "type": "point",
+      "filled": true
+    },
+    "encoding": {
+      "x": {
+        "field": "x",
+        "type": "quantitative",
+        "axis": null
+      },
+      "y": {
+        "field": "y",
+        "type": "quantitative",
+        "axis": null
+      },
+      "color": {
+        "field": "sex",
+        "type": "nominal",
+        "axis": null
+      }
+    }
+  }
+}

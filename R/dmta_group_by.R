@@ -1,4 +1,4 @@
-#' @importFrom dplyr any_of arrange bind_rows filter group_by group_size group_split group_vars is_grouped_df left_join mutate n n_groups pull select summarize ungroup group_indices
+#' @importFrom dplyr any_of arrange bind_rows filter group_by group_size group_split group_vars is_grouped_df left_join mutate n n_groups pull select summarize ungroup group_indices if_else
 #' @importFrom gganimate anim_save ease_aes transition_states view_follow
 #' @importFrom ggplot2 aes element_blank geom_point ggplot ggtitle scale_color_manual theme
 #' @importFrom magick image_read image_write

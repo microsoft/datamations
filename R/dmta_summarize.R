@@ -1,4 +1,4 @@
-#' @importFrom dplyr is_grouped_df mutate n left_join bind_rows select filter group_vars pull group_by summarize group_split arrange ungroup
+#' @importFrom dplyr is_grouped_df mutate n left_join bind_rows select filter group_vars pull group_by summarize group_split arrange ungroup if_else
 #' @importFrom purrr map2_dfr pmap_dfr pmap_dbl map2_dbl map2_chr flatten map2 map_dfr
 #' @importFrom ggplot2 ggplot aes geom_point scale_color_manual ggtitle
 #' @importFrom gganimate transition_states ease_aes view_follow anim_save
@@ -92,7 +92,7 @@ dmta_summarize <- function(state1, state2, dimensions,
         mutate(Row_Coord = as.numeric(.data$Row_Coord)) %>%
         mutate(Row_Coord = pmap_dbl(
           list(.data$Time, .data$When, .data$Col_Coord),
-          ~ if_else(..1 == ..2, mid_point, ..3)
+          F~ if_else(..1 == ..2, mid_point, ..3)
         )) %>%
         mutate(Col_Coord = pmap_dbl(
           list(.data$Time, .data$When, .data$Col_Coord),
