@@ -88,15 +88,25 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       dplyr::ungroup() %>%
       dplyr::distinct(.data$x, label = {{ color_var }}) %>%
       generate_labelsExpr()
+
+    x_domain <- data_1 %>%
+      dplyr::ungroup() %>%
+      dplyr::distinct(.data$x, label = {{ color_var }}) %>%
+      generate_x_domain()
+
   } else {
     data_1 <- data_1 %>%
       dplyr::mutate(x = 1)
 
     x_labels <- generate_labelsExpr(NULL)
+
+    x_domain <- generate_x_domain(NULL)
   }
 
   # Set up specs based on number of groups
   x_encoding <- append(x_encoding, list(axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]]), title = NULL))
+
+  # Only need to set the domain for X in the final plot, since jitter plot is already centered on the JS side
 
   encoding <- list(
     x = x_encoding,
@@ -172,6 +182,9 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       dplyr::mutate(x = 1)
   }
 
+  # Set X domain
+  encoding$x$scale <- x_domain
+
   if (n_groups == 0) {
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
@@ -223,4 +236,12 @@ generate_labelsExpr <- function(data) {
   labelExpr <- c(glue::glue("datum.label == {breaks[1:(n_breaks - 1)]} ? '{labels[1:(n_breaks - 1)]}'"), glue::glue("'{labels[n_breaks]}'")) %>% paste0(collapse = " : ")
 
   list(breaks = breaks, labelExpr = labelExpr)
+}
+
+generate_x_domain <- function(data) {
+  if (is.null(data)) {
+    list(domain = c(0.5, 1.5))
+  } else {
+    list(domain = c(min(data[["x"]]) - 0.5, max(data[["x"]]) + 0.5))
+  }
 }
