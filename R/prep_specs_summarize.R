@@ -33,16 +33,29 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   .data <- .data %>%
     dplyr::mutate_at(dplyr::all_of(group_vars_chr), as.character)
 
-  # END: same as animate_group_by_sanddance()
-
-  # Arrange by grouping variables so IDs are the same across frames, and add ID
+  # Convert NA to "NA", put at the end of factor, then arrange by grouping variables so IDs are the same across frames and add ID
   .data <- .data %>%
-    # Ungroup for arranging
+    # Ungroup for arranging and factorizing
     dplyr::ungroup() %>%
+    dplyr::mutate_at(dplyr::all_of(group_vars_chr), function(x) {
+      x <- x %>%
+        dplyr::coalesce(x, "NA")
+
+      if (any(x == "NA")) {
+        x %>%
+          forcats::fct_relevel("NA", after = Inf)
+      }
+      else {
+        x
+      }
+    }) %>%
+    # Arrange by grouping variables
     dplyr::arrange(!!!group_vars) %>%
     dplyr::mutate(gemini_id = dplyr::row_number()) %>%
     # Add groups back in
     dplyr::group_by(!!!group_vars)
+
+  # END: same as animate_group_by_sanddance()
 
   # Get summary function and variable
 
@@ -63,7 +76,13 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
 
   x_encoding <- list(field = "x", type = "quantitative")
   y_encoding <- list(field = "y", type = "quantitative", title = rlang::quo_name(summary_variable))
-  color_encoding <- list(field = rlang::quo_name(color_var), type = "nominal", axis = NULL)
+  color_encoding <- list(field = rlang::quo_name(color_var), type = "nominal")
+
+  # Need to manually set order of colour legend, otherwise it's not in the same order as the grids/points!
+  if (!is.null(color_var)) {
+    color_encoding <- append(color_encoding, list(legend = list(values = levels(.data[[color_var]]))))
+  }
+
   facet_col_encoding <- list(field = col_facet_var_chr, type = "nominal", title = col_facet_var_chr)
   facet_row_encoding <- list(field = row_facet_var_chr, type = "nominal", title = row_facet_var_chr)
 
@@ -80,8 +99,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   if (n_groups == 3) {
     data_1 <- data_1 %>%
       dplyr::mutate(
-        x = forcats::fct_explicit_na({{ color_var }}),
-        x = as.numeric(.data$x)
+        x = as.numeric({{ color_var }})
       )
 
     x_labels <- data_1 %>%
@@ -174,8 +192,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   if (n_groups == 3) {
     data_2 <- data_2 %>%
       dplyr::mutate(
-        x = forcats::fct_explicit_na({{ color_var }}),
-        x = as.numeric(.data$x)
+        x = as.numeric({{ color_var }})
       )
   } else {
     data_2 <- data_2 %>%
@@ -231,7 +248,7 @@ generate_labelsExpr <- function(data) {
   }
 
   data <- data %>%
-    dplyr::mutate(label = dplyr::coalesce(.data$label, "unknown"))
+    dplyr::mutate(label = dplyr::coalesce(.data$label, "undefined"))
 
   n_breaks <- nrow(data)
   breaks <- data[["x"]] - 0.5

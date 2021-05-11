@@ -28,6 +28,21 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
   .data <- .data %>%
     dplyr::mutate_at(dplyr::all_of(group_vars_chr), as.character)
 
+  # Convert NA to "NA", put at the end of factors
+  .data <- .data %>%
+    dplyr::mutate_at(dplyr::all_of(group_vars_chr), function(x) {
+      x <- x %>%
+        dplyr::coalesce(x, "NA")
+
+      if (any(x == "NA")) {
+        x %>%
+          forcats::fct_relevel("NA", after = Inf)
+      }
+      else {
+        x
+      }
+    })
+
   # Generate the data and specs for each state
   specs_list <- vector("list", length = n_groups)
 
@@ -35,7 +50,13 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
 
   x_encoding <- list(field = "x", type = "quantitative", axis = NULL)
   y_encoding <- list(field = "y", type = "quantitative", axis = NULL)
-  color_encoding <- list(field = rlang::quo_name(color_var), type = "nominal", axis = NULL)
+  color_encoding <- list(field = rlang::quo_name(color_var), type = "nominal")
+
+  # Need to manually set order of colour legend, otherwise it's not in the same order as the grids/points!
+  if (!is.null(color_var)) {
+    color_encoding <- append(color_encoding, list(legend = list(values = levels(.data[[color_var]]))))
+  }
+
   facet_col_encoding <- list(field = col_facet_var_chr, type = "nominal", title = col_facet_var_chr)
   facet_row_encoding <- list(field = row_facet_var_chr, type = "nominal", title = row_facet_var_chr)
 
