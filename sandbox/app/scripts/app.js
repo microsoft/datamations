@@ -97,7 +97,7 @@ async function init(id, { specUrls, specs }) {
       .catch((e) => {});
   }
 
-  drawFrame(0, id);
+  drawFrame(4, id);
 }
 
 let counter = 0,
@@ -138,6 +138,11 @@ function drawFrame(index, id) {
   if (meta.axes) {
     const spec = rawFiles[index];
     const columnFacet = (spec.facet && spec.facet.column);
+
+    // update axis domain to matched hacked facet view
+    const extentY = d3.extent(spec.data.values, d => d.y);
+    const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
+    encoding.y.scale = { domain: extentY };
 
     vegaEmbed(axisSelector, rawFiles[index], { renderer: "svg" }).then(() => {
         if (columnFacet && columnFacet.title) {
@@ -192,14 +197,14 @@ function loadData(specUrls) {
       // make adjustments here if needed
       return files.map((d, i) => {
         // todo: ask sharla to remove axis: null and use them to define which axis needs to be rendered
-        // if (i >= 4) {
-        //   d.meta = {
-        //     ...d.meta,
-        //     axes: true,
-        //   };
-        //   delete d.spec.encoding.x.axis;
-        //   delete d.spec.encoding.y.axis;
-        // }
+        if (i >= 4) {
+          d.meta = {
+            ...d.meta,
+            axes: true,
+          };
+          delete d.spec.encoding.x.axis;
+          delete d.spec.encoding.y.axis;
+        }
 
         return {
           ...d,
