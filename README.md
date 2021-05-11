@@ -3,6 +3,11 @@
 
 # datamations
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/jhofman/datamations/workflows/R-CMD-check/badge.svg)](https://github.com/jhofman/datamations/actions)
+<!-- badges: end -->
+
 datamations is a framework for automatic generation of explanation of
 plots and tables from analysis code. It automatically turns code into
 animations, showing the steps that led to a plot or a table.

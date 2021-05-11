@@ -2,7 +2,7 @@
 #' @importFrom gganimate anim_save ease_aes transition_states view_follow
 #' @importFrom ggplot2 aes element_blank geom_point ggplot ggtitle scale_color_manual theme
 #' @importFrom magick image_read image_write
-#' @importFrom purrr accumulate flatten map map2 map2_dbl map2_dfr map_chr map_dbl map_dfr map_if pmap_dbl pmap_dfr reduce
+#' @importFrom purrr accumulate map map2 map2_dbl map2_dfr map_chr map_dbl map_dfr map_if pmap_dbl pmap_dfr reduce
 #' @importFrom rlang parse_expr
 #' @importFrom stats median
 #' @importFrom tibble as_tibble tibble
@@ -23,7 +23,7 @@ make_coords <- function(df, row_ceiling = nrow(df)) {
       coordinates$Row[i] <- row
       coordinates$Col[i] <- col
       coordinates$Row_Coord[i] <- rev(seq_along(1:nrow(df)))[row]
-      #coordinates$Row_Coord[i] <- (row_ceiling:1)[seq_along(1:nrow(df))][row]
+      # coordinates$Row_Coord[i] <- (row_ceiling:1)[seq_along(1:nrow(df))][row]
       coordinates$Col_Coord[i] <- col
       i <- i + 1
     }
