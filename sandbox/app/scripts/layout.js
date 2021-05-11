@@ -140,21 +140,11 @@ function getGridSpec(spec, rows = 10) {
  * @returns jittered spec
  */
 function getJitterSpec(spec) {
-  const width = spec.width;
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const colorField = encoding.color ? encoding.color.field : null;
-  const xField = spec.facet && spec.facet.column ? spec.facet.column.field : null;
   const nodes = spec.data.values;
   const circleRadius = 4;
-
-  let rootGroupCount = 1;
   let innerGroupCount = 1;
-
-  if (xField) {
-    rootGroupCount = new Set(
-      nodes.map(d => d[xField])
-    ).size
-  }
 
   if (colorField) {
     innerGroupCount = new Set(
@@ -162,9 +152,8 @@ function getJitterSpec(spec) {
     ).size;
   }
 
-  const facetSize = width / rootGroupCount;
+  const facetSize = 200;
   const yExtent = d3.extent(nodes, d => d.y);
-
   const xScale = d3.scaleBand()
     .domain(d3.range(1, innerGroupCount + 1))
     .range([0, facetSize]);
@@ -195,7 +184,7 @@ function getJitterSpec(spec) {
     .stop();
 
   return new Promise((res) => {
-    const bandwidth = xScale.bandwidth() * 0.8;
+    const bandwidth = xScale.bandwidth() * 0.9;
 
     for (let i = 0; i < 120; i++) {
       simulation.tick();
@@ -205,13 +194,17 @@ function getJitterSpec(spec) {
         d.y = d.oldY;
         d.x = Math.max(
           x + xScale.bandwidth() * 0.05, 
-          Math.min(x + bandwidth, d.x)
+          Math.min(x + bandwidth, d.x),
         );
       })
     }
 
     encoding.y.scale = {
       domain: yExtent
+    }
+
+    encoding.x.scale = {
+      domain: [0, facetSize]
     }
 
     return res({
