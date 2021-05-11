@@ -2,9 +2,9 @@
 #'
 #' @param .data Optionally grouped input data
 #' @param summary_operation Summary operation including summary function and column operated on.
-#' @param toJSON Whether to converts the spec to JSON. Defaults to TRUE.
-#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE, and only relevant when \code{toJSON} is TRUE.
-prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty = TRUE) {
+#' @inheritParams datamation_sanddance
+#' @inheritParams prep_specs_data
+prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
 
   # START: same as animate_group_by_sanddance
 
@@ -86,6 +86,25 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   facet_col_encoding <- list(field = col_facet_var_chr, type = "nominal", title = col_facet_var_chr)
   facet_row_encoding <- list(field = row_facet_var_chr, type = "nominal", title = row_facet_var_chr)
 
+  # Calculate number of facets for sizing
+  .group_keys <- .data %>%
+    dplyr::group_by(!!!group_vars) %>%
+    dplyr::group_keys()
+
+  n_col_facets  <- .group_keys %>%
+    dplyr::pull({{col_facet_var}}) %>%
+    unique() %>%
+    length()
+
+  if (!is.null(row_facet_var)) {
+    n_row_facets <- .group_keys %>%
+      dplyr::pull({{row_facet_var}}) %>%
+      unique() %>%
+      length()
+  } else {
+    n_row_facets <- 1
+  }
+
   # State 1: Scatter plot (with any grouping) -----
 
   data_1 <- .data %>%
@@ -158,6 +177,8 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
 
   if (n_groups == 0) {
     specs_list[[1]] <- list(
+      height = height,
+      width = width,
       `$schema` = vegawidget::vega_schema(),
       meta = list(
         parse = "jitter",
@@ -178,6 +199,8 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       data = list(values = data_1),
       facet = facet,
       spec = list(
+        height = height / n_row_facets,
+        width = width / n_col_facets,
         mark = list(type = "point", filled = TRUE),
         encoding = encoding
       )
@@ -213,6 +236,8 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   if (n_groups == 0) {
 
     specs_list[[2]] <- list(
+      height = height,
+      width = width,
       `$schema` = vegawidget::vega_schema(),
       meta = list(axes = FALSE),
       data = list(values = data_2),
@@ -227,6 +252,8 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       data = list(values = data_2),
       facet = facet,
       spec = list(
+        height = height / n_row_facets,
+        width = width / n_col_facets,
         mark = list(type = "point", filled = TRUE),
         encoding = encoding
       )

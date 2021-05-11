@@ -6,8 +6,10 @@
 #' @param envir Environment where code is evaluated. Defaults to the global environment.
 #' @param pretty Whether to pretty the JSON output. Defaults to TRUE.
 #' @param elementId Optional ID for the widget element.
+#' @param height Height of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).
+#' @param width Width of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).
 #' @export
-datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty = TRUE, elementId = NULL) {
+datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty = TRUE, elementId = NULL, height = 300, width = 300) {
   supported_tidy_functions <- c("group_by", "summarize", "summarise")
 
   fittings <- pipeline %>%
@@ -66,7 +68,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
       summarize = rlang::parse_exprs(args)
     )
 
-    do.call(call_verb, list(data, call_args, toJSON = FALSE, pretty = pretty))
+    do.call(call_verb, list(data, call_args, toJSON = FALSE, pretty = pretty, height = height, width = width))
   })
 
   # Unlist into a single list

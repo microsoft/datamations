@@ -3,8 +3,8 @@
 #' @param .data Input data
 #' @param ... Additional arguments, unused.
 #' @param toJSON Whether to converts the spec to JSON. Defaults to TRUE.
-#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE, and only relevant when \code{toJSON} is TRUE.
-prep_specs_data <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
+#' @inheritParams datamation_sanddance
+prep_specs_data <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
 
   # Generate the data and specs for each state
   specs_list <- vector("list", length = 1)
@@ -25,6 +25,8 @@ prep_specs_data <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
   # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
 
   specs_list[[1]] <- list(
+    height = height,
+    width = width,
     `$schema` = vegawidget::vega_schema(),
     meta = list(parse = "grid"),
     data = list(values = data_1),

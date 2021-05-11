@@ -2,9 +2,9 @@
 #'
 #' @param .data Input data
 #' @param ... Grouping variables
-#' @param toJSON Whether to converts the spec to JSON. Defaults to TRUE.
-#' @param pretty Whether to pretty the JSON output of the spec. Defaults to TRUE, and only relevant when \code{toJSON} is TRUE.
-prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
+#' @inheritParams datamation_sanddance
+#' @inheritParams prep_specs_data
+prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
 
   # Map grouping variables
   group_vars <- c(...)
@@ -60,6 +60,25 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
   facet_col_encoding <- list(field = col_facet_var_chr, type = "nominal", title = col_facet_var_chr)
   facet_row_encoding <- list(field = row_facet_var_chr, type = "nominal", title = row_facet_var_chr)
 
+  # Calculate number of facets for sizing
+  .group_keys <- .data %>%
+    dplyr::group_by(!!!group_vars) %>%
+    dplyr::group_keys()
+
+  n_col_facets  <- .group_keys %>%
+    dplyr::pull({{col_facet_var}}) %>%
+    unique() %>%
+    length()
+
+  if (!is.null(row_facet_var)) {
+    n_row_facets <- .group_keys %>%
+      dplyr::pull({{row_facet_var}}) %>%
+      unique() %>%
+      length()
+  } else {
+    n_row_facets <- 1
+  }
+
   # These are not "real specs" as they don't actually have an x or y, only n
   # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
 
@@ -78,6 +97,8 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
     data = list(values = data_1),
     facet = list(column = facet_col_encoding),
     spec = list(
+      height = height,
+      width = width / n_col_facets,
       mark = list(type = "point", filled = TRUE),
       encoding = list(
         x = x_encoding,
@@ -104,6 +125,8 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
         row = facet_row_encoding
       ),
       spec = list(
+        height = height / n_row_facets,
+        width = width / n_col_facets,
         mark = list(type = "point", filled = TRUE),
         encoding = list(
           x = x_encoding,
@@ -131,6 +154,8 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE) {
         row = facet_row_encoding
       ),
       spec = list(
+        height = height / n_row_facets,
+        width = width / n_col_facets,
         mark = list(type = "point", filled = TRUE),
         encoding = list(
           x = x_encoding,

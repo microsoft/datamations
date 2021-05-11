@@ -8,7 +8,9 @@ datamation_sanddance(
   pipeline,
   envir = rlang::global_env(),
   pretty = TRUE,
-  elementId = NULL
+  elementId = NULL,
+  height = 300,
+  width = 300
 )
 }
 \arguments{
@@ -19,6 +21,10 @@ datamation_sanddance(
 \item{pretty}{Whether to pretty the JSON output. Defaults to TRUE.}
 
 \item{elementId}{Optional ID for the widget element.}
+
+\item{height}{Height of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).}
+
+\item{width}{Width of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).}
 }
 \description{
 Generates the vega lite specs necessary for a plot datamation, based on a tidyverse pipeline.

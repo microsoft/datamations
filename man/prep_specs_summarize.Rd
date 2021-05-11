@@ -4,7 +4,14 @@
 \alias{prep_specs_summarize}
 \title{Generate specs of data distribution and summarized data}
 \usage{
-prep_specs_summarize(.data, summary_operation, toJSON = TRUE, pretty = TRUE)
+prep_specs_summarize(
+  .data,
+  summary_operation,
+  toJSON = TRUE,
+  pretty = TRUE,
+  height = 300,
+  width = 300
+)
 }
 \arguments{
 \item{.data}{Optionally grouped input data}
@@ -13,7 +20,11 @@ prep_specs_summarize(.data, summary_operation, toJSON = TRUE, pretty = TRUE)
 
 \item{toJSON}{Whether to converts the spec to JSON. Defaults to TRUE.}
 
-\item{pretty}{Whether to pretty the JSON output of the spec. Defaults to TRUE, and only relevant when \code{toJSON} is TRUE.}
+\item{pretty}{Whether to pretty the JSON output. Defaults to TRUE.}
+
+\item{height}{Height of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).}
+
+\item{width}{Width of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).}
 }
 \description{
 Generate specs of data distribution and summarized data

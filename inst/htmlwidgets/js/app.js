@@ -193,30 +193,21 @@ function loadData(specUrls) {
   )
     .then((files) => {
       // make adjustments here if needed
-      return files.map((d, i) => {
-        // todo: ask sharla to remove axis: null and use them to define which axis needs to be rendered
-        // if (i >= 4) {
-        //   d.meta = {
-        //     ...d.meta,
-        //     axes: true,
-        //   };
-        //   delete d.spec.encoding.x.axis;
-        //   delete d.spec.encoding.y.axis;
-        // }
-
-        // if (i === 5) {
-        //   const encoding = d.spec.encoding;
-        //   encoding.x.scale = { domain: [0.5, 3.5] }
-        // }
-
-        return {
-          ...d,
-          width: 600,
-          height: 300,
-        };
-      });
+      return files;
     })
     .catch((e) => {
       console.error(e.message);
     });
 }
+
+// with urls
+init("vis", {
+  specUrls: [
+    dataUrl + "01-ungrouped.json",
+    dataUrl + "02-column-facet.json",
+    dataUrl + "03-column-row-facet.json",
+    dataUrl + "04-column-row-facet-color.json",
+    dataUrl + "05-jitter.json",
+    dataUrl + "06-summary.json",
+  ],
+});
