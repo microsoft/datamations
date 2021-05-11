@@ -59,7 +59,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   # Generate the data and specs for each state
   specs_list <- vector("list", length = 2)
 
-  # Prep encoding
+  # Prep encoding ----
 
   x_encoding <- list(field = "x", type = "quantitative")
   y_encoding <- list(field = "y", type = "quantitative", title = rlang::quo_name(summary_variable))
@@ -67,7 +67,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   facet_col_encoding <- list(field = col_facet_var_chr, type = "nominal", title = col_facet_var_chr)
   facet_row_encoding <- list(field = row_facet_var_chr, type = "nominal", title = row_facet_var_chr)
 
-  # State 1: Scatter plot (with any grouping)
+  # State 1: Scatter plot (with any grouping) -----
 
   data_1 <- .data %>%
     dplyr::select(.data$gemini_id, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
@@ -138,7 +138,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       `$schema` = vegawidget::vega_schema(),
       meta = list(
         parse = "jitter",
-        axes = TRUE
+        axes = FALSE
       ),
       data = list(values = data_1),
       mark = list(type = "point", filled = TRUE),
@@ -162,7 +162,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       vegawidget::as_vegaspec()
   }
 
-  # State 2: Summary plot (with any grouping)
+  # State 2: Summary plot (with any grouping) -----
   # There should still be a point for each datapoint, just all overlapping
   # None should disappear, otherwise makes animating
 
@@ -185,10 +185,14 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   # Set X domain
   encoding$x$scale <- x_domain
 
+  # Determine and set Y domain - based on range of previous frame
+  encoding$y$scale$domain <- range(data_1[["y"]])
+
   if (n_groups == 0) {
+
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      meta = list(axes = TRUE),
+      meta = list(axes = FALSE),
       data = list(values = data_2),
       mark = list(type = "point", filled = TRUE),
       encoding = encoding
