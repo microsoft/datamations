@@ -9,6 +9,8 @@ HTMLWidgets.widget({
 
                 init(el.id, {specs: x.specs});
 
+                play(el.id);
+
             },
 
             resize: function (width, height) { },
