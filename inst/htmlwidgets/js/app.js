@@ -1,4 +1,4 @@
-const frameDuration = 2500;
+const frameDuration = 1200;
 
 let specsArray, frames, metas, files, rawFiles;
 
@@ -116,7 +116,7 @@ function play(id) {
       clearInterval(intervalId);
       counter = 0;
     }
-  }, frameDuration + 1500);
+  }, frameDuration + 100);
 }
 
 function drawFrame(index, id) {
@@ -195,14 +195,19 @@ function loadData(specUrls) {
       // make adjustments here if needed
       return files.map((d, i) => {
         // todo: ask sharla to remove axis: null and use them to define which axis needs to be rendered
-        if (i >= 4) {
-          d.meta = {
-            ...d.meta,
-            axes: true,
-          };
-          delete d.spec.encoding.x.axis;
-          delete d.spec.encoding.y.axis;
-        }
+        // if (i >= 4) {
+        //   d.meta = {
+        //     ...d.meta,
+        //     axes: true,
+        //   };
+        //   delete d.spec.encoding.x.axis;
+        //   delete d.spec.encoding.y.axis;
+        // }
+
+        // if (i === 5) {
+        //   const encoding = d.spec.encoding;
+        //   encoding.x.scale = { domain: [0.5, 3.5] }
+        // }
 
         return {
           ...d,
