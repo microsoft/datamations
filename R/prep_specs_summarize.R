@@ -186,7 +186,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   encoding$x$scale <- x_domain
 
   # Determine and set Y domain - based on range of previous frame
-  encoding$y$scale$domain <- range(data_1[["y"]])
+  encoding$y$scale$domain <- range(data_1[["y"]], na.rm = TRUE)
 
   if (n_groups == 0) {
 
