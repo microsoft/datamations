@@ -60,7 +60,7 @@ datamationSandDance_html <- function(...) {
   shiny::div(
     shiny::div(
       class = "button-wrapper",
-      shiny::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Replay")
+      shiny::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Play")
     ),
     shiny::div(
       class = "vega-vis-wrapper",
