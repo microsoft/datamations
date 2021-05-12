@@ -35,3 +35,32 @@
       .vega-vis-wrapper .vega-for-axis .role-title {
         display: none;
       }
+
+      .control-bar {
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .button-wrapper {
+        padding: 10px;
+      }
+
+      .slider-wrapper {
+        padding: 10px;
+        flex-grow: 1;
+        max-width: 400px;
+      }
+
+      .slider-wrapper input {
+        width: 100%;
+      }
+
+      details {
+        display: none;
+      }
+
+      .description {
+        white-space: nowrap;
+        padding-left: 10px;
+      }

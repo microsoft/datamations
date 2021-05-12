@@ -58,16 +58,24 @@ datamationSandDance_html <- function(...) {
   id <- c(...)[["id"]]
 
   shiny::div(
+    ...,
     shiny::div(
-      class = "button-wrapper",
-      shiny::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Play")
+      class = "control-bar",
+      shiny::div(
+        class = "button-wrapper",
+        shiny::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Replay")
+      ),
+      shiny::div(
+        class = "slider-wrapper",
+        shiny::tags$input(class = "slider", type = "range", min = "0", value = "0", onchange = htmlwidgets::JS(paste0("onSlide('", id, "')")))
+      ),
+      shiny::div(class = "description")
     ),
     shiny::div(
       class = "vega-vis-wrapper",
-      ...,
       shiny::div(class = "vega-for-axis"),
-      shiny::div(class = "vega-vis"
-      )
+      shiny::div(class = "vega-vis")
     )
   )
+
 }
