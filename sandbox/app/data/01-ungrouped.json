@@ -1,0 +1,32 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "width": 400,
+  "height": 400,
+  "meta": {
+    "parse": "grid"
+  },
+  "data": {
+    "values": [
+      {
+        "n": 344
+      }
+    ]
+  },
+  "mark": {
+    "type": "point",
+    "filled": true,
+    "tooltip": true
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "axis": null
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "axis": null
+    }
+  }
+}

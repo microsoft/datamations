@@ -1,6 +1,7 @@
 const repoUrl = "https://raw.githubusercontent.com/jhofman/datamations";
-const dataUrl = repoUrl + "/refactor-test/sandbox/specs-for-infogrid/";
-const frameDuration = 1200;
+// const dataUrl = "./data/";
+const dataUrl = repoUrl + "/fixes/sandbox/specs-for-infogrid/";
+const frameDuration = 3200;
 
 let specsArray, frames, metas, files, rawFiles;
 
@@ -136,27 +137,32 @@ function drawFrame(index, id) {
 
   // draw axis
   if (meta.axes) {
-    const spec = rawFiles[index];
-    const columnFacet = (spec.facet && spec.facet.column);
-
-    // update axis domain to matched hacked facet view
-    const extentY = d3.extent(spec.data.values, d => d.y);
-    const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
-    encoding.y.scale = { domain: extentY };
-
-    vegaEmbed(axisSelector, rawFiles[index], { renderer: "svg" }).then(() => {
-        if (columnFacet && columnFacet.title) {
-            d3.select(axisSelector + ' svg > g').attr('transform', function() {
-                const transform = d3.select(this).attr('transform');
-                const x = transform.split("(")[1].split(",")[0];
-                return `translate(${x}, 40)`;
-            })
-        }
-    });
+    drawAxis(index, id);
   }
 
   // draw vis
   return vegaEmbed(visSelector, specsArray[index], { renderer: "svg" });
+}
+
+function drawAxis(index, id) {
+  const spec = rawFiles[index];
+  const columnFacet = spec.facet && spec.facet.column;
+  const axisSelector = "#" + id + " .vega-for-axis";
+
+  // update axis domain to matched hacked facet view
+  const extentY = d3.extent(spec.data.values, (d) => d.y);
+  const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
+  encoding.y.scale = { domain: extentY };
+
+  vegaEmbed(axisSelector, rawFiles[index], { renderer: "svg" }).then(() => {
+    if (columnFacet && columnFacet.title) {
+      d3.select(axisSelector + " svg > g").attr("transform", function () {
+        const transform = d3.select(this).attr("transform");
+        const x = transform.split("(")[1].split(",")[0];
+        return `translate(${x}, 40)`;
+      });
+    }
+  });
 }
 
 async function animateFrame(index, id) {
@@ -177,11 +183,10 @@ async function animateFrame(index, id) {
     // show/hide axis vega chart
     if (prevHasAxes && !currHasAxes) {
       d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
-
       d3.select(visSelector).classed("with-axes", false);
     } else if (!prevHasAxes && currHasAxes) {
-      d3.select(axisSelector).transition().duration(100).style("opacity", 1);
-
+      drawAxis(index + 1, id);
+      d3.select(axisSelector).style("opacity", 0).transition().duration(1000).style("opacity", 1);
       d3.select(visSelector).classed("with-axes", true);
     }
   });
