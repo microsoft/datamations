@@ -199,15 +199,3 @@ function loadData(specUrls) {
       console.error(e.message);
     });
 }
-
-// with urls
-init("vis", {
-  specUrls: [
-    dataUrl + "01-ungrouped.json",
-    dataUrl + "02-column-facet.json",
-    dataUrl + "03-column-row-facet.json",
-    dataUrl + "04-column-row-facet-color.json",
-    dataUrl + "05-jitter.json",
-    dataUrl + "06-summary.json",
-  ],
-});

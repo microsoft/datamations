@@ -2,7 +2,7 @@ devtools::load_all()
 library(palmerpenguins)
 library(purrr)
 
-specs <- datamation_sanddance("penguins %>% group_by(island, species, sex) %>% summarize(mean = mean(bill_length_mm))")
+specs <- datamation_sanddance("penguins %>% group_by(species, island, sex) %>% summarize(mean = mean(bill_length_mm))")
 
 specs <- specs$x$specs
 
@@ -27,3 +27,4 @@ walk2(
     write(x, here::here("sandbox", "specs-for-infogrid", y))
   }
 )
+

@@ -28,20 +28,26 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
   .data <- .data %>%
     dplyr::mutate_at(dplyr::all_of(group_vars_chr), as.character)
 
-  # Convert NA to "NA", put at the end of factors
+  # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
   .data <- .data %>%
+    # Arrange once to get alphabetical order
+    dplyr::arrange(!!!group_vars) %>%
     dplyr::mutate_at(dplyr::all_of(group_vars_chr), function(x) {
       x <- x %>%
         dplyr::coalesce(x, "NA")
 
       if (any(x == "NA")) {
         x %>%
+          forcats::fct_inorder() %>%
           forcats::fct_relevel("NA", after = Inf)
       }
       else {
-        x
+        forcats::fct_inorder(x) %>%
+        forcats::as_factor()
       }
-    })
+    }) %>%
+    # then again to get new order, with NAs last
+  dplyr::arrange(!!!group_vars)
 
   # Generate the data and specs for each state
   specs_list <- vector("list", length = n_groups)
@@ -57,23 +63,28 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
     color_encoding <- append(color_encoding, list(legend = list(values = levels(.data[[color_var]]))))
   }
 
-  facet_col_encoding <- list(field = col_facet_var_chr, type = "nominal", title = col_facet_var_chr)
-  facet_row_encoding <- list(field = row_facet_var_chr, type = "nominal", title = row_facet_var_chr)
-
-  # Calculate number of facets for sizing
+  # Calculate number of facets for sizing, and respect order
   .group_keys <- .data %>%
     dplyr::group_by(!!!group_vars) %>%
     dplyr::group_keys()
 
-  n_col_facets  <- .group_keys %>%
+  col_facets <- .group_keys %>%
     dplyr::pull({{col_facet_var}}) %>%
-    unique() %>%
+    unique()
+
+  n_col_facets  <- col_facets %>%
     length()
 
+  facet_col_encoding <- list(field = col_facet_var_chr, type = "ordinal", title = col_facet_var_chr)
+
+  facet_row_encoding <- list(field = row_facet_var_chr, type = "ordinal", title = row_facet_var_chr)
+
   if (!is.null(row_facet_var)) {
-    n_row_facets <- .group_keys %>%
+    row_facets <- .group_keys %>%
       dplyr::pull({{row_facet_var}}) %>%
-      unique() %>%
+      unique()
+
+    n_row_facets <- row_facets %>%
       length()
   } else {
     n_row_facets <- 1
@@ -85,11 +96,9 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
   # State 1: Grouped icon aray, first grouping in column facets ----
 
   # Add a count (grouped) to each record
-  # order by the grouping variable so that IDs are consistent across frames
 
   data_1 <- .data %>%
-    dplyr::count({{ col_facet_var }}) %>%
-    dplyr::arrange({{ col_facet_var }})
+    dplyr::count({{ col_facet_var }})
 
   specs_list[[1]] <- list(
     `$schema` = vegawidget::vega_schema(),
@@ -109,12 +118,10 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
     vegawidget::as_vegaspec()
 
   # State 2: Grouped icon array, first group in col and second in row facets ----
-  # order by the grouping variables so that IDs are consistent across frames
 
   if (n_groups %in% c(2, 3)) {
     data_2 <- .data %>%
-      dplyr::count({{ col_facet_var }}, {{ row_facet_var }}) %>%
-      dplyr::arrange({{ col_facet_var }}, {{ row_facet_var }})
+      dplyr::count({{ col_facet_var }}, {{ row_facet_var }})
 
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
@@ -138,12 +145,10 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
   }
 
   # State 3: Grouped icon array, first group in col, second in row facets, third in colour -----
-  # order by the grouping variables so that IDs are consistent across frames
 
   if (n_groups == 3) {
     data_3 <- .data %>%
-      dplyr::count({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }}) %>%
-      dplyr::arrange({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }})
+      dplyr::count({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }})
 
     specs_list[[3]] <- list(
       `$schema` = vegawidget::vega_schema(),

@@ -33,23 +33,26 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   .data <- .data %>%
     dplyr::mutate_at(dplyr::all_of(group_vars_chr), as.character)
 
-  # Convert NA to "NA", put at the end of factor, then arrange by grouping variables so IDs are the same across frames and add ID
+  # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
   .data <- .data %>%
-    # Ungroup for arranging and factorizing
+    # Arrange once to get in alphabetical order
     dplyr::ungroup() %>%
+    dplyr::arrange(!!!group_vars) %>%
     dplyr::mutate_at(dplyr::all_of(group_vars_chr), function(x) {
       x <- x %>%
         dplyr::coalesce(x, "NA")
 
       if (any(x == "NA")) {
         x %>%
+          forcats::fct_inorder() %>%
           forcats::fct_relevel("NA", after = Inf)
       }
       else {
-        x
+        forcats::fct_inorder(x) %>%
+          forcats::as_factor()
       }
     }) %>%
-    # Arrange by grouping variables
+    # Arrange again to put NAs last
     dplyr::arrange(!!!group_vars) %>%
     dplyr::mutate(gemini_id = dplyr::row_number()) %>%
     # Add groups back in
@@ -83,23 +86,29 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
     color_encoding <- append(color_encoding, list(legend = list(values = levels(.data[[color_var]]))))
   }
 
-  facet_col_encoding <- list(field = col_facet_var_chr, type = "nominal", title = col_facet_var_chr)
-  facet_row_encoding <- list(field = row_facet_var_chr, type = "nominal", title = row_facet_var_chr)
 
-  # Calculate number of facets for sizing
+  # Calculate number of facets for sizing, and respect order
   .group_keys <- .data %>%
     dplyr::group_by(!!!group_vars) %>%
     dplyr::group_keys()
 
-  n_col_facets  <- .group_keys %>%
+  col_facets <- .group_keys %>%
     dplyr::pull({{col_facet_var}}) %>%
-    unique() %>%
+    unique()
+
+  n_col_facets  <- col_facets %>%
     length()
 
+  facet_col_encoding <- list(field = col_facet_var_chr, type = "ordinal", title = col_facet_var_chr)
+
+  facet_row_encoding <- list(field = row_facet_var_chr, type = "ordinal", title = row_facet_var_chr)
+
   if (!is.null(row_facet_var)) {
-    n_row_facets <- .group_keys %>%
+    row_facets <- .group_keys %>%
       dplyr::pull({{row_facet_var}}) %>%
-      unique() %>%
+      unique()
+
+    n_row_facets <- row_facets %>%
       length()
   } else {
     n_row_facets <- 1
