@@ -1,11 +1,16 @@
 const repoUrl = "https://raw.githubusercontent.com/jhofman/datamations";
 // const dataUrl = "./data/";
 const dataUrl = repoUrl + "/fixes/sandbox/specs-for-infogrid/";
-const frameDuration = 3200;
+const frameDuration = 1200;
 
 let specsArray, frames, metas, files, rawFiles;
+let counter = 0, intervalId;
 
-async function init(id, { specUrls, specs }) {
+async function init(id, { 
+  specUrls, 
+  specs,
+  autoPlay,
+}) {
   files = [];
   rawFiles = [];
 
@@ -98,11 +103,15 @@ async function init(id, { specUrls, specs }) {
       .catch((e) => {});
   }
 
+  d3.select('#' + id + ' .slider').property('max', files.length - 1);
   drawFrame(0, id);
-}
 
-let counter = 0,
-  intervalId;
+  if (autoPlay) {
+    setTimeout(() => {
+      play(id);
+    }, 100)
+  }
+}
 
 function play(id) {
   counter = 0;
@@ -128,6 +137,10 @@ function drawFrame(index, id) {
   const meta = metas[index];
   const axisSelector = "#" + id + " .vega-for-axis";
   const visSelector = "#" + id + " .vega-vis";
+  const descr = '#' + id + ' .description';
+  
+  d3.select('#' + id + ' .slider').property('value', index);
+  d3.select(descr).html(meta.description || 'frame ' + index);
 
   d3.select(axisSelector)
     .style("opacity", meta.axes ? 1 : 0)
@@ -178,7 +191,9 @@ async function animateFrame(index, id) {
   let currHasAxes = currMeta.axes;
 
   drawFrame(index, id).then(() => {
-    anim.play(visSelector);
+    anim.play(visSelector).then(() => {
+      d3.select('#' + id + ' .slider').property('value', index + 1);
+    });
 
     // show/hide axis vega chart
     if (prevHasAxes && !currHasAxes) {
@@ -186,7 +201,11 @@ async function animateFrame(index, id) {
       d3.select(visSelector).classed("with-axes", false);
     } else if (!prevHasAxes && currHasAxes) {
       drawAxis(index + 1, id);
-      d3.select(axisSelector).style("opacity", 0).transition().duration(1000).style("opacity", 1);
+      d3.select(axisSelector)
+        .style("opacity", 0)
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
       d3.select(visSelector).classed("with-axes", true);
     }
   });
@@ -207,8 +226,14 @@ function loadData(specUrls) {
     });
 }
 
+function onSlide(id) {
+  const index = document.querySelector('#' + id + ' .slider').value;
+  drawFrame(index, id);
+  if (intervalId) clearInterval(intervalId);
+}
+
 // with urls
-init("vis", {
+init("app", {
   specUrls: [
     dataUrl + "01-ungrouped.json",
     dataUrl + "02-column-facet.json",
@@ -217,4 +242,5 @@ init("vis", {
     dataUrl + "05-jitter.json",
     dataUrl + "06-summary.json",
   ],
+  autoPlay: true
 });
