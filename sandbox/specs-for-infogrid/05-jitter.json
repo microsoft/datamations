@@ -2,7 +2,8 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "meta": {
     "parse": "jitter",
-    "axes": true
+    "axes": true,
+    "description": "Plot bill_length_mm within each group"
   },
   "data": {
     "values": [

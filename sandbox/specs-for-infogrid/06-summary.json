@@ -1,7 +1,8 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "meta": {
-    "axes": true
+    "axes": true,
+    "description": "Plot mean bill_length_mm of each group"
   },
   "data": {
     "values": [

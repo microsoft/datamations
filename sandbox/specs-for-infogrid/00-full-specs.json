@@ -4,7 +4,8 @@
     "width": 300,
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
-      "parse": "grid"
+      "parse": "grid",
+      "description": "Initial data"
     },
     "data": {
       "values": [
@@ -33,7 +34,8 @@
   {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
-      "parse": "grid"
+      "parse": "grid",
+      "description": "Group by species"
     },
     "data": {
       "values": [
@@ -82,7 +84,8 @@
   {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
-      "parse": "grid"
+      "parse": "grid",
+      "description": "Group by species, island"
     },
     "data": {
       "values": [
@@ -149,7 +152,8 @@
   {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
-      "parse": "grid"
+      "parse": "grid",
+      "description": "Group by species, island, sex"
     },
     "data": {
       "values": [
@@ -277,7 +281,8 @@
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "parse": "jitter",
-      "axes": true
+      "axes": true,
+      "description": "Plot bill_length_mm within each group"
     },
     "data": {
       "values": [
@@ -3066,7 +3071,8 @@
   {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
-      "axes": true
+      "axes": true,
+      "description": "Plot mean bill_length_mm of each group"
     },
     "data": {
       "values": [

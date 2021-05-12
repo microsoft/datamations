@@ -43,11 +43,11 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
       }
       else {
         forcats::fct_inorder(x) %>%
-        forcats::as_factor()
+          forcats::as_factor()
       }
     }) %>%
     # then again to get new order, with NAs last
-  dplyr::arrange(!!!group_vars)
+    dplyr::arrange(!!!group_vars)
 
   # Generate the data and specs for each state
   specs_list <- vector("list", length = n_groups)
@@ -69,10 +69,10 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
     dplyr::group_keys()
 
   col_facets <- .group_keys %>%
-    dplyr::pull({{col_facet_var}}) %>%
+    dplyr::pull({{ col_facet_var }}) %>%
     unique()
 
-  n_col_facets  <- col_facets %>%
+  n_col_facets <- col_facets %>%
     length()
 
   facet_col_encoding <- list(field = col_facet_var_chr, type = "ordinal", title = col_facet_var_chr)
@@ -81,7 +81,7 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
 
   if (!is.null(row_facet_var)) {
     row_facets <- .group_keys %>%
-      dplyr::pull({{row_facet_var}}) %>%
+      dplyr::pull({{ row_facet_var }}) %>%
       unique()
 
     n_row_facets <- row_facets %>%
@@ -100,9 +100,15 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
   data_1 <- .data %>%
     dplyr::count({{ col_facet_var }})
 
+  # Generate description
+  description <- generate_group_by_description(group_vars, 1)
+
   specs_list[[1]] <- list(
     `$schema` = vegawidget::vega_schema(),
-    meta = list(parse = "grid"),
+    meta = list(
+      parse = "grid",
+      description = description
+    ),
     data = list(values = data_1),
     facet = list(column = facet_col_encoding),
     spec = list(
@@ -119,13 +125,19 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
 
   # State 2: Grouped icon array, first group in col and second in row facets ----
 
+  # Generate description
+  description <- generate_group_by_description(group_vars, 2)
+
   if (n_groups %in% c(2, 3)) {
     data_2 <- .data %>%
       dplyr::count({{ col_facet_var }}, {{ row_facet_var }})
 
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      meta = list(parse = "grid"),
+      meta = list(
+        parse = "grid",
+        description = description
+      ),
       data = list(values = data_2),
       facet = list(
         column = facet_col_encoding,
@@ -150,9 +162,11 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
     data_3 <- .data %>%
       dplyr::count({{ col_facet_var }}, {{ row_facet_var }}, {{ color_var }})
 
+    description <- generate_group_by_description(group_vars, 3)
+
     specs_list[[3]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      meta = list(parse = "grid"),
+      meta = list(parse = "grid", description = description),
       data = list(values = data_3),
       facet = list(
         column = facet_col_encoding,
@@ -180,4 +194,11 @@ prep_specs_group_by <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height
 
   # Return the specs
   specs_list
+}
+
+generate_group_by_description <- function(group_vars, i) {
+  group_vars_chr_sep <- group_vars[1:i] %>%
+    purrr::map_chr(rlang::quo_name) %>%
+    paste0(collapse = ", ")
+  glue::glue("Group by {group_vars_chr_sep}")
 }

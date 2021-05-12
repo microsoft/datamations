@@ -182,6 +182,9 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
     )
   }
 
+  # Generate description
+  description <- generate_summarize_description(summary_variable)
+
   # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
 
   if (n_groups == 0) {
@@ -191,7 +194,8 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       `$schema` = vegawidget::vega_schema(),
       meta = list(
         parse = "jitter",
-        axes = FALSE
+        axes = FALSE,
+        description = description
       ),
       data = list(values = data_1),
       mark = list(type = "point", filled = TRUE),
@@ -203,7 +207,8 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       `$schema` = vegawidget::vega_schema(),
       meta = list(
         parse = "jitter",
-        axes = TRUE
+        axes = TRUE,
+        description = description
       ),
       data = list(values = data_1),
       facet = facet,
@@ -242,13 +247,16 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   # Determine and set Y domain - based on range of previous frame
   encoding$y$scale$domain <- range(data_1[["y"]], na.rm = TRUE)
 
+  # Generate description
+  description <- generate_summarize_description(summary_variable, summary_function)
+
   if (n_groups == 0) {
 
     specs_list[[2]] <- list(
       height = height,
       width = width,
       `$schema` = vegawidget::vega_schema(),
-      meta = list(axes = FALSE),
+      meta = list(axes = FALSE, description = description),
       data = list(values = data_2),
       mark = list(type = "point", filled = TRUE),
       encoding = encoding
@@ -257,7 +265,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   } else {
     specs_list[[2]] <- list(
       `$schema` = vegawidget::vega_schema(),
-      meta = list(axes = TRUE),
+      meta = list(axes = TRUE, description = description),
       data = list(values = data_2),
       facet = facet,
       spec = list(
@@ -305,5 +313,13 @@ generate_x_domain <- function(data) {
     list(domain = c(0.5, 1.5))
   } else {
     list(domain = c(min(data[["x"]]) - 0.5, max(data[["x"]]) + 0.5))
+  }
+}
+
+generate_summarize_description <- function(summary_variable, summary_function = NULL) {
+  if (is.null(summary_function)) {
+    glue::glue("Plot {summary_variable} within each group")
+  } else {
+    glue::glue("Plot {summary_function} {summary_variable} of each group")
   }
 }

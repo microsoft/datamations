@@ -21,6 +21,10 @@ prep_specs_data <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height = 3
   data_1 <- .data %>%
     dplyr::count()
 
+  # Generate description
+
+  description <- "Initial data"
+
   # These are not "real specs" as they don't actually have an x or y, only n
   # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
 
@@ -28,7 +32,8 @@ prep_specs_data <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height = 3
     height = height,
     width = width,
     `$schema` = vegawidget::vega_schema(),
-    meta = list(parse = "grid"),
+    meta = list(parse = "grid",
+                description = description),
     data = list(values = data_1),
     mark = list(type = "point", filled = TRUE),
     encoding = list(

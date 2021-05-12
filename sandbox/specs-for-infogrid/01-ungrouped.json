@@ -3,7 +3,8 @@
   "width": 300,
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "meta": {
-    "parse": "grid"
+    "parse": "grid",
+    "description": "Initial data"
   },
   "data": {
     "values": [
