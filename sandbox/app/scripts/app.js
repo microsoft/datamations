@@ -242,5 +242,5 @@ init("app", {
     dataUrl + "05-jitter.json",
     dataUrl + "06-summary.json",
   ],
-  autoPlay: true
+  autoPlay: false
 });

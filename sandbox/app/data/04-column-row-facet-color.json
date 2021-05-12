@@ -114,8 +114,7 @@
       },
       "color": {
         "field": "sex",
-        "type": "nominal",
-        "axis": null
+        "type": "nominal"
       }
     }
   }
