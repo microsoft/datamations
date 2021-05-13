@@ -196,6 +196,7 @@ async function animateFrame(index, id) {
   drawFrame(index, id).then(() => {
     anim.play(visSelector).then(() => {
       d3.select('#' + id + ' .slider').property('value', index + 1);
+      d3.select('#' + id + ' .description').html(currMeta.description);
     });
 
     // show/hide axis vega chart
