@@ -78,14 +78,21 @@ async function init(id, {
         domainDimension: "same",
       },
       marks: {
-        change: {
-          data: ["gemini_id"],
-          encode: {
-            update: true,
-            enter: true,
-            exit: true,
+        marks: {
+          change: {
+            data: {
+              keys: ['gemini_id'],
+              update: true,
+              enter: true,
+              exit: true,
+            },
+            encode: {
+              update: true,
+              enter: true,
+              exit: true,
+            },
           },
-        },
+        }
       },
       totalDuration: frameDuration,
     });
