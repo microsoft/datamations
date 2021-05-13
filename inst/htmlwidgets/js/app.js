@@ -75,14 +75,21 @@ async function init(id, {
         domainDimension: "same",
       },
       marks: {
-        change: {
-          data: ["gemini_id"],
-          encode: {
-            update: true,
-            enter: true,
-            exit: true,
+        marks: {
+          change: {
+            data: {
+              keys: ['gemini_id'],
+              update: true,
+              enter: true,
+              exit: true,
+            },
+            encode: {
+              update: true,
+              enter: true,
+              exit: true,
+            },
           },
-        },
+        }
       },
       totalDuration: frameDuration,
     });
@@ -163,6 +170,9 @@ function drawAxis(index, id) {
   const extentY = d3.extent(spec.data.values, (d) => d.y);
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   encoding.y.scale = { domain: extentY };
+  if (encoding.color) {
+    encoding.color.legend = null;
+  }
 
   vegaEmbed(axisSelector, rawFiles[index], { renderer: "svg" }).then(() => {
     if (columnFacet && columnFacet.title) {
@@ -190,6 +200,7 @@ async function animateFrame(index, id) {
   drawFrame(index, id).then(() => {
     anim.play(visSelector).then(() => {
       d3.select('#' + id + ' .slider').property('value', index + 1);
+      d3.select('#' + id + ' .description').html(currMeta.description);
     });
 
     // show/hide axis vega chart
