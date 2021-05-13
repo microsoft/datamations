@@ -9,8 +9,8 @@ prep_specs_data(
   ...,
   toJSON = TRUE,
   pretty = TRUE,
-  height = 600,
-  width = 600
+  height = 300,
+  width = 300
 )
 }
 \arguments{

@@ -30,7 +30,8 @@ Imports:
     forcats,
     glue,
     tidyselect,
-    htmlwidgets
+    htmlwidgets,
+    reactable
 Suggests: 
     jsonlite,
     palmerpenguins,
