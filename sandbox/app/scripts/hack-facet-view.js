@@ -2,7 +2,6 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   const encoding = spec.spec.encoding;
   const mark = spec.spec.mark;
   const facet = spec.facet;
-  const meta = spec.meta;
   
   if (encoding.x) {
     const title = facet && facet.column ? facet.column.title : null;
@@ -43,10 +42,6 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
         orient: "right"
       } : null,
     }
-  }
-
-  if (encoding.color && meta && meta.axes) {
-    encoding.color.legend = null;
   }
 
   return {

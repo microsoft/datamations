@@ -166,6 +166,9 @@ function drawAxis(index, id) {
   const extentY = d3.extent(spec.data.values, (d) => d.y);
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   encoding.y.scale = { domain: extentY };
+  if (encoding.color) {
+    encoding.color.legend = null;
+  }
 
   vegaEmbed(axisSelector, rawFiles[index], { renderer: "svg" }).then(() => {
     if (columnFacet && columnFacet.title) {
