@@ -27,7 +27,8 @@ expect_meta_axes <- function(specs, axes_value) {
 # Test that the data.values are the same as the passed data frame
 expect_data_values <- function(single_spec, df) {
   df <- df %>%
-    dplyr::mutate_if(is.factor, as.character)
+    dplyr::mutate_if(is.factor, as.character) %>%
+    dplyr::mutate_if(is.character, coalesce, "NA")
 
   spec_data <- single_spec %>%
     jsonlite::fromJSON() %>%

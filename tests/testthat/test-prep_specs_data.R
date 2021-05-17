@@ -7,4 +7,4 @@ test_that("prep_specs_data returns a vega lite spec of length 1, with one data v
   expect_meta_axes(specs, NULL) # Axes are not shown
   expect_no_grouping(specs)
   expect_mark_encoding_top_level(specs)
-  })
+})

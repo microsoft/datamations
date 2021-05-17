@@ -43,4 +43,4 @@ test_that("split_pipeline errors if first element is function, but there is no d
 test_that("split_pipeline errors if first element is a function containing data, but it is not a data frame", {
   df <- list(palmerpenguins::penguins)
   expect_error(split_pipeline("group_by(df, species)"), "not a data frame")
-  })
+})
