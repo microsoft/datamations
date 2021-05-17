@@ -13,7 +13,7 @@ run_app <- function() {
         width = 3,
         shiny::selectInput("dataset",
           "Dataset",
-          choices = c("small_salary_data", "penguins")
+          choices = c("small_salary", "penguins")
         )
       ),
       shiny::column(
@@ -69,7 +69,7 @@ run_app <- function() {
       switch(input$dataset,
         mtcars = datasets::mtcars,
         penguins = palmerpenguins::penguins,
-        small_salary_data = datamations::small_salary_data
+        small_salary = datamations::small_salary
       )
     })
 
