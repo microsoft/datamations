@@ -23,5 +23,4 @@ Parses a tidyverse pipeline, input as a string, into a list of its components as
 
 "group_by(small_salary, Degree) \%>\% summarize(mean = mean(Salary))" \%>\%
   parse_pipeline()
-
 }
