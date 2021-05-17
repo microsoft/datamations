@@ -1,18 +1,19 @@
 #' Generate spec of data in ungrouped icon array
 #'
 #' @param .data Input data
-#' @param ... Additional arguments, unused.
+#' @param mapping Mapping, unused.
 #' @param toJSON Whether to converts the spec to JSON. Defaults to TRUE.
 #' @inheritParams datamation_sanddance
-prep_specs_data <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
+prep_specs_data <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
 
   # Generate the data and specs for each state
   specs_list <- vector("list", length = 1)
 
   # Prep encoding
-
   x_encoding <- list(field = "x", type = "quantitative", axis = NULL)
   y_encoding <- list(field = "y", type = "quantitative", axis = NULL)
+
+  spec_encoding <- list(x = x_encoding, y = y_encoding)
 
   # State 1: Ungrouped icon array
 
@@ -28,22 +29,13 @@ prep_specs_data <- function(.data, ..., toJSON = TRUE, pretty = TRUE, height = 3
   # These are not "real specs" as they don't actually have an x or y, only n
   # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
 
-  specs_list[[1]] <- list(
-    height = height,
-    width = width,
-    `$schema` = vegawidget::vega_schema(),
-    meta = list(
-      parse = "grid",
-      description = description
-    ),
-    data = list(values = data_1),
-    mark = list(type = "point", filled = TRUE),
-    encoding = list(
-      x = x_encoding,
-      y = y_encoding
-    )
-  ) %>%
-    vegawidget::as_vegaspec()
+  specs_list[[1]] <- generate_vega_specs(data_1,
+                                         mapping = mapping,
+    meta = list(parse = "grid", description = description),
+    spec_encoding = spec_encoding,
+    height = height, width = width,
+    column = FALSE, row = FALSE, color = FALSE
+  )
 
   # Convert specs to JSON
   if (toJSON) {

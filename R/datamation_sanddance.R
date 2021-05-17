@@ -10,30 +10,43 @@
 #' @param width Width of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).
 #' @export
 datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty = TRUE, elementId = NULL, height = 300, width = 300) {
+  # Specify which functions are supported, for parsing functions out and for erroring if any are not in this list
   supported_tidy_functions <- c("group_by", "summarize", "summarise")
 
+  # Convert pipeline into list
   fittings <- pipeline %>%
     parse_pipeline(supported_tidy_functions)
 
+  # Get data at each stage
   data_states <- fittings %>%
     snake(envir = envir)
 
+  # Error if there's no data transformation
   if (length(data_states) < 2) {
     stop("No data transformation detected by `datamation_sanddance`.", call. = FALSE)
   }
 
+  # Extract function names from pipeline
   tidy_functions_list <- parse_functions(fittings)
 
-  tidy_func_arg <- fittings %>%
-    purrr::map(as.list) %>%
-    purrr::map(as.character)
-
+  # Check that all functions are supported
   purrr::map(
-    tidy_functions_list,
+    tidy_functions_list[-1], # Since the first one is data
     ~ if (!(.x %in% supported_tidy_functions)) {
       stop(paste(.x, "is not supported by `datamation_sanddance`"), call. = FALSE)
     }
   )
+
+  # Extract arguments
+  tidy_function_args <- fittings %>%
+    purrr::map(as.list) %>%
+    purrr::map(as.character)
+
+  # Construct mapping
+  names(data_states) <- tidy_functions_list
+  names(tidy_function_args) <- tidy_functions_list
+
+  mapping <- generate_mapping(data_states, tidy_function_args)
 
   res <- purrr::map(1:length(fittings), function(i) {
 
@@ -43,7 +56,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
       verb <- "data"
     } else {
       data <- data_states[[i - 1]]
-      verb <- tidy_func_arg[[i]][[1]]
+      verb <- tidy_function_args[[i]][[1]]
     }
 
     call_verb <- switch(verb,
@@ -53,22 +66,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
       summarize = prep_specs_summarize
     )
 
-    args <- switch(verb,
-      data = NA_character_,
-      group_by = tidy_func_arg[[i]][-1],
-      summarise = tidy_func_arg[[i]][[2]],
-      summarize = tidy_func_arg[[i]][[2]]
-    )
-
-    call_args <- switch(verb,
-      data = NA_character_,
-      group_by = rlang::parse_exprs(args),
-      # TODO: What if there's more than one calculation??
-      summarise = rlang::parse_exprs(args),
-      summarize = rlang::parse_exprs(args)
-    )
-
-    do.call(call_verb, list(data, call_args, toJSON = FALSE, pretty = pretty, height = height, width = width))
+    do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
   })
 
   # Unlist into a single list
