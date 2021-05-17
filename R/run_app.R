@@ -188,8 +188,10 @@ run_app <- function() {
         output[[output_name]] <- reactable::renderReactable(
           x %>%
             dplyr::mutate_if(is.numeric, round, 3) %>%
-            reactable::reactable(fullWidth = FALSE,
-                                 width = 600)
+            reactable::reactable(
+              fullWidth = FALSE,
+              width = 600
+            )
         )
       })
     })

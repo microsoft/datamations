@@ -77,5 +77,4 @@ datamationSandDance_html <- function(...) {
       shiny::div(class = "vega-vis")
     )
   )
-
 }

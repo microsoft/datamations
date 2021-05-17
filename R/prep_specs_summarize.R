@@ -92,12 +92,16 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
     dplyr::group_by(!!!group_vars) %>%
     dplyr::group_keys()
 
-  col_facets <- .group_keys %>%
-    dplyr::pull({{col_facet_var}}) %>%
-    unique()
+  if (!is.null(col_facet_var)) {
+    col_facets <- .group_keys %>%
+      dplyr::pull({{ col_facet_var }}) %>%
+      unique()
 
-  n_col_facets  <- col_facets %>%
-    length()
+    n_col_facets <- col_facets %>%
+      length()
+  } else {
+    n_col_facets <- 1
+  }
 
   facet_col_encoding <- list(field = col_facet_var_chr, type = "ordinal", title = col_facet_var_chr)
 
@@ -105,7 +109,7 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
 
   if (!is.null(row_facet_var)) {
     row_facets <- .group_keys %>%
-      dplyr::pull({{row_facet_var}}) %>%
+      dplyr::pull({{ row_facet_var }}) %>%
       unique()
 
     n_row_facets <- row_facets %>%
@@ -144,7 +148,6 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
       dplyr::ungroup() %>%
       dplyr::distinct(.data$x, label = {{ color_var }}) %>%
       generate_x_domain()
-
   } else {
     data_1 <- data_1 %>%
       dplyr::mutate(x = 1)
@@ -251,7 +254,6 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
   description <- generate_summarize_description(summary_variable, summary_function)
 
   if (n_groups == 0) {
-
     specs_list[[2]] <- list(
       height = height,
       width = width,

@@ -16,6 +16,7 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
   expect_data_values(specs[[2]], palmerpenguins::penguins %>%
     dplyr::arrange(species) %>%
     dplyr::mutate(x = 1, gemini_id = dplyr::row_number()) %>%
+    dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::group_by(species) %>%
     dplyr::mutate(y = mean(bill_length_mm, na.rm = TRUE)) %>%
     dplyr::select(gemini_id, y, species, x) %>%
@@ -49,6 +50,7 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
       x_var = forcats::fct_explicit_na(sex),
       x = as.numeric(x_var)
     ) %>%
+    dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::group_by(species, island, sex) %>%
     dplyr::mutate(y = mean(bill_length_mm, na.rm = TRUE)) %>%
     dplyr::select(gemini_id, y, species, island, sex, x) %>%
@@ -72,6 +74,7 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
     dplyr::select(gemini_id, y = bill_length_mm, x)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
   expect_data_values(specs[[2]], palmerpenguins::penguins %>%
     dplyr::mutate(x = 1, gemini_id = dplyr::row_number()) %>%
+    dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::mutate(y = mean(bill_length_mm, na.rm = TRUE)) %>%
     dplyr::select(gemini_id, y, x))
   expect_mark_encoding_top_level(specs) # mark and encoding are at the top level

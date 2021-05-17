@@ -13,7 +13,6 @@
 #'
 #' "group_by(small_salary, Degree) %>% summarize(mean = mean(Salary))" %>%
 #'   parse_pipeline()
-#'
 parse_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "summarize", "summarise")) {
   pipeline %>%
     split_pipeline(supported_tidy_functions = supported_tidy_functions) %>%
