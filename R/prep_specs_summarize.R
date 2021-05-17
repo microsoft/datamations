@@ -302,7 +302,7 @@ generate_labelsExpr <- function(data) {
     dplyr::mutate(label = dplyr::coalesce(.data$label, "undefined"))
 
   n_breaks <- nrow(data)
-  breaks <- data[["x"]] - 0.5
+  breaks <- data[["x"]]
   labels <- data[["label"]]
 
   labelExpr <- c(glue::glue("round(datum.label) == {ceiling(breaks[1:(n_breaks - 1)])} ? '{labels[1:(n_breaks - 1)]}'"), glue::glue("'{labels[n_breaks]}'")) %>% paste0(collapse = " : ")
