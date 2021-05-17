@@ -124,9 +124,8 @@ prep_specs_summarize <- function(.data, summary_operation, toJSON = TRUE, pretty
     dplyr::select(.data$gemini_id, y = {{ summary_variable }}, tidyselect::any_of(group_vars_chr))
 
   # Remove NA values, since their values will not be displayed - better to have them fade off
-  # TODO - this isn't working - look into it more.
   data_1 <- data_1 %>%
-    dplyr::filter(!is.na(y))
+    dplyr::filter(!is.na(.data$y))
 
   # Add an x variable to use as the center of jittering
   # It can just be 1, except if there are three grouping variables (since then there's facet, row, and colour grouping, and the colour is also offset)
