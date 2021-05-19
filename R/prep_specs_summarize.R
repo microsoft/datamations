@@ -1,7 +1,7 @@
 #' Generate specs of data distribution and summarized data
 #'
-#' @param .data Optionally grouped input data
-#' @param summary_operation Summary operation including summary function and column operated on.
+#' @param .data Input data
+#' @param mapping A list that describes mapping for the datamations, including x and y variables, sjummary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
@@ -101,7 +101,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # State 1: Scatter plot (with any grouping) -----
 
   data_1 <- .data %>%
-    dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), x, y)
+    dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), .data$x, .data$y)
 
   # Remove NA values, since their values will not be displayed - better to have them fade off
   data_1 <- data_1 %>%

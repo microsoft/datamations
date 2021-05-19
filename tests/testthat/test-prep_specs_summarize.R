@@ -2,8 +2,7 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
   # One group
   df <- palmerpenguins::penguins %>%
     dplyr::group_by(species)
-  summary_operation <- list(rlang::parse_expr("mean(bill_length_mm)"))
-  specs <- prep_specs_summarize(df, summary_operation)
+  specs <- prep_specs_summarize(df, list(x = 1, y = "bill_length_mm", summary_function = "mean", column = "species", groups = "species"))
 
   expect_length(specs, 2) # Returns a list with two elements
   expect_meta_parse_value(specs[1], "jitter") # First element meta.parse is jitter
@@ -12,14 +11,14 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
   expect_data_values(specs[[1]], palmerpenguins::penguins %>%
     dplyr::arrange(species) %>%
     dplyr::mutate(x = 1, gemini_id = dplyr::row_number()) %>%
-    dplyr::select(gemini_id, y = bill_length_mm, species, x)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
+    dplyr::select(gemini_id, species, x, y = bill_length_mm)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
   expect_data_values(specs[[2]], palmerpenguins::penguins %>%
     dplyr::arrange(species) %>%
     dplyr::mutate(x = 1, gemini_id = dplyr::row_number()) %>%
     dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::group_by(species) %>%
     dplyr::mutate(y = mean(bill_length_mm, na.rm = TRUE)) %>%
-    dplyr::select(gemini_id, y, species, x) %>%
+    dplyr::select(gemini_id, species, x, y) %>%
     dplyr::ungroup()) # Second element, all of the values are the summary value
   expect_spec_contains_mark_encoding(specs) # mark and encoding are within `spec`
   expect_grouping_order_1(specs[[1]]) # The grouping order is correct
@@ -28,8 +27,7 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
   # Three groups
   df <- palmerpenguins::penguins %>%
     dplyr::group_by(species, island, sex)
-  summary_operation <- list(rlang::parse_expr("mean(bill_length_mm)"))
-  specs <- prep_specs_summarize(df, summary_operation)
+  specs <- prep_specs_summarize(df, mapping = list(x = 1, y = "bill_length_mm", summary_function = "mean", column = "species", row = "island", color = "sex", groups = c("species", "island", "sex")))
 
   expect_length(specs, 2) # Returns a list with two elements
   expect_meta_parse_value(specs[1], "jitter") # First element meta.parse is jitter
@@ -42,7 +40,7 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
       x_var = forcats::fct_explicit_na(sex),
       x = as.numeric(x_var)
     ) %>%
-    dplyr::select(gemini_id, y = bill_length_mm, species, island, sex, x)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
+    dplyr::select(gemini_id, species, island, sex, x, y = bill_length_mm)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
   expect_data_values(specs[[2]], palmerpenguins::penguins %>%
     dplyr::arrange(species, island, sex) %>%
     dplyr::mutate(
@@ -53,17 +51,15 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
     dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::group_by(species, island, sex) %>%
     dplyr::mutate(y = mean(bill_length_mm, na.rm = TRUE)) %>%
-    dplyr::select(gemini_id, y, species, island, sex, x) %>%
+    dplyr::select(gemini_id, species, island, sex, x, y) %>%
     dplyr::ungroup()) # Second element, all of the values are the summary value
   expect_spec_contains_mark_encoding(specs) # mark and encoding are within `spec`
   expect_grouping_order_3(specs[[1]]) # The grouping order is correct
   expect_grouping_order_3(specs[[2]])
 
   # No groups
-
   df <- palmerpenguins::penguins
-  summary_operation <- list(rlang::parse_expr("mean(bill_length_mm)"))
-  specs <- prep_specs_summarize(df, summary_operation)
+  specs <- prep_specs_summarize(df, mapping = list(x = 1, y = "bill_length_mm", summary_function = "mean"))
 
   expect_length(specs, 2) # Returns a list with two elements
   expect_meta_parse_value(specs[1], "jitter") # First element meta.parse is jitter
@@ -71,12 +67,12 @@ test_that("prep_specs_summarize returns a list with two elements - one for the j
   expect_meta_axes(specs, FALSE) # Additional axes are NOT shown when there's no groups
   expect_data_values(specs[[1]], palmerpenguins::penguins %>%
     dplyr::mutate(x = 1, gemini_id = dplyr::row_number()) %>%
-    dplyr::select(gemini_id, y = bill_length_mm, x)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
+    dplyr::select(gemini_id, x, y = bill_length_mm)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
   expect_data_values(specs[[2]], palmerpenguins::penguins %>%
     dplyr::mutate(x = 1, gemini_id = dplyr::row_number()) %>%
     dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::mutate(y = mean(bill_length_mm, na.rm = TRUE)) %>%
-    dplyr::select(gemini_id, y, x))
+    dplyr::select(gemini_id, x, y))
   expect_mark_encoding_top_level(specs) # mark and encoding are at the top level
   expect_no_grouping(specs) # There is no grouping
 })

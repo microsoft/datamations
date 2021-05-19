@@ -11,7 +11,7 @@
 #' @export
 datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty = TRUE, elementId = NULL, height = 300, width = 300) {
   # Specify which functions are supported, for parsing functions out and for erroring if any are not in this list
-  supported_tidy_functions <- c("group_by", "summarize", "summarise")
+  supported_tidy_functions <- c("group_by", "summarize")
 
   # Convert pipeline into list
   fittings <- pipeline %>%
@@ -62,7 +62,6 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     call_verb <- switch(verb,
       data = prep_specs_data,
       group_by = prep_specs_group_by,
-      summarise = prep_specs_summarize,
       summarize = prep_specs_summarize
     )
 

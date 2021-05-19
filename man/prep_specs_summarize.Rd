@@ -6,7 +6,7 @@
 \usage{
 prep_specs_summarize(
   .data,
-  summary_operation,
+  mapping,
   toJSON = TRUE,
   pretty = TRUE,
   height = 300,
@@ -14,9 +14,9 @@ prep_specs_summarize(
 )
 }
 \arguments{
-\item{.data}{Optionally grouped input data}
+\item{.data}{Input data}
 
-\item{summary_operation}{Summary operation including summary function and column operated on.}
+\item{mapping}{A list that describes mapping for the datamations, including x and y variables, sjummary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.}
 
 \item{toJSON}{Whether to converts the spec to JSON. Defaults to TRUE.}
 

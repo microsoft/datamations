@@ -12,8 +12,5 @@ parse_functions <- function(fittings) {
   # Rename the first "function" to just be data
   functions[1] <- "data"
 
-  # Convert summarise to summarize
-  functions <- stringr::str_replace_all(functions, "summarise", "summarize")
-
   functions
 }

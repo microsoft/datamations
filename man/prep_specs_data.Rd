@@ -6,7 +6,7 @@
 \usage{
 prep_specs_data(
   .data,
-  ...,
+  mapping,
   toJSON = TRUE,
   pretty = TRUE,
   height = 300,
@@ -16,7 +16,7 @@ prep_specs_data(
 \arguments{
 \item{.data}{Input data}
 
-\item{...}{Additional arguments, unused.}
+\item{mapping}{Mapping, unused.}
 
 \item{toJSON}{Whether to converts the spec to JSON. Defaults to TRUE.}
 

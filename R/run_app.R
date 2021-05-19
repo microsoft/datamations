@@ -132,7 +132,7 @@ run_app <- function() {
     data_for_tabs <- shiny::reactive({
       pipeline_group_by <- !is.null(input$group_by)
 
-      supported_tidy_functions <- c("group_by", "summarize", "summarise")
+      supported_tidy_functions <- c("group_by", "summarize")
 
       fittings <- pipeline() %>%
         parse_pipeline(supported_tidy_functions)
