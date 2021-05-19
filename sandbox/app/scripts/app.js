@@ -5,7 +5,7 @@ const frameDuration = 1200;
 
 let specsArray, frames, metas, files, rawFiles;
 let counter = 0, intervalId;
-// some test comment here
+
 async function init(id, { 
   specUrls, 
   specs,

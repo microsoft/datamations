@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>error bars</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
+
+    <style>
+      .vega-vis-wrapper {
+        position: relative;
+      }
+
+      .vega-vis-wrapper > div {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .vega-vis-wrapper > div svg {
+        background-color: transparent !important;
+      }
+
+      .vega-vis-wrapper .hidden .role-axis {
+        display: none;
+      }
+
+      .vega-vis-wrapper .hidden .role-title {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="vis" class="vega-vis-wrapper"></div>
+
+    <script type="text/javascript">
+      const spec = {
+        $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+        data: { url: "https://vega.github.io/editor/data/barley.json" },
+        encoding: { 
+          y: { 
+            field: "variety", 
+            type: "ordinal" 
+          } 
+        },
+        layer: [
+          {
+            mark: { type: "point", filled: true },
+            encoding: {
+              x: {
+                aggregate: "mean",
+                field: "yield",
+                type: "quantitative",
+                scale: {"zero": false, "domain": [20, 55]},
+                title: "Barley Yield",
+              },
+              color: { value: "black" },
+            },
+          },
+          {
+            mark: { 
+              type: "errorbar", 
+              extent: "stdev"
+            },
+            encoding: {
+              x: {
+                field: "yield",
+                type: "quantitative",
+                title: "Barley Yield",
+                scale: {"zero": false, "domain": [20, 55]},
+              },
+            },
+          },
+        ],
+      };
+
+      const splitLayers = (input, animatedInd) => {
+        const specArray = [];
+
+        input.layer.forEach((d, i) => {
+          const obj = {...input};
+
+          if (obj.meta) {
+            obj.meta.animated = (i === animatedInd);
+          } else {
+            obj.meta = {
+              animated: (i === animatedInd)
+            };
+          }
+
+          if (obj.encoding) {
+            obj.encoding = Object.assign({}, obj.encoding, d.encoding)
+          } else {
+            obj.encoding = d.encoding;
+          }
+
+          obj.mark = d.mark;
+          delete obj.layer;
+
+          specArray.push(obj);
+        });
+
+        return specArray;
+      };
+      const specArray = splitLayers(spec, 1);
+      const vis = document.querySelector("#vis");
+
+      specArray.forEach(s => {
+        const div = document.createElement("div");
+
+        if (!s.meta.animated) {
+          div.classList.add('hidden');
+        }
+
+        vegaEmbed(div, s, { renderer: "svg" });
+        vis.appendChild(div);
+      });
+      
+    </script>
+  </body>
+</html>
