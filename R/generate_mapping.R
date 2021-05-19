@@ -5,10 +5,14 @@ generate_mapping <- function(data_states, tidy_functions_arg) {
   pipeline_has_summarize <- any(names(data_states) == "summarize")
 
   # Extract grouping variables and count of them
-  .group_vars <- data_states[["group_by"]] %>%
-    group_vars()
+  if (pipeline_has_group_by) {
+    .group_vars <- data_states[["group_by"]] %>%
+      group_vars()
 
-  n_group_vars <- length(.group_vars)
+    n_group_vars <- length(.group_vars)
+  } else {
+    n_group_vars <- 0
+  }
 
   # X mapping
   # If there are 3 grouping variables, X is the third one - otherwise, it's just 1
