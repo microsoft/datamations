@@ -1,4 +1,4 @@
-generate_mapping <- function(data_states, tidy_functions_arg) {
+generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
 
   # Check if there is any grouping or summarizing in the pipeline
   pipeline_has_group_by <- any(names(data_states) == "group_by")
@@ -14,12 +14,17 @@ generate_mapping <- function(data_states, tidy_functions_arg) {
     n_group_vars <- 0
   }
 
-  # X mapping
-  # If there are 3 grouping variables, X is the third one - otherwise, it's just 1
-  if (identical(n_group_vars, 3L)) { # Use identical to handle NULL if there is no grouping at all
-    x_mapping <- list(x = dplyr::nth(.group_vars, 3))
+  # If there is mapping from the plot, start with that
+  if (!is.null(plot_mapping)) {
+    x_mapping <- list(x = plot_mapping$x)
   } else {
-    x_mapping <- list(x = 1)
+    # X mapping
+    # If there are 3 grouping variables, X is the third one - otherwise, it's just 1
+    if (identical(n_group_vars, 3L)) { # Use identical to handle NULL if there is no grouping at all
+      x_mapping <- list(x = dplyr::nth(.group_vars, 3))
+    } else {
+      x_mapping <- list(x = 1)
+    }
   }
 
   # Y mapping
@@ -47,28 +52,33 @@ generate_mapping <- function(data_states, tidy_functions_arg) {
   }
 
   # Group mapping
-  if (!pipeline_has_group_by) {
-    group_mapping <- NULL
-  } else {
-    if (n_group_vars >= 1) {
-      group_mapping <- list(column = dplyr::nth(.group_vars, 1))
-    }
-
-    if (n_group_vars >= 2) {
-      group_mapping <- append(
-        group_mapping,
-        list(row = dplyr::nth(.group_vars, 2))
-      )
-    }
-
-    if (n_group_vars == 3) {
-      group_mapping <- append(
-        group_mapping,
-        list(color = dplyr::nth(.group_vars, 3))
-      )
-    }
-
+  if (!is.null(plot_mapping)) {
+    group_mapping <- plot_mapping[c("row", "column")]
     group_mapping <- append(group_mapping, list(groups = .group_vars))
+  } else {
+    if (!pipeline_has_group_by) {
+      group_mapping <- NULL
+    } else {
+      if (n_group_vars >= 1) {
+        group_mapping <- list(column = dplyr::nth(.group_vars, 1))
+      }
+
+      if (n_group_vars >= 2) {
+        group_mapping <- append(
+          group_mapping,
+          list(row = dplyr::nth(.group_vars, 2))
+        )
+      }
+
+      if (n_group_vars == 3) {
+        group_mapping <- append(
+          group_mapping,
+          list(color = dplyr::nth(.group_vars, 3))
+        )
+      }
+
+      group_mapping <- append(group_mapping, list(groups = .group_vars))
+    }
   }
 
   # Combine all

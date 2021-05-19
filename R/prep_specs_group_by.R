@@ -58,12 +58,14 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   # Generate the data and specs for each state
 
-  specs_list <- vector("list", length = length(group_vars))
+  specs_list <- list()
 
-  # Order of grouping should go column -> row -> colour
+  browser()
+
+  # Order of grouping should go column -> row -> x
   # But only if they actually exist in the mapping!
 
-  # State 1: Grouped icon aray, first grouping in column facets ----
+  # State 1: Grouped icon array, first grouping in column facets ----
 
   # Add a count (grouped) to each record
   data_1 <- .data %>%
@@ -128,4 +130,6 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   # Return the specs
   specs_list
+
+  browser()
 }

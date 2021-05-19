@@ -17,14 +17,20 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   full_fittings <- pipeline %>%
     parse_pipeline(supported_tidy_functions)
 
-  # Remove any plotting fittings
-  ggplot_fittings <- full_fittings %>%
-    purrr::map(function(x) {
-      x %>% rlang::quo_name() %>% stringr::str_starts("ggplot")
-      }) %>%
-    unlist()
+  # Check if there's any ggplot2 in the fittings
+  contains_ggplot <- stringr::str_detect(pipeline, "ggplot")
 
-  fittings <- full_fittings[!ggplot_fittings]
+  # If there is, assume the last element is the plotting
+  if (contains_ggplot) {
+    fittings <- full_fittings[1:(length(full_fittings) - 1)]
+
+    # Check that ggplot2 is loaded, error if not
+    if (!"ggplot2" %in% (.packages())) {
+      stop("Please load ggplot2 via `library(ggplot2)` to generate this datamation.", call. = FALSE)
+    }
+  } else {
+    fittings <- full_fittings
+  }
 
   # Get data at each stage
   data_states <- fittings %>%
@@ -51,11 +57,23 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     purrr::map(as.list) %>%
     purrr::map(as.character)
 
+  if (contains_ggplot) {
+    # Evaluate plot
+    pipeline_plot <- pipeline %>%
+      rlang::parse_expr() %>%
+      eval()
+
+    # Parse aspects of mapping from plot
+    plot_mapping <- generate_mapping_from_plot(pipeline_plot)
+  } else {
+    plot_mapping <- NULL
+  }
+
   # Construct mapping
   names(data_states) <- tidy_functions_list
   names(tidy_function_args) <- tidy_functions_list
 
-  mapping <- generate_mapping(data_states, tidy_function_args)
+  mapping <- generate_mapping(data_states, tidy_function_args, plot_mapping)
 
   res <- purrr::map(1:length(fittings), function(i) {
 
