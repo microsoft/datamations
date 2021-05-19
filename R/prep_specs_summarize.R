@@ -115,7 +115,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   specs_list[[1]] <- generate_vega_specs(
     .data = data_1,
     mapping = mapping,
-    meta = list(parse = "jitter", axes = TRUE, description = description),
+    meta = list(parse = "jitter", axes = length(group_vars) != 0, description = description),
     spec_encoding = spec_encoding, facet_encoding = facet_encoding,
     height = height, width = width, facet_dims = facet_dims,
     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
@@ -137,7 +137,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   specs_list[[2]] <- generate_vega_specs(
     .data = data_2,
     mapping = mapping,
-    meta = list(axes = TRUE, description = description),
+    meta = list(axes = length(group_vars) != 0, description = description),
     spec_encoding = spec_encoding, facet_encoding = facet_encoding,
     height = height, width = width, facet_dims = facet_dims,
     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
