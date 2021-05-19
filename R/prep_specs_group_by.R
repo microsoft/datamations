@@ -65,7 +65,9 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   # State 1: Grouped icon array, by column ----
 
-  if (!is.null(mapping$column)) {
+  do_column <- !is.null(mapping$column)
+
+  if (do_column) {
     # Add a count (grouped) to each record
     count_data <- .data %>%
       dplyr::count(dplyr::across(mapping$column))
@@ -89,7 +91,9 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   # State 2: Grouped icon array, by column and row ----
 
-  if (!is.null(mapping$row)) {
+  do_row <- !is.null(mapping$row)
+
+  if (do_row) {
     count_data <- .data %>%
       dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row))))
 
@@ -111,7 +115,10 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   # State 3: Grouped icon array, by column, row, and x/color ----
 
-  if (!is.null(mapping$x)) {
+  # If x is the same as the row/column variable, don't do it twice
+  do_x <- !is.null(mapping$x) & !((mapping$x == mapping$column) | mapping$x == mapping$row)
+
+  if (do_x) {
     count_data <- .data %>%
       dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row, mapping$x))))
 

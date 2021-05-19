@@ -9,7 +9,8 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   if (!is.null(plot_mapping)) {
     .group_vars <- plot_mapping[c("column", "row", "x")] %>%
       unlist() %>%
-      unname()
+      unname() %>%
+      unique()
 
     n_group_vars <- length(.group_vars)
   } else if (pipeline_has_group_by) { # If not, take the order supplied in the grouping
