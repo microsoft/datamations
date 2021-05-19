@@ -82,7 +82,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       facet_encoding = facet_encoding,
       height = height, width = width,
       facet_dims = facet_dims,
-      column = TRUE
+      column = TRUE, color = mapping$column == mapping$color # Also do color if it's the same as the column variable
     )
 
     specs_list <- specs_list %>%
@@ -106,7 +106,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       facet_encoding = facet_encoding,
       height = height, width = width,
       facet_dims = facet_dims,
-      column = TRUE, row = TRUE
+      column = TRUE, row = TRUE, color = mapping$row == mapping$color # Also do color if it's the same as the row variable
     )
 
     specs_list <- specs_list %>%
@@ -116,7 +116,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
   # State 3: Grouped icon array, by column, row, and x/color ----
 
   # If x is the same as the row/column variable, don't do it twice
-  do_x <- !is.null(mapping$x) & !((mapping$x == mapping$column) | mapping$x == mapping$row)
+  do_x <- !is.null(mapping$x) & !(identical(mapping$x, mapping$column) | identical(mapping$x, mapping$row))
 
   if (do_x) {
     count_data <- .data %>%
