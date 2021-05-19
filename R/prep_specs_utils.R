@@ -10,6 +10,12 @@ generate_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encod
 
 generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, width, color = FALSE) {
 
+  # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
+  # So even if color = TRUE, if it's not there, it'll be removed!
+  if (!color) {
+    spec_encoding <- spec_encoding[c("x", "y")]
+  }
+
   # todo - handle color
   list(
     height = height,
