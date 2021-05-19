@@ -61,6 +61,6 @@
       }
 
       .description {
-        white-space: nowrap;
         padding-left: 10px;
+        max-width: 25%;
       }

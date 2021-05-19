@@ -152,7 +152,7 @@ function getJitterSpec(spec) {
     ).size;
   }
 
-  const facetSize = 200;
+  const facetSize = 150;
   const yExtent = d3.extent(nodes, d => d.y);
   const xScale = d3.scaleBand()
     .domain(d3.range(1, innerGroupCount + 1))
