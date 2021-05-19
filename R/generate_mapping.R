@@ -5,18 +5,28 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   pipeline_has_summarize <- any(names(data_states) == "summarize")
 
   # Extract grouping variables and count of them
-  if (pipeline_has_group_by) {
+  # If there is mapping, use column -> row -> x
+  if (!is.null(plot_mapping)) {
+    .group_vars <- plot_mapping[c("column", "row", "x")] %>%
+      unlist() %>%
+      unname()
+
+    n_group_vars <- length(.group_vars)
+  } else if (pipeline_has_group_by) { # If not, take the order supplied in the grouping
     .group_vars <- data_states[["group_by"]] %>%
       group_vars()
 
     n_group_vars <- length(.group_vars)
-  } else {
+  } else if (!pipeline_has_group_by) {
     n_group_vars <- 0
   }
 
   # If there is mapping from the plot, start with that
   if (!is.null(plot_mapping)) {
-    x_mapping <- list(x = plot_mapping$x)
+    x_mapping <- list(
+      x = plot_mapping$x,
+      color = plot_mapping$x
+    )
   } else {
     # X mapping
     # If there are 3 grouping variables, X is the third one - otherwise, it's just 1
@@ -30,6 +40,7 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   # Y mapping
   # If there is no summarize, then Y can be NULL
   # Otherwise it's parsed from the summarize section of the pipeline
+
   if (!pipeline_has_summarize) {
     y_mapping <- list(
       y = NULL,

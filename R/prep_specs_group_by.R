@@ -1,7 +1,7 @@
 #' Generate specs of data in grouped icon array
 #'
 #' @param .data Input data
-#' @param mapping A list that describes mapping for the datamations, including x and y variables, sjummary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.
+#' @param mapping A list that describes mapping for the datamations, including x and y variables, summary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
@@ -60,7 +60,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   specs_list <- list()
 
-  # Order of grouping should go column -> row -> x
+  # Order of grouping should go column -> row -> x/color
   # But only if they actually exist in the mapping!
 
   # State 1: Grouped icon array, by column ----
@@ -109,7 +109,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       append(list(spec))
   }
 
-  # State 3: Grouped icon array, by column, row, and x ----
+  # State 3: Grouped icon array, by column, row, and x/color ----
 
   if (!is.null(mapping$x)) {
     count_data <- .data %>%
