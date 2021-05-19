@@ -14,8 +14,17 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   supported_tidy_functions <- c("group_by", "summarize")
 
   # Convert pipeline into list
-  fittings <- pipeline %>%
+  full_fittings <- pipeline %>%
     parse_pipeline(supported_tidy_functions)
+
+  # Remove any plotting fittings
+  ggplot_fittings <- full_fittings %>%
+    purrr::map(function(x) {
+      x %>% rlang::quo_name() %>% stringr::str_starts("ggplot")
+      }) %>%
+    unlist()
+
+  fittings <- full_fittings[!ggplot_fittings]
 
   # Get data at each stage
   data_states <- fittings %>%
