@@ -59,3 +59,41 @@ test_that("datamation_sanddance returns an htmlwidget", {
   widget <- datamation_sanddance("palmerpenguins::penguins %>% group_by(species, island) %>% summarize(mean = mean(bill_length_mm))")
   expect_s3_class(widget, "htmlwidget")
 })
+
+test_that("specs are generated as expected", {
+  spec <- "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
+    datamation_sanddance()
+  expect_snapshot(spec$x$spec)
+
+  spec <- "small_salary %>% group_by(Degree, Work) %>% summarize(mean = mean(Salary))" %>%
+    datamation_sanddance()
+  expect_snapshot(spec$x$spec)
+
+  spec <- "small_salary %>% summarize(mean = mean(Salary))" %>%
+    datamation_sanddance()
+  expect_snapshot(spec$x$spec)
+
+  spec <- "penguins %>% group_by(species, island, sex) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
+    datamation_sanddance()
+  expect_snapshot(spec$x$spec)
+
+  spec <- "penguins %>% group_by(species, island) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
+    datamation_sanddance()
+  expect_snapshot(spec$x$spec)
+
+  spec <- "penguins %>% group_by(species) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
+    datamation_sanddance()
+  expect_snapshot(spec$x$spec)
+
+  spec <- "penguins %>% group_by(species, sex, island) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
+    datamation_sanddance()
+  expect_snapshot(spec$x$spec)
+
+  spec <- "penguins %>% group_by(sex) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
+    datamation_sanddance()
+  expect_snapshot(spec$x$spec)
+
+  spec <- "penguins %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
+    datamation_sanddance()
+  expect_snapshot(spec$x$spec)
+})

@@ -38,3 +38,4 @@ Suggests:
     testthat (>= 2.1.0)
 Depends: 
     R (>= 3.5.0)
+Config/testthat/edition: 3

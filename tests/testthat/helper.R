@@ -40,7 +40,7 @@ expect_data_values <- function(single_spec, df) {
     purrr::pluck("data") %>%
     purrr::pluck("values")
 
-  expect_equivalent(spec_data, df)
+  expect_equal(spec_data, df, ignore_attr = TRUE)
 }
 
 # Test that "mark" and "encoding" are within `spec` - this happens when there is a facet (any grouping)
