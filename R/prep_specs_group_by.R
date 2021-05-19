@@ -60,39 +60,42 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   specs_list <- list()
 
-  browser()
-
   # Order of grouping should go column -> row -> x
   # But only if they actually exist in the mapping!
 
-  # State 1: Grouped icon array, first grouping in column facets ----
+  # State 1: Grouped icon array, by column ----
 
-  # Add a count (grouped) to each record
-  data_1 <- .data %>%
-    dplyr::count(!!rlang::parse_expr(mapping$column))
+  if (!is.null(mapping$column)) {
+    # Add a count (grouped) to each record
+    count_data <- .data %>%
+      dplyr::count(dplyr::across(mapping$column))
 
-  # Generate description
-  description <- generate_group_by_description(mapping, "column")
+    # Generate description
+    description <- generate_group_by_description(mapping, "column")
 
-  specs_list[[1]] <- generate_vega_specs(data_1,
-    mapping = mapping,
-    meta = list(parse = "grid", description = description),
-    spec_encoding = spec_encoding,
-    facet_encoding = facet_encoding,
-    height = height, width = width,
-    facet_dims = facet_dims,
-    column = TRUE
-  )
+    spec <- generate_vega_specs(count_data,
+      mapping = mapping,
+      meta = list(parse = "grid", description = description),
+      spec_encoding = spec_encoding,
+      facet_encoding = facet_encoding,
+      height = height, width = width,
+      facet_dims = facet_dims,
+      column = TRUE
+    )
 
-  # State 2: Grouped icon array, first group in col and second in row facets ----
+    specs_list <- specs_list %>%
+      append(list(spec))
+  }
+
+  # State 2: Grouped icon array, by column and row ----
 
   if (!is.null(mapping$row)) {
-    data_2 <- .data %>%
-      dplyr::count(!!rlang::parse_expr(mapping$column), !!rlang::parse_expr(mapping$row))
+    count_data <- .data %>%
+      dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row))))
 
     description <- generate_group_by_description(mapping, "column", "row")
 
-    specs_list[[2]] <- generate_vega_specs(data_2,
+    spec <- generate_vega_specs(count_data,
       mapping = mapping,
       meta = list(parse = "grid", description = description),
       spec_encoding = spec_encoding,
@@ -101,17 +104,20 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       facet_dims = facet_dims,
       column = TRUE, row = TRUE
     )
+
+    specs_list <- specs_list %>%
+      append(list(spec))
   }
 
-  # State 3: Grouped icon array, first group in col, second in row facets, third in colour -----
+  # State 3: Grouped icon array, by column, row, and x ----
 
-  if (!is.null(mapping$color)) {
-    data_3 <- .data %>%
-      dplyr::count(!!rlang::parse_expr(mapping$column), !!rlang::parse_expr(mapping$row), !!rlang::parse_expr(mapping$color))
+  if (!is.null(mapping$x)) {
+    count_data <- .data %>%
+      dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row, mapping$x))))
 
-    description <- generate_group_by_description(mapping, "column", "row", "color")
+    description <- generate_group_by_description(mapping, "column", "row", "x")
 
-    specs_list[[3]] <- generate_vega_specs(data_3,
+    spec <- generate_vega_specs(count_data,
       mapping = mapping,
       meta = list(parse = "grid", description = description),
       spec_encoding = spec_encoding,
@@ -120,6 +126,9 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       facet_dims = facet_dims,
       column = TRUE, row = TRUE, color = TRUE
     )
+
+    specs_list <- specs_list %>%
+      append(list(spec))
   }
 
   # Convert specs to JSON
@@ -130,6 +139,4 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   # Return the specs
   specs_list
-
-  browser()
 }
