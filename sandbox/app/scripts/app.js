@@ -177,7 +177,7 @@ function drawAxis(index, id) {
     encoding.color.legend = null;
   }
 
-  vegaEmbed(axisSelector, rawFiles[index], { renderer: "svg" }).then(() => {
+  vegaEmbed(axisSelector, spec, { renderer: "svg" }).then(() => {
     if (columnFacet && columnFacet.title) {
       d3.select(axisSelector + " svg > g").attr("transform", function () {
         const transform = d3.select(this).attr("transform");
@@ -201,9 +201,10 @@ async function animateFrame(index, id) {
   let currHasAxes = currMeta.axes;
 
   drawFrame(index, id).then(() => {
+    d3.select('#' + id + ' .description').html(currMeta.description);
+    
     anim.play(visSelector).then(() => {
       d3.select('#' + id + ' .slider').property('value', index + 1);
-      d3.select('#' + id + ' .description').html(currMeta.description);
     });
 
     // show/hide axis vega chart
@@ -243,7 +244,6 @@ function onSlide(id) {
   if (intervalId) clearInterval(intervalId);
 }
 
-// with urls
 init("app", {
   specUrls: [
     dataUrl + "01-ungrouped.json",
