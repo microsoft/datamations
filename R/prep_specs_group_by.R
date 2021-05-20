@@ -82,7 +82,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       facet_encoding = facet_encoding,
       height = height, width = width,
       facet_dims = facet_dims,
-      column = TRUE, color = mapping$column == mapping$color # Also do color if it's the same as the column variable
+      column = TRUE, color = identical(mapping$column, mapping$color) # Also do color if it's the same as the column variable
     )
 
     specs_list <- specs_list %>%
@@ -106,7 +106,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       facet_encoding = facet_encoding,
       height = height, width = width,
       facet_dims = facet_dims,
-      column = TRUE, row = TRUE, color = mapping$row == mapping$color # Also do color if it's the same as the row variable
+      column = TRUE, row = TRUE, color = identical(mapping$row, mapping$color) # Also do color if it's the same as the row variable
     )
 
     specs_list <- specs_list %>%

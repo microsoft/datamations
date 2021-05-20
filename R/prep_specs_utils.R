@@ -1,14 +1,14 @@
 # General ----
 
-generate_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column = FALSE, row = FALSE, color = FALSE) {
+generate_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column = FALSE, row = FALSE, color = FALSE, errorbar = FALSE) {
   if (!column & !row) {
-    generate_unfacet_vega_specs(.data, meta, spec_encoding, height, width, color)
+    generate_unfacet_vega_specs(.data, meta, spec_encoding, height, width, color, errorbar)
   } else {
-    generate_facet_vega_specs(.data, mapping, meta, spec_encoding, facet_encoding,  height, width,facet_dims, column, row, color)
+    generate_facet_vega_specs(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column, row, color, errorbar)
   }
 }
 
-generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, width, color = FALSE) {
+generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, width, color = FALSE, errorbar = FALSE) {
 
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
   # So even if color = TRUE, if it's not there, it'll be removed!
@@ -17,19 +17,43 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
   }
 
   # todo - handle color
-  list(
-    height = height,
-    width = width,
-    `$schema` = vegawidget::vega_schema(),
-    meta = meta,
-    data = list(values = .data),
-    mark = list(type = "point", filled = TRUE),
-    encoding = spec_encoding
-  ) %>%
-    vegawidget::as_vegaspec()
+  if (!errorbar) {
+    list(
+      height = height,
+      width = width,
+      `$schema` = vegawidget::vega_schema(),
+      meta = meta,
+      data = list(values = .data),
+      mark = list(type = "point", filled = TRUE),
+      encoding = spec_encoding
+    ) %>%
+      vegawidget::as_vegaspec()
+  } else {
+    errorbar_spec_encoding <- spec_encoding
+    errorbar_spec_encoding$y$field <- "y_raw"
+
+    list(
+      height = height,
+      width = width,
+      `$schema` = vegawidget::vega_schema(),
+      meta = meta,
+      data = list(values = .data),
+      layer = list(
+        list(
+          mark = "errorbar",
+          encoding = errorbar_spec_encoding
+        ),
+        list(
+          mark = list(type = "point", filled = TRUE),
+          encoding = spec_encoding
+        )
+      )
+    ) %>%
+      vegawidget::as_vegaspec()
+  }
 }
 
-generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encoding, height, width,facet_dims, column = FALSE, row = FALSE, color = FALSE) {
+generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column = FALSE, row = FALSE, color = FALSE, errorbar = FALSE) {
 
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
   # So even if color = TRUE, if it's not there, it'll be removed!
@@ -49,19 +73,46 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
     facet_dims[["nrow"]] <- 1
   }
 
-  list(
-    `$schema` = vegawidget::vega_schema(),
-    meta = meta,
-    data = list(values = .data),
-    facet = facet_encoding,
-    spec = list(
-      height = height / facet_dims[["nrow"]],
-      width = width / facet_dims[["ncol"]],
-      mark = list(type = "point", filled = TRUE),
-      encoding = spec_encoding
-    )
-  ) %>%
-    vegawidget::as_vegaspec()
+  if (!errorbar) {
+    list(
+      `$schema` = vegawidget::vega_schema(),
+      meta = meta,
+      data = list(values = .data),
+      facet = facet_encoding,
+      spec = list(
+        height = height / facet_dims[["nrow"]],
+        width = width / facet_dims[["ncol"]],
+        mark = list(type = "point", filled = TRUE),
+        encoding = spec_encoding
+      )
+    ) %>%
+      vegawidget::as_vegaspec()
+  } else {
+    errorbar_spec_encoding <- spec_encoding
+    errorbar_spec_encoding$y$field <- "y_raw"
+
+    list(
+      `$schema` = vegawidget::vega_schema(),
+      meta = meta,
+      data = list(values = .data),
+      facet = facet_encoding,
+      spec = list(
+        height = height / facet_dims[["nrow"]],
+        width = width / facet_dims[["ncol"]],
+        layer = list(
+          list(
+            mark = "errorbar",
+            encoding = errorbar_spec_encoding
+          ),
+          list(
+            mark = list(type = "point", filled = TRUE),
+            encoding = spec_encoding
+          )
+        )
+      )
+    ) %>%
+      vegawidget::as_vegaspec()
+  }
 }
 
 # Group by ----
@@ -161,7 +212,12 @@ generate_x_domain <- function(data) {
   }
 }
 
-generate_summarize_description <- function(summary_variable, summary_function = NULL) {
+generate_summarize_description <- function(summary_variable, summary_function = NULL, errorbar = FALSE) {
+
+  if(errorbar) {
+    return(glue::glue("Plot mean {summary_variable} of each group, with errorbar"))
+  }
+
   if (is.null(summary_function)) {
     glue::glue("Plot {summary_variable} within each group")
   } else {

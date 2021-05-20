@@ -96,7 +96,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     calculate_facet_dimensions(group_vars, mapping)
 
   # Generate the data and specs for each state
-  specs_list <- vector("list", length = 2)
+  specs_list <- list()
 
   # State 1: Scatter plot (with any grouping) -----
 
@@ -112,7 +112,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
 
-  specs_list[[1]] <- generate_vega_specs(
+  spec <- generate_vega_specs(
     .data = data_1,
     mapping = mapping,
     meta = list(parse = "jitter", axes = length(group_vars) != 0, description = description),
@@ -120,6 +120,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     height = height, width = width, facet_dims = facet_dims,
     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
   )
+
+  specs_list <- append(specs_list, list(spec))
 
   # State 2: Summary plot (with any grouping) -----
   # There should still be a point for each datapoint, just all overlapping
@@ -134,7 +136,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # TODO: not working quite yet - not in animation, only when frame is specifically clicked
   # spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
 
-  specs_list[[2]] <- generate_vega_specs(
+  spec <- generate_vega_specs(
     .data = data_2,
     mapping = mapping,
     meta = list(axes = length(group_vars) != 0, description = description),
@@ -142,6 +144,32 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     height = height, width = width, facet_dims = facet_dims,
     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
   )
+
+  specs_list <- append(specs_list, list(spec))
+
+  # State 3: Error bars -----
+  # Only if the summary function is mean!
+
+  if (mapping$summary_function == "mean") {
+    data_3 <- data_1 %>%
+      dplyr::mutate(y_raw = .data$y) %>%
+      dplyr::group_by(!!!group_vars) %>%
+      dplyr::mutate(dplyr::across(.data$y, !!summary_function, na.rm = TRUE))
+
+    description <- generate_summarize_description(summary_variable, summary_function, errorbar = TRUE)
+
+    spec <- generate_vega_specs(
+      .data = data_3,
+      mapping = mapping,
+      meta = list(axes = length(group_vars) != 0, description = description),
+      spec_encoding = spec_encoding, facet_encoding = facet_encoding,
+      height = height, width = width, facet_dims = facet_dims,
+      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color),
+      errorbar = TRUE
+    )
+
+    specs_list <- append(specs_list, list(spec))
+  }
 
   # Convert specs to JSON
   if (toJSON) {
