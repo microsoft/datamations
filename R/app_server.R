@@ -7,14 +7,12 @@ app_server <- function(input, output, session) {
   library(palmerpenguins)
 
   inputs <- mod_inputs_server("inputs")
-  mod_pipeline_server("pipeline", inputs = inputs)
+  pipeline <- mod_pipeline_server("pipeline", inputs)
+
+  mod_datamation_sanddance_server("datamation_sanddance", inputs, pipeline)
 
   #
-  # # Generate datamation -----
-  #
-  # datamation <- shiny::reactive({
-  #   datamation_sanddance(pipeline(), height = input$height, width = input$width)
-  # })
+
   #
   # # Generate tabs of data -----
   #
@@ -91,19 +89,10 @@ app_server <- function(input, output, session) {
   # # Outputs -----
   #
   #
-  # output$datamation <- datamations::renderDatamationSandDance(
-  #   datamation()
-  # )
+
   #
   # # Render UIs
   # shiny::observeEvent(input$go, {
-  #   output$pipeline_ui <- shiny::renderUI({
-  #     shiny::fluidRow(
-  #       shiny::h2("tidyverse pipeline"),
-  #       shiny::verbatimTextOutput("pipeline")
-  #     )
-  #   })
-  #
   #   output$datamation_ui <- shiny::renderUI({
   #     shiny::fluidRow(
   #       shiny::h2("datamation"),

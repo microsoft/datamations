@@ -101,8 +101,7 @@ mod_inputs_server <- function(id) {
     })
 
     inputs <- list(
-      dataset_name = shiny::reactive(input$dataset),
-      dataset = shiny::reactive(dataset()),
+      dataset = shiny::reactive(input$dataset),
       group_by = shiny::reactive(input$group_by),
       summary_variable = shiny::reactive(input$summary_variable),
       summary_function = shiny::reactive(input$summary_function),

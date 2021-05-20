@@ -24,16 +24,10 @@ mod_pipeline_server <- function(id, inputs){
     pipeline <- shiny::eventReactive(inputs$go(), {
       pipeline_group_by <- !is.null(inputs$group_by())
       if (pipeline_group_by) {
-        glue::glue("{inputs$dataset_name()} %>% group_by({paste0(inputs$group_by(), collapse = ', ')}) %>% summarize({inputs$summary_function()} = {inputs$summary_function()}({inputs$summary_variable()}, na.rm = TRUE))")
+        glue::glue("{inputs$dataset()} %>% group_by({paste0(inputs$group_by(), collapse = ', ')}) %>% summarize({inputs$summary_function()} = {inputs$summary_function()}({inputs$summary_variable()}, na.rm = TRUE))")
       } else {
-        glue::glue("{inputs$dataset_name()} %>% summarize({inputs$summary_function()} = {inputs$summary_function()}({inputs$summary_var()}, na.rm = TRUE))")
+        glue::glue("{inputs$dataset()} %>% summarize({inputs$summary_function()} = {inputs$summary_function()}({inputs$summary_var()}, na.rm = TRUE))")
       }
-    })
-
-    # Evaluate pipeline ----
-
-    pipeline_res <- shiny::reactive({
-      eval(rlang::parse_expr(pipeline()))
     })
 
     # Outputs -----
@@ -50,6 +44,15 @@ mod_pipeline_server <- function(id, inputs){
         )
       })
     })
+
+  #   # Evaluate and return results from pipeline
+  #   pipeline_res <- shiny::reactive({
+  #     eval(rlang::parse_expr(pipeline()))
+  #   })
+  #
+  #   return(pipeline_res)
+
+    return(pipeline)
   })
 }
 
