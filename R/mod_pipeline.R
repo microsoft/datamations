@@ -7,18 +7,22 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_pipeline_ui <- function(id){
+mod_pipeline_ui <- function(id) {
   ns <- NS(id)
-  tagList(
-    shiny::uiOutput(ns("pipeline_ui"))
+  shiny::fluidRow(
+    shinydashboard::box(
+      width = 12,
+      shiny::h2("tidyverse pipeline"),
+      shiny::uiOutput(ns("pipeline_ui"))
+    )
   )
 }
 
 #' Pipeline Server Functions
 #'
 #' @noRd
-mod_pipeline_server <- function(id, inputs){
-  moduleServer(id, function(input, output, session){
+mod_pipeline_server <- function(id, inputs) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     pipeline <- shiny::eventReactive(inputs$go(), {
@@ -38,19 +42,9 @@ mod_pipeline_server <- function(id, inputs){
 
     shiny::observeEvent(inputs$go(), {
       output$pipeline_ui <- shiny::renderUI({
-        shiny::fluidRow(
-          shiny::h2("tidyverse pipeline"),
-          shiny::verbatimTextOutput(ns("pipeline"))
-        )
+        shiny::verbatimTextOutput(ns("pipeline"))
       })
     })
-
-  #   # Evaluate and return results from pipeline
-  #   pipeline_res <- shiny::reactive({
-  #     eval(rlang::parse_expr(pipeline()))
-  #   })
-  #
-  #   return(pipeline_res)
 
     return(pipeline)
   })
