@@ -13,7 +13,16 @@ mod_pipeline_ui <- function(id) {
     shinydashboard::box(
       width = 12,
       shiny::h2("tidyverse pipeline"),
-      shiny::uiOutput(ns("pipeline_ui"))
+      shinyAce::aceEditor(
+        outputId = ns("pipeline_editor"),
+        mode = "r",
+        fontSize = 16,
+        readOnly = TRUE,
+        autoScrollEditorIntoView = TRUE,
+        minLines = 2,
+        maxLines = 30,
+        value = "# Code will appear here!"
+      ),
     )
   )
 }
@@ -34,16 +43,11 @@ mod_pipeline_server <- function(id, inputs) {
       }
     })
 
-    # Outputs -----
-
-    output$pipeline <- shiny::renderText({
-      pipeline()
-    })
+    # Update editor with pipeline
 
     shiny::observeEvent(inputs$go(), {
-      output$pipeline_ui <- shiny::renderUI({
-        shiny::verbatimTextOutput(ns("pipeline"))
-      })
+      text <- styler::style_text((pipeline()))
+      shinyAce::updateAceEditor(session, "pipeline_editor", value = paste0(text, collapse = "\n"))
     })
 
     return(pipeline)
