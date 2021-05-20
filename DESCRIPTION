@@ -31,7 +31,8 @@ Imports:
     glue,
     tidyselect,
     htmlwidgets,
-    reactable
+    reactable,
+    shinyWidgets
 Suggests: 
     jsonlite,
     palmerpenguins,
