@@ -32,7 +32,11 @@ Imports:
     tidyselect,
     htmlwidgets,
     reactable,
-    shinyWidgets
+    shinyWidgets,
+    shinydashboard,
+    shinyAce,
+    golem,
+    styler
 Suggests: 
     jsonlite,
     palmerpenguins,
