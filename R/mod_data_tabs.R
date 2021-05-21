@@ -42,7 +42,8 @@ mod_data_tabs_server <- function(id, inputs, pipeline) {
         # State 2: summarized data
         if (!pipeline_group_by) {
           data_states_tabs[[2]] <- data_states[[2]]
-          names(data_states_tabs) <- c("Initial data", glue::glue("{inputs$summary_function} {inputs$summary_var}"))
+          names(data_states_tabs) <- c("Initial data", "Summarized data")
+          data_states_titles <- c("Initial data", glue::glue("{inputs$summary_function} {inputs$summary_var}"))
         }
 
         # Yes group by
@@ -68,7 +69,8 @@ mod_data_tabs_server <- function(id, inputs, pipeline) {
             select(!!!grouping_vars, rlang::parse_expr(inputs$summary_function())) %>%
             arrange(!!!grouping_vars)
 
-          names(data_states_tabs) <- c("Initial data", glue::glue("Group by {paste0(inputs$group_by(), collapse = ', ')}"), glue::glue("{inputs$summary_function()} {inputs$summary_variable()} in each group"))
+          names(data_states_tabs) <- c("Initial data", "Grouped data", "Summarized data")
+          data_states_titles <- c("Initial data", glue::glue("Group by {paste0(inputs$group_by(), collapse = ', ')}"), glue::glue("{inputs$summary_function()} {inputs$summary_variable()} in each group"))
         }
 
       # Render each of the data tabs into an output
@@ -85,11 +87,11 @@ mod_data_tabs_server <- function(id, inputs, pipeline) {
       })
 
       output$data_tabs_ui <- shiny::renderUI({
-        tabs <- purrr::imap(
-          data_states_tabs,
-          function(x, y) {
-            output_name <- ns(paste0("data", y))
-            shiny::tabPanel(y, reactable::reactableOutput(output_name))
+        tabs <- purrr::map(
+          seq_along(data_states_tabs),
+          function(i) {
+            output_name <- ns(paste0("data", names(data_states_tabs)[[i]]))
+            shiny::tabPanel(names(data_states_tabs)[[i]], shiny::h3(shiny::p(data_states_titles[[i]])),  reactable::reactableOutput(output_name))
           }
         )
         names(tabs) <- NULL
