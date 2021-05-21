@@ -23,7 +23,6 @@ mod_data_tabs_server <- function(id, inputs, pipeline) {
     shiny::observeEvent(inputs$go(), {
 
       # Generate the data, and render DTs for them
-      data_for_tabs <- shiny::reactive({
         pipeline_group_by <- !is.null(inputs$group_by())
 
         supported_tidy_functions <- c("group_by", "summarize")
@@ -72,11 +71,8 @@ mod_data_tabs_server <- function(id, inputs, pipeline) {
           names(data_states_tabs) <- c("Initial data", glue::glue("Group by {paste0(inputs$group_by(), collapse = ', ')}"), glue::glue("{inputs$summary_function()} {inputs$summary_variable()} in each group"))
         }
 
-        data_states_tabs
-      })
-
       # Render each of the data tabs into an output
-      purrr::iwalk(data_for_tabs(), function(x, y) {
+      purrr::iwalk(data_states_tabs, function(x, y) {
         output_name <- paste0("data", y)
         output[[output_name]] <- reactable::renderReactable(
           x %>%
@@ -90,7 +86,7 @@ mod_data_tabs_server <- function(id, inputs, pipeline) {
 
       output$data_tabs_ui <- shiny::renderUI({
         tabs <- purrr::imap(
-          data_for_tabs(),
+          data_states_tabs,
           function(x, y) {
             output_name <- ns(paste0("data", y))
             shiny::tabPanel(y, reactable::reactableOutput(output_name))
