@@ -9,20 +9,25 @@
 #' @importFrom shiny NS tagList
 mod_pipeline_ui <- function(id) {
   ns <- NS(id)
-  shiny::fluidRow(
-    shinydashboard::box(
-      width = 12,
-      shiny::h2("tidyverse pipeline"),
-      shinyAce::aceEditor(
-        outputId = ns("pipeline_editor"),
-        mode = "r",
-        fontSize = 16,
-        readOnly = TRUE,
-        autoScrollEditorIntoView = TRUE,
-        minLines = 2,
-        maxLines = 30,
-        value = "# Code will appear here!"
-      ),
+  shiny::tagList(
+    shiny::hr(),
+    shiny::fluidRow(
+      shinydashboard::box(
+        width = 12,
+        solidHeader = TRUE,
+        shiny::h2("tidyverse pipeline"),
+        shinyAce::aceEditor(
+          outputId = ns("pipeline_editor"),
+          mode = "r",
+          fontSize = 16,
+          readOnly = TRUE,
+          highlightActiveLine = FALSE,
+          autoScrollEditorIntoView = TRUE,
+          minLines = 2,
+          maxLines = 30,
+          value = "# Code will appear here based on selections above"
+        ),
+      )
     )
   )
 }
