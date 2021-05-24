@@ -78,6 +78,33 @@
         padding-left: 10px;
         max-width: 25%;
       }
+
+      .layered-vega-vis {
+        position: relative;
+      }
+
+      .layered-vega-vis > div {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .layered-vega-vis > div svg {
+        background-color: transparent !important;
+      }
+
+      .layered-vega-vis .hidden {
+        transition: 0.3s all ease-in-out;
+        /* opacity: 0; */
+      }
+
+      .layered-vega-vis .hidden .role-axis {
+        display: none;
+      }
+
+      .layered-vega-vis .hidden .role-title {
+        display: none;
+      }
     </style>
   </head>
 
