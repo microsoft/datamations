@@ -80,52 +80,6 @@
   {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
-      "parse": "grid",
-      "description": "Group by Degree, 1"
-    },
-    "data": {
-      "values": [
-        {
-          "Degree": "Masters",
-          "n": 72
-        },
-        {
-          "Degree": "PhD",
-          "n": 28
-        }
-      ]
-    },
-    "facet": {
-      "column": {
-        "field": "Degree",
-        "type": "ordinal",
-        "title": "Degree"
-      }
-    },
-    "spec": {
-      "height": 300,
-      "width": 150,
-      "mark": {
-        "type": "point",
-        "filled": true
-      },
-      "encoding": {
-        "x": {
-          "field": "x",
-          "type": "quantitative",
-          "axis": null
-        },
-        "y": {
-          "field": "y",
-          "type": "quantitative",
-          "axis": null
-        }
-      }
-    }
-  },
-  {
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-    "meta": {
       "parse": "jitter",
       "axes": true,
       "description": "Plot Salary within each group"
