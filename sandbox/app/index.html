@@ -79,30 +79,38 @@
         max-width: 25%;
       }
 
-      .layered-vega-vis {
+      .vega-other-layers {
         position: relative;
       }
 
-      .layered-vega-vis > div {
+      .vega-other-layers > div {
         position: absolute;
         top: 0;
         left: 0;
       }
 
-      .layered-vega-vis > div svg {
+      .vega-other-layers > div svg {
         background-color: transparent !important;
       }
 
-      .layered-vega-vis .hidden {
-        transition: 0.3s all ease-in-out;
+      .vega-other-layers .hidden {
+        transition: 1s all ease-in-out;
         /* opacity: 0; */
       }
 
-      .layered-vega-vis .hidden .role-axis {
+      .vega-other-layers .hidden .role-axis {
         display: none;
       }
 
-      .layered-vega-vis .hidden .role-title {
+      .vega-other-layers .hidden .role-title {
+        display: none;
+      }
+
+      .vega-other-layers.with-axes .background {
+        stroke: none !important;
+      }
+
+      .vega-other-layers.with-axes details {
         display: none;
       }
     </style>
@@ -123,6 +131,7 @@
       <div class="vega-vis-wrapper">
         <div class="vega-for-axis"></div>
         <div class="vega-vis"></div>
+        <div class="vega-other-layers"></div>
       </div>
     </div>
 
