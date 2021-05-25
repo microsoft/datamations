@@ -65,12 +65,10 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
   # So even if e.g. row = TRUE, if there's no variable to facet by, it'll be removed!
   if (is.null(mapping$column) | !column) {
     facet_encoding <- facet_encoding[names(facet_encoding) != "column"]
-    facet_dims[["nrow"]] <- 1
   }
 
   if (is.null(mapping$row) | !row) {
     facet_encoding <- facet_encoding[names(facet_encoding) != "row"]
-    facet_dims[["nrow"]] <- 1
   }
 
   if (!errorbar) {
