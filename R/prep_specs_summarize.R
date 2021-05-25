@@ -68,7 +68,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   x_encoding <- list(field = "x", type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]]), title = x_title, scale = x_domain)
 
-  y_encoding <- list(field = "y", type = "quantitative", title = mapping$y, scale = list(domain = range(.data[["y"]], na.rm = TRUE)))
+  y_range <- range(.data[["y"]], na.rm = TRUE)
+  y_encoding <- list(field = "y", type = "quantitative", title = mapping$y, scale = list(domain = y_range))
 
   color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
 
@@ -167,9 +168,32 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   #     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color),
   #     errorbar = TRUE
   #   )
-  #
-  #   specs_list <- append(specs_list, list(spec))
-  # }
+
+#
+#     specs_list <- append(specs_list, list(spec))
+#   }
+
+  # Step 4: Zoom -----
+  # Zoom in on the summarised value
+  # If it's mean (and there's error bars), need to calculate the error bars manually and get the range from there
+  # Otherwise, just do the range of the Y + some padding
+
+  description <- generate_summarize_description(summary_variable, summary_function)
+  description <- glue::glue("{description}, zoomed in")
+
+  range_y <- range(data_2[["y"]], na.rm = TRUE)
+  spec_encoding$y$scale$domain <- range_y
+
+  spec <- generate_vega_specs(
+    .data = data_2,
+    mapping = mapping,
+    meta = list(axes = length(group_vars) != 0, description = description),
+    spec_encoding = spec_encoding, facet_encoding = facet_encoding,
+    height = height, width = width, facet_dims = facet_dims,
+    column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
+  )
+
+  specs_list <- append(specs_list, list(spec))
 
   # Convert specs to JSON
   if (toJSON) {
