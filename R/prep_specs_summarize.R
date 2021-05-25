@@ -33,10 +33,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     dplyr::rename(y = {{ summary_variable }})
 
   # Add an x variable to use as the center of jittering
-  # It can just be 1, except if there's mapping by color
+  # It can just be 1, except if mapping$x is not 1!
   # Generate the labels for these too - label by colour grouping variable or not at all
 
-  if (is.null(mapping$color)) {
+  if (mapping$x == 1) {
     .data <- .data %>%
       dplyr::mutate(x = 1)
 
@@ -44,21 +44,21 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     x_domain <- generate_x_domain(NULL)
     x_title <- ""
   } else {
+    x_var <- rlang::parse_expr(mapping$x)
 
-    color_var <- rlang::parse_expr(mapping$color)
     .data <- .data %>%
       dplyr::mutate(
-        x = as.numeric({{ color_var }})
+        x = as.numeric({{ x_var }})
       )
 
     x_labels <- .data %>%
       dplyr::ungroup() %>%
-      dplyr::distinct(.data$x, label = {{ color_var }}) %>%
+      dplyr::distinct(.data$x, label = {{ x_var }}) %>%
       generate_labelsExpr()
 
     x_domain <- .data %>%
       dplyr::ungroup() %>%
-      dplyr::distinct(.data$x, label = {{ color_var }}) %>%
+      dplyr::distinct(.data$x, label = {{ x_var }}) %>%
       generate_x_domain()
 
     x_title <- mapping$x
