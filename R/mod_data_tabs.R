@@ -16,7 +16,7 @@ mod_data_tabs_ui <- function(id) {
 #'
 #' @noRd
 mod_data_tabs_server <- function(id, inputs, pipeline) {
-  moduleServer(id, function(input, output, session) {
+  shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
 

@@ -58,7 +58,7 @@ mod_inputs_ui <- function(id) {
 #'
 #' @noRd
 mod_inputs_server <- function(id) {
-  moduleServer(id, function(input, output, session) {
+  shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     # Select dataset ----

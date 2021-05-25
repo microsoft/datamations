@@ -36,7 +36,7 @@ mod_pipeline_ui <- function(id) {
 #'
 #' @noRd
 mod_pipeline_server <- function(id, inputs) {
-  moduleServer(id, function(input, output, session) {
+  shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     pipeline <- shiny::eventReactive(inputs$go(), {
