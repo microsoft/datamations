@@ -150,6 +150,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
 
   newSpec.encoding.x.scale.domain = xDomain;
   newSpec.encoding.y.scale.domain = yDomain;
+
   newSpec.data.values = values;
   newSpec.width = xDomain[1];
   newSpec.height = yDomain[0];
@@ -163,8 +164,8 @@ function hackFacet(spec) {
   return vegaEmbed(div, spec, {renderer: "svg"}).then(resp => {
     const newSpec = getHackedSpec({
       ...resp,
-      width: spec.width,
-      height: spec.height,
+      width: spec.spec.width,
+      height: spec.spec.height,
     });
 
     if (spec.config) {

@@ -12,11 +12,7 @@ async function init(id, {
   rawFiles = [];
 
   if (specs) {
-    files = specs.map((d) => {
-      if (!d.width) d.width = 600;
-      if (!d.height) d.height = 600;
-      return { ...d };
-    });
+    files = specs;
   } else if (specUrls) {
     files = await loadData(specUrls);
   }
@@ -150,7 +146,7 @@ function drawFrame(index, id) {
     .style("opacity", meta.axes ? 1 : 0)
     .html("");
 
-  d3.select(visSelector).classed("with-axes", meta.axes);
+  d3.select(visSelector).classed("with-axes", meta.axes).html("");
 
   // draw axis
   if (meta.axes) {
@@ -167,9 +163,13 @@ function drawAxis(index, id) {
   const axisSelector = "#" + id + " .vega-for-axis";
 
   // update axis domain to matched hacked facet view
-  const extentY = d3.extent(spec.data.values, (d) => d.y);
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
-  encoding.y.scale = { domain: extentY };
+
+  if (!encoding.y.scale) {
+    const extentY = d3.extent(spec.data.values, (d) => d.y);
+    encoding.y.scale = { domain: extentY };
+  }
+
   if (encoding.color) {
     encoding.color.legend = null;
   }
@@ -225,14 +225,9 @@ function loadData(specUrls) {
     specUrls.map((url) => {
       return d3.json(url);
     })
-  )
-    .then((files) => {
-      // make adjustments here if needed
-      return files;
-    })
-    .catch((e) => {
-      console.error(e.message);
-    });
+  ).catch((e) => {
+    console.error(e.message);
+  });
 }
 
 function onSlide(id) {
