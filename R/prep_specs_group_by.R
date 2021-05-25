@@ -116,7 +116,8 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
   # State 3: Grouped icon array, by column, row, and x/color ----
 
   # If x is the same as the row/column variable, don't do it twice
-  do_x <- !is.null(mapping$x) & !(identical(mapping$x, mapping$column) | identical(mapping$x, mapping$row))
+  # AND if the mapping is not just 1
+  do_x <- (!is.null(mapping$x) & !(identical(mapping$x, mapping$column) | identical(mapping$x, mapping$row))) & mapping$x != 1
 
   if (do_x) {
     count_data <- .data %>%
