@@ -3,7 +3,7 @@ test_that("prep_specs_group_by returns a list, with one element for each groupin
   # one group ----
   specs <- prep_specs_group_by(palmerpenguins::penguins, mapping = list(x = 1, y = NULL, summary_function = NULL, column = "species", groups = "species"))
 
-  expect_length(specs, length(groups)) # one element for each grouping variable
+  expect_length(specs, 1) # one element for each grouping variable
   expect_data_values(specs[[1]], dplyr::count(palmerpenguins::penguins, species)) # one data value for each group combination,  containing group levels and n
   expect_spec_contains_mark_encoding(specs) # mark and encoding within spec
   expect_meta_parse_value(specs, "grid") # meta.parse specifies grid
@@ -24,9 +24,12 @@ test_that("prep_specs_group_by returns a list, with one element for each groupin
   # three groups
   specs <- prep_specs_group_by(palmerpenguins::penguins, list(x = 1, y = NULL, summary_function = NULL, column = "species", row = "island", color = "sex", groups = c("species", "island", "sex")))
 
+  # This test is failing because color is "turned off" right now
+  # But for some reason it's still animated in 3 steps?? TODO
   expect_length(specs, 3) # one element for each grouping variable
   expect_data_values(specs[[1]], dplyr::count(palmerpenguins::penguins, species)) # one data value for each group combination,  containing group levels and n
   expect_data_values(specs[[2]], dplyr::count(palmerpenguins::penguins, species, island))
+  # Failing expected as above
   expect_data_values(specs[[3]], dplyr::count(palmerpenguins::penguins, species, island, sex))
   expect_spec_contains_mark_encoding(specs) # mark and encoding within spec
   expect_meta_parse_value(specs, "grid") # meta.parse specifies grid

@@ -16,7 +16,7 @@ prep_specs_group_by(
 \arguments{
 \item{.data}{Input data}
 
-\item{mapping}{A list that describes mapping for the datamations, including x and y variables, sjummary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.}
+\item{mapping}{A list that describes mapping for the datamations, including x and y variables, summary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.}
 
 \item{toJSON}{Whether to converts the spec to JSON. Defaults to TRUE.}
 

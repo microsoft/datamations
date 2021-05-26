@@ -25,7 +25,7 @@ test_that("datamation_sanddance returns a frame for the data, one for each group
     purrr::pluck("x") %>%
     purrr::pluck("specs") %>%
     jsonlite::fromJSON(simplifyDataFrame = FALSE)
-  expect_length(specs, 5)
+  expect_length(specs, 7)
 })
 
 test_that("datamation_sanddance errors when no data transformation is present", {

@@ -184,14 +184,14 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     data_errorbar <- data_3 %>%
       dplyr::summarize(
         y = y,
-        sd = sd(y_raw, na.rm = TRUE),
+        sd = sd(.data$y_raw, na.rm = TRUE),
         n = n()
       ) %>%
       dplyr::distinct() %>%
       dplyr::mutate(
-        se = 1.96 * sd / sqrt(n),
-        lcl = y - se,
-        ucl = y + se
+        se = 1.96 * .data$sd / sqrt(.data$n),
+        lcl = .data$y - .data$se,
+        ucl = .data$y + .data$se
       )
 
     lcl <- min(data_errorbar[["lcl"]])
