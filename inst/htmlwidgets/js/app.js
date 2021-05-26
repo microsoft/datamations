@@ -46,7 +46,7 @@ async function init(id, { specUrls, specs, autoPlay }) {
       for (let j = 0; j < arr.length; j++) {
         const s = arr[j];
         // fake facets
-        if (s.facet && s.spec) {
+        if (s.facet && s.spec && s.meta.animated) {
           const newSpec = await hackFacet(s);
           vegaLiteSpecs[i].push(newSpec);
           metas[i] = newSpec.meta;
@@ -221,7 +221,7 @@ function drawFrame(index, id) {
   // shift vis
   if (meta.transformX) {
     d3.select(visSelector)
-      .style("left", meta.transformX + 'px');
+      .style("left", meta.transformX + 'px')
   }
 
   d3.select(controls).style("width", (spec.width + 10) + 'px');
@@ -270,7 +270,7 @@ function drawAxis(index, id) {
   }
 
   const columnFacet = spec.facet && spec.facet.column;
-  const { axisSelector, controls } = getSelectors(id);
+  const { axisSelector, controls, otherLayers } = getSelectors(id);
 
   // update axis domain to matched hacked facet view
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
@@ -284,13 +284,20 @@ function drawAxis(index, id) {
     encoding.color.legend = null;
   }
 
+  if (encoding.x && encoding.x.axis) {
+    encoding.x.axis.labelAngle = -90;
+  }
+
   return vegaEmbed(axisSelector, spec, { renderer: "svg" }).then(() => {
     if (columnFacet && columnFacet.title) {
-      d3.select(axisSelector + " svg > g").attr("transform", function () {
+      const fn = function () {
         const transform = d3.select(this).attr("transform");
         const x = transform.split("(")[1].split(",")[0];
         return `translate(${x}, 40)`;
-      });
+      };
+
+      d3.select(axisSelector + " svg > g").attr("transform", fn);
+      d3.select(otherLayers + " svg > g").attr("transform", fn);
     }
     const width = d3.select(axisSelector).node().getBoundingClientRect().width;
     d3.select(controls).style("width", width + 'px');
