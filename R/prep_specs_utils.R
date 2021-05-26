@@ -71,6 +71,11 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
     facet_encoding <- facet_encoding[names(facet_encoding) != "row"]
   }
 
+  # If there's no rows in this spec, set nrow = 1
+  if(!row) {
+    facet_dims$nrow <- 1
+  }
+
   if (!errorbar) {
     list(
       `$schema` = vegawidget::vega_schema(),
