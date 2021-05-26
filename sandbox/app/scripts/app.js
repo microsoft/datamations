@@ -49,7 +49,7 @@ async function init(id, { specUrls, specs, autoPlay }) {
       for (let j = 0; j < arr.length; j++) {
         const s = arr[j];
         // fake facets
-        if (s.facet && s.spec) {
+        if (s.facet && s.spec && s.meta.animated) {
           const newSpec = await hackFacet(s);
           vegaLiteSpecs[i].push(newSpec);
           metas[i] = newSpec.meta;
@@ -224,7 +224,7 @@ function drawFrame(index, id) {
   // shift vis
   if (meta.transformX) {
     d3.select(visSelector)
-      .style("left", meta.transformX + 'px');
+      .style("left", meta.transformX + 'px')
   }
 
   d3.select(controls).style("width", (spec.width + 10) + 'px');
@@ -273,7 +273,7 @@ function drawAxis(index, id) {
   }
 
   const columnFacet = spec.facet && spec.facet.column;
-  const { axisSelector, controls } = getSelectors(id);
+  const { axisSelector, controls, otherLayers } = getSelectors(id);
 
   // update axis domain to matched hacked facet view
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
@@ -287,13 +287,20 @@ function drawAxis(index, id) {
     encoding.color.legend = null;
   }
 
+  if (encoding.x && encoding.x.axis) {
+    encoding.x.axis.labelAngle = -90;
+  }
+
   return vegaEmbed(axisSelector, spec, { renderer: "svg" }).then(() => {
     if (columnFacet && columnFacet.title) {
-      d3.select(axisSelector + " svg > g").attr("transform", function () {
+      const fn = function () {
         const transform = d3.select(this).attr("transform");
         const x = transform.split("(")[1].split(",")[0];
         return `translate(${x}, 40)`;
-      });
+      };
+
+      d3.select(axisSelector + " svg > g").attr("transform", fn);
+      d3.select(otherLayers + " svg > g").attr("transform", fn);
     }
     const width = d3.select(axisSelector).node().getBoundingClientRect().width;
     d3.select(controls).style("width", width + 'px');
@@ -442,45 +449,26 @@ function splitLayers(input) {
   return specArray;
 }
 
-// init("app", {
-//   specUrls: [
-//     dataUrl + "01-ungrouped.json",
-//     dataUrl + "02-column-facet.json",
-//     dataUrl + "03-column-row-facet.json",
-//     dataUrl + "04-column-row-facet-color.json",
-//     dataUrl + "05-jitter.json",
-//     dataUrl + "06-summary.json",
-//   ],
-//   autoPlay: false
-// });
+init("app", {
+  specUrls: [
+    dataUrl + "01-ungrouped.json",
+    dataUrl + "02-column-facet.json",
+    dataUrl + "03-column-row-facet.json",
+    dataUrl + "04-column-row-facet-color.json",
+    dataUrl + "05-jitter.json",
+    dataUrl + "06-summary.json",
+  ],
+  autoPlay: false
+});
 
 // d3.json(
-//   "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_with_facet.json"
+  // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_with_facet.json"
+  // 'https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_no_facet.json'
+//   "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/zoomed_specs.json"
+// "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/double_errorbar.json"
+// "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/erroring_errorbar.json"
 // ).then((res) => {
 //   init("app", {
 //     specs: res.filter((d, i) => i !== 2),
 //   });
 // });
-
-// d3.json('https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_no_facet.json')
-//   .then(res => {
-//     init("app", {
-//       specs: res
-//     })
-//   });
-
-// d3.json(
-//   "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/zoomed_specs.json"
-// ).then((res) => {
-//   init("app", {
-//     specs: res
-//   });
-// });
-
-d3.json(
-  "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/double_errorbar.json"
-).then((res) => {
-  init("app", {
-    specs: res
-  });
-});

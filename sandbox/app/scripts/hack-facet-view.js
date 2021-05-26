@@ -23,11 +23,11 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
     }
   }
 
-  if (encoding.y && spec.spec.mark !== "errorbar") {
+  if (encoding.y) {
     const title = facet && facet.row ? facet.row.title : null;
 
     encoding.y = {
-      field: "y",
+      field: spec.spec.mark === "errorbar" ? encoding.y.field : "y",
       type: "quantitative",
       scale: {},
       axis: axes.y ? {
@@ -149,9 +149,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   });
 
   newSpec.encoding.x.scale.domain = xDomain;
-  if (newSpec.mark !== "errorbar") {
-    newSpec.encoding.y.scale.domain = yDomain;
-  }
+  newSpec.encoding.y.scale.domain = yDomain;
   newSpec.data.values = values;
   newSpec.width = xDomain[1];
   newSpec.height = yDomain[0];
