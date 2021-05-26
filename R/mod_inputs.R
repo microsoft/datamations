@@ -44,7 +44,7 @@ mod_inputs_ui <- function(id) {
       ),
       shiny::column(
         width = 3,
-        shiny::numericInput(ns("width"), "Width", min = 200, max = 600, value = 300)
+        shiny::numericInput(ns("width"), "Width", min = 200, max = 600, value = 400)
       ),
       shiny::column(
         width = 3,
