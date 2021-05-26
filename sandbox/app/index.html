@@ -95,7 +95,6 @@
 
       .vega-other-layers .hidden {
         transition: 1s all ease-in-out;
-        /* opacity: 0; */
       }
 
       .vega-other-layers .hidden .role-axis {
@@ -112,6 +111,10 @@
 
       .vega-other-layers.with-axes details {
         display: none;
+      }
+
+      .vega-other-layers.with-axes {
+        left: 1px !important; /* Hacky, but don't know why it is working */
       }
     </style>
   </head>
@@ -130,8 +133,8 @@
       
       <div class="vega-vis-wrapper">
         <div class="vega-for-axis"></div>
-        <div class="vega-vis"></div>
         <div class="vega-other-layers"></div>
+        <div class="vega-vis"></div>
       </div>
     </div>
 

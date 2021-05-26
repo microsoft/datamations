@@ -1,7 +1,7 @@
 const repoUrl = "https://raw.githubusercontent.com/jhofman/datamations";
 // const dataUrl = "./data/";
 const dataUrl = repoUrl + "/fixes/sandbox/specs-for-infogrid/";
-const frameDuration = 1200;
+const frameDuration = 2000;
 
 let vegaLiteSpecs, vegaSpecs, frames, metas, rawFiles;
 
@@ -40,7 +40,6 @@ async function init(id, { specUrls, specs, autoPlay }) {
       const arr = splitLayers(vlSpec);
       // vegaLiteSpecs[i] = arr;
       vegaLiteSpecs[i] = [];
-      console.log(arr);
 
       for (let j = 0; j < arr.length; j++) {
         const s = arr[j];
@@ -313,7 +312,7 @@ async function animateFrame(index, id) {
 
   let prevHasAxes = prevMeta.axes;
   let currHasAxes = currMeta.axes;
-
+  console.log(index);
   drawFrame(index, id).then(() => {
     d3.select(descr).html(currMeta.description);
 
@@ -345,7 +344,8 @@ async function animateFrame(index, id) {
       d3.select(otherLayers)
         .style("opacity", 0)
         .transition()
-        .duration(1000)
+        .delay(frameDuration / 2)
+        .duration(frameDuration / 2)
         .style("opacity", 1);
 
       statics.forEach((s) => {
@@ -410,7 +410,7 @@ function splitLayers(input) {
   } else if (input.layer) {
     input.layer.forEach((d, i) => {
       const obj = JSON.parse(JSON.stringify(input));
-      const animated = i === 0;
+      const animated = i === input.layer.length - 1;
 
       if (obj.meta) {
         obj.meta.animated = animated;
