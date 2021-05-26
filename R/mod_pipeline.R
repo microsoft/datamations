@@ -51,7 +51,11 @@ mod_pipeline_server <- function(id, inputs) {
     # Update editor with pipeline
 
     shiny::observeEvent(inputs$go(), {
-      text <- styler::style_text((pipeline()))
+      text <- c("library(dplyr)\n", pipeline())
+      if (inputs$dataset() == "penguins") {
+        text <- c("library(palmerpenguins)\n", text)
+      }
+      text <- styler::style_text(text)
       shinyAce::updateAceEditor(session, "pipeline_editor", value = paste0(text, collapse = "\n"))
     })
 
