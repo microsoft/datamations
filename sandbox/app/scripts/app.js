@@ -3,14 +3,20 @@ const repoUrl = "https://raw.githubusercontent.com/jhofman/datamations";
 const dataUrl = repoUrl + "/fixes/sandbox/specs-for-infogrid/";
 const frameDuration = 2000;
 
-let vegaLiteSpecs, vegaSpecs, frames, metas, rawFiles;
-
-let counter = 0,
-  intervalId;
+let vegaLiteSpecs, vegaSpecs, frames, metas, rawFiles, counter = 0, intervalId;
 
 async function init(id, { specUrls, specs, autoPlay }) {
   vegaLiteSpecs = [];
+  vegaSpecs = [];
   rawFiles = [];
+  frames = [];
+  metas = [];
+  counter = 0;
+
+  if (intervalId) {
+    clearInterval(intervalId);
+    intervalId = null;
+  }
 
   if (specs) {
     vegaLiteSpecs = specs;
@@ -46,6 +52,7 @@ async function init(id, { specUrls, specs, autoPlay }) {
         if (s.facet && s.spec) {
           const newSpec = await hackFacet(s);
           vegaLiteSpecs[i].push(newSpec);
+          metas[i] = newSpec.meta;
         } else {
           vegaLiteSpecs[i].push(s);
         }
@@ -67,8 +74,6 @@ async function init(id, { specUrls, specs, autoPlay }) {
     console.log(s);
     return gemini.vl2vg4gemini(s);
   });
-
-  frames = [];
 
   for (let i = 1; i < vegaSpecs.length; i++) {
     const prev = vegaSpecs[i - 1];
@@ -197,7 +202,8 @@ function drawFrame(index, id) {
     visSelector, 
     descr, 
     slider, 
-    otherLayers 
+    otherLayers,
+    controls,
   } = getSelectors(id);
 
   d3.select(slider).property("value", index);
@@ -220,6 +226,8 @@ function drawFrame(index, id) {
     d3.select(visSelector)
       .style("left", meta.transformX + 'px');
   }
+
+  d3.select(controls).style("width", (spec.width + 10) + 'px');
 
   // draw vis
   return drawChart(spec, id);
@@ -264,7 +272,7 @@ function drawAxis(index, id) {
   }
 
   const columnFacet = spec.facet && spec.facet.column;
-  const { axisSelector } = getSelectors(id);
+  const { axisSelector, controls } = getSelectors(id);
 
   // update axis domain to matched hacked facet view
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
@@ -278,7 +286,7 @@ function drawAxis(index, id) {
     encoding.color.legend = null;
   }
 
-  vegaEmbed(axisSelector, spec, { renderer: "svg" }).then(() => {
+  return vegaEmbed(axisSelector, spec, { renderer: "svg" }).then(() => {
     if (columnFacet && columnFacet.title) {
       d3.select(axisSelector + " svg > g").attr("transform", function () {
         const transform = d3.select(this).attr("transform");
@@ -286,6 +294,8 @@ function drawAxis(index, id) {
         return `translate(${x}, 40)`;
       });
     }
+    const width = d3.select(axisSelector).node().getBoundingClientRect().width;
+    d3.select(controls).style("width", width + 'px');
   });
 }
 
@@ -297,15 +307,15 @@ async function animateFrame(index, id) {
     visSelector, 
     otherLayers, 
     descr, 
-    slider 
+    slider,
+    controls
   } = getSelectors(id);
   
   let { source, target, gemSpec, prevMeta, currMeta } = frames[index];
-
   let anim = await gemini.animate(source, target, gemSpec);
-
   let prevHasAxes = prevMeta.axes;
   let currHasAxes = currMeta.axes;
+  let width = target.width;
 
   drawFrame(index, id).then(() => {
     d3.select(descr).html(currMeta.description);
@@ -334,6 +344,7 @@ async function animateFrame(index, id) {
       d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
       d3.select(visSelector).classed("with-axes", false);
       d3.select(otherLayers).classed("with-axes", false);
+      d3.select(controls).style("width", (width + 10) + 'px');
     }
 
     const nextSpec = vegaLiteSpecs[index + 1];
@@ -384,6 +395,7 @@ function getSelectors(id) {
     descr: base + " .description",
     slider: base + " .slider",
     otherLayers: base + " .vega-other-layers",
+    controls: base + " .controls-wrapper",
   };
 }
 

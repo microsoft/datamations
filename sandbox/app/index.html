@@ -61,9 +61,8 @@
       }
 
       .slider-wrapper {
-        padding: 10px;
+        padding-left: 10px;
         flex-grow: 1;
-        max-width: 400px;
       }
 
       .slider-wrapper input {
@@ -71,12 +70,16 @@
       }
 
       details {
-        display: none;
+        display: none !important;
+      }
+
+      .vega-embed.has-actions {
+        padding-right: 0px !important;
       }
 
       .description {
-        padding-left: 10px;
-        max-width: 25%;
+        text-align: center;
+        margin-bottom: 10px;
       }
 
       .vega-other-layers {
@@ -113,20 +116,22 @@
         display: none;
       }
 
-      /* .vega-other-layers.with-axes {
+      .vega-other-layers.with-axes {
         left: 1px !important;
-      } */
+      }
     </style>
   </head>
 
   <body>
     <div id="app">
-      <div class="control-bar">
-        <div class="button-wrapper">
-          <button onclick="play('app')">Replay</button>
-        </div>
-        <div class="slider-wrapper">
-          <input class="slider" type="range" min="0" value="0" onchange="onSlide('app')"/>
+      <div class="controls-wrapper">
+        <div class="control-bar">
+          <div class="button-wrapper">
+            <button onclick="play('app')">Replay</button>
+          </div>
+          <div class="slider-wrapper">
+            <input class="slider" type="range" min="0" value="0" onchange="onSlide('app')"/>
+          </div>     
         </div>
         <div class="description"></div>
       </div>
