@@ -23,7 +23,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
     }
   }
 
-  if (encoding.y) {
+  if (encoding.y && spec.spec.mark !== "errorbar") {
     const title = facet && facet.row ? facet.row.title : null;
 
     encoding.y = {
@@ -149,8 +149,9 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   });
 
   newSpec.encoding.x.scale.domain = xDomain;
-  newSpec.encoding.y.scale.domain = yDomain;
-
+  if (newSpec.mark !== "errorbar") {
+    newSpec.encoding.y.scale.domain = yDomain;
+  }
   newSpec.data.values = values;
   newSpec.width = xDomain[1];
   newSpec.height = yDomain[0];
@@ -160,6 +161,8 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
 
 function hackFacet(spec) {
   const div = document.createElement("div");
+
+  spec.data.name = "source";
 
   return vegaEmbed(div, spec, {renderer: "svg"}).then(resp => {
     const newSpec = getHackedSpec({
@@ -172,9 +175,18 @@ function hackFacet(spec) {
       newSpec.config = spec.config;
     }
 
-    return {
-      newSpec: newSpec,
-      view: resp.view,
-    };
+    if (spec.meta) {
+      newSpec.meta = spec.meta;
+    }
+
+    const transformX = resp.view._origin[0];
+    console.log(transformX);
+    if (newSpec.meta) {
+      newSpec.meta.transformX = transformX
+    } else {
+      newSpec.meta = { transformX };
+    }
+
+    return newSpec;
   });
 }

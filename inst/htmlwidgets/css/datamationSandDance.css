@@ -47,9 +47,8 @@
 }
 
 .slider-wrapper {
-  padding: 10px;
+  padding-left: 10px;
   flex-grow: 1;
-  max-width: 400px;
 }
 
 .slider-wrapper input {
@@ -57,10 +56,52 @@
 }
 
 details {
-  display: none;
+  display: none !important;
+}
+
+.vega-embed.has-actions {
+  padding-right: 0px !important;
 }
 
 .description {
-  max-width: 100%;
   text-align: center;
+  margin-bottom: 10px;
+}
+
+.vega-other-layers {
+  position: relative;
+}
+
+.vega-other-layers > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.vega-other-layers > div svg {
+  background-color: transparent !important;
+}
+
+.vega-other-layers .hidden {
+  transition: 1s all ease-in-out;
+}
+
+.vega-other-layers .hidden .role-axis {
+  display: none;
+}
+
+.vega-other-layers .hidden .role-title {
+  display: none;
+}
+
+.vega-other-layers.with-axes .background {
+  stroke: none !important;
+}
+
+.vega-other-layers.with-axes details {
+  display: none;
+}
+
+.vega-other-layers.with-axes {
+  left: 1px !important;
 }
