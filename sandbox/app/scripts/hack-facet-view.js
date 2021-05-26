@@ -162,6 +162,8 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
 function hackFacet(spec) {
   const div = document.createElement("div");
 
+  spec.data.name = "source";
+
   return vegaEmbed(div, spec, {renderer: "svg"}).then(resp => {
     const newSpec = getHackedSpec({
       ...resp,
@@ -173,9 +175,18 @@ function hackFacet(spec) {
       newSpec.config = spec.config;
     }
 
-    return {
-      newSpec: newSpec,
-      view: resp.view,
-    };
+    if (spec.meta) {
+      newSpec.meta = spec.meta;
+    }
+
+    const transformX = resp.view._origin[0];
+    console.log(transformX);
+    if (newSpec.meta) {
+      newSpec.meta.transformX = transformX
+    } else {
+      newSpec.meta = { transformX };
+    }
+
+    return newSpec;
   });
 }

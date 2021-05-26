@@ -18,7 +18,7 @@ async function init(id, { specUrls, specs, autoPlay }) {
     vegaLiteSpecs = await loadData(specUrls);
   }
 
-  const { visSelector, slider, otherLayers } = getSelectors(id);
+  const { slider } = getSelectors(id);
 
   // save raw vegaLiteSpecs to use for facet axes drawing
   vegaLiteSpecs.forEach((d) => {
@@ -38,30 +38,14 @@ async function init(id, { specUrls, specs, autoPlay }) {
       vegaLiteSpecs[i] = await getJitterSpec(vlSpec);
     } else if (vlSpec.layer || (vlSpec.spec && vlSpec.spec.layer)) {
       const arr = splitLayers(vlSpec);
-      // vegaLiteSpecs[i] = arr;
       vegaLiteSpecs[i] = [];
 
       for (let j = 0; j < arr.length; j++) {
         const s = arr[j];
-        const meta = s.meta;
-
         // fake facets
         if (s.facet && s.spec) {
-          const withAxes = meta && meta.axes;
-
-          s.data.name = "source";
-          const { newSpec, view } = await hackFacet(s);
-
-          if (withAxes) {
-            const vis = document.querySelector(visSelector);
-            const origin = view._origin;
-            vis.style.left = origin[0] + "px";
-
-            // const layers = document.querySelector(otherLayers);
-            // layers.style.left = origin[0] + "px";
-          }
-
-          vegaLiteSpecs[i].push({ ...newSpec, meta });
+          const newSpec = await hackFacet(s);
+          vegaLiteSpecs[i].push(newSpec);
         } else {
           vegaLiteSpecs[i].push(s);
         }
@@ -73,20 +57,8 @@ async function init(id, { specUrls, specs, autoPlay }) {
 
     // fake facets
     if (facet && spec) {
-      const meta = vegaLiteSpecs[i].meta;
-      const withAxes = meta && meta.axes;
-
-      vegaLiteSpecs[i].data.name = "source";
-
-      const { newSpec, view } = await hackFacet(vegaLiteSpecs[i]);
-
+      const newSpec = await hackFacet(vegaLiteSpecs[i]);
       vegaLiteSpecs[i] = newSpec;
-
-      if (withAxes) {
-        const vis = document.querySelector(visSelector);
-        const origin = view._origin;
-        vis.style.left = origin[0] + "px";
-      }
     }
   }
 
@@ -108,21 +80,27 @@ async function init(id, { specUrls, specs, autoPlay }) {
     const recommendations = gemini.recommend(prev, curr, {
       stageN: 1,
       scales: {
-        domainDimension: "same",
+        x: {
+          domainDimension: "diff",
+        },
+        y: {
+          domainDimension: "diff",
+        },
       },
       marks: {
         marks: {
           change: {
+            "scale": ["x", "y"],
             data: {
               keys: ["gemini_id"],
               update: true,
               enter: true,
-              exit: false,
+              exit: true,
             },
             encode: {
               update: true,
               enter: true,
-              exit: false,
+              exit: true,
             },
           },
         },
@@ -214,8 +192,13 @@ function drawFrame(index, id) {
   if (!spec) return;
 
   const meta = metas[index];
-  const { axisSelector, visSelector, descr, slider, otherLayers } =
-    getSelectors(id);
+  const { 
+    axisSelector, 
+    visSelector, 
+    descr, 
+    slider, 
+    otherLayers 
+  } = getSelectors(id);
 
   d3.select(slider).property("value", index);
   d3.select(descr).html(meta.description || "frame " + index);
@@ -225,12 +208,17 @@ function drawFrame(index, id) {
     .html("");
 
   d3.select(visSelector).classed("with-axes", meta.axes);
-
   d3.select(otherLayers).classed("with-axes", meta.axes).html("");
 
   // draw axis
   if (meta.axes) {
     drawAxis(index, id);
+  }
+
+  // shift vis
+  if (meta.transformX) {
+    d3.select(visSelector)
+      .style("left", meta.transformX + 'px');
   }
 
   // draw vis
@@ -304,15 +292,21 @@ function drawAxis(index, id) {
 async function animateFrame(index, id) {
   if (!frames[index]) return;
 
-  const { axisSelector, visSelector, otherLayers, descr, slider } =
-    getSelectors(id);
-  const { source, target, gemSpec, prevMeta, currMeta } = frames[index];
+  const { 
+    axisSelector, 
+    visSelector, 
+    otherLayers, 
+    descr, 
+    slider 
+  } = getSelectors(id);
+  
+  let { source, target, gemSpec, prevMeta, currMeta } = frames[index];
 
   let anim = await gemini.animate(source, target, gemSpec);
 
   let prevHasAxes = prevMeta.axes;
   let currHasAxes = currMeta.axes;
-  console.log(index);
+
   drawFrame(index, id).then(() => {
     d3.select(descr).html(currMeta.description);
 
@@ -320,20 +314,26 @@ async function animateFrame(index, id) {
       d3.select(slider).property("value", index + 1);
     });
 
+    if (currMeta.transformX) {
+      d3.select(visSelector)
+        .transition()
+        .duration(750)
+        .style("left", currMeta.transformX + 'px');
+    }
+
     // show/hide axis vega chart
-    if (prevHasAxes && !currHasAxes) {
-      d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
-      d3.select(visSelector).classed("with-axes", false);
-      d3.select(otherLayers).classed("with-axes", false);
-    } else if (!prevHasAxes && currHasAxes) {
+    if (currHasAxes) {
       drawAxis(index + 1, id);
       d3.select(axisSelector)
-        .style("opacity", 0)
         .transition()
         .duration(1000)
         .style("opacity", 1);
       d3.select(visSelector).classed("with-axes", true);
       d3.select(otherLayers).classed("with-axes", true);
+    } else {
+      d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
+      d3.select(visSelector).classed("with-axes", false);
+      d3.select(otherLayers).classed("with-axes", false);
     }
 
     const nextSpec = vegaLiteSpecs[index + 1];
@@ -440,13 +440,13 @@ function splitLayers(input) {
 //   autoPlay: false
 // });
 
-d3.json(
-  "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_with_facet.json"
-).then((res) => {
-  init("app", {
-    specs: res.filter((d, i) => i !== 2),
-  });
-});
+// d3.json(
+//   "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_with_facet.json"
+// ).then((res) => {
+//   init("app", {
+//     specs: res.filter((d, i) => i !== 2),
+//   });
+// });
 
 // d3.json('https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_no_facet.json')
 //   .then(res => {
@@ -454,3 +454,11 @@ d3.json(
 //       specs: res
 //     })
 //   });
+
+d3.json(
+  "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/zoomed_specs.json"
+).then((res) => {
+  init("app", {
+    specs: res
+  });
+});
