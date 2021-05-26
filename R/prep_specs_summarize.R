@@ -135,7 +135,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   description <- generate_summarize_description(summary_variable, summary_function)
 
   # TODO: not working quite yet - not in animation, only when frame is specifically clicked
-  # spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
+  spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
 
   spec <- generate_vega_specs(
     .data = data_2,
@@ -180,17 +180,48 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   description <- generate_summarize_description(summary_variable, summary_function)
   description <- glue::glue("{description}, zoomed in")
 
-  range_y <- range(data_2[["y"]], na.rm = TRUE)
-  spec_encoding$y$scale$domain <- range_y
+  if (mapping$summary_function == "mean") {
+    data_errorbar <- data_3 %>%
+      dplyr::summarize(
+        y = y,
+        sd = sd(y_raw, na.rm = TRUE),
+        n = n()
+      ) %>%
+      dplyr::distinct() %>%
+      dplyr::mutate(
+        se = 1.96 * sd / sqrt(n),
+        lcl = y - se,
+        ucl = y + se
+      )
 
-  spec <- generate_vega_specs(
-    .data = data_2,
-    mapping = mapping,
-    meta = list(axes = length(group_vars) != 0, description = description),
-    spec_encoding = spec_encoding, facet_encoding = facet_encoding,
-    height = height, width = width, facet_dims = facet_dims,
-    column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
-  )
+    lcl <- min(data_errorbar[["lcl"]])
+    ucl <- max(data_errorbar[["ucl"]])
+
+    range_y_errorbar <- c(lcl, ucl)
+    spec_encoding$y$scale$domain <- range_y_errorbar
+
+    spec <- generate_vega_specs(
+      .data = data_3,
+      mapping = mapping,
+      meta = list(axes = length(group_vars) != 0, description = description),
+      spec_encoding = spec_encoding, facet_encoding = facet_encoding,
+      height = height, width = width, facet_dims = facet_dims,
+      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color),
+      errorbar = TRUE
+    )
+  } else {
+    range_y <- range(data_2[["y"]], na.rm = TRUE)
+    spec_encoding$y$scale$domain <- range_y
+
+    spec <- generate_vega_specs(
+      .data = data_2,
+      mapping = mapping,
+      meta = list(axes = length(group_vars) != 0, description = description),
+      spec_encoding = spec_encoding, facet_encoding = facet_encoding,
+      height = height, width = width, facet_dims = facet_dims,
+      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
+    )
+  }
 
   specs_list <- append(specs_list, list(spec))
 
