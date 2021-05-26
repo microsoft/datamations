@@ -214,7 +214,7 @@ function drawFrame(index, id) {
     .html("");
 
   d3.select(visSelector).classed("with-axes", meta.axes);
-  d3.select(otherLayers).classed("with-axes", meta.axes).html("");
+  d3.select(otherLayers).classed("with-axes", meta.axes);
 
   // draw axis
   if (meta.axes) {
@@ -236,6 +236,7 @@ function drawFrame(index, id) {
 function drawChart(spec, id) {
   const { visSelector, otherLayers } = getSelectors(id);
   const layers = document.querySelector(otherLayers);
+  layers.innerHTML = "";
 
   if (Array.isArray(spec)) {
     return new Promise((res) => {
@@ -353,9 +354,10 @@ async function animateFrame(index, id) {
       const statics = nextSpec.filter((d) => !d.meta.animated);
 
       d3.select(otherLayers)
+        .html("")
         .style("opacity", 0)
         .transition()
-        .delay(frameDuration / 2)
+        .delay(frameDuration / 3)
         .duration(frameDuration / 2)
         .style("opacity", 1);
 
@@ -467,8 +469,16 @@ function splitLayers(input) {
 //     })
 //   });
 
+// d3.json(
+//   "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/zoomed_specs.json"
+// ).then((res) => {
+//   init("app", {
+//     specs: res
+//   });
+// });
+
 d3.json(
-  "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/zoomed_specs.json"
+  "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/double_errorbar.json"
 ).then((res) => {
   init("app", {
     specs: res
