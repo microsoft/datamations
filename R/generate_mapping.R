@@ -25,8 +25,8 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   # If there is mapping from the plot, start with that
   if (!is.null(plot_mapping)) {
     x_mapping <- list(
-      x = plot_mapping$x,
-      color = plot_mapping$x
+      x = plot_mapping$x
+      # color = plot_mapping$x
     )
   } else {
     # X mapping
