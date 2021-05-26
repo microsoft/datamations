@@ -151,27 +151,26 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # State 3: Error bars -----
   # Only if the summary function is mean!
 
-  # if (mapping$summary_function == "mean") {
-  #   data_3 <- data_1 %>%
-  #     dplyr::mutate(y_raw = .data$y) %>%
-  #     dplyr::group_by(!!!group_vars) %>%
-  #     dplyr::mutate(dplyr::across(.data$y, !!summary_function, na.rm = TRUE))
-  #
-  #   description <- generate_summarize_description(summary_variable, summary_function, errorbar = TRUE)
-  #
-  #   spec <- generate_vega_specs(
-  #     .data = data_3,
-  #     mapping = mapping,
-  #     meta = list(axes = length(group_vars) != 0, description = description),
-  #     spec_encoding = spec_encoding, facet_encoding = facet_encoding,
-  #     height = height, width = width, facet_dims = facet_dims,
-  #     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color),
-  #     errorbar = TRUE
-  #   )
+  if (mapping$summary_function == "mean") {
+    data_3 <- data_1 %>%
+      dplyr::mutate(y_raw = .data$y) %>%
+      dplyr::group_by(!!!group_vars) %>%
+      dplyr::mutate(dplyr::across(.data$y, !!summary_function, na.rm = TRUE))
 
-#
-#     specs_list <- append(specs_list, list(spec))
-#   }
+    description <- generate_summarize_description(summary_variable, summary_function, errorbar = TRUE)
+
+    spec <- generate_vega_specs(
+      .data = data_3,
+      mapping = mapping,
+      meta = list(axes = length(group_vars) != 0, description = description),
+      spec_encoding = spec_encoding, facet_encoding = facet_encoding,
+      height = height, width = width, facet_dims = facet_dims,
+      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color),
+      errorbar = TRUE
+    )
+
+    specs_list <- append(specs_list, list(spec))
+  }
 
   # Step 4: Zoom -----
   # Zoom in on the summarised value
