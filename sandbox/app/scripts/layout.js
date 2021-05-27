@@ -5,8 +5,7 @@
  * @returns grid data
  */
 function applyShifts(spec, rows) {
-  const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
-  const colorField = encoding.color.field;
+  const splitField = spec.meta.splitField;
   const specValues = spec.data.values;
 
   const groupKeys = [];
@@ -20,7 +19,7 @@ function applyShifts(spec, rows) {
     }
   }
 
-  const colorOptions = [...new Set(specValues.map((d) => d[colorField]))];
+  const colorOptions = [...new Set(specValues.map((d) => d[splitField]))];
   const shifters = new Map(
     colorOptions.map((d, i) => {
       return [d, i > 0 ? colorOptions[i - 1] : null];
@@ -28,12 +27,12 @@ function applyShifts(spec, rows) {
   );
 
   const reduce = (v) => {
-    const map = new Map(v.map((d) => [d[colorField], d.n]));
+    const map = new Map(v.map((d) => [d[splitField], d.n]));
     let shiftSum = 0; // will accumulate shiftX
     let shiftCounter = 0;
 
     return v.map((d) => {
-      const shifter = shifters.get(d[colorField]);
+      const shifter = shifters.get(d[splitField]);
       let m = map.get(shifter);
 
       if (m) {
@@ -79,7 +78,7 @@ function applyShifts(spec, rows) {
 function getGridSpec(spec, rows = 10) {
   const obj = { ...spec };
   const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
-  const values = encoding.color ? applyShifts(obj, rows) : obj.data.values;
+  const values = spec.meta.splitField ? applyShifts(obj, rows) : obj.data.values;
   const newValues = [];
 
   return new Promise((res) => {
@@ -141,14 +140,13 @@ function getGridSpec(spec, rows = 10) {
  */
 function getJitterSpec(spec) {
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
-  const colorField = encoding.color ? encoding.color.field : null;
   const nodes = spec.data.values;
   const circleRadius = 4;
   let innerGroupCount = 1;
 
-  if (colorField) {
+  if (spec.meta.splitField) {
     innerGroupCount = new Set(
-      nodes.map(d => d[colorField])
+      nodes.map(d => d[spec.meta.splitField])
     ).size;
   }
 
