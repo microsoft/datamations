@@ -19,7 +19,7 @@ async function init(id, { specUrls, specs, autoPlay }) {
   }
 
   if (specs) {
-    vegaLiteSpecs = specs;
+    vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
   } else if (specUrls) {
     vegaLiteSpecs = await loadData(specUrls);
   }
