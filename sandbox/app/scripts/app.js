@@ -247,7 +247,7 @@ function drawChart(spec, id) {
           target = visSelector;
         } else {
           const div = document.createElement("div");
-          div.classList.add("hidden");
+          div.classList.add("vega-hidden-layer");
           layers.appendChild(div);
           target = div;
         }
@@ -370,7 +370,7 @@ async function animateFrame(index, id) {
 
       statics.forEach((s) => {
         const div = document.createElement("div");
-        div.classList.add("hidden");
+        div.classList.add("vega-hidden-layer");
         vegaEmbed(div, s, { renderer: "svg" });
         document.querySelector(otherLayers).appendChild(div);
       });
@@ -449,26 +449,26 @@ function splitLayers(input) {
   return specArray;
 }
 
-init("app", {
-  specUrls: [
-    dataUrl + "01-ungrouped.json",
-    dataUrl + "02-column-facet.json",
-    dataUrl + "03-column-row-facet.json",
-    dataUrl + "04-column-row-facet-color.json",
-    dataUrl + "05-jitter.json",
-    dataUrl + "06-summary.json",
-  ],
-  autoPlay: false
-});
+// init("app", {
+//   specUrls: [
+//     dataUrl + "01-ungrouped.json",
+//     dataUrl + "02-column-facet.json",
+//     dataUrl + "03-column-row-facet.json",
+//     dataUrl + "04-column-row-facet-color.json",
+//     dataUrl + "05-jitter.json",
+//     dataUrl + "06-summary.json",
+//   ],
+//   autoPlay: false
+// });
 
-// d3.json(
+d3.json(
   // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_with_facet.json"
   // 'https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_no_facet.json'
 //   "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/zoomed_specs.json"
-// "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/double_errorbar.json"
+"https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/double_errorbar.json"
 // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/erroring_errorbar.json"
-// ).then((res) => {
-//   init("app", {
-//     specs: res.filter((d, i) => i !== 2),
-//   });
-// });
+).then((res) => {
+  init("app", {
+    specs: res.filter((d, i) => i !== 2),
+  });
+});
