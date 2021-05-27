@@ -178,7 +178,7 @@ function hackFacet(spec) {
     }
 
     const transformX = resp.view._origin[0];
-    console.log(transformX);
+
     if (newSpec.meta) {
       newSpec.meta.transformX = transformX
     } else {

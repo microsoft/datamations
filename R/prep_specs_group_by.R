@@ -99,9 +99,16 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
     description <- generate_group_by_description(mapping, "column", "row")
 
+    meta <- list(parse = "grid", description = description)
+
+    # Split on X if it's the same as the row mapping
+    if(identical(mapping$x, mapping$row)) {
+      meta <- append(meta, list(splitField = mapping$x))
+    }
+
     spec <- generate_vega_specs(count_data,
       mapping = mapping,
-      meta = list(parse = "grid", description = description),
+      meta = meta,
       spec_encoding = spec_encoding,
       facet_encoding = facet_encoding,
       height = height, width = width,
@@ -127,7 +134,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
     spec <- generate_vega_specs(count_data,
       mapping = mapping,
-      meta = list(parse = "grid", description = description),
+      meta = list(parse = "grid", description = description, splitField = mapping$x),
       spec_encoding = spec_encoding,
       facet_encoding = facet_encoding,
       height = height, width = width,

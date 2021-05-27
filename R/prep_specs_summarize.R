@@ -112,11 +112,16 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   description <- generate_summarize_description(summary_variable)
 
   # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
+  meta <- list(parse = "jitter", axes = length(group_vars) != 0, description = description)
+
+  if (!is.null(mapping$x)) {
+    meta <- append(meta, list(splitField = mapping$x))
+  }
 
   spec <- generate_vega_specs(
     .data = data_1,
     mapping = mapping,
-    meta = list(parse = "jitter", axes = length(group_vars) != 0, description = description),
+    meta = meta,
     spec_encoding = spec_encoding, facet_encoding = facet_encoding,
     height = height, width = width, facet_dims = facet_dims,
     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)

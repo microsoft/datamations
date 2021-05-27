@@ -68,7 +68,6 @@ async function init(id, { specUrls, specs, autoPlay }) {
 
   vegaSpecs = vegaLiteSpecs.map((d) => {
     const s = Array.isArray(d) ? d.find((d) => d.meta.animated) : d;
-    console.log(s);
     return gemini.vl2vg4gemini(s);
   });
 
@@ -156,7 +155,7 @@ async function init(id, { specUrls, specs, autoPlay }) {
         });
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
       });
   }
 
@@ -380,7 +379,20 @@ function loadData(specUrls) {
     specUrls.map((url) => {
       return d3.json(url);
     })
-  ).catch((e) => {
+  )
+  // fallback for old spec to work again
+  // if no splitField is set, I am setting color.field
+  // .then(data => {
+  //   return data.map(d => {
+  //     const encoding = d.spec ? d.spec.encoding : d.encoding;
+  //     if (encoding.color && !d.meta.splitField) {
+  //       d.meta.splitField = encoding.color.field;
+  //       console.log(d);
+  //     }
+  //     return d;
+  //   })
+  // })
+  .catch((e) => {
     console.error(e.message);
   });
 }
@@ -445,3 +457,4 @@ function splitLayers(input) {
 
   return specArray;
 }
+

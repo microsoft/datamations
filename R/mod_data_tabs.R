@@ -113,8 +113,8 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
         if (datamation_state() == 0) {
           shiny::updateTabsetPanel(
             session = session,
-            inputId = ns("data_tabs_panel"),
-            selected = "0"
+            inputId = "data_tabs_panel",
+            selected = NULL
           )
         }
       })
