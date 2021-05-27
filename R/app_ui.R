@@ -6,6 +6,12 @@ app_ui <- function(request) {
   shiny::tagList(
     shinyWidgets::useShinydashboard(),
     golem_add_external_resources(),
+    shiny::tags$script(shiny::HTML('
+    $(document).ready(function() {
+    $(document).on("change", ".slider", function() {
+  Shiny.onInputChange("datamation_state", $(this).val());
+  })
+  })')),
     shiny::fluidPage(
       style = "max-width: 1200px;",
       shiny::h1("Datamations"),
