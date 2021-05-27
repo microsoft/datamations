@@ -16,7 +16,7 @@ async function init(id, { specUrls, specs, autoPlay }) {
   }
 
   if (specs) {
-    vegaLiteSpecs = specs;
+    vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
   } else if (specUrls) {
     vegaLiteSpecs = await loadData(specUrls);
   }
@@ -244,7 +244,7 @@ function drawChart(spec, id) {
           target = visSelector;
         } else {
           const div = document.createElement("div");
-          div.classList.add("hidden");
+          div.classList.add("vega-hidden-layer");
           layers.appendChild(div);
           target = div;
         }
@@ -367,7 +367,7 @@ async function animateFrame(index, id) {
 
       statics.forEach((s) => {
         const div = document.createElement("div");
-        div.classList.add("hidden");
+        div.classList.add("vega-hidden-layer");
         vegaEmbed(div, s, { renderer: "svg" });
         document.querySelector(otherLayers).appendChild(div);
       });
