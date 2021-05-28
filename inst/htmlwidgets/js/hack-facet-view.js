@@ -151,8 +151,8 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   newSpec.encoding.x.scale.domain = xDomain;
   newSpec.encoding.y.scale.domain = yDomain;
   newSpec.data.values = values;
-  newSpec.width = xDomain[1];
-  newSpec.height = yDomain[0];
+  newSpec.width = xDomain[1] - xDomain[0];
+  newSpec.height = yDomain[0] - yDomain[1];
 
   return newSpec;
 }
