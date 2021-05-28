@@ -25,15 +25,19 @@ mod_datamation_sanddance_server <- function(id, inputs, pipeline) {
 
       # Generate datamation -----
       datamation <- shiny::reactive({
+        cat("making datamation \n")
         datamation_sanddance(pipeline(), height = inputs$height(), width = inputs$width())
       })
 
       # Create an output for it
-      output$datamation <- datamations::renderDatamationSandDance(
+      output$datamation <- datamations::renderDatamationSandDance({
+        cat("rendering datamation \n")
         datamation()
+      }
       )
 
       output$datamation_ui <- shiny::renderUI({
+        cat("rendering datamation ui \n")
         datamations::datamationSandDanceOutput(ns("datamation"))
       })
     })

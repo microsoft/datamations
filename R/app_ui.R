@@ -10,6 +10,7 @@ app_ui <- function(request) {
     $(document).ready(function() {
     $(document).on("change", ".slider", function() {
   Shiny.onInputChange("datamation_state", $(this).val());
+  Shiny.onInputChange("datamation_state_max", $(this).attr("max"));
   })
   })')),
     shiny::fluidPage(

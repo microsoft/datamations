@@ -88,34 +88,49 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
 
       # Add panels to the tabs
       purrr::walk(
-          seq_along(data_states_tabs),
-          function(i) {
-            output_name <- ns(paste0("data", names(data_states_tabs)[[i]]))
-            tab <- shiny::tabPanel(names(data_states_tabs)[[i]], shiny::h3(shiny::p(data_states_titles[[i]])), reactable::reactableOutput(output_name), value = i - 1)
-            shiny::appendTab(inputId = "data_tabs_panel", tab, select = i == 1, session = session)
-          }
-        )
+        seq_along(data_states_tabs),
+        function(i) {
+          output_name <- ns(paste0("data", names(data_states_tabs)[[i]]))
+          tab <- shiny::tabPanel(names(data_states_tabs)[[i]], shiny::h3(shiny::p(data_states_titles[[i]])), reactable::reactableOutput(output_name), value = i)
+          shiny::appendTab(inputId = "data_tabs_panel", tab, select = i == 1, session = session)
+        }
+      )
 
-        # do.call(data_tabs_panel, tabs)
-      })
-
-
+      # do.call(data_tabs_panel, tabs)
 
       # Change the tab shown based on the slider ----
-      shiny::observeEvent(datamation_state(), {
+      shiny::observeEvent(datamation_state$state(), {
         # Match the states to the tabs
 
-        # 0 is the first state, always initial data
+        # Logic: 0 is the first tab, always initial data
+        # There is one group by tab for every variable grouped by
+        # Then every tab beyond that is summarize
 
-        if (datamation_state() == 0) {
-          browser()
-          shiny::updateTabsetPanel(
-            session = session,
-            inputId = "data_tabs_panel",
-            selected = NULL
-          )
+        slider_state <- datamation_state$state()
+
+        if (slider_state == 0) {
+          selected_tab <- 1
+        } else {
+          if (!is.null(inputs$group_by())) {
+            if (slider_state %in% 1:(1 + length(inputs$group_by()))) {
+              selected_tab <- 2
+            } else {
+              selected_tab <- 3
+            }
+          } else {
+            selected_tab <- 2
+          }
         }
+
+        selected_tab <- as.character(selected_tab)
+
+        shiny::updateTabsetPanel(
+          session = session,
+          inputId = "data_tabs_panel",
+          selected = selected_tab
+        )
       })
+    })
   })
 }
 
