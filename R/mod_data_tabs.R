@@ -9,7 +9,8 @@
 #' @importFrom shiny NS tagList
 mod_data_tabs_ui <- function(id) {
   ns <- NS(id)
-  shiny::uiOutput(ns("data_tabs_ui"))
+  shiny::tabsetPanel(id = ns("data_tabs_panel"))
+  # shiny::uiOutput(ns("data_tabs_ui"))
 }
 
 #' data_tabs Server Functions
@@ -85,21 +86,17 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
         )
       })
 
-      output$data_tabs_ui <- shiny::renderUI({
-        tabs <- purrr::map(
+      # Add panels to the tabs
+      purrr::walk(
           seq_along(data_states_tabs),
           function(i) {
             output_name <- ns(paste0("data", names(data_states_tabs)[[i]]))
-            shiny::tabPanel(names(data_states_tabs)[[i]], shiny::h3(shiny::p(data_states_titles[[i]])), reactable::reactableOutput(output_name), value = i - 1)
+            tab <- shiny::tabPanel(names(data_states_tabs)[[i]], shiny::h3(shiny::p(data_states_titles[[i]])), reactable::reactableOutput(output_name), value = i - 1)
+            shiny::appendTab(inputId = "data_tabs_panel", tab, select = i == 1, session = session)
           }
         )
-        names(tabs) <- NULL
 
-        data_tabs_panel <- function(...) {
-          shiny::tabsetPanel(id = ns("data_tabs_panel"), ...)
-        }
-
-        do.call(data_tabs_panel, tabs)
+        # do.call(data_tabs_panel, tabs)
       })
 
 
@@ -111,6 +108,7 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
         # 0 is the first state, always initial data
 
         if (datamation_state() == 0) {
+          browser()
           shiny::updateTabsetPanel(
             session = session,
             inputId = "data_tabs_panel",
@@ -118,7 +116,6 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
           )
         }
       })
-    })
   })
 }
 
