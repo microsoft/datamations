@@ -7,7 +7,6 @@
 function applyShifts(spec, rows) {
   const splitField = spec.meta.splitField;
   const specValues = spec.data.values;
-
   const groupKeys = [];
 
   if (spec.facet) {
@@ -19,10 +18,10 @@ function applyShifts(spec, rows) {
     }
   }
 
-  const colorOptions = [...new Set(specValues.map((d) => d[splitField]))];
+  const splitOptions = [...new Set(specValues.map((d) => d[splitField]))];
   const shifters = new Map(
-    colorOptions.map((d, i) => {
-      return [d, i > 0 ? colorOptions[i - 1] : null];
+    splitOptions.map((d, i) => {
+      return [d, i > 0 ? splitOptions[i - 1] : null];
     })
   );
 
@@ -52,21 +51,20 @@ function applyShifts(spec, rows) {
     return reduce(specValues);
   }
 
-  return d3
-    .rollups(
-      specValues,
-      reduce,
-      ...groupKeys.map((key) => {
-        return (d) => d[key];
-      })
-    )
-    .flatMap((d) => {
-      if (groupKeys.length === 1) {
-        return d[1];
-      } else {
-        return d[1].flatMap((d) => d[1]);
-      }
-    });
+  return d3.rollups(
+    specValues,
+    reduce,
+    ...groupKeys.map((key) => {
+      return (d) => d[key];
+    })
+  )
+  .flatMap((d) => {
+    if (groupKeys.length === 1) {
+      return d[1];
+    } else {
+      return d[1].flatMap((d) => d[1]);
+    }
+  });
 }
 
 /**

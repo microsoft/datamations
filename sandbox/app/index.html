@@ -100,6 +100,10 @@
         transition: 1s all ease-in-out;
       }
 
+      .vega-other-layers .vega-hidden-layer .role-legend {
+        display: none;
+      }
+
       .vega-other-layers .vega-hidden-layer .role-axis {
         display: none;
       }
@@ -114,10 +118,6 @@
 
       .vega-other-layers.with-axes details {
         display: none;
-      }
-
-      .vega-other-layers.with-axes {
-        /* left: 1px; */
       }
     </style>
   </head>
@@ -169,14 +169,18 @@
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/offset_x_only.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/offset_x_second_row.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/errorbar_using_rule.json"
+      // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/dual_legend_missing_last_frame.json"
       ).then((res) => {
-        // console.log(res[5]);
+        // res[2].meta.splitField = null;
+        // res[2].data.values[1].shiftX = 70;
+        // res[2].data.values[3].shiftX = 90;
+        // console.log(res[7]);
+        // console.log(res[2]);
+        // res[7].spec.layer[0].encoding.y.scale.domain = [32.1, 59.6]
+        // res[7].spec.layer[1].encoding.y.scale.domain = [32.1, 59.6]
+        
         init("app", {
-          specs: res,
-          // specs: [
-          //   // res[0],
-          //   res[4],
-          // ]
+          specs: specs
         });
       });
     </script>
