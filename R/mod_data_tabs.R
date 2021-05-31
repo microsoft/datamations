@@ -128,8 +128,7 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
           shiny::appendTab(inputId = "data_tabs_panel", tab, select = i == 1, session = session)
         }
       )
-
-      # do.call(data_tabs_panel, tabs)
+    })
 
       # Change the tab shown based on the slider ----
       shiny::observeEvent(datamation_state$state(), {
@@ -163,7 +162,6 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
           selected = selected_tab
         )
       })
-    })
   })
 }
 
