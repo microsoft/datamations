@@ -10,7 +10,7 @@
 mod_inputs_ui <- function(id) {
   ns <- shiny::NS(id)
   tagList(
-    shiny::p("Construct a tidyverse pipeline by choosing from the options below. You select a data set, then up to three variables to group by, and finally a variable to summarize and a summary function to apply to it. You can also adjust the height and width of the resulting datamation."),
+    shiny::p("Construct a tidyverse pipeline by choosing from the options below. You select a data set, then up to three variables to group by, and finally a variable to summarize and a summary function to apply to it."),
     shiny::hr(),
     shiny::fluidRow(
       shiny::column(
