@@ -66,7 +66,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   # Prep encoding ----
 
-  x_encoding <- list(field = "x", type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]]), title = x_title, scale = x_domain)
+  x_encoding <- list(field = "x", type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
 
   y_range <- range(.data[["y"]], na.rm = TRUE)
   y_encoding <- list(field = "y", type = "quantitative", title = mapping$y, scale = list(domain = y_range))
@@ -83,6 +83,9 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     y = y_encoding,
     color = color_encoding
   )
+
+  # Flag for whether the plot will have facets - used to set axes = TRUE (if it does have facets, and the "fake facets" need to be used) or FALSE (if it doesn't, and the real axes can be used)
+  has_facets <- !is.null(mapping$column) | !is.null(mapping$row)
 
   facet_col_encoding <- list(field = mapping$column, type = "ordinal", title = mapping$column)
   facet_row_encoding <- list(field = mapping$row, type = "ordinal", title = mapping$row)
@@ -112,7 +115,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   description <- generate_summarize_description(summary_variable, group_by = length(group_vars) != 0)
 
   # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
-  meta <- list(parse = "jitter", axes = length(group_vars) != 0, description = description)
+  meta <- list(parse = "jitter", axes = has_facets, description = description)
 
   if (!is.null(mapping$x)) {
     meta <- append(meta, list(splitField = mapping$x))
@@ -139,13 +142,12 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Generate description
   description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
 
-  # TODO: not working quite yet - not in animation, only when frame is specifically clicked
   spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
 
   spec <- generate_vega_specs(
     .data = data_2,
     mapping = mapping,
-    meta = list(axes = length(group_vars) != 0, description = description),
+    meta = list(axes = has_facets, description = description),
     spec_encoding = spec_encoding, facet_encoding = facet_encoding,
     height = height, width = width, facet_dims = facet_dims,
     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
@@ -167,7 +169,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     spec <- generate_vega_specs(
       .data = data_3,
       mapping = mapping,
-      meta = list(axes = length(group_vars) != 0, description = description),
+      meta = list(axes = has_facets, description = description),
       spec_encoding = spec_encoding, facet_encoding = facet_encoding,
       height = height, width = width, facet_dims = facet_dims,
       column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color),
@@ -208,7 +210,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     spec <- generate_vega_specs(
       .data = data_3,
       mapping = mapping,
-      meta = list(axes = length(group_vars) != 0, description = description),
+      meta = list(axes = has_facets, description = description),
       spec_encoding = spec_encoding, facet_encoding = facet_encoding,
       height = height, width = width, facet_dims = facet_dims,
       column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color),
@@ -222,7 +224,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     spec <- generate_vega_specs(
       .data = data_2,
       mapping = mapping,
-      meta = list(axes = length(group_vars) != 0, description = description),
+      meta = list(axes = has_facets, description = description),
       spec_encoding = spec_encoding, facet_encoding = facet_encoding,
       height = height, width = width, facet_dims = facet_dims,
       column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)

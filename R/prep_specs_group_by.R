@@ -5,7 +5,6 @@
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
-
   # Extract mapping ----
 
   # Extract grouping variables from mapping
@@ -139,7 +138,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       facet_encoding = facet_encoding,
       height = height, width = width,
       facet_dims = facet_dims,
-      column = TRUE, row = TRUE, color = TRUE
+      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
     )
 
     specs_list <- specs_list %>%
