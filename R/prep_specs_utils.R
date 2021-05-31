@@ -72,7 +72,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
   }
 
   # If there's no rows in this spec, set nrow = 1
-  if(!row) {
+  if (!row) {
     facet_dims$nrow <- 1
   }
 
@@ -215,15 +215,21 @@ generate_x_domain <- function(data) {
   }
 }
 
-generate_summarize_description <- function(summary_variable, summary_function = NULL, errorbar = FALSE) {
+generate_summarize_description <- function(summary_variable, summary_function = NULL, errorbar = FALSE, group_by = TRUE) {
 
-  if(errorbar) {
-    return(glue::glue("Plot mean {summary_variable} of each group, with errorbar"))
+  if (errorbar) {
+    return(glue::glue("Plot mean {summary_variable}{group_description}, with errorbar",
+      group_description = ifelse(group_by, " of each group", "")
+    ))
   }
 
   if (is.null(summary_function)) {
-    glue::glue("Plot {summary_variable} within each group")
+    glue::glue("Plot {summary_variable}{group_description}",
+      group_description = ifelse(group_by, " within each group", "")
+    )
   } else {
-    glue::glue("Plot {summary_function} {summary_variable} of each group")
+    glue::glue("Plot {summary_function} {summary_variable}{group_description}",
+      group_description = ifelse(group_by, " of each group", "")
+    )
   }
 }

@@ -109,7 +109,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     dplyr::filter(!is.na(.data$y))
 
   # Generate description
-  description <- generate_summarize_description(summary_variable)
+  description <- generate_summarize_description(summary_variable, group_by = length(group_vars) != 0)
 
   # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
   meta <- list(parse = "jitter", axes = length(group_vars) != 0, description = description)
@@ -137,7 +137,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     dplyr::mutate(dplyr::across(.data$y, !!summary_function, na.rm = TRUE))
 
   # Generate description
-  description <- generate_summarize_description(summary_variable, summary_function)
+  description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
 
   # TODO: not working quite yet - not in animation, only when frame is specifically clicked
   spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
@@ -162,7 +162,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       dplyr::group_by(!!!group_vars) %>%
       dplyr::mutate(dplyr::across(.data$y, !!summary_function, na.rm = TRUE))
 
-    description <- generate_summarize_description(summary_variable, summary_function, errorbar = TRUE)
+    description <- generate_summarize_description(summary_variable, summary_function, errorbar = TRUE, group_by = length(group_vars) != 0)
 
     spec <- generate_vega_specs(
       .data = data_3,
@@ -182,7 +182,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # If it's mean (and there's error bars), need to calculate the error bars manually and get the range from there
   # Otherwise, just do the range of the Y + some padding
 
-  description <- generate_summarize_description(summary_variable, summary_function)
+  description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
 
   if (mapping$summary_function == "mean") {
     description <- glue::glue("{description}, with errorbar, zoomed in")
