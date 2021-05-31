@@ -25,30 +25,20 @@ mod_inputs_ui <- function(id) {
         shiny::uiOutput(ns("group_by"))
       ),
       shiny::column(
-        width = 3,
+        width = 2,
         shiny::uiOutput(ns("summary_variable"))
       ),
       shiny::column(
-        width = 3,
+        width = 2,
         shiny::selectInput(
           ns("summary_function"),
           "Summary function",
           choices = c("mean", "median", "min", "max")
         )
-      )
-    ),
-    shiny::fluidRow(
-      shiny::column(
-        width = 3,
-        shiny::numericInput(ns("height"), "Height", min = 200, max = 600, value = 300)
       ),
       shiny::column(
-        width = 3,
-        shiny::numericInput(ns("width"), "Width", min = 200, max = 600, value = 400)
-      ),
-      shiny::column(
-        width = 3,
-        shiny::actionButton(ns("go"), "Go", width = "100%", style = "margin-top: 25px;")
+        width = 2,
+        shiny::actionButton(ns("go"), "Go", width = "100%", style = "margin-top: 31px;")
       )
     )
   )
