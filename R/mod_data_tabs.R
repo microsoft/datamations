@@ -22,6 +22,12 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
 
     shiny::observeEvent(pipeline(), {
 
+      # Clear existing tabs
+      purrr::walk(c("1", "2", "3"), ~ shiny::removeTab(
+        inputId = "data_tabs_panel",
+        target = .x, session = session
+      ))
+
       # Generate the data, and render DTs for them
       pipeline_group_by <- !is.null(inputs$group_by())
 
@@ -74,24 +80,51 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
       }
 
       # Render each of the data tabs into an output
-      purrr::iwalk(data_states_tabs, function(x, y) {
-        output_name <- paste0("data", y)
-        output[[output_name]] <- reactable::renderReactable(
-          x %>%
-            dplyr::mutate_if(is.numeric, round, 3) %>%
-            reactable::reactable(
-              fullWidth = FALSE,
-              width = 600
-            )
-        )
-      })
+      # purrr::iwalk(data_states_tabs, function(x, y) {
+      #   cat("generating tab", y, "\n")
+      #   output_name <- paste0("data", y)
+      #   output[[output_name]] <- reactable::renderReactable({
+      #     x <- x %>%
+      #       dplyr::mutate_if(is.numeric, round, 3)
+      #
+      #     if (y == "Initial data") {
+      #       x %>%
+      #         reactable::reactable(
+      #           fullWidth = FALSE,
+      #           width = 600
+      #         )
+      #     } else {
+      #       x %>%
+      #         reactable::reactable(
+      #           fullWidth = FALSE
+      #         )
+      #     }
+      #   })
+      # })
 
-      # Add panels to the tabs
+      # Create tabs and generate tables for them
       purrr::walk(
         seq_along(data_states_tabs),
         function(i) {
-          output_name <- ns(paste0("data", names(data_states_tabs)[[i]]))
-          tab <- shiny::tabPanel(names(data_states_tabs)[[i]], shiny::h3(shiny::p(data_states_titles[[i]])), reactable::reactableOutput(output_name), value = i)
+          # Generate content
+          content <- data_states_tabs[[i]] %>%
+            dplyr::mutate_if(is.numeric, round, 3)
+
+          if (i == 1) {
+            content <- content %>%
+              reactable::reactable(
+                fullWidth = FALSE,
+                width = 600
+              )
+          } else {
+            content <- content %>%
+              reactable::reactable(
+                fullWidth = FALSE
+              )
+          }
+
+          # Create and append tab
+          tab <- shiny::tabPanel(names(data_states_tabs)[[i]], shiny::h3(shiny::p(data_states_titles[[i]])), content, value = i)
           shiny::appendTab(inputId = "data_tabs_panel", tab, select = i == 1, session = session)
         }
       )
