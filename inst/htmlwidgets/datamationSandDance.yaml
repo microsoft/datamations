@@ -19,6 +19,10 @@ dependencies:
    version: 0.1.0
    src: htmlwidgets/gemini
    script: gemini.web.js
+ - name: utils
+   version: 0.0.1
+   src: htmlwidgets/js
+   script: utils.js
  - name: app
    version: 0.0.1
    src: htmlwidgets/js

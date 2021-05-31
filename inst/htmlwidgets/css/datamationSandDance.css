@@ -28,7 +28,7 @@
   opacity: 0;
 }
 
-.vega-vis-wrapper .vega-for-axis .mark-group.cell .mark-symbol {
+.vega-vis-wrapper .vega-for-axis .mark-symbol {
   display: none;
 }
 
@@ -86,6 +86,10 @@ details {
   transition: 1s all ease-in-out;
 }
 
+.vega-other-layers .vega-hidden-layer .role-legend {
+  display: none;
+}
+
 .vega-other-layers .vega-hidden-layer .role-axis {
   display: none;
 }
@@ -94,18 +98,10 @@ details {
   display: none;
 }
 
-.vega-other-layers .vega-hidden-layer .role-legend {
-  display: none;
-}
-
-.vega-other-layers.with-axes .background {
+.vega-other-layers .vega-hidden-layer .background {
   stroke: none !important;
 }
 
 .vega-other-layers.with-axes details {
   display: none;
-}
-
-.vega-other-layers.with-axes {
-  /* left: 1px; */
 }
