@@ -9,7 +9,7 @@ app_server <- function(input, output, session) {
   inputs <- mod_inputs_server("inputs")
   pipeline <- mod_pipeline_server("pipeline", inputs)
 
-  mod_datamation_sanddance_server("datamation_sanddance", inputs, pipeline)
+  mod_datamation_sanddance_server("datamation_sanddance", pipeline)
 
   datamation_state <- list(
     state = shiny::reactive(input$datamation_state),

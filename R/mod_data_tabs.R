@@ -20,7 +20,7 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    shiny::observeEvent(inputs$go(), {
+    shiny::observeEvent(pipeline(), {
 
       # Generate the data, and render DTs for them
       pipeline_group_by <- !is.null(inputs$group_by())
