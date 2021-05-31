@@ -22,7 +22,8 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
 
     shiny::observeEvent(pipeline(), {
 
-      # Clear existing tabs
+      # Clear existing tabs - note that this still tries to remove the tabs at the very beginning even if they don't exist - might need to look into this to see if it's causing any issues or if we can set to remove them only if they actually exist.
+      # Doesn't seem to be causing issues though, just a warning in the console
       purrr::walk(c("1", "2", "3"), ~ shiny::removeTab(
         inputId = "data_tabs_panel",
         target = .x, session = session
