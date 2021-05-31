@@ -73,13 +73,13 @@ const reset = () => {
  * @param {Object} param1 configuration object
  */
 async function init(id, { specUrls, specs, autoPlay }) {
-  const { slider } = getSelectors(id);
-
-  reset();
-  
   // ignore all subsequent init calls.
   if (initializing) return;
   initializing = true;
+
+  const { slider } = getSelectors(id);
+
+  reset();
 
   // load or set data
   if (specs) {
@@ -386,13 +386,15 @@ async function transformSpecs() {
       }
     }
 
-    const facet = vegaLiteSpecs[i].facet;
-    const spec = vegaLiteSpecs[i].spec;
+    if (vegaLiteSpecs[i]) {
+      const facet = vegaLiteSpecs[i].facet;
+      const spec = vegaLiteSpecs[i].spec;
 
-    // fake facets
-    if (facet && spec) {
-      const newSpec = await hackFacet(vegaLiteSpecs[i]);
-      vegaLiteSpecs[i] = newSpec;
+      // fake facets
+      if (facet && spec) {
+        const newSpec = await hackFacet(vegaLiteSpecs[i]);
+        vegaLiteSpecs[i] = newSpec;
+      }
     }
   }
 }
