@@ -183,9 +183,9 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Otherwise, just do the range of the Y + some padding
 
   description <- generate_summarize_description(summary_variable, summary_function)
-  description <- glue::glue("{description}, zoomed in")
 
   if (mapping$summary_function == "mean") {
+    description <- glue::glue("{description}, with errorbar, zoomed in")
     data_errorbar <- data_3 %>%
       dplyr::summarize(
         y = y,
@@ -199,8 +199,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
         ucl = .data$y + .data$se
       )
 
-    lcl <- min(data_errorbar[["lcl"]])
-    ucl <- max(data_errorbar[["ucl"]])
+    lcl <- min(data_errorbar[["lcl"]], na.rm = TRUE)
+    ucl <- max(data_errorbar[["ucl"]], na.rm = TRUE)
 
     range_y_errorbar <- c(lcl, ucl)
     spec_encoding$y$scale$domain <- range_y_errorbar
@@ -215,6 +215,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       errorbar = TRUE
     )
   } else {
+    description <- glue::glue("{description}, zoomed in")
     range_y <- range(data_2[["y"]], na.rm = TRUE)
     spec_encoding$y$scale$domain <- range_y
 
