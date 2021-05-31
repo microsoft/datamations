@@ -143,10 +143,15 @@
       </div>
     </div>
 
+    <script src="./scripts/utils.js"></script>
     <script src="./scripts/layout.js"></script>
     <script src="./scripts/hack-facet-view.js"></script>
     <script src="./scripts/app.js"></script>
     <script>
+      // const repoUrl = "https://raw.githubusercontent.com/jhofman/datamations";
+      // const dataUrl = "./data/";
+      // const dataUrl = repoUrl + "/fixes/sandbox/specs-for-infogrid/";
+
       // init("app", {
       //   specUrls: [
       //     dataUrl + "01-ungrouped.json",
@@ -162,7 +167,7 @@
       d3.json(
         // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_with_facet.json"
         // 'https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_no_facet.json'
-      //   "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/zoomed_specs.json"
+        // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/zoomed_specs.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/double_errorbar.json"
       "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/erroring_errorbar.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/offset_x_with_color.json"
@@ -170,6 +175,7 @@
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/offset_x_second_row.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/errorbar_using_rule.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/dual_legend_missing_last_frame.json"
+      // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/no_facets_errorbar_off_on_zoom.json"
       ).then((res) => {
         // res[2].meta.splitField = null;
         // res[2].data.values[1].shiftX = 70;
@@ -180,7 +186,7 @@
         // res[7].spec.layer[1].encoding.y.scale.domain = [32.1, 59.6]
         
         init("app", {
-          specs: specs
+          specs: res
         });
       });
     </script>

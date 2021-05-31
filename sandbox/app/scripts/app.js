@@ -1,217 +1,165 @@
-const repoUrl = "https://raw.githubusercontent.com/jhofman/datamations";
-// const dataUrl = "./data/";
-const dataUrl = repoUrl + "/fixes/sandbox/specs-for-infogrid/";
+/**
+ * Datamations JavaScript App script
+ * Reads vega lite specs, converts to vega specs and animates using gemini
+ */
+
+
+let rawSpecs; // holds raw vega-lite specs, not transformed
+let vegaLiteSpecs;
+let vegaSpecs; // vega specs, converted by gemini.vl2vg4gemini (https://github.com/uwdata/gemini#vl2vg4gemini)
+let frames;
+let metas;
+let frameIndex = 0;
+let intervalId;
+let initializing = false;
+
 const frameDuration = 2000;
+// a fallback gemini spec in case gemini.animate could not find anything
+const gemSpec = {
+  timeline: {
+    concat: [
+      {
+        sync: [
+          {
+            component: {
+              mark: "marks",
+            },
+            change: {
+              data: {
+                keys: ["gemini_id"],
+                update: true,
+                enter: true,
+                exit: false,
+              },
+              encode: {
+                update: true,
+                enter: true,
+                exit: true,
+              },
+            },
+            timing: {
+              duration: {
+                ratio: 1,
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
+  totalDuration: frameDuration,
+};
 
-let vegaLiteSpecs, vegaSpecs, frames, metas, rawFiles, counter = 0, intervalId;
-
-async function init(id, { specUrls, specs, autoPlay }) {
+/**
+ * Resets all the instance variables
+ */
+const reset = () => {
   vegaLiteSpecs = [];
   vegaSpecs = [];
-  rawFiles = [];
+  rawSpecs = [];
   frames = [];
   metas = [];
-  counter = 0;
+  frameIndex = 0;
 
   if (intervalId) {
     clearInterval(intervalId);
     intervalId = null;
   }
+};
 
+/**
+ * Initializes datamation app
+ * @param {String} id root container id where vega visualizations are mounted
+ * @param {Object} param1 configuration object
+ */
+async function init(id, { specUrls, specs, autoPlay }) {
+  const { slider } = getSelectors(id);
+
+  reset();
+  
+  // ignore all subsequent init calls.
+  if (initializing) return;
+  initializing = true;
+
+  // load or set data
   if (specs) {
     vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
   } else if (specUrls) {
     vegaLiteSpecs = await loadData(specUrls);
   }
 
-  const { slider } = getSelectors(id);
-
-  // save raw vegaLiteSpecs to use for facet axes drawing
+  // save raw specs to use for facet axes drawing
   vegaLiteSpecs.forEach((d) => {
-    rawFiles.push(JSON.parse(JSON.stringify(d)));
-  });
+    rawSpecs.push(JSON.parse(JSON.stringify(d)));
 
-  metas = vegaLiteSpecs.map((d) => d.meta);
-
-  for (let i = 0; i < vegaLiteSpecs.length; i++) {
-    const vlSpec = vegaLiteSpecs[i];
-    const parse = vlSpec.meta.parse;
-
-    // parsing
-    if (parse === "grid") {
-      vegaLiteSpecs[i] = await getGridSpec(vlSpec);
-    } else if (parse === "jitter") {
-      vegaLiteSpecs[i] = await getJitterSpec(vlSpec);
-    } else if (vlSpec.layer || (vlSpec.spec && vlSpec.spec.layer)) {
-      const arr = splitLayers(vlSpec);
-      vegaLiteSpecs[i] = [];
-
-      for (let j = 0; j < arr.length; j++) {
-        const s = arr[j];
-        // fake facets
-        if (s.facet && s.spec && s.meta.animated) {
-          const newSpec = await hackFacet(s);
-          vegaLiteSpecs[i].push(newSpec);
-          metas[i] = newSpec.meta;
-        } else {
-          vegaLiteSpecs[i].push(s);
-        }
-      }
+    if (d.meta) {
+      metas.push(d.meta);
     }
-
-    const facet = vegaLiteSpecs[i].facet;
-    const spec = vegaLiteSpecs[i].spec;
-
-    // fake facets
-    if (facet && spec) {
-      const newSpec = await hackFacet(vegaLiteSpecs[i]);
-      vegaLiteSpecs[i] = newSpec;
-    }
-  }
-
-  vegaSpecs = vegaLiteSpecs.map((d) => {
-    const s = Array.isArray(d) ? d.find((d) => d.meta.animated) : d;
-    return gemini.vl2vg4gemini(s);
   });
-
-  for (let i = 1; i < vegaSpecs.length; i++) {
-    const prev = vegaSpecs[i - 1];
-    const curr = vegaSpecs[i];
-
-    const prevMeta = metas[i - 1];
-    const currMeta = metas[i];
-
-    const recommendations = gemini.recommend(prev, curr, {
-      stageN: 1,
-      scales: {
-        x: {
-          domainDimension: "diff",
-        },
-        y: {
-          domainDimension: "diff",
-        },
-      },
-      marks: {
-        marks: {
-          change: {
-            "scale": ["x", "y"],
-            data: {
-              keys: ["gemini_id"],
-              update: true,
-              enter: true,
-              exit: true,
-            },
-            encode: {
-              update: true,
-              enter: true,
-              exit: true,
-            },
-          },
-        },
-      },
-      totalDuration: frameDuration,
-    });
-
-    recommendations
-      .then((resp) => {
-        const gemSpec = {
-          timeline: {
-            concat: [
-              {
-                sync: [
-                  {
-                    component: {
-                      mark: "marks",
-                    },
-                    change: {
-                      data: {
-                        keys: ["gemini_id"],
-                        update: true,
-                        enter: true,
-                        exit: false,
-                      },
-                      encode: {
-                        update: true,
-                        enter: true,
-                        exit: true,
-                      },
-                    },
-                    timing: {
-                      duration: {
-                        ratio: 1,
-                      },
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-          totalDuration: 1200,
-        };
-
-        frames.push({
-          source: prev,
-          target: curr,
-          gemSpec: resp[0] ? resp[0].spec : gemSpec,
-          prevMeta,
-          currMeta,
-        });
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }
 
   d3.select(slider).property("max", vegaLiteSpecs.length - 1);
-  drawFrame(0, id);
+
+  // parse, jitter, layer splitting
+  await transformSpecs();
+
+  // compile to vega
+  toVegaSpecs();
+
+  // create frames for animation
+  await makeFrames();
+
+  drawSpec(0, id);
 
   if (autoPlay) {
-    setTimeout(() => {
-      play(id);
-    }, 100);
+    setTimeout(() => play(id), 100);
   }
+
+  initializing = false;
 }
 
+/**
+ * Plays animation
+ * @param {String} id root container id where vega visualizations are mounted
+ */
 function play(id) {
-  counter = 0;
+  frameIndex = 0;
   const tick = () => {
-    animateFrame(counter, id);
-    counter++;
+    animateFrame(frameIndex, id);
+    frameIndex++;
   };
   tick();
 
   if (intervalId) clearInterval(intervalId);
   intervalId = setInterval(() => {
     tick();
-    if (counter >= frames.length) {
+    if (frameIndex >= frames.length) {
       clearInterval(intervalId);
-      counter = 0;
+      frameIndex = 0;
     }
   }, frameDuration + 100);
 }
 
-function drawFrame(index, id) {
+/**
+ * Draws vega lite spec statically, also updates slider, description, show/hides some layers
+ * @param {Number} index specification index in vegaLiteSpecs
+ * @param {String} id root container id where vega visualizations are mounted
+ * @returns a promise of vegaEmbed
+ */
+function drawSpec(index, id) {
   const spec = vegaLiteSpecs[index];
 
   if (!spec) return;
 
   const meta = metas[index];
-  const { 
-    axisSelector, 
-    visSelector, 
-    descr, 
-    slider, 
-    otherLayers,
-    controls,
-  } = getSelectors(id);
+
+  const { axisSelector, visSelector, descr, slider, otherLayers, controls } =
+    getSelectors(id);
 
   d3.select(slider).property("value", index);
   d3.select(descr).html(meta.description || "frame " + index);
-
   d3.select(axisSelector)
     .style("opacity", meta.axes ? 1 : 0)
     .html("");
-
   d3.select(visSelector).classed("with-axes", meta.axes);
   d3.select(otherLayers).classed("with-axes", meta.axes);
 
@@ -222,16 +170,21 @@ function drawFrame(index, id) {
 
   // shift vis
   if (meta.transformX) {
-    d3.select(visSelector)
-      .style("left", meta.transformX + 'px')
+    d3.select(visSelector).style("left", meta.transformX + "px");
   }
 
-  d3.select(controls).style("width", (spec.width + 10) + 'px');
+  d3.select(controls).style("width", spec.width + 10 + "px");
 
   // draw vis
   return drawChart(spec, id);
 }
 
+/**
+ * Draws a chart
+ * @param {Object} spec vega lite spec
+ * @param {String} id root container id where vega visualizations are mounted
+ * @returns a promise of vegaEmbed
+ */
 function drawChart(spec, id) {
   const { visSelector, otherLayers } = getSelectors(id);
   const layers = document.querySelector(otherLayers);
@@ -263,8 +216,14 @@ function drawChart(spec, id) {
   }
 }
 
+/**
+ * Draws an axis layer
+ * @param {Number} index specification index in vegaLiteSpecs
+ * @param {String} id root container id where vega visualizations are mounted
+ * @returns
+ */
 function drawAxis(index, id) {
-  let spec = rawFiles[index];
+  let spec = rawSpecs[index];
 
   if (spec.spec && spec.spec.layer) {
     const split = splitLayers(spec);
@@ -302,29 +261,29 @@ function drawAxis(index, id) {
       d3.select(otherLayers + " svg > g").attr("transform", fn);
     }
     const width = d3.select(axisSelector).node().getBoundingClientRect().width;
-    d3.select(controls).style("width", width + 'px');
+    d3.select(controls).style("width", width + "px");
   });
 }
 
+/**
+ * Animates a frame, from source to target vega specification using gemini
+ * @param {Number} index specification index in vegaLiteSpecs
+ * @param {String} id root container id where vega visualizations are mounted
+ * @returns a promise of gemini.animate
+ */
 async function animateFrame(index, id) {
   if (!frames[index]) return;
 
-  const { 
-    axisSelector, 
-    visSelector, 
-    otherLayers, 
-    descr, 
-    slider,
-    controls
-  } = getSelectors(id);
-  
+  const { axisSelector, visSelector, otherLayers, descr, slider, controls } =
+    getSelectors(id);
+
   let { source, target, gemSpec, prevMeta, currMeta } = frames[index];
   let anim = await gemini.animate(source, target, gemSpec);
   let prevHasAxes = prevMeta.axes;
   let currHasAxes = currMeta.axes;
   let width = target.width;
 
-  drawFrame(index, id).then(() => {
+  drawSpec(index, id).then(() => {
     d3.select(descr).html(currMeta.description);
 
     anim.play(visSelector).then(() => {
@@ -335,23 +294,20 @@ async function animateFrame(index, id) {
       d3.select(visSelector)
         .transition()
         .duration(750)
-        .style("left", currMeta.transformX + 'px');
+        .style("left", currMeta.transformX + "px");
     }
 
     // show/hide axis vega chart
     if (currHasAxes) {
       drawAxis(index + 1, id);
-      d3.select(axisSelector)
-        .transition()
-        .duration(1000)
-        .style("opacity", 1);
+      d3.select(axisSelector).transition().duration(1000).style("opacity", 1);
       d3.select(visSelector).classed("with-axes", true);
       d3.select(otherLayers).classed("with-axes", true);
     } else {
       d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
       d3.select(visSelector).classed("with-axes", false);
       d3.select(otherLayers).classed("with-axes", false);
-      d3.select(controls).style("width", (width + 10) + 'px');
+      d3.select(controls).style("width", width + 10 + "px");
     }
 
     const nextSpec = vegaLiteSpecs[index + 1];
@@ -377,86 +333,145 @@ async function animateFrame(index, id) {
   });
 }
 
+/**
+ * Loads specifications using d3.json
+ * @param {Array} specUrls list of urls
+ * @returns a promise of Promise.all
+ */
 function loadData(specUrls) {
   return Promise.all(
     specUrls.map((url) => {
       return d3.json(url);
     })
-  )
-  // fallback for old spec to work again
-  // if no splitField is set, I am setting color.field
-  // .then(data => {
-  //   return data.map(d => {
-  //     const encoding = d.spec ? d.spec.encoding : d.encoding;
-  //     if (encoding.color && !d.meta.splitField) {
-  //       d.meta.splitField = encoding.color.field;
-  //       console.log(d);
-  //     }
-  //     return d;
-  //   })
-  // })
-  .catch((e) => {
+  ).catch((e) => {
     console.error(e.message);
   });
 }
 
+/**
+ * Transforms specifications into proper format:
+ * - meta.grid = generates infogrid
+ * - meta.jitter = jitters data using d3.force
+ * - spec.layer = splits layers to stack on top on each other
+ */
+async function transformSpecs() {
+  for (let i = 0; i < vegaLiteSpecs.length; i++) {
+    const vlSpec = vegaLiteSpecs[i];
+
+    if (Array.isArray(vlSpec)) continue; // just sanity check, making sure that it is not an array
+
+    const parse = vlSpec.meta.parse;
+
+    // parsing
+    if (parse === "grid") {
+      vegaLiteSpecs[i] = await getGridSpec(vlSpec);
+    } else if (parse === "jitter") {
+      vegaLiteSpecs[i] = await getJitterSpec(vlSpec);
+    } else if (vlSpec.layer || (vlSpec.spec && vlSpec.spec.layer)) {
+      const arr = splitLayers(vlSpec);
+
+      vegaLiteSpecs[i] = [];
+
+      for (let j = 0; j < arr.length; j++) {
+        const s = arr[j];
+
+        // fake facets
+        if (s.facet && s.spec && s.meta.animated) {
+          const newSpec = await hackFacet(s);
+          vegaLiteSpecs[i].push(newSpec);
+          metas[i] = newSpec.meta;
+        } else {
+          vegaLiteSpecs[i].push(s);
+        }
+      }
+    }
+
+    const facet = vegaLiteSpecs[i].facet;
+    const spec = vegaLiteSpecs[i].spec;
+
+    // fake facets
+    if (facet && spec) {
+      const newSpec = await hackFacet(vegaLiteSpecs[i]);
+      vegaLiteSpecs[i] = newSpec;
+    }
+  }
+}
+
+/**
+ * Converts vega-lite to vega using vl2vg4gemini
+ */
+function toVegaSpecs() {
+  vegaSpecs = vegaLiteSpecs.map((d) => {
+    const s = Array.isArray(d) ? d.find((d) => d.meta.animated) : d;
+    return gemini.vl2vg4gemini(s);
+  });
+}
+
+/**
+ * Generates animation frames
+ */
+async function makeFrames() {
+  for (let i = 1; i < vegaSpecs.length; i++) {
+    const prev = vegaSpecs[i - 1];
+    const curr = vegaSpecs[i];
+
+    const prevMeta = metas[i - 1];
+    const currMeta = metas[i];
+
+    try {
+      const resp = await gemini.recommend(prev, curr, {
+        stageN: 1,
+        scales: {
+          x: {
+            domainDimension: "same",
+          },
+          y: {
+            domainDimension: "same",
+            signal: true,
+            data: false
+          },
+        },
+        marks: {
+          marks: {
+            change: {
+              scale: ["x", "y"],
+              data: {
+                keys: ["gemini_id"],
+                update: true,
+                enter: true,
+                exit: true,
+              },
+              encode: {
+                update: true,
+                enter: true,
+                exit: true,
+              },
+            },
+          },
+        },
+        totalDuration: frameDuration,
+      });
+
+      frames.push({
+        source: prev,
+        target: curr,
+        gemSpec: resp[0] ? resp[0].spec : gemSpec,
+        prevMeta,
+        currMeta,
+      });
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
+/**
+ * Slider on change callback
+ * @param {String} id root container id where vega visualizations are mounted
+ */
 function onSlide(id) {
   const { slider } = getSelectors(id);
   const index = document.querySelector(slider).value;
-  drawFrame(index, id);
+  drawSpec(index, id);
   if (intervalId) clearInterval(intervalId);
-}
-
-function getSelectors(id) {
-  const base = "#" + id;
-
-  return {
-    axisSelector: base + " .vega-for-axis",
-    visSelector: base + " .vega-vis",
-    descr: base + " .description",
-    slider: base + " .slider",
-    otherLayers: base + " .vega-other-layers",
-    controls: base + " .controls-wrapper",
-  };
-}
-
-function splitLayers(input) {
-  const specArray = [];
-  const spec = input.spec;
-
-  if (spec && spec.layer) {
-    spec.layer.forEach((d, i) => {
-      const obj = JSON.parse(JSON.stringify(input));
-      const animated = i === spec.layer.length - 1;
-
-      if (obj.meta) {
-        obj.meta.animated = animated;
-      } else {
-        obj.meta = { animated };
-      }
-
-      obj.spec.encoding = d.encoding;
-      obj.spec.mark = d.mark;
-      delete obj.spec.layer;
-      specArray.push(obj);
-    });
-  } else if (input.layer) {
-    input.layer.forEach((d, i) => {
-      const obj = JSON.parse(JSON.stringify(input));
-      const animated = i === input.layer.length - 1;
-
-      if (obj.meta) {
-        obj.meta.animated = animated;
-      } else {
-        obj.meta = { animated };
-      }
-
-      obj.encoding = d.encoding;
-      obj.mark = d.mark;
-      delete obj.layer;
-      specArray.push(obj);
-    });
-  }
-
-  return specArray;
 }
