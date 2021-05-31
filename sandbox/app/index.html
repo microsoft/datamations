@@ -42,7 +42,7 @@
         opacity: 0;
       }
 
-      .vega-vis-wrapper .vega-for-axis .mark-group.cell .mark-symbol {
+      .vega-vis-wrapper .vega-for-axis .mark-symbol {
         display: none;
       }
 
@@ -112,7 +112,7 @@
         display: none;
       }
 
-      .vega-other-layers.with-axes .background {
+      .vega-other-layers .vega-hidden-layer .background {
         stroke: none !important;
       }
 
@@ -169,13 +169,14 @@
         // 'https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_no_facet.json'
         // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/zoomed_specs.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/double_errorbar.json"
-      "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/erroring_errorbar.json"
+      // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/erroring_errorbar.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/offset_x_with_color.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/offset_x_only.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/offset_x_second_row.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/errorbar_using_rule.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/dual_legend_missing_last_frame.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/no_facets_errorbar_off_on_zoom.json"
+      "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/variable_x_only_jitter_off.json"
       ).then((res) => {
         // res[2].meta.splitField = null;
         // res[2].data.values[1].shiftX = 70;
@@ -184,7 +185,7 @@
         // console.log(res[2]);
         // res[7].spec.layer[0].encoding.y.scale.domain = [32.1, 59.6]
         // res[7].spec.layer[1].encoding.y.scale.domain = [32.1, 59.6]
-        
+        res[2].meta.xAxisLabels = ['Academia', 'Industry'];
         init("app", {
           specs: res
         });

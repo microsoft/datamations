@@ -138,8 +138,10 @@ function getGridSpec(spec, rows = 10) {
  */
 function getJitterSpec(spec) {
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
+  const width = spec.spec ? spec.spec.width : spec.width;
   const nodes = spec.data.values;
   const circleRadius = 4;
+
   let innerGroupCount = 1;
 
   if (spec.meta.splitField) {
@@ -148,7 +150,7 @@ function getJitterSpec(spec) {
     ).size;
   }
 
-  const facetSize = 150;
+  const facetSize = width ? width : 150;
   const yExtent = d3.extent(nodes, d => d.y);
   const xScale = d3.scaleBand()
     .domain(d3.range(1, innerGroupCount + 1))
@@ -170,7 +172,7 @@ function getJitterSpec(spec) {
 
   const simulation = d3
     .forceSimulation(arr)
-    .force("x", d3.forceX().strength(0.001))
+    .force("x", d3.forceX().strength(0.0002))
     .force("y", d3.forceY().strength(0.002).y(d => d.y))
     .force("collide", d3
       .forceCollide()
@@ -201,6 +203,21 @@ function getJitterSpec(spec) {
 
     encoding.x.scale = {
       domain: [0, facetSize]
+    }
+
+    // if no axes is drawn, and we have custom x-axis
+    if (!spec.meta.axes && encoding.x.axis && spec.meta.xAxisLabels) {
+      const labels = spec.meta.xAxisLabels;
+
+      const axisExpr = {};
+      const mapped = labels.map((d, i) => {
+        const x = Math.round(xScale(i + 1) + xScale.bandwidth() / 2);
+        axisExpr[x] = d;
+        return { x, label: d };
+      });
+
+      encoding.x.axis.labelExpr = `${JSON.stringify(axisExpr)}[datum.label]`;
+      encoding.x.axis.values = mapped.map(d => d.x);
     }
 
     return res({
