@@ -56,7 +56,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   };
 }
 
-function getHackedSpec({ view, spec, width = 600, height = 600 }) {
+function getHackedSpec({ view, spec, vgSpec, width = 600, height = 600 }) {
   const rowId = spec.facet.row ? spec.facet.row.field : null;
   const colId = spec.facet.column ? spec.facet.column.field : null;
 

@@ -94,6 +94,10 @@ details {
   display: none;
 }
 
+.vega-other-layers .vega-hidden-layer .role-legend {
+  display: none;
+}
+
 .vega-other-layers.with-axes .background {
   stroke: none !important;
 }
