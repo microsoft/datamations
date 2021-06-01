@@ -84,8 +84,10 @@ async function init(id, { specUrls, specs, autoPlay }) {
   // load or set data
   if (specs) {
     vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
+    console.log(specs);
   } else if (specUrls) {
     vegaLiteSpecs = await loadData(specUrls);
+    console.log(specUrls);
   }
 
   // save raw specs to use for facet axes drawing
