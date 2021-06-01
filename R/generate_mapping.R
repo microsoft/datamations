@@ -97,5 +97,8 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   mapping <- append(x_mapping, y_mapping) %>%
     append(group_mapping)
 
+  # Remove "empty" entries (with NA names)
+  mapping <- mapping[!is.na(names(mapping))]
+
   mapping
 }
