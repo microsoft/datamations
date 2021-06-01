@@ -2,6 +2,6 @@ body {
   font-size: 18px;
 }
 
-.form-control {
+.form-control, .action-button {
   font-size: 18px;
 }

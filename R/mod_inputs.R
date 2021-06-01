@@ -38,7 +38,7 @@ mod_inputs_ui <- function(id) {
       ),
       shiny::column(
         width = 2,
-        shiny::actionButton(ns("go"), "Go", width = "100%", style = "margin-top: 31px;")
+        shiny::actionButton(ns("go"), "Go", width = "100%", style = "margin-top: 28px;")
       )
     )
   )

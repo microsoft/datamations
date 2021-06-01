@@ -80,29 +80,6 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
         data_states_titles <- c("Initial data", glue::glue("Group by {paste0(inputs$group_by(), collapse = ', ')}"), glue::glue("{inputs$summary_function()} {inputs$summary_variable()} in each group"))
       }
 
-      # Render each of the data tabs into an output
-      # purrr::iwalk(data_states_tabs, function(x, y) {
-      #   cat("generating tab", y, "\n")
-      #   output_name <- paste0("data", y)
-      #   output[[output_name]] <- reactable::renderReactable({
-      #     x <- x %>%
-      #       dplyr::mutate_if(is.numeric, round, 3)
-      #
-      #     if (y == "Initial data") {
-      #       x %>%
-      #         reactable::reactable(
-      #           fullWidth = FALSE,
-      #           width = 600
-      #         )
-      #     } else {
-      #       x %>%
-      #         reactable::reactable(
-      #           fullWidth = FALSE
-      #         )
-      #     }
-      #   })
-      # })
-
       # Create tabs and generate tables for them
       purrr::walk(
         seq_along(data_states_tabs),
@@ -151,7 +128,11 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
               selected_tab <- 3
             }
           } else {
-            selected_tab <- 2
+            if (slider_state == 1) {
+              selected_tab <- 1
+            } else {
+              selected_tab <- 2
+            }
           }
         }
 
