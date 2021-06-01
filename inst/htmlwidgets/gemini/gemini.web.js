@@ -128,7 +128,7 @@
     return JSON.parse(JSON.stringify(this));
   };
   function stringifyDatumValue(value) {
-    if (value === null) {
+    if (value === null || value === undefined) {
       return "__null__";
     }
     return value.toString();
