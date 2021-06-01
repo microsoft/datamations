@@ -119,6 +119,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   if (!is.null(mapping$x)) {
     meta <- append(meta, list(splitField = mapping$x))
+
+    if (!has_facets) {
+      meta <- append(meta, list(xAxisLabels = levels(data_1[[mapping$x]])))
+    }
   }
 
   spec <- generate_vega_specs(
