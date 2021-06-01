@@ -145,23 +145,26 @@ function play(id) {
  * Draws vega lite spec statically, also updates slider, description, show/hides some layers
  * @param {Number} index specification index in vegaLiteSpecs
  * @param {String} id root container id where vega visualizations are mounted
+ * @param {Object} vegaSpec source vega spec of current frame
  * @returns a promise of vegaEmbed
  */
-function drawSpec(index, id) {
+function drawSpec(index, id, vegaSpec) {
   const spec = vegaLiteSpecs[index];
 
   if (!spec) return;
 
   const meta = metas[index];
 
-  const { axisSelector, visSelector, descr, slider, otherLayers, controls } =
-    getSelectors(id);
+  const { 
+    axisSelector,
+    visSelector, 
+    descr, slider, 
+    otherLayers, controls 
+  } = getSelectors(id);
 
   d3.select(slider).property("value", index);
   d3.select(descr).html(meta.description || "frame " + index);
-  d3.select(axisSelector)
-    .style("opacity", meta.axes ? 1 : 0)
-    .html("");
+  d3.select(axisSelector).style("opacity", meta.axes ? 1 : 0).html("");
   d3.select(visSelector).classed("with-axes", meta.axes);
   d3.select(otherLayers).classed("with-axes", meta.axes);
 
@@ -178,16 +181,17 @@ function drawSpec(index, id) {
   d3.select(controls).style("width", spec.width + 10 + "px");
 
   // draw vis
-  return drawChart(spec, id);
+  return drawChart(spec, id, vegaSpec);
 }
 
 /**
  * Draws a chart
  * @param {Object} spec vega lite spec
  * @param {String} id root container id where vega visualizations are mounted
+ * @param {Object} vegaSpec source vega spec of current frame
  * @returns a promise of vegaEmbed
  */
-function drawChart(spec, id) {
+function drawChart(spec, id, vegaSpec) {
   const { visSelector, otherLayers } = getSelectors(id);
   const layers = document.querySelector(otherLayers);
   layers.innerHTML = "";
@@ -195,10 +199,13 @@ function drawChart(spec, id) {
   if (Array.isArray(spec)) {
     return new Promise((res) => {
       spec.forEach((s, i) => {
-        let target;
+        let target, embedSpec = s;
 
         if (s.meta.animated) {
           target = visSelector;
+          if (vegaSpec) {
+            embedSpec = vegaSpec;
+          }
         } else {
           const div = document.createElement("div");
           div.classList.add("vega-hidden-layer");
@@ -206,7 +213,7 @@ function drawChart(spec, id) {
           target = div;
         }
 
-        vegaEmbed(target, s, { renderer: "svg" }).then(() => {
+        vegaEmbed(target, embedSpec, { renderer: "svg" }).then(() => {
           if (i === spec.length - 1) {
             res();
           }
@@ -214,7 +221,7 @@ function drawChart(spec, id) {
       });
     });
   } else {
-    return vegaEmbed(visSelector, spec, { renderer: "svg" });
+    return vegaEmbed(visSelector, vegaSpec || spec, { renderer: "svg" });
   }
 }
 
@@ -276,16 +283,21 @@ function drawAxis(index, id) {
 async function animateFrame(index, id) {
   if (!frames[index]) return;
 
-  const { axisSelector, visSelector, otherLayers, descr, slider, controls } =
-    getSelectors(id);
+  const { 
+    axisSelector, 
+    visSelector, 
+    otherLayers, 
+    descr, 
+    slider, 
+    controls
+  } =  getSelectors(id);
 
   let { source, target, gemSpec, prevMeta, currMeta } = frames[index];
   let anim = await gemini.animate(source, target, gemSpec);
-  let prevHasAxes = prevMeta.axes;
   let currHasAxes = currMeta.axes;
   let width = target.width;
 
-  drawSpec(index, id).then(() => {
+  drawSpec(index, id, source).then(() => {
     d3.select(descr).html(currMeta.description);
 
     anim.play(visSelector).then(() => {
@@ -425,16 +437,16 @@ async function makeFrames() {
     try {
       const resp = await gemini.recommend(prev, curr, {
         stageN: 1,
+        
         scales: {
           x: {
-            domainDimension: "same",
+            domainDimension: "diff",
           },
           y: {
-            domainDimension: "same",
-            signal: true,
-            data: false
+            domainDimension: "diff",
           },
         },
+
         marks: {
           marks: {
             change: {
@@ -456,10 +468,30 @@ async function makeFrames() {
         totalDuration: frameDuration,
       });
 
+      const _gemSpec = resp[0] ? resp[0].spec : gemSpec;
+
+      const sync = _gemSpec.timeline.concat[0].sync;
+
+      if (!sync.some(d => d.component === "view")) {
+        sync.push({
+          "component": "view",
+          "change": {
+            "signal": [
+              "width", "height"
+            ]
+          },
+          "timing": {
+                "duration": {
+                    "ratio": 1
+                }
+            }
+        })
+      }
+
       frames.push({
         source: prev,
         target: curr,
-        gemSpec: resp[0] ? resp[0].spec : gemSpec,
+        gemSpec: _gemSpec,
         prevMeta,
         currMeta,
       });
