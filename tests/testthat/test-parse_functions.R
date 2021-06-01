@@ -9,8 +9,6 @@ test_that("parse_functions identifies functions used in a pipeline", {
   expect_equal(functions, c("data", "group_by", "summarize"))
 })
 
-# This doesn't work yet - creating the test for when it does
-
 test_that("parse_functions properly identifies when the first pipe in a pipeline contains the data, and still grabs the function", {
   pipeline <- "group_by(small_salary, Degree) %>% summarise(mean = mean(Salary))"
 
