@@ -22,11 +22,21 @@ mod_inputs_ui <- function(id) {
       ),
       shiny::column(
         width = 3,
-        shiny::uiOutput(ns("group_by"))
+        shiny::selectInput(
+          ns("group_by"),
+          "Group by",
+          choices = c("Work", "Degree"),
+          selected = "Work",
+          multiple = TRUE
+        )
       ),
       shiny::column(
         width = 2,
-        shiny::uiOutput(ns("summary_variable"))
+        shiny::selectInput(
+          ns("summary_variable"),
+          "Summary variable",
+          choices = "Salary"
+        )
       ),
       shiny::column(
         width = 2,
@@ -61,32 +71,28 @@ mod_inputs_server <- function(id) {
       )
     })
 
-    # Update group by variables based on dataset ----
+    # Update group by and summary variables based on dataset ----
 
-    output$group_by <- shiny::renderUI({
+    shiny::observe({
+
       group_by_vars <- dataset() %>%
         dplyr::select_if(~ is.factor(.x) | is.character(.x)) %>%
         names()
 
-      shiny::selectInput(
-        ns("group_by"),
-        "Group by",
+      shiny::updateSelectInput(
+        session = session,
+        inputId = "group_by",
         choices = group_by_vars,
-        selected = group_by_vars[[1]],
-        multiple = TRUE
+        selected = group_by_vars[[1]]
       )
-    })
 
-    # Update summary variables based on dataset ----
-
-    output$summary_variable <- shiny::renderUI({
       summarise_vars <- dataset() %>%
         dplyr::select_if(is.numeric) %>%
         names()
 
-      shiny::selectInput(
-        ns("summary_variable"),
-        "Summary variable",
+      shiny::updateSelectInput(
+        session = session,
+        inputId = "summary_variable",
         choices = summarise_vars
       )
     })
