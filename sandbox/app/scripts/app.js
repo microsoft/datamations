@@ -361,12 +361,12 @@ function loadData(specUrls) {
       return d3.json(url);
     })
   )
-  // .then(res => {
-  //   res[3].meta.splitField = "sex";
-  //   res[5].spec.encoding.x.axis.values = [1, 2, 3];
-  //   console.log(res[5]);
-  //   return res;
-  // })
+  .then(res => {
+    res[3].meta.splitField = "sex";
+    res[5].spec.encoding.x.axis.values = [1, 2, 3];
+    console.log(res[5]);
+    return res;
+  })
   .catch((e) => {
     console.error(e.message);
   });
@@ -385,17 +385,6 @@ async function transformSpecs() {
     if (Array.isArray(vlSpec)) continue; // just sanity check, making sure that it is not an array
 
     const meta = vlSpec.meta;
-
-    // if (meta.shiftGrids && meta.xAxisLabels) {
-    //   const max = d3.max(vlSpec.data.values, d => d.n);
-
-    //   vlSpec.data.values.forEach(d => {
-    //     if (d[meta.shiftField] === meta.xAxisLabels[1]) {
-    //       d.shiftX = max + 10;
-    //     }
-    //   });
-    // }
-
     const parse = meta.parse;
 
     // parsing
