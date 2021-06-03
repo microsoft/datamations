@@ -30,13 +30,13 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
     )
   } else {
     # X mapping
-    # If there are 3 grouping variables, X is the third one - otherwise, it's just 1
-    if (identical(n_group_vars, 3L)) { # Use identical to handle NULL if there is no grouping at all
-      x_mapping <- list(x = dplyr::nth(.group_vars, 3))
-    } else {
-      x_mapping <- list(x = 1)
+
+    # 1 grouping variable = first is X
+    # 2 grouping variables = second is X
+    # 3 grouping variables = third is X
+
+    x_mapping <- list(x = dplyr::nth(.group_vars, n_group_vars))
     }
-  }
 
   # Y mapping
   # If there is no summarize, then Y can be NULL
@@ -71,23 +71,16 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
     if (!pipeline_has_group_by) {
       group_mapping <- NULL
     } else {
-      if (n_group_vars >= 1) {
-        group_mapping <- list(column = dplyr::nth(.group_vars, 1))
-      }
 
-      if (n_group_vars >= 2) {
-        group_mapping <- append(
-          group_mapping,
-          list(row = dplyr::nth(.group_vars, 2))
-        )
-      }
+      # One variable - x
+      # Two variables - column, x
+      # Three variables - column, row, x
 
-      if (n_group_vars == 3) {
-        group_mapping <- append(
-          group_mapping,
-          list(color = dplyr::nth(.group_vars, 3))
-        )
-      }
+      group_mapping <- switch(n_group_vars,
+        "1" = list(x = dplyr::nth(.group_vars, 1)),
+        "2" = list(column = dplyr::nth(.group_vars, 1), x = dplyr::nth(.group_vars, 2), color = dplyr::nth(.group_vars, 2)),
+        "3" = list(column = dplyr::nth(.group_vars, 1), row = dplyr::nth(.group_vars, 2), x = dplyr::nth(.group_vars, 3), color = dplyr::nth(.group_vars, 3))
+      )
 
       group_mapping <- append(group_mapping, list(groups = .group_vars))
     }
