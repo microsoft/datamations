@@ -148,39 +148,50 @@
     <script src="./scripts/hack-facet-view.js"></script>
     <script src="./scripts/app.js"></script>
     <script>
-      // const repoUrl = "https://raw.githubusercontent.com/jhofman/datamations";
+      const repoUrl = "https://raw.githubusercontent.com/jhofman/datamations";
       // const dataUrl = "./data/";
-      // const dataUrl = repoUrl + "/fixes/sandbox/specs-for-infogrid/";
+      const dataUrl = repoUrl + "/fixes/sandbox/specs-for-infogrid/";
 
-      // init("app", {
-      //   specUrls: [
-      //     dataUrl + "01-ungrouped.json",
-      //     dataUrl + "02-column-facet.json",
-      //     dataUrl + "03-column-row-facet.json",
-      //     dataUrl + "04-column-row-facet-color.json",
-      //     dataUrl + "05-jitter.json",
-      //     dataUrl + "06-summary.json",
-      //   ],
-      //   autoPlay: false
-      // });
+      init("app", {
+        specUrls: [
+          dataUrl + "01-ungrouped.json",
+          dataUrl + "02-column-facet.json",
+          dataUrl + "03-column-row-facet.json",
+          dataUrl + "04-column-row-facet-color.json",
+          dataUrl + "05-jitter.json",
+          dataUrl + "06-summary.json",
+        ],
+        autoPlay: false
+      });
 
-      d3.json(
-        // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_with_facet.json"
-        // 'https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_no_facet.json'
-        // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/zoomed_specs.json"
+      // d3.json(
+      // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_with_facet.json"
+      // 'https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/specs_no_facet.json'
+      // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/zoomed_specs.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/double_errorbar.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/erroring_errorbar.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/offset_x_with_color.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/offset_x_second_row.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/offset_x_second_column.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/dual_legend_missing_last_frame.json"
-      "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/no_facets_errorbar_off_on_zoom.json"
+      // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/errorbar/no_facets_errorbar_off_on_zoom.json"
       // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/variable_x_only_jitter_off.json"
-      ).then((res) => {
-        init("app", {
-          specs: res
-        });
-      });
+      // "https://raw.githubusercontent.com/microsoft/datamations/parse-ggplot2/sandbox/ggplot2/shiftgrids_example.json"
+      // ).then((res) => {
+        // delete res[2].meta.splitField;
+
+        // res[2].meta.shiftGrids = true;
+        // res[2].meta.xAxisLabels = ['Masters', 'PhD'];
+        // res[2].meta.shiftField = "Degree";
+        // res[2].spec.width = 170;
+
+        // res[2].meta.shiftField = "Work";
+        // res[2].spec.width = 170;
+
+      //   init("app", {
+      //     specs: res
+      //   });
+      // });
     </script>
   </body>
 </html>
