@@ -84,10 +84,9 @@ async function init(id, { specUrls, specs, autoPlay }) {
   // load or set data
   if (specs) {
     vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
-    console.log(specs);
+    // console.log(specs);
   } else if (specUrls) {
     vegaLiteSpecs = await loadData(specUrls);
-    console.log(specUrls);
   }
 
   // save raw specs to use for facet axes drawing
@@ -173,12 +172,14 @@ function drawSpec(index, id, vegaSpec) {
     drawAxis(index, id);
   }
 
-  // shift vis
-  if (meta.transformX) {
-    d3.select(visSelector).style("left", meta.transformX + "px");
-  }
+  const transformX = (meta.transformX || 0);
 
-  d3.select(controls).style("width", spec.width + 10 + "px");
+  // shift vis
+  d3.select(visSelector).style("left", () => {
+    return transformX + "px"
+  });
+
+  d3.select(controls).style("width", (spec.width + transformX + 10) + "px");
 
   // draw vis
   return drawChart(spec, id, vegaSpec);
@@ -304,11 +305,13 @@ async function animateFrame(index, id) {
       d3.select(slider).property("value", index + 1);
     });
 
-    if (currMeta.transformX) {
+    const transformX = (currMeta.transformX || 0)
+
+    if (transformX) {
       d3.select(visSelector)
         .transition()
         .duration(750)
-        .style("left", currMeta.transformX + "px");
+        .style("left", transformX + "px");
     }
 
     // show/hide axis vega chart
@@ -321,7 +324,7 @@ async function animateFrame(index, id) {
       d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
       d3.select(visSelector).classed("with-axes", false);
       d3.select(otherLayers).classed("with-axes", false);
-      d3.select(controls).style("width", width + 10 + "px");
+      d3.select(controls).style("width", (width + transformX + 10) + "px");
     }
 
     const nextSpec = vegaLiteSpecs[index + 1];
@@ -357,7 +360,14 @@ function loadData(specUrls) {
     specUrls.map((url) => {
       return d3.json(url);
     })
-  ).catch((e) => {
+  )
+  // .then(res => {
+  //   res[3].meta.splitField = "sex";
+  //   res[5].spec.encoding.x.axis.values = [1, 2, 3];
+  //   console.log(res[5]);
+  //   return res;
+  // })
+  .catch((e) => {
     console.error(e.message);
   });
 }
@@ -374,7 +384,19 @@ async function transformSpecs() {
 
     if (Array.isArray(vlSpec)) continue; // just sanity check, making sure that it is not an array
 
-    const parse = vlSpec.meta.parse;
+    const meta = vlSpec.meta;
+
+    // if (meta.shiftGrids && meta.xAxisLabels) {
+    //   const max = d3.max(vlSpec.data.values, d => d.n);
+
+    //   vlSpec.data.values.forEach(d => {
+    //     if (d[meta.shiftField] === meta.xAxisLabels[1]) {
+    //       d.shiftX = max + 10;
+    //     }
+    //   });
+    // }
+
+    const parse = meta.parse;
 
     // parsing
     if (parse === "grid") {

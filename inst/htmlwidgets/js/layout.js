@@ -29,6 +29,7 @@ function applyShifts(spec, rows) {
     const map = new Map(v.map((d) => [d[splitField], d.n]));
     let shiftSum = 0; // will accumulate shiftX
     let shiftCounter = 0;
+    let sum = d3.sum(v, d => d.n);
 
     return v.map((d) => {
       const shifter = shifters.get(d[splitField]);
@@ -43,6 +44,7 @@ function applyShifts(spec, rows) {
         ...d,
         shiftX: shiftSum,
         shiftCounter,
+        sum: sum,
       };
     });
   };
@@ -79,14 +81,30 @@ function getGridSpec(spec, rows = 10) {
   const values = spec.meta.splitField ? applyShifts(obj, rows) : obj.data.values;
   const newValues = [];
 
+  let maxN = 0;
+
+  if (spec.meta.splitField) {
+    maxN = d3.max(values, d => d.sum);
+  } else {
+    maxN = d3.max(values, d => d.n);
+  }
+
   return new Promise((res) => {
     let counter = 1;
+
     for (let x = 0; x < values.length; x++) {
       const d = values[x];
       const n = d.n;
+      const sum = spec.meta.splitField ? d.sum : d.n;
       const shiftX = d.shiftX || 0;
       const shiftCounter = d.shiftCounter || 0;
       const shiftCol = Math.floor(shiftX / rows);
+
+      let startCol = 0;
+
+      if (sum !== maxN) {
+        startCol = Math.ceil((Math.floor(maxN / rows) - Math.floor(sum / rows)) / 2);
+      }
 
       for (let i = 0; i < n; i++) {
         const row = i % rows;
@@ -95,17 +113,23 @@ function getGridSpec(spec, rows = 10) {
         newValues.push({
           ...d,
           gemini_id: counter,
-          x: col + (shiftCol > 0 ? shiftCol + shiftCounter : 0),
+          x: col + (shiftCol > 0 ? shiftCol + shiftCounter : 0) + startCol,
           y: rows - 1 - row,
         });
+
         counter++;
       }
     }
 
-    const xDomain = [
+    let xDomain = [
       d3.min(newValues, (d) => d.x) - 2,
       d3.max(newValues, (d) => d.x) + 2,
     ];
+
+    // if (spec.meta.shiftGrids) {
+    //   const max = Math.ceil(d3.max(values, (d) => d.n) / 10) * 2;
+    //   xDomain = [-2, max + 1];
+    // }
 
     const yDomain = [
       d3.min(newValues, (d) => d.y) - 0.7,
