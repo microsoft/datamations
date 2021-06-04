@@ -31,12 +31,16 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   } else {
     # X mapping
 
-    # 1 grouping variable = first is X
-    # 2 grouping variables = second is X
-    # 3 grouping variables = third is X
+    if (n_group_vars > 0) {
+      # 1 grouping variable = first is X
+      # 2 grouping variables = second is X
+      # 3 grouping variables = third is X
 
-    x_mapping <- list(x = dplyr::nth(.group_vars, n_group_vars))
+      x_mapping <- list(x = dplyr::nth(.group_vars, n_group_vars))
+    } else {
+      x_mapping <- list(x = 1)
     }
+  }
 
   # Y mapping
   # If there is no summarize, then Y can be NULL
