@@ -26,7 +26,7 @@ mod_inputs_ui <- function(id) {
           ns("group_by"),
           "Group by",
           choices = c("Work", "Degree"),
-          selected = "Work",
+          selected = "Degree",
           multiple = TRUE
         )
       ),
