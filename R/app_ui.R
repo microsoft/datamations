@@ -6,6 +6,7 @@ app_ui <- function(request) {
   shiny::tagList(
     shinyWidgets::useShinydashboard(),
     golem_add_external_resources(),
+    # Send slider value, for changing tabs
     shiny::tags$script(shiny::HTML('
     $(document).ready(function() {
     $(document).on("change", ".slider", function() {
@@ -13,6 +14,13 @@ app_ui <- function(request) {
   Shiny.onInputChange("datamation_state_max", $(this).attr("max"));
   })
   })')),
+  # Listen to tab value, for changing slider!
+  shiny::tags$script("
+      Shiny.addCustomMessageHandler('tab-selected', function(tab) {
+      document.getElementById('datamation_sanddance-datamation_ui').getElementsByClassName('slider')[0].value = tab;
+      onSlide('datamation_sanddance-datamation');
+      });
+    "),
     shiny::fluidPage(
       style = "max-width: 1200px;",
       shiny::h1("Datamations"),

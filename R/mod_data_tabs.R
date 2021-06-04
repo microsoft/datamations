@@ -108,42 +108,76 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
       )
     })
 
-      # Change the tab shown based on the slider ----
-      shiny::observeEvent(datamation_state$state(), {
-        # Match the states to the tabs
+    # Change the tab shown based on the slider ----
+    shiny::observeEvent(datamation_state$state(), {
+      # Match the states to the tabs
 
-        # Logic: 0 is the first tab, always initial data
-        # There is one group by tab for every variable grouped by
-        # Then every tab beyond that is summarize
+      # Logic: 0 is the first tab, always initial data
+      # There is one group by tab for every variable grouped by
+      # Then every tab beyond that is summarize
 
-        slider_state <- datamation_state$state()
+      slider_state <- datamation_state$state()
 
-        if (slider_state == 0) {
-          selected_tab <- 1
+      if (slider_state == 0) {
+        selected_tab <- 1
+      } else {
+        if (!is.null(inputs$group_by())) {
+          if (slider_state %in% 1:(1 + length(inputs$group_by()))) {
+            selected_tab <- 2
+          } else {
+            selected_tab <- 3
+          }
+        } else {
+          if (slider_state == 1) {
+            selected_tab <- 1
+          } else {
+            selected_tab <- 2
+          }
+        }
+      }
+
+      selected_tab <- as.character(selected_tab)
+
+      shiny::updateTabsetPanel(
+        session = session,
+        inputId = "data_tabs_panel",
+        selected = selected_tab
+      )
+    })
+
+    # Change the slider based on the tab selected ----
+
+    observe({
+      # Match the tab to the slider! Opposite logic as above
+
+      # Logic: 1 is the first tab, always initial data
+      # There is one group by tab for every variable grouped by
+      # Then every tab beyond that is summarize
+
+      tab_state <- input$data_tabs_panel
+
+      if (!is.null(tab_state)) {
+
+        if (tab_state == 1) {
+          selected_slider <- 1
         } else {
           if (!is.null(inputs$group_by())) {
-            if (slider_state %in% 1:(1 + length(inputs$group_by()))) {
-              selected_tab <- 2
-            } else {
-              selected_tab <- 3
+            if (tab_state == 2) { # Group by tab
+              selected_slider <- 2
+            } else { # Summarize tab
+              selected_slider <- 3 + length(inputs$group_by())
             }
           } else {
-            if (slider_state == 1) {
-              selected_tab <- 1
-            } else {
-              selected_tab <- 2
-            }
+            selected_slider <- 3
           }
         }
 
-        selected_tab <- as.character(selected_tab)
+        # Handle 0 indexing in javascript
+        selected_slider <- selected_slider - 1
 
-        shiny::updateTabsetPanel(
-          session = session,
-          inputId = "data_tabs_panel",
-          selected = selected_tab
-        )
-      })
+        session$sendCustomMessage("tab-selected", selected_slider)
+      }
+    })
   })
 }
 
