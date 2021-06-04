@@ -11,9 +11,11 @@ let frames;
 let metas;
 let frameIndex = 0;
 let intervalId;
+let timeoutId;
 let initializing = false;
 
 const frameDuration = 2000;
+const frameDelay = 1000;
 // a fallback gemini spec in case gemini.animate could not find anything
 const gemSpec = {
   timeline: {
@@ -64,6 +66,11 @@ const reset = () => {
   if (intervalId) {
     clearInterval(intervalId);
     intervalId = null;
+  }
+
+  if (timeoutId) {
+    clearInterval(timeoutId);
+    timeoutId = null;
   }
 };
 
@@ -137,7 +144,7 @@ function play(id) {
       clearInterval(intervalId);
       frameIndex = 0;
     }
-  }, frameDuration + 100);
+  }, frameDuration + frameDelay);
 }
 
 /**
@@ -298,55 +305,63 @@ async function animateFrame(index, id) {
   let currHasAxes = currMeta.axes;
   let width = target.width;
 
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+  }
+
   drawSpec(index, id, source).then(() => {
-    d3.select(descr).html(currMeta.description);
+    timeoutId = setTimeout(() => {
+      d3.select(descr).html(currMeta.description);
 
-    anim.play(visSelector).then(() => {
-      d3.select(slider).property("value", index + 1);
-    });
-
-    const transformX = (currMeta.transformX || 0)
-
-    if (transformX) {
-      d3.select(visSelector)
-        .transition()
-        .duration(750)
-        .style("left", transformX + "px");
-    }
-
-    // show/hide axis vega chart
-    if (currHasAxes) {
-      drawAxis(index + 1, id);
-      d3.select(axisSelector).transition().duration(1000).style("opacity", 1);
-      d3.select(visSelector).classed("with-axes", true);
-      d3.select(otherLayers).classed("with-axes", true);
-    } else {
-      d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
-      d3.select(visSelector).classed("with-axes", false);
-      d3.select(otherLayers).classed("with-axes", false);
-      d3.select(controls).style("width", (width + transformX + 10) + "px");
-    }
-
-    const nextSpec = vegaLiteSpecs[index + 1];
-
-    if (nextSpec && Array.isArray(nextSpec)) {
-      const statics = nextSpec.filter((d) => !d.meta.animated);
-
-      d3.select(otherLayers)
-        .html("")
-        .style("opacity", 0)
-        .transition()
-        .delay(frameDuration / 3)
-        .duration(frameDuration / 2)
-        .style("opacity", 1);
-
-      statics.forEach((s) => {
-        const div = document.createElement("div");
-        div.classList.add("vega-hidden-layer");
-        vegaEmbed(div, s, { renderer: "svg" });
-        document.querySelector(otherLayers).appendChild(div);
+      anim.play(visSelector).then(() => {
+        d3.select(slider).property("value", index + 1);
       });
-    }
+  
+      const transformX = (currMeta.transformX || 0)
+  
+      if (transformX) {
+        d3.select(visSelector)
+          .transition()
+          .duration(750)
+          .style("left", transformX + "px");
+      }
+  
+      // show/hide axis vega chart
+      if (currHasAxes) {
+        drawAxis(index + 1, id);
+        d3.select(axisSelector).transition().duration(1000).style("opacity", 1);
+        d3.select(visSelector).classed("with-axes", true);
+        d3.select(otherLayers).classed("with-axes", true);
+      } else {
+        d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
+        d3.select(visSelector).classed("with-axes", false);
+        d3.select(otherLayers).classed("with-axes", false);
+        d3.select(controls).style("width", (width + transformX + 10) + "px");
+      }
+  
+      const nextSpec = vegaLiteSpecs[index + 1];
+  
+      if (nextSpec && Array.isArray(nextSpec)) {
+        const statics = nextSpec.filter((d) => !d.meta.animated);
+  
+        d3.select(otherLayers)
+          .html("")
+          .style("opacity", 0)
+          .transition()
+          .delay(frameDuration / 3)
+          .duration(frameDuration / 2)
+          .style("opacity", 1);
+  
+        statics.forEach((s) => {
+          const div = document.createElement("div");
+          div.classList.add("vega-hidden-layer");
+          vegaEmbed(div, s, { renderer: "svg" });
+          document.querySelector(otherLayers).appendChild(div);
+        });
+      }
+    }, frameDelay)
+
+
   });
 }
 
