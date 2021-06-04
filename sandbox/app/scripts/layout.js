@@ -26,7 +26,7 @@ function applyShifts(spec, rows) {
     const map = new Map(v.map((d) => [d[splitField], d.n]));
     let shiftSum = 0; // will accumulate shiftX
     let shiftCounter = 0;
-    let sum = d3.sum(v, d => d.n);
+    let sumCols = d3.sum(v, d => Math.ceil(d.n / rows));
 
     return v.map((d) => {
       const shifter = shifters.get(d[splitField]);
@@ -42,7 +42,7 @@ function applyShifts(spec, rows) {
         ...d,
         shiftX: shiftSum,
         shiftCounter,
-        sum: sum,
+        sumCols: sumCols + v.length - 1
       };
     });
   };
@@ -82,23 +82,21 @@ function getGridSpec(spec, rows = 10) {
   const values = shiftingSubGrids ? applyShifts(obj, rows) : obj.data.values;
   const newValues = [];
 
-  let maxN = 0;
+  let maxCols = 0;
   
   if (shiftingSubGrids) {
-    maxN = d3.max(values, d => d.sum);
+    maxCols = d3.max(values, d => d.sumCols);
   } else {
-    maxN = d3.max(values, d => d.n);
+    maxCols = Math.ceil(d3.max(values, d => d.n) / rows);
   }
-
-  const maxCols = Math.floor(maxN / rows);
-
+  
   return new Promise((res) => {
     let counter = 1;
 
     for (let x = 0; x < values.length; x++) {
       const d = values[x];
       const n = d.n;
-      const sum = shiftingSubGrids ? d.sum : d.n;
+      const cols = shiftingSubGrids ? d.sumCols : Math.ceil(d.n / rows);
 
       let shiftCounter = 0;
       let shiftCol = 0;
@@ -113,8 +111,8 @@ function getGridSpec(spec, rows = 10) {
 
       let startCol = 0;
 
-      if (sum !== maxN) {
-        startCol = Math.floor((maxCols - Math.ceil(sum / rows)) / 2);
+      if (cols !== maxCols) {
+        startCol = Math.ceil((maxCols - cols) / 2);
       }
 
       for (let i = 0; i < n; i++) {
@@ -173,7 +171,8 @@ function getGridSpec(spec, rows = 10) {
         labelExpr: `${JSON.stringify(expr)}[datum.label]`,
         values: Object.keys(expr).map(d => +d),
         labelAngle: -90,
-        grid: false
+        grid: false,
+        title: spec.meta.splitField,
       }
     }
 
