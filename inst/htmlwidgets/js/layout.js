@@ -18,21 +18,19 @@ function applyShifts(spec, rows) {
     }
   }
 
-  const splitOptions = [...new Set(specValues.map((d) => d[splitField]))];
-  const shifters = new Map(
-    splitOptions.map((d, i) => {
-      return [d, i > 0 ? splitOptions[i - 1] : null];
-    })
-  );
-
   const reduce = (v) => {
+    const splitOptions = [...new Set(v.map((d) => d[splitField]))];
+    const shifters = new Map(splitOptions.map((d, i) => {
+      return [d, i > 0 ? splitOptions[i - 1] : null];
+    }));
     const map = new Map(v.map((d) => [d[splitField], d.n]));
     let shiftSum = 0; // will accumulate shiftX
     let shiftCounter = 0;
-    let sum = d3.sum(v, d => d.n);
+    let sumCols = d3.sum(v, d => Math.ceil(d.n / rows));
 
     return v.map((d) => {
       const shifter = shifters.get(d[splitField]);
+
       let m = map.get(shifter);
 
       if (m) {
@@ -44,7 +42,7 @@ function applyShifts(spec, rows) {
         ...d,
         shiftX: shiftSum,
         shiftCounter,
-        sum: sum,
+        sumCols: sumCols + v.length - 1
       };
     });
   };
@@ -78,15 +76,18 @@ function applyShifts(spec, rows) {
 function getGridSpec(spec, rows = 10) {
   const obj = { ...spec };
   const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
-  const values = spec.meta.splitField ? applyShifts(obj, rows) : obj.data.values;
+  const shiftingSubGrids = (spec.meta.splitField && spec.facet);
+
+  // apply shiftX and shiftCounter only if facets and splitField
+  const values = shiftingSubGrids ? applyShifts(obj, rows) : obj.data.values;
   const newValues = [];
 
-  let maxN = 0;
+  let maxCols = 0;
 
-  if (spec.meta.splitField) {
-    maxN = d3.max(values, d => d.sum);
+  if (shiftingSubGrids) {
+    maxCols = d3.max(values, d => d.sumCols);
   } else {
-    maxN = d3.max(values, d => d.n);
+    maxCols = Math.ceil(d3.max(values, d => d.n) / rows);
   }
 
   return new Promise((res) => {
@@ -95,15 +96,23 @@ function getGridSpec(spec, rows = 10) {
     for (let x = 0; x < values.length; x++) {
       const d = values[x];
       const n = d.n;
-      const sum = spec.meta.splitField ? d.sum : d.n;
-      const shiftX = d.shiftX || 0;
-      const shiftCounter = d.shiftCounter || 0;
-      const shiftCol = Math.floor(shiftX / rows);
+      const cols = shiftingSubGrids ? d.sumCols : Math.ceil(d.n / rows);
+
+      let shiftCounter = 0;
+      let shiftCol = 0;
+
+      if (shiftingSubGrids) {
+        shiftCounter = d.shiftCounter;
+        shiftCol = Math.floor(d.shiftX / rows);
+      } else if (spec.meta.splitField) {
+        shiftCounter = x;
+        shiftCol = maxCols * x
+      }
 
       let startCol = 0;
 
-      if (sum !== maxN) {
-        startCol = Math.ceil((Math.floor(maxN / rows) - Math.floor(sum / rows)) / 2);
+      if (cols !== maxCols) {
+        startCol = Math.ceil((maxCols - cols) / 2);
       }
 
       for (let i = 0; i < n; i++) {
@@ -113,7 +122,7 @@ function getGridSpec(spec, rows = 10) {
         newValues.push({
           ...d,
           gemini_id: counter,
-          x: col + (shiftCol > 0 ? shiftCol + shiftCounter : 0) + startCol,
+          x: col + shiftCol + shiftCounter + startCol,
           y: rows - 1 - row,
         });
 
@@ -121,15 +130,13 @@ function getGridSpec(spec, rows = 10) {
       }
     }
 
-    let xDomain = [
-      d3.min(newValues, (d) => d.x) - 2,
-      d3.max(newValues, (d) => d.x) + 2,
-    ];
+    let xDomain;
 
-    // if (spec.meta.shiftGrids) {
-    //   const max = Math.ceil(d3.max(values, (d) => d.n) / 10) * 2;
-    //   xDomain = [-2, max + 1];
-    // }
+    if (spec.facet) {
+      xDomain = [-2, d3.max(newValues, d => d.x) + 2];
+    } else {
+      xDomain = [-2, maxCols * values.length + 2 + (values.length - 1)];
+    }
 
     const yDomain = [
       d3.min(newValues, (d) => d.y) - 0.7,
@@ -150,6 +157,24 @@ function getGridSpec(spec, rows = 10) {
 
     encoding.x.field = "x";
     encoding.y.field = "y";
+
+    if (!spec.facet && spec.meta.splitField) {
+      const labels = values.map(d => d[spec.meta.splitField]);
+      const expr = {};
+
+      labels.forEach((d, i) => {
+        const x = maxCols * i + Math.floor(maxCols / 2) + i;
+        expr[x] = d;
+      });
+
+      encoding.x.axis = {
+        labelExpr: `${JSON.stringify(expr)}[datum.label]`,
+        values: Object.keys(expr).map(d => +d),
+        labelAngle: -90,
+        grid: false,
+        title: spec.meta.splitField,
+      }
+    }
 
     return res(obj);
   });
