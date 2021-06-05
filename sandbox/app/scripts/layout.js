@@ -1,13 +1,8 @@
-/**
- * Applies shiftX to inner grid elements
- * @param {Object} spec vega-lite specification
- * @param {Number} rows number of rows in a grid
- * @returns grid data
- */
-function applyShifts(spec, rows) {
+function generateGrid(spec, rows = 10) {
   const splitField = spec.meta.splitField;
   const specValues = spec.data.values;
   const groupKeys = [];
+  const maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows)
 
   if (spec.facet) {
     if (spec.facet.column) {
@@ -18,33 +13,42 @@ function applyShifts(spec, rows) {
     }
   }
 
+  let splitOptions = [];
+
+  if (splitField) {
+    splitOptions = Array.from(
+      new Set(specValues.map((d) => d[splitField]))
+    )
+  }
+
+  let counter = 1;
+
   const reduce = (v) => {
-    const splitOptions = [...new Set(v.map((d) => d[splitField]))];
-    const shifters = new Map(splitOptions.map((d, i) => {
-      return [d, i > 0 ? splitOptions[i - 1] : null];
-    }));
-    const map = new Map(v.map((d) => [d[splitField], d.n]));
-    let shiftSum = 0; // will accumulate shiftX
-    let shiftCounter = 0;
-    let sumCols = d3.sum(v, d => Math.ceil(d.n / rows));
+    const arr = [];
 
-    return v.map((d) => {
-      const shifter = shifters.get(d[splitField]);
+    v.forEach((d, j) => {
+      const n = d.n;
+      const xCenter = splitField ? splitOptions.indexOf(d[splitField]) + 1 : 1;
 
-      let m = map.get(shifter);
+      let startCol = (xCenter - 1) * maxCols + j; // inner grid start
+      startCol += Math.floor((maxCols - Math.ceil(n / rows)) / 2); // center alignment
+      
+      for (let i = 0; i < n; i++) {
+        const x = startCol + Math.floor(i / rows);
+        const y = rows - 1 - i % rows;
 
-      if (m) {
-        shiftCounter++;
-        shiftSum += m + rows;
+        arr.push({
+          ...d,
+          gemini_id: counter,
+          x,
+          y,
+        });
+
+        counter++;
       }
-
-      return {
-        ...d,
-        shiftX: shiftSum,
-        shiftCounter,
-        sumCols: sumCols + v.length - 1
-      };
     });
+
+    return arr;
   };
 
   if (groupKeys.length === 0) {
@@ -68,82 +72,30 @@ function applyShifts(spec, rows) {
 }
 
 /**
- * Generates grid-like specification 
+ * Generates infogrid specification 
  * @param {Object} spec vega-lite specification
  * @param {Number} rows number of rows in a grid
  * @returns grid specification
  */
 function getGridSpec(spec, rows = 10) {
-  const obj = { ...spec };
-  const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
-  const shiftingSubGrids = (spec.meta.splitField && spec.facet);
-
-  // apply shiftX and shiftCounter only if facets and splitField
-  const values = shiftingSubGrids ? applyShifts(obj, rows) : obj.data.values;
-  const newValues = [];
-
-  let maxCols = 0;
-  
-  if (shiftingSubGrids) {
-    maxCols = d3.max(values, d => d.sumCols);
-  } else {
-    maxCols = Math.ceil(d3.max(values, d => d.n) / rows);
-  }
-  
   return new Promise((res) => {
-    let counter = 1;
+    const grid = generateGrid(spec, rows);
+    const obj = {...spec};
+    const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
-    for (let x = 0; x < values.length; x++) {
-      const d = values[x];
-      const n = d.n;
-      const cols = shiftingSubGrids ? d.sumCols : Math.ceil(d.n / rows);
+    const yGap = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
 
-      let shiftCounter = 0;
-      let shiftCol = 0;
-
-      if (shiftingSubGrids) {
-        shiftCounter = d.shiftCounter;
-        shiftCol = Math.floor(d.shiftX / rows);
-      } else if (spec.meta.splitField) {
-        shiftCounter = x;
-        shiftCol = maxCols * x
-      }
-
-      let startCol = 0;
-
-      if (cols !== maxCols) {
-        startCol = Math.ceil((maxCols - cols) / 2);
-      }
-
-      for (let i = 0; i < n; i++) {
-        const row = i % rows;
-        const col = Math.floor(i / rows);
-
-        newValues.push({
-          ...d,
-          gemini_id: counter,
-          x: col + shiftCol + shiftCounter + startCol,
-          y: rows - 1 - row,
-        });
-
-        counter++;
-      }
-    }
-
-    let xDomain;
-
-    if (spec.facet) {
-      xDomain = [-2, d3.max(newValues, d => d.x) + 2];
-    } else {
-      xDomain = [-2, maxCols * values.length + 2 + (values.length - 1)];
-    }
-
-    const yDomain = [
-      d3.min(newValues, (d) => d.y) - 0.7,
-      d3.max(newValues, (d) => d.y) + 0.7,
+    const xDomain = [
+      d3.min(grid, d => d.x) - 2, 
+      d3.max(grid, d => d.x) + 2
     ];
 
-    obj.data.values = newValues;
+    const yDomain = [
+      d3.min(grid, (d) => d.y) - yGap,
+      d3.max(grid, (d) => d.y) + yGap,
+    ];
+
+    obj.data.values = grid;
 
     encoding.x.scale = {
       type: "linear",
@@ -158,12 +110,16 @@ function getGridSpec(spec, rows = 10) {
     encoding.x.field = "x";
     encoding.y.field = "y";
 
-    if (!spec.facet && spec.meta.splitField) {
-      const labels = values.map(d => d[spec.meta.splitField]);
+    if (spec.meta.splitField) {
+      const labels = Array.from(
+        new Set(grid.map(d => d[spec.meta.splitField]))
+      );
+
       const expr = {};
+      const maxCols = d3.max(spec.data.values, d => Math.ceil(d.n / rows));
 
       labels.forEach((d, i) => {
-        const x = maxCols * i + Math.floor(maxCols / 2) + i;
+        const x = maxCols * i + Math.floor(maxCols / 2);
         expr[x] = d;
       });
 
@@ -173,7 +129,7 @@ function getGridSpec(spec, rows = 10) {
         labelAngle: -90,
         grid: false,
         title: spec.meta.splitField,
-      }
+      };
     }
 
     return res(obj);
