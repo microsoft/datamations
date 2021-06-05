@@ -408,9 +408,10 @@ async function transformSpecs() {
 
     // parsing
     if (parse === "grid") {
-      vegaLiteSpecs[i] = await getGridSpec(vlSpec);
-      rawSpecs[i].data.values = vegaLiteSpecs[i].data.values;
-      const enc = vegaLiteSpecs[i].spec ? vegaLiteSpecs[i].spec.encoding : vegaLiteSpecs[i].encoding;
+      const gridSpec = await getGridSpec(vlSpec);
+      const enc = gridSpec.spec ? gridSpec.spec.encoding : gridSpec.encoding;
+      
+      rawSpecs[i].data.values = gridSpec.data.values;
 
       if (rawSpecs[i].meta.axes && rawSpecs[i].meta.splitField) {
         const encoding = rawSpecs[i].spec ? rawSpecs[i].spec.encoding : rawSpecs[i].encoding;
@@ -419,6 +420,8 @@ async function transformSpecs() {
           domain: enc.y.scale.domain
         }
       }
+
+      vegaLiteSpecs[i] = gridSpec;
     } else if (parse === "jitter") {
       vegaLiteSpecs[i] = await getJitterSpec(vlSpec);
     } else if (vlSpec.layer || (vlSpec.spec && vlSpec.spec.layer)) {
