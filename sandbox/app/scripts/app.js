@@ -352,7 +352,7 @@ async function animateFrame(index, id) {
           .html("")
           .style("opacity", 0)
           .transition()
-          .delay(frameDuration / 3)
+          // .delay(frameDuration / 3)
           .duration(frameDuration / 2)
           .style("opacity", 1);
   
