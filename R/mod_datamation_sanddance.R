@@ -25,7 +25,6 @@ mod_datamation_sanddance_server <- function(id, pipeline) {
 
       # Generate datamation -----
       datamation <- shiny::reactive({
-        cat("making datamation \n")
         datamation_sanddance(pipeline(), height = 300, width = 300)
       })
 

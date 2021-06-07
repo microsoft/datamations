@@ -150,30 +150,13 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
     observe({
       # Match the tab to the slider! Opposite logic as above
 
-      # Logic: 1 is the first tab, always initial data
-      # There is one group by tab for every variable grouped by
-      # Then every tab beyond that is summarize
-
       tab_state <- input$data_tabs_panel
 
       if (!is.null(tab_state)) {
 
-        if (tab_state == 1) {
-          selected_slider <- 1
-        } else {
-          if (!is.null(inputs$group_by())) {
-            if (tab_state == 2) { # Group by tab
-              selected_slider <- 2
-            } else { # Summarize tab
-              selected_slider <- 3 + length(inputs$group_by())
-            }
-          } else {
-            selected_slider <- 3
-          }
-        }
+        selected_slider <- determine_slider_from_tab(tab_state, inputs$group_by())
 
-        # Handle 0 indexing in javascript
-        selected_slider <- selected_slider - 1
+        # If the slider is ALREADY in the right section (e.g. already on the second group by frame), don't change it to the first -
 
         session$sendCustomMessage("tab-selected", selected_slider)
       }
@@ -181,8 +164,34 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
   })
 }
 
-## To be copied in the UI
-# mod_data_tabs_ui("data_tabs")
+determine_slider_from_tab <- function(tab, group_by) {
+  # Determining the slider position from the tab selected
 
-## To be copied in the server
-# mod_data_tabs_server("data_tabs")
+  # If the tab value is 1 (the initial data), then the slider is always 1
+
+  if (tab == 1) {
+    slider <- 1
+  }
+
+  # If there are grouping variables, then:
+  # The first frame of the "group by" is in the second position - after the initial data, and just go to that
+  # There is 1 frame per grouping variable, plus one frame for the distribution
+  # So the first frame of the "summarize" is in: 1 (initial frame) + 1 (distribution) + n_groups + 1 (after all those)
+  if (!is.null(group_by)) {
+    if (tab == 2) { # The second tab is group by
+      slider <- 2
+    } else if (tab == 3) {
+      slider <- 3 + length(group_by)
+    }
+  }
+
+  # If there is no grouping variable, then:
+  # There is 1 frame for the initial data, and 1 frame for the distribution
+  # So the first frame of the "summarize" step is 3
+  if (is.null(group_by) & tab != 1) {
+    slider <- 3
+  }
+
+  # Handle 0 indexing in javascript
+  slider - 1
+}
