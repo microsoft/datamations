@@ -91,7 +91,7 @@ async function init(id, { specUrls, specs, autoPlay }) {
   // load or set data
   if (specs) {
     vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
-    // console.log(specs);
+    console.log(specs);
   } else if (specUrls) {
     vegaLiteSpecs = await loadData(specUrls);
   }
@@ -229,7 +229,11 @@ function drawChart(spec, id, vegaSpec) {
       });
     });
   } else {
-    return vegaEmbed(visSelector, vegaSpec || spec, { renderer: "svg" });
+    return vegaEmbed(
+      visSelector,
+      vegaSpec || spec,
+      { renderer: "svg" }
+    );
   }
 }
 
@@ -404,7 +408,20 @@ async function transformSpecs() {
 
     // parsing
     if (parse === "grid") {
-      vegaLiteSpecs[i] = await getGridSpec(vlSpec);
+      const gridSpec = await getGridSpec(vlSpec);
+      const enc = gridSpec.spec ? gridSpec.spec.encoding : gridSpec.encoding;
+
+      rawSpecs[i].data.values = gridSpec.data.values;
+
+      if (rawSpecs[i].meta.axes && rawSpecs[i].meta.splitField) {
+        const encoding = rawSpecs[i].spec ? rawSpecs[i].spec.encoding : rawSpecs[i].encoding;
+        encoding.x.axis = enc.x.axis;
+        encoding.y.scale = {
+          domain: enc.y.scale.domain
+        }
+      }
+
+      vegaLiteSpecs[i] = gridSpec;
     } else if (parse === "jitter") {
       vegaLiteSpecs[i] = await getJitterSpec(vlSpec);
     } else if (vlSpec.layer || (vlSpec.spec && vlSpec.spec.layer)) {
