@@ -10,8 +10,7 @@ app_ui <- function(request) {
     shiny::tags$script(shiny::HTML('
     $(document).ready(function() {
     $(document).on("change", ".slider", function() {
-  Shiny.onInputChange("datamation_state", $(this).val());
-  Shiny.onInputChange("datamation_state_max", $(this).attr("max"));
+  Shiny.onInputChange("slider_state", $(this).val());
   })
   })')),
   # Listen to tab value, for changing slider!

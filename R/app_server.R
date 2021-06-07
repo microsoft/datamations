@@ -11,10 +11,9 @@ app_server <- function(input, output, session) {
 
   mod_datamation_sanddance_server("datamation_sanddance", pipeline)
 
-  datamation_state <- list(
-    state = shiny::reactive(input$datamation_state),
-    max_state = shiny::reactive(input$datamation_state_max)
+  slider_state <- list(
+    slider_state = shiny::reactive(input$slider_state)
   )
 
-  mod_data_tabs_server("data_tabs", inputs, pipeline, datamation_state)
+  mod_data_tabs_server("data_tabs", inputs, pipeline, slider_state)
 }

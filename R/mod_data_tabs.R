@@ -16,7 +16,7 @@ mod_data_tabs_ui <- function(id) {
 #' data_tabs Server Functions
 #'
 #' @noRd
-mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
+mod_data_tabs_server <- function(id, inputs, pipeline, slider_state) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -109,33 +109,9 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
     })
 
     # Change the tab shown based on the slider ----
-    shiny::observeEvent(datamation_state$state(), {
-      # Match the states to the tabs
+    shiny::observeEvent(slider_state$slider_state(), {
 
-      # Logic: 0 is the first tab, always initial data
-      # There is one group by tab for every variable grouped by
-      # Then every tab beyond that is summarize
-
-      slider_state <- datamation_state$state()
-
-      if (slider_state == 0) {
-        selected_tab <- 1
-      } else {
-        if (!is.null(inputs$group_by())) {
-          if (slider_state %in% 1:(1 + length(inputs$group_by()))) {
-            selected_tab <- 2
-          } else {
-            selected_tab <- 3
-          }
-        } else {
-          if (slider_state == 1) {
-            selected_tab <- 1
-          } else {
-            selected_tab <- 2
-          }
-        }
-      }
-
+      selected_tab <- determine_tab_from_slider(slider_state$slider_state(), inputs$group_by())
       selected_tab <- as.character(selected_tab)
 
       shiny::updateTabsetPanel(
@@ -162,6 +138,43 @@ mod_data_tabs_server <- function(id, inputs, pipeline, datamation_state) {
       }
     })
   })
+}
+
+determine_tab_from_slider <- function(slider, group_by) {
+  # Determining the tab from the slider position
+
+  # Add 1 since javascript is 0 indexed, and 1 indexing makes more sense to me for creating logic with :)
+  slider <- as.numeric(slider) + 1
+
+  # If the slider is in the first position, then this is the initial data and the tab is also the initial data
+  if (slider == 1) {
+    tab <- 1
+  }
+
+  # If there are grouping variables, then:
+  # The first "group by" frame is the second slider, and the last is 1 (initial data) + n_groups + 1 (distribution)
+  # So the slider range is 2:(1 + 1 + n_groups), and this should go to the second tab
+  # And the "summarize" range is (3 + n_groups):end, and this should go to the third tab
+  if (!is.null(group_by)) {
+    group_by_slider_range <- 2:(1 + 1 + length(group_by))
+
+    if(slider %in% group_by_slider_range) {
+      tab <- 2
+    } else if (slider > max(group_by_slider_range)) {
+      tab <- 3
+    }
+  }
+
+  # If there are no grouping variables, then the first frame is the initial data, the second frame is the distribution, and anything beyond is the summarize range
+  if (is.null(group_by) & slider != 1) {
+    if (slider == 2) { # The distribution
+      tab <- 1
+    } else if (slider > 2) {
+      tab <- 2
+    }
+  }
+
+  tab
 }
 
 determine_slider_from_tab <- function(tab, group_by) {
