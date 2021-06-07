@@ -177,7 +177,7 @@ function getJitterSpec(spec) {
 
   const simulation = d3
     .forceSimulation(arr)
-    // .force("x", d3.forceX().strength(0.0002))
+    .force("x", d3.forceX().strength(0.0001))
     .force("y", d3.forceY().strength(0.002).y(d => d.y))
     .force("collide", d3
       .forceCollide()
