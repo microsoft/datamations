@@ -36,7 +36,8 @@ Imports:
     shinydashboard,
     shinyAce,
     golem,
-    styler
+    styler,
+    shinyjs
 Suggests: 
     jsonlite,
     palmerpenguins,

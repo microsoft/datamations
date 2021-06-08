@@ -5,6 +5,7 @@
 app_ui <- function(request) {
   shiny::tagList(
     shinyWidgets::useShinydashboard(),
+    shinyjs::useShinyjs(),
     golem_add_external_resources(),
     # Send slider value, for changing tabs
     shiny::tags$script(shiny::HTML('
@@ -15,8 +16,8 @@ app_ui <- function(request) {
   })')),
   # Listen to tab value, for changing slider!
   shiny::tags$script("
-      Shiny.addCustomMessageHandler('tab-selected', function(tab) {
-      document.getElementById('datamation_sanddance-datamation_ui').getElementsByClassName('slider')[0].value = tab;
+      Shiny.addCustomMessageHandler('slider-from-tab', function(tab) {
+      document.getElementById('datamation_sanddance-datamation').getElementsByClassName('slider')[0].value = tab;
       onSlide('datamation_sanddance-datamation');
       });
     "),

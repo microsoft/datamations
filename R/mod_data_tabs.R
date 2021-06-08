@@ -15,7 +15,7 @@ mod_data_tabs_ui <- function(id) {
 #' data_tabs Server Functions
 #'
 #' @noRd
-mod_data_tabs_server <- function(id, inputs, pipeline, slider_state) {
+mod_data_tabs_server <- function(id, inputs, pipeline, slider_state, tab_change) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -108,12 +108,9 @@ mod_data_tabs_server <- function(id, inputs, pipeline, slider_state) {
     })
 
     # Change the tab shown based on the slider ----
-    shiny::observeEvent(slider_state$slider_state(), {
-
-      selected_tab <- determine_tab_from_slider(slider_state$slider_state(), inputs$group_by())
+    shiny::observeEvent(slider_state(), {
+      selected_tab <- determine_tab_from_slider(slider_state(), inputs$group_by())
       selected_tab <- as.character(selected_tab)
-
-      # cat("slider", slider_state$slider_state(), "changed tab to", selected_tab, "\n")
 
       shiny::updateTabsetPanel(
         session = session,
@@ -122,44 +119,35 @@ mod_data_tabs_server <- function(id, inputs, pipeline, slider_state) {
       )
     })
 
+    # Listen to changes to the tab from clicking, and update tab_change if that's the case
+    shinyjs::onclick("data_tabs_panel", tab_change("click"))
+
     # Change the slider based on the tab selected ----
 
-    observe({
+    shiny::observeEvent(input$data_tabs_panel, {
+
+      # This will actually happen when the tabs are first inserted, since the first is selected - and so slider_state() and tab_change() haven't triggered yet, and are NULL - in this case, don't update anything, just return
+
+      if (is.null(tab_change()) & is.null(slider_state())) {
+        return(NULL)
+      }
+
+      # If it was the slider that changes the tab, *don't* have the tab change the slider -- circular, messy logic!
+
+      if (tab_change() == "slider") {
+        return(NULL)
+      }
+
       # Match the tab to the slider! Opposite logic as above
 
       tab_state <- input$data_tabs_panel
 
-      if (!is.null(tab_state)) {
+      selected_slider <- determine_slider_from_tab(tab_state, inputs$group_by())
+      selected_slider <- as.character(selected_slider)
 
-        selected_slider <- determine_slider_from_tab(tab_state, inputs$group_by())
-
-        # There is an issue with the circular nature of the slider / tab changing, namely:
-        # If you change the slider to *NOT* the first frame of a "stage", i.e. to the 2nd+ frame in group by, or the 2nd+ frame in summarize
-        # Then it will change the tab to the group by or summarize tab
-        # Which in turn changes the slider to the FIRST frame of the stage
-
-        # So we need to check what TAB the "selected_slider" would change to - if it's the same as the tab that is already selected, AND the slider position currently selected would lead to this tab, then it's safe to say that the tab was already changed BY THE SLIDER, so we don't want to change the slider! A little confusing... I know
-
-        # Also... unless it's the initial data - then just change it and don't worry about it :)
-
-        # tab_for_selected_slider <- determine_tab_from_slider(selected_slider, inputs$group_by())
-        # tab_for_selected_slider <- as.character(tab_for_selected_slider)
-        #
-        # if (!is.null(slider_state$slider_state())) {
-        #   tab_for_current_slider <- determine_tab_from_slider(as.numeric(slider_state$slider_state()), inputs$group_by())
-        #   tab_for_current_slider <- as.character(tab_for_current_slider)
-        #
-        #   if (!(tab_state == tab_for_selected_slider & tab_for_current_slider == tab_state) | tab_state == 1) {
-
-        # cat("tab", tab_state, "changed slider to", selected_slider, "\n")
-
-            # session$sendCustomMessage("tab-selected", selected_slider)
-          # }
-        # }
-      }
+      session$sendCustomMessage("slider-from-tab", selected_slider)
     })
   })
-
 }
 
 determine_tab_from_slider <- function(slider, group_by) {
@@ -180,7 +168,7 @@ determine_tab_from_slider <- function(slider, group_by) {
   if (!is.null(group_by)) {
     group_by_slider_range <- 2:(1 + 1 + length(group_by))
 
-    if(slider %in% group_by_slider_range) {
+    if (slider %in% group_by_slider_range) {
       tab <- 2
     } else if (slider > max(group_by_slider_range)) {
       tab <- 3

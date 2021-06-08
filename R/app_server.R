@@ -11,9 +11,13 @@ app_server <- function(input, output, session) {
 
   mod_datamation_sanddance_server("datamation_sanddance", pipeline)
 
-  slider_state <- list(
-    slider_state = shiny::reactive(input$slider_state)
-  )
+  slider_state <- shiny::reactiveVal()
+  tab_change <- shiny::reactiveVal()
 
-  mod_data_tabs_server("data_tabs", inputs, pipeline, slider_state)
+  shiny::observeEvent(input$slider_state, {
+    slider_state(input$slider_state)
+    tab_change("slider")
+  })
+
+  mod_data_tabs_server("data_tabs", inputs, pipeline, slider_state, tab_change)
 }
