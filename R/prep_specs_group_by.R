@@ -133,7 +133,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
     spec <- generate_vega_specs(count_data,
       mapping = mapping,
-      meta = list(parse = "grid", description = description, splitField = mapping$x, axes = !is.null(mapping$column)),
+      meta = list(parse = "grid", description = description, splitField = mapping$x, axes = !is.null(mapping$column) | (is.null(mapping$column) & !is.null(mapping$row))),
       spec_encoding = spec_encoding,
       facet_encoding = facet_encoding,
       height = height, width = width,
