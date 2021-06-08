@@ -24,6 +24,8 @@ knitr::opts_template$set(
     results = "hide"
   )
 )
+
+ggplot2::theme_set(ggplot2::theme_minimal())
 ```
 
 # datamations
@@ -76,6 +78,35 @@ You can group by multiple variables, as in this example, grouping by `Degree` an
 
 ```{r mean-salary-degree-work-plot-datamations-gif, echo = FALSE}
 knitr::include_graphics("man/figures/README-mean_salary_group_by_degree_work.gif")
+```
+
+datamations has some defaults in terms of how groups are represented. As seen in the above two examples, when there is one grouping variable, it's shown on the x-axis. When there are two grouping variables, the first (by what comes first in `group_by()`) is shown in column facets, and the second is shown on the x-axis as well as colored. If there are three grouping variables, the first is in column facets, the second in row facets, and the third on the x-axis and colored.
+
+If you would like to change these defaults, or to match an existing plot style, datamations can take ggplot2 code as input.
+
+For example, to match this plot, which has Work on the x-axis and Degree in row facets:
+
+```{r ggplot2-existing-plot}
+library(ggplot2)
+
+small_salary %>%
+  group_by(Work, Degree) %>%
+  summarize(mean_salary = mean(Salary)) %>%
+  ggplot(aes(x = Work, y = mean_salary)) + 
+  geom_point() + 
+  facet_grid(rows = vars(Degree))
+```
+
+Simply define the code and pass to `datamation_sanddance()`, which will produce an animation with desired plot layout.
+
+```{r ggplot2-sanddance}
+"small_salary %>%
+  group_by(Work, Degree) %>%
+  summarize(mean_salary = mean(Salary)) %>%
+  ggplot(aes(x = Work, y = mean_salary)) + 
+  geom_point() + 
+  facet_grid(rows = vars(Degree))" %>%
+  datamation_sanddance()
 ```
 
 ### Table-based datamations
