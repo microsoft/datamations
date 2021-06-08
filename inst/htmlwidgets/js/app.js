@@ -91,7 +91,6 @@ async function init(id, { specUrls, specs, autoPlay }) {
   // load or set data
   if (specs) {
     vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
-    console.log(specs);
   } else if (specUrls) {
     vegaLiteSpecs = await loadData(specUrls);
   }
@@ -134,6 +133,9 @@ function play(id) {
   const tick = () => {
     animateFrame(frameIndex, id);
     frameIndex++;
+    if(HTMLWidgets.shinyMode){
+      Shiny.onInputChange("slider_state", frameIndex);
+    }
   };
   tick();
 
@@ -383,7 +385,6 @@ function loadData(specUrls) {
   .then(res => {
     res[3].meta.splitField = "sex";
     res[5].spec.encoding.x.axis.values = [1, 2, 3];
-    console.log(res[5]);
     return res;
   })
   .catch((e) => {
