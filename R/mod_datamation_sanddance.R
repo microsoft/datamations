@@ -9,7 +9,9 @@
 #' @importFrom shiny NS tagList
 mod_datamation_sanddance_ui <- function(id) {
   ns <- NS(id)
-  shiny::uiOutput(ns("datamation_ui"))
+  datamations::datamationSandDanceOutput(ns("datamation"))
+  # See in server re: why this is commented out
+  # shiny::uiOutput(ns("datamation_ui"))
 }
 
 #' datamation_sanddance Server Functions
@@ -34,9 +36,10 @@ mod_datamation_sanddance_server <- function(id, pipeline) {
       }
       )
 
-      output$datamation_ui <- shiny::renderUI({
-        datamations::datamationSandDanceOutput(ns("datamation"))
-      })
+      # For some reason, doing renderUI is causing the javascript code to run twice (even when the actual R code is not) - so just use datamationSandDanceOutput directly, even if it means the slider shows initially!
+      # output$datamation_ui <- shiny::renderUI({
+      #   datamations::datamationSandDanceOutput(ns("datamation"))
+      # })
     })
   })
 }
