@@ -165,7 +165,7 @@ function getJitterSpec(spec) {
     d.oldX = d.x;
     d.oldY = d.y;
 
-    let x = xScale(d.x) + xScale.bandwidth() / 2 + Math.random() * 4 - 2;
+    let x = xScale(d.x) + xScale.bandwidth() / 2;
     let y = d.y;
 
     return {
@@ -177,11 +177,11 @@ function getJitterSpec(spec) {
 
   const simulation = d3
     .forceSimulation(arr)
-    .force("x", d3.forceX().strength(0.0002))
+    .force("x", d3.forceX().strength(0.0001))
     .force("y", d3.forceY().strength(0.002).y(d => d.y))
     .force("collide", d3
       .forceCollide()
-      .strength(0.002)
+      .strength(0.001)
       .radius(circleRadius)
     )
     .stop();
