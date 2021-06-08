@@ -135,8 +135,9 @@ function play(id) {
     animateFrame(frameIndex, id);
     frameIndex++;
     if(HTMLWidgets.shinyMode){
-  Shiny.onInputChange("slider_state", frameIndex);
-}
+      var prevIndex = frameIndex - 1;
+      Shiny.onInputChange("slider_state", prevIndex);
+    }
   };
   tick();
 
