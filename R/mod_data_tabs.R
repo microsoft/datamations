@@ -10,7 +10,6 @@
 mod_data_tabs_ui <- function(id) {
   ns <- NS(id)
   shiny::tabsetPanel(id = ns("data_tabs_panel"))
-  # shiny::uiOutput(ns("data_tabs_ui"))
 }
 
 #' data_tabs Server Functions
@@ -114,6 +113,8 @@ mod_data_tabs_server <- function(id, inputs, pipeline, slider_state) {
       selected_tab <- determine_tab_from_slider(slider_state$slider_state(), inputs$group_by())
       selected_tab <- as.character(selected_tab)
 
+      # cat("slider", slider_state$slider_state(), "changed tab to", selected_tab, "\n")
+
       shiny::updateTabsetPanel(
         session = session,
         inputId = "data_tabs_panel",
@@ -132,12 +133,33 @@ mod_data_tabs_server <- function(id, inputs, pipeline, slider_state) {
 
         selected_slider <- determine_slider_from_tab(tab_state, inputs$group_by())
 
-        # If the slider is ALREADY in the right section (e.g. already on the second group by frame), don't change it to the first -
+        # There is an issue with the circular nature of the slider / tab changing, namely:
+        # If you change the slider to *NOT* the first frame of a "stage", i.e. to the 2nd+ frame in group by, or the 2nd+ frame in summarize
+        # Then it will change the tab to the group by or summarize tab
+        # Which in turn changes the slider to the FIRST frame of the stage
 
-        session$sendCustomMessage("tab-selected", selected_slider)
+        # So we need to check what TAB the "selected_slider" would change to - if it's the same as the tab that is already selected, AND the slider position currently selected would lead to this tab, then it's safe to say that the tab was already changed BY THE SLIDER, so we don't want to change the slider! A little confusing... I know
+
+        # Also... unless it's the initial data - then just change it and don't worry about it :)
+
+        # tab_for_selected_slider <- determine_tab_from_slider(selected_slider, inputs$group_by())
+        # tab_for_selected_slider <- as.character(tab_for_selected_slider)
+        #
+        # if (!is.null(slider_state$slider_state())) {
+        #   tab_for_current_slider <- determine_tab_from_slider(as.numeric(slider_state$slider_state()), inputs$group_by())
+        #   tab_for_current_slider <- as.character(tab_for_current_slider)
+        #
+        #   if (!(tab_state == tab_for_selected_slider & tab_for_current_slider == tab_state) | tab_state == 1) {
+
+        # cat("tab", tab_state, "changed slider to", selected_slider, "\n")
+
+            # session$sendCustomMessage("tab-selected", selected_slider)
+          # }
+        # }
       }
     })
   })
+
 }
 
 determine_tab_from_slider <- function(slider, group_by) {

@@ -33,8 +33,7 @@ mod_datamation_sanddance_server <- function(id, pipeline) {
       # Create an output for it
       output$datamation <- datamations::renderDatamationSandDance({
         datamation()
-      }
-      )
+      })
 
       # For some reason, doing renderUI is causing the javascript code to run twice (even when the actual R code is not) - so just use datamationSandDanceOutput directly, even if it means the slider shows initially!
       # output$datamation_ui <- shiny::renderUI({
