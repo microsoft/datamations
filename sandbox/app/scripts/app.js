@@ -134,6 +134,10 @@ function play(id) {
   const tick = () => {
     animateFrame(frameIndex, id);
     frameIndex++;
+    if(HTMLWidgets.shinyMode){
+      var prevIndex = frameIndex - 1;
+      Shiny.onInputChange("slider_state", prevIndex);
+    }
   };
   tick();
 
