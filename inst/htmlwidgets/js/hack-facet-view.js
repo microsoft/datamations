@@ -177,15 +177,18 @@ function hackFacet(spec) {
       newSpec.meta = spec.meta;
     }
 
-    // if (spec.meta.axes) {
-      const transformX = resp.view._origin[0];
+    let [transformX, transformY] = resp.view._origin;
 
-      if (newSpec.meta) {
-        newSpec.meta.transformX = transformX
-      } else {
-        newSpec.meta = { transformX };
-      }
-    // }
+    if (!(spec.facet && spec.facet.row && !spec.facet.column)) {
+      transformY = 0;
+    }
+
+    if (newSpec.meta) {
+      newSpec.meta.transformX = transformX;
+      newSpec.meta.transformY = transformY;
+    } else {
+      newSpec.meta = { transformX, transformY };
+    }
 
     return newSpec;
   });

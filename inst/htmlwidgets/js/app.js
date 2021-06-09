@@ -184,11 +184,12 @@ function drawSpec(index, id, vegaSpec) {
   }
 
   const transformX = (meta.transformX || 0);
+  const transformY = (meta.transformY || 0);
 
   // shift vis
-  d3.select(visSelector).style("left", () => {
-    return transformX + "px"
-  });
+  d3.select(visSelector)
+    .style("left",  transformX + "px")
+    .style("top",  transformY + "px");
 
   d3.select(controls).style("width", (spec.width + transformX + 10) + "px");
 
@@ -325,14 +326,14 @@ async function animateFrame(index, id) {
         d3.select(slider).property("value", index + 1);
       });
 
-      const transformX = (currMeta.transformX || 0)
+      const transformX = (currMeta.transformX || 0);
+      const transformY = (currMeta.transformY || 0);
 
-      if (transformX) {
-        d3.select(visSelector)
-          .transition()
-          .duration(750)
-          .style("left", transformX + "px");
-      }
+      d3.select(visSelector)
+        .transition()
+        .duration(750)
+        .style("left", transformX + "px")
+        .style("top", transformY + "px");
 
       // show/hide axis vega chart
       if (currHasAxes) {
