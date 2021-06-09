@@ -27,14 +27,20 @@ expect_meta_axes <- function(specs, axes_value) {
 # Test that the data.values are the same as the passed data frame
 expect_data_values <- function(single_spec, df) {
   df <- df %>%
-    dplyr::mutate_if(is.factor, as.character)
+    dplyr::mutate_if(is.factor, as.character) %>%
+    dplyr::mutate_if(is.character, dplyr::coalesce, "NA")
+
+  if ("y" %in% names(df)) {
+    df <- df %>%
+      dplyr::filter(!is.na(y))
+  }
 
   spec_data <- single_spec %>%
     jsonlite::fromJSON() %>%
     purrr::pluck("data") %>%
     purrr::pluck("values")
 
-  expect_equivalent(spec_data, df)
+  expect_equal(spec_data, df, ignore_attr = TRUE)
 }
 
 # Test that "mark" and "encoding" are within `spec` - this happens when there is a facet (any grouping)

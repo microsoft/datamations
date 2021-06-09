@@ -1,15 +1,8 @@
-/**
- * Applies shiftX to inner grid elements
- * @param {Object} spec vega-lite specification
- * @param {Number} rows number of rows in a grid
- * @returns grid data
- */
-function applyShifts(spec, rows) {
-  const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
-  const colorField = encoding.color.field;
+function generateGrid(spec, rows = 10) {
+  const splitField = spec.meta.splitField;
   const specValues = spec.data.values;
-
   const groupKeys = [];
+  const maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows)
 
   if (spec.facet) {
     if (spec.facet.column) {
@@ -20,102 +13,89 @@ function applyShifts(spec, rows) {
     }
   }
 
-  const colorOptions = [...new Set(specValues.map((d) => d[colorField]))];
-  const shifters = new Map(
-    colorOptions.map((d, i) => {
-      return [d, i > 0 ? colorOptions[i - 1] : null];
-    })
-  );
+  let splitOptions = [];
+
+  if (splitField) {
+    splitOptions = Array.from(
+      new Set(specValues.map((d) => d[splitField]))
+    )
+  }
+
+  let counter = 1;
 
   const reduce = (v) => {
-    const map = new Map(v.map((d) => [d[colorField], d.n]));
-    let shiftSum = 0; // will accumulate shiftX
-    let shiftCounter = 0;
+    const arr = [];
 
-    return v.map((d) => {
-      const shifter = shifters.get(d[colorField]);
-      let m = map.get(shifter);
+    v.forEach((d, j) => {
+      const n = d.n;
+      const xCenter = splitField ? splitOptions.indexOf(d[splitField]) + 1 : 1;
 
-      if (m) {
-        shiftCounter++;
-        shiftSum += m + rows;
+      let startCol = (xCenter - 1) * maxCols + j; // inner grid start
+      startCol += Math.floor((maxCols - Math.ceil(n / rows)) / 2); // center alignment
+
+      for (let i = 0; i < n; i++) {
+        const x = startCol + Math.floor(i / rows);
+        const y = rows - 1 - i % rows;
+
+        arr.push({
+          ...d,
+          gemini_id: counter,
+          x,
+          y,
+        });
+
+        counter++;
       }
-
-      return {
-        ...d,
-        shiftX: shiftSum,
-        shiftCounter,
-      };
     });
+
+    return arr;
   };
 
   if (groupKeys.length === 0) {
     return reduce(specValues);
   }
 
-  return d3
-    .rollups(
-      specValues,
-      reduce,
-      ...groupKeys.map((key) => {
-        return (d) => d[key];
-      })
-    )
-    .flatMap((d) => {
-      if (groupKeys.length === 1) {
-        return d[1];
-      } else {
-        return d[1].flatMap((d) => d[1]);
-      }
-    });
+  return d3.rollups(
+    specValues,
+    reduce,
+    ...groupKeys.map((key) => {
+      return (d) => d[key];
+    })
+  )
+  .flatMap((d) => {
+    if (groupKeys.length === 1) {
+      return d[1];
+    } else {
+      return d[1].flatMap((d) => d[1]);
+    }
+  });
 }
 
 /**
- * Generates grid-like specification
+ * Generates infogrid specification
  * @param {Object} spec vega-lite specification
  * @param {Number} rows number of rows in a grid
  * @returns grid specification
  */
 function getGridSpec(spec, rows = 10) {
-  const obj = { ...spec };
-  const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
-  const values = encoding.color ? applyShifts(obj, rows) : obj.data.values;
-  const newValues = [];
-
   return new Promise((res) => {
-    let counter = 1;
-    for (let x = 0; x < values.length; x++) {
-      const d = values[x];
-      const n = d.n;
-      const shiftX = d.shiftX || 0;
-      const shiftCounter = d.shiftCounter || 0;
-      const shiftCol = Math.floor(shiftX / rows);
+    const grid = generateGrid(spec, rows);
+    const obj = {...spec};
+    const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
-      for (let i = 0; i < n; i++) {
-        const row = i % rows;
-        const col = Math.floor(i / rows);
-
-        newValues.push({
-          ...d,
-          gemini_id: counter,
-          x: col + (shiftCol > 0 ? shiftCol + shiftCounter : 0),
-          y: rows - 1 - row,
-        });
-        counter++;
-      }
-    }
+    const yGap = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
 
     const xDomain = [
-      d3.min(newValues, (d) => d.x) - 2,
-      d3.max(newValues, (d) => d.x) + 2,
+      d3.min(grid, d => d.x) - 2,
+      d3.max(grid, d => d.x) + 2
     ];
 
     const yDomain = [
-      d3.min(newValues, (d) => d.y) - 0.7,
-      d3.max(newValues, (d) => d.y) + 0.7,
+      d3.min(grid, (d) => d.y) - yGap,
+      d3.max(grid, (d) => d.y) + yGap,
     ];
 
-    obj.data.values = newValues;
+    obj.data.values = grid;
 
     encoding.x.scale = {
       type: "linear",
@@ -130,6 +110,28 @@ function getGridSpec(spec, rows = 10) {
     encoding.x.field = "x";
     encoding.y.field = "y";
 
+    if (spec.meta.splitField) {
+      const labels = Array.from(
+        new Set(grid.map(d => d[spec.meta.splitField]))
+      );
+
+      const expr = {};
+      const maxCols = d3.max(spec.data.values, d => Math.ceil(d.n / rows));
+
+      labels.forEach((d, i) => {
+        const x = maxCols * i + Math.floor(maxCols / 2);
+        expr[x] = d;
+      });
+
+      encoding.x.axis = {
+        labelExpr: `${JSON.stringify(expr)}[datum.label]`,
+        values: Object.keys(expr).map(d => +d),
+        labelAngle: -90,
+        grid: false,
+        title: spec.meta.splitField,
+      };
+    }
+
     return res(obj);
   });
 }
@@ -141,18 +143,19 @@ function getGridSpec(spec, rows = 10) {
  */
 function getJitterSpec(spec) {
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
-  const colorField = encoding.color ? encoding.color.field : null;
+  const width = spec.spec ? spec.spec.width : spec.width;
   const nodes = spec.data.values;
   const circleRadius = 4;
+
   let innerGroupCount = 1;
 
-  if (colorField) {
+  if (spec.meta.splitField) {
     innerGroupCount = new Set(
-      nodes.map(d => d[colorField])
+      nodes.map(d => d[spec.meta.splitField])
     ).size;
   }
 
-  const facetSize = 200;
+  const facetSize = width ? width : 150;
   const yExtent = d3.extent(nodes, d => d.y);
   const xScale = d3.scaleBand()
     .domain(d3.range(1, innerGroupCount + 1))
@@ -162,7 +165,7 @@ function getJitterSpec(spec) {
     d.oldX = d.x;
     d.oldY = d.y;
 
-    let x = xScale(d.x) + xScale.bandwidth() / 2 + Math.random() * 4 - 2;
+    let x = xScale(d.x) + xScale.bandwidth() / 2;
     let y = d.y;
 
     return {
@@ -174,11 +177,11 @@ function getJitterSpec(spec) {
 
   const simulation = d3
     .forceSimulation(arr)
-    .force("x", d3.forceX().strength(0.001))
+    .force("x", d3.forceX().strength(0.0001))
     .force("y", d3.forceY().strength(0.002).y(d => d.y))
     .force("collide", d3
       .forceCollide()
-      .strength(0.002)
+      .strength(0.001)
       .radius(circleRadius)
     )
     .stop();
@@ -205,6 +208,21 @@ function getJitterSpec(spec) {
 
     encoding.x.scale = {
       domain: [0, facetSize]
+    }
+
+    // if no axes is drawn, and we have custom x-axis
+    if (!spec.meta.axes && encoding.x.axis && spec.meta.xAxisLabels) {
+      const labels = spec.meta.xAxisLabels;
+
+      const axisExpr = {};
+      const mapped = labels.map((d, i) => {
+        const x = Math.round(xScale(i + 1) + xScale.bandwidth() / 2);
+        axisExpr[x] = d;
+        return { x, label: d };
+      });
+
+      encoding.x.axis.labelExpr = `${JSON.stringify(axisExpr)}[datum.label]`;
+      encoding.x.axis.values = mapped.map(d => d.x);
     }
 
     return res({

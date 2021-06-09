@@ -1,32 +1,35 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "meta": {
-    "parse": "grid"
+    "parse": "grid",
+    "description": "Group by species"
   },
   "data": {
     "values": [
       {
-        "island": "Biscoe",
-        "n": 168
+        "species": "Adelie",
+        "n": 152
       },
       {
-        "island": "Dream",
+        "species": "Chinstrap",
+        "n": 68
+      },
+      {
+        "species": "Gentoo",
         "n": 124
-      },
-      {
-        "island": "Torgersen",
-        "n": 52
       }
     ]
   },
   "facet": {
     "column": {
-      "field": "island",
-      "type": "nominal",
-      "title": "island"
+      "field": "species",
+      "type": "ordinal",
+      "title": "species"
     }
   },
   "spec": {
+    "height": 300,
+    "width": 100,
     "mark": {
       "type": "point",
       "filled": true

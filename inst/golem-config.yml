@@ -1,0 +1,8 @@
+default:
+  golem_name: datamations
+  golem_version: 0.0.0.9007
+  app_prod: no
+production:
+  app_prod: yes
+dev:
+  golem_wd: !expr here::here()

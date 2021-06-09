@@ -9,6 +9,8 @@ parse_functions <- function(fittings) {
     purrr::map(~ .x[[1]]) %>%
     purrr::map_chr(as.character)
 
-  # Assumes the first element is the data - NOT always the case
-  functions[-1]
+  # Rename the first "function" to just be data
+  functions[1] <- "data"
+
+  functions
 }

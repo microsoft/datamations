@@ -4,10 +4,7 @@
 \alias{parse_pipeline}
 \title{Parse a tidyverse pipeline}
 \usage{
-parse_pipeline(
-  pipeline,
-  supported_tidy_functions = c("group_by", "summarize", "summarise")
-)
+parse_pipeline(pipeline, supported_tidy_functions = c("group_by", "summarize"))
 }
 \arguments{
 \item{pipeline}{Input pipeline, as a string.}
@@ -23,5 +20,4 @@ Parses a tidyverse pipeline, input as a string, into a list of its components as
 
 "group_by(small_salary, Degree) \%>\% summarize(mean = mean(Salary))" \%>\%
   parse_pipeline()
-
 }

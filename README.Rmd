@@ -24,6 +24,8 @@ knitr::opts_template$set(
     results = "hide"
   )
 )
+
+ggplot2::theme_set(ggplot2::theme_minimal())
 ```
 
 # datamations
@@ -59,7 +61,9 @@ A plot-based datamation shows a plot of what the data looks like at each step of
 First, define the code for the pipeline, then generate the datamation with `datamation_sanddance()`:
 
 ```{r mean-salary-degree-plot-setup, eval = FALSE}
-"small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
+"small_salary %>% 
+  group_by(Degree) %>%
+  summarize(mean = mean(Salary))" %>%
   datamation_sanddance()
 ```
 
@@ -70,13 +74,57 @@ knitr::include_graphics("man/figures/README-mean_salary_group_by_degree.gif")
 You can group by multiple variables, as in this example, grouping by `Degree` and `Work` before calculating the mean `Salary`:
 
 ```{r mean-salary-degree-plot-work-setup, eval = FALSE}
-"small_salary %>% group_by(Degree, Work) %>% summarize(mean = mean(Salary))" %>%
+"small_salary %>%
+  group_by(Degree, Work) %>% 
+  summarize(mean = mean(Salary))" %>%
   datamation_sanddance()
 ```
 
 ```{r mean-salary-degree-work-plot-datamations-gif, echo = FALSE}
 knitr::include_graphics("man/figures/README-mean_salary_group_by_degree_work.gif")
 ```
+
+datamations has some defaults in terms of how groups are represented. As seen in the above two examples, when there is one grouping variable, it's shown on the x-axis. When there are two grouping variables, the first (by what comes first in `group_by()`) is shown in column facets, and the second is shown on the x-axis as well as colored. If there are three grouping variables, the first is in column facets, the second in row facets, and the third on the x-axis and colored.
+
+If you would like to change these defaults, or to match an existing plot style, datamations can take ggplot2 code as input.
+
+For example, to match this plot, which has Work on the x-axis and Degree in row facets:
+
+```{r ggplot2-existing-plot, dpi = 300}
+library(ggplot2)
+
+small_salary %>%
+  group_by(Work, Degree) %>%
+  summarize(mean_salary = mean(Salary)) %>%
+  ggplot(aes(x = Work, y = mean_salary)) + 
+  geom_point() + 
+  facet_grid(rows = vars(Degree))
+```
+
+Simply define the code and pass to `datamation_sanddance()`, which will produce an animation with desired plot layout.
+
+```{r mean-salary-degree-work-ggplot-setup, eval = FALSE}
+"small_salary %>%
+  group_by(Work, Degree) %>%
+  summarize(mean_salary = mean(Salary)) %>%
+  ggplot(aes(x = Work, y = mean_salary)) + 
+  geom_point() + 
+  facet_grid(rows = vars(Degree))" %>%
+  datamation_sanddance()
+```
+
+```{r mean-salary-degree-work-ggplot-datamations-gif, echo = FALSE}
+knitr::include_graphics("man/figures/README-mean_salary_group_by_degree_work_ggplot.gif")
+```
+
+When ggplot2 code is provided, the order of animation is not determined by the order in `group_by()`, but by the plot layout. Variables are first animated by what's in the column facets, then the row facets, and finally by the x-axis. 
+
+Some limitations:
+
+* `color` mapping is not yet supported
+* `facet_wrap()` is not supported - please use `facet_grid()`
+* datamations expects different variables in the column and row facets than in the x-axis. datamations generated that do not match this layout may look different than the final plot!
+* Only `geom_point()` is supported, e.g. specifying `geom_bar()` will not produce a bar in the datamation.
 
 ### Table-based datamations
 

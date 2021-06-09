@@ -4,16 +4,27 @@
 \alias{prep_specs_group_by}
 \title{Generate specs of data in grouped icon array}
 \usage{
-prep_specs_group_by(.data, ..., toJSON = TRUE, pretty = TRUE)
+prep_specs_group_by(
+  .data,
+  mapping,
+  toJSON = TRUE,
+  pretty = TRUE,
+  height = 300,
+  width = 300
+)
 }
 \arguments{
 \item{.data}{Input data}
 
-\item{...}{Grouping variables}
+\item{mapping}{A list that describes mapping for the datamations, including x and y variables, summary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.}
 
 \item{toJSON}{Whether to converts the spec to JSON. Defaults to TRUE.}
 
-\item{pretty}{Whether to pretty the JSON output of the spec. Defaults to TRUE, and only relevant when \code{toJSON} is TRUE.}
+\item{pretty}{Whether to pretty the JSON output. Defaults to TRUE.}
+
+\item{height}{Height of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).}
+
+\item{width}{Width of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).}
 }
 \description{
 Generate specs of data in grouped icon array

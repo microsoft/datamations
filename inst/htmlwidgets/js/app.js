@@ -1,222 +1,561 @@
-const frameDuration = 2500;
+/**
+ * Datamations JavaScript App script
+ * Reads vega lite specs, converts to vega specs and animates using gemini
+ */
 
-let specsArray, frames, metas, files, rawFiles;
 
-async function init(id, { specUrls, specs }) {
-  files = [];
-  rawFiles = [];
+let rawSpecs; // holds raw vega-lite specs, not transformed
+let vegaLiteSpecs;
+let vegaSpecs; // vega specs, converted by gemini.vl2vg4gemini (https://github.com/uwdata/gemini#vl2vg4gemini)
+let frames;
+let metas;
+let frameIndex = 0;
+let intervalId;
+let timeoutId;
+let initializing = false;
 
-  if (specs) {
-    files = specs.map((d) => {
-      if (!d.width) d.width = 600;
-      if (!d.height) d.height = 600;
-      return { ...d };
-    });
-  } else if (specUrls) {
-    files = await loadData(specUrls);
+const frameDuration = 2000;
+const frameDelay = 1000;
+// a fallback gemini spec in case gemini.animate could not find anything
+const gemSpec = {
+  timeline: {
+    concat: [
+      {
+        sync: [
+          {
+            component: {
+              mark: "marks",
+            },
+            change: {
+              data: {
+                keys: ["gemini_id"],
+                update: true,
+                enter: true,
+                exit: false,
+              },
+              encode: {
+                update: true,
+                enter: true,
+                exit: true,
+              },
+            },
+            timing: {
+              duration: {
+                ratio: 1,
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
+  totalDuration: frameDuration,
+};
+
+/**
+ * Resets all the instance variables
+ */
+const reset = () => {
+  vegaLiteSpecs = [];
+  vegaSpecs = [];
+  rawSpecs = [];
+  frames = [];
+  metas = [];
+  frameIndex = 0;
+
+  if (intervalId) {
+    clearInterval(intervalId);
+    intervalId = null;
   }
 
-  files.forEach((d) => {
-    rawFiles.push(JSON.parse(JSON.stringify(d)));
+  if (timeoutId) {
+    clearInterval(timeoutId);
+    timeoutId = null;
+  }
+};
+
+/**
+ * Initializes datamation app
+ * @param {String} id root container id where vega visualizations are mounted
+ * @param {Object} param1 configuration object
+ */
+async function init(id, { specUrls, specs, autoPlay }) {
+  // ignore all subsequent init calls.
+  if (initializing) return;
+  initializing = true;
+
+  const { slider } = getSelectors(id);
+
+  reset();
+
+  // load or set data
+  if (specs) {
+    vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
+    console.log(specs);
+  } else if (specUrls) {
+    vegaLiteSpecs = await loadData(specUrls);
+  }
+
+  // save raw specs to use for facet axes drawing
+  vegaLiteSpecs.forEach((d) => {
+    rawSpecs.push(JSON.parse(JSON.stringify(d)));
+
+    if (d.meta) {
+      metas.push(d.meta);
+    }
   });
 
-  metas = files.map((d) => d.meta);
+  d3.select(slider).property("max", vegaLiteSpecs.length - 1);
 
-  for (let i = 0; i < files.length; i++) {
-    const parse = files[i].meta.parse;
+  // parse, jitter, layer splitting
+  await transformSpecs();
 
-    // parsing
-    if (parse === "grid") {
-      files[i] = await getGridSpec(files[i]);
-    } else if (parse === "jitter") {
-      files[i] = await getJitterSpec(files[i]);
-    }
+  // compile to vega
+  toVegaSpecs();
 
-    const facet = files[i].facet;
-    const spec = files[i].spec;
+  // create frames for animation
+  await makeFrames();
 
-    // fake facets
-    if (facet && spec) {
-      const meta = files[i].meta;
-      const withAxes = meta && meta.axes;
+  drawSpec(0, id);
 
-      files[i].data.name = "source";
-
-      const { newSpec, view } = await hackFacet(files[i]);
-
-      files[i] = newSpec;
-
-      if (withAxes) {
-        const vis = document.querySelector("#" + id + " .vega-vis");
-        const origin = view._origin;
-        vis.style.left = origin[0] + "px";
-      }
-    }
+  if (autoPlay) {
+    setTimeout(() => play(id), 100);
   }
 
-  specsArray = files.map((d) => gemini.vl2vg4gemini(d));
-  frames = [];
-
-  for (let i = 1; i < specsArray.length; i++) {
-    const prev = specsArray[i - 1];
-    const curr = specsArray[i];
-
-    const prevMeta = metas[i - 1];
-    const currMeta = metas[i];
-
-    const recommendations = gemini.recommend(prev, curr, {
-      stageN: 1,
-      scales: {
-        domainDimension: "same",
-      },
-      marks: {
-        change: {
-          data: ["gemini_id"],
-          encode: {
-            update: true,
-            enter: true,
-            exit: true,
-          },
-        },
-      },
-      totalDuration: frameDuration,
-    });
-
-    recommendations
-      .then((resp) => {
-        frames.push({
-          source: prev,
-          target: curr,
-          gemSpec: resp[0].spec,
-          prevMeta,
-          currMeta,
-        });
-      })
-      .catch((e) => {});
-  }
-
-  drawFrame(0, id);
+  initializing = false;
 }
 
-let counter = 0,
-  intervalId;
-
+/**
+ * Plays animation
+ * @param {String} id root container id where vega visualizations are mounted
+ */
 function play(id) {
-  counter = 0;
+  frameIndex = 0;
   const tick = () => {
-    animateFrame(counter, id);
-    counter++;
+    animateFrame(frameIndex, id);
+    frameIndex++;
+    if(HTMLWidgets.shinyMode){
+      var prevIndex = frameIndex - 1;
+      Shiny.onInputChange("slider_state", prevIndex);
+    }
   };
   tick();
 
   if (intervalId) clearInterval(intervalId);
   intervalId = setInterval(() => {
     tick();
-    if (counter >= frames.length) {
+    if (frameIndex >= frames.length) {
       clearInterval(intervalId);
-      counter = 0;
+      frameIndex = 0;
     }
-  }, frameDuration + 100);
+  }, frameDuration + frameDelay);
 }
 
-function drawFrame(index, id) {
-  if (!specsArray[index]) return;
+/**
+ * Draws vega lite spec statically, also updates slider, description, show/hides some layers
+ * @param {Number} index specification index in vegaLiteSpecs
+ * @param {String} id root container id where vega visualizations are mounted
+ * @param {Object} vegaSpec source vega spec of current frame
+ * @returns a promise of vegaEmbed
+ */
+function drawSpec(index, id, vegaSpec) {
+  const spec = vegaLiteSpecs[index];
+
+  if (!spec) return;
 
   const meta = metas[index];
-  const axisSelector = "#" + id + " .vega-for-axis";
-  const visSelector = "#" + id + " .vega-vis";
 
-  d3.select(axisSelector)
-    .style("opacity", meta.axes ? 1 : 0)
-    .html("");
+  const {
+    axisSelector,
+    visSelector,
+    descr, slider,
+    otherLayers, controls
+  } = getSelectors(id);
 
+  d3.select(slider).property("value", index);
+  d3.select(descr).html(meta.description || "frame " + index);
+  d3.select(axisSelector).style("opacity", meta.axes ? 1 : 0).html("");
   d3.select(visSelector).classed("with-axes", meta.axes);
+  d3.select(otherLayers).classed("with-axes", meta.axes);
 
   // draw axis
   if (meta.axes) {
-    const spec = rawFiles[index];
-    const columnFacet = (spec.facet && spec.facet.column);
-
-    // update axis domain to matched hacked facet view
-    const extentY = d3.extent(spec.data.values, d => d.y);
-    const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
-    encoding.y.scale = { domain: extentY };
-
-    vegaEmbed(axisSelector, rawFiles[index], { renderer: "svg" }).then(() => {
-        if (columnFacet && columnFacet.title) {
-            d3.select(axisSelector + ' svg > g').attr('transform', function() {
-                const transform = d3.select(this).attr('transform');
-                const x = transform.split("(")[1].split(",")[0];
-                return `translate(${x}, 40)`;
-            })
-        }
-    });
+    drawAxis(index, id);
   }
 
+  const transformX = (meta.transformX || 0);
+  const transformY = (meta.transformY || 0);
+
+  // shift vis
+  d3.select(visSelector)
+    .style("left",  transformX + "px")
+    .style("top",  transformY + "px");
+
+  d3.select(controls).style("width", (spec.width + transformX + 10) + "px");
+
   // draw vis
-  return vegaEmbed(visSelector, specsArray[index], { renderer: "svg" });
+  return drawChart(spec, id, vegaSpec);
 }
 
-async function animateFrame(index, id) {
-  if (!frames[index]) return;
+/**
+ * Draws a chart
+ * @param {Object} spec vega lite spec
+ * @param {String} id root container id where vega visualizations are mounted
+ * @param {Object} vegaSpec source vega spec of current frame
+ * @returns a promise of vegaEmbed
+ */
+function drawChart(spec, id, vegaSpec) {
+  const { visSelector, otherLayers } = getSelectors(id);
+  const layers = document.querySelector(otherLayers);
+  layers.innerHTML = "";
 
-  const axisSelector = "#" + id + " .vega-for-axis";
-  const visSelector = "#" + id + " .vega-vis";
-  const { source, target, gemSpec, prevMeta, currMeta } = frames[index];
+  if (Array.isArray(spec)) {
+    return new Promise((res) => {
+      spec.forEach((s, i) => {
+        let target, embedSpec = s;
 
-  let anim = await gemini.animate(source, target, gemSpec);
+        if (s.meta.animated) {
+          target = visSelector;
+          if (vegaSpec) {
+            embedSpec = vegaSpec;
+          }
+        } else {
+          const div = document.createElement("div");
+          div.classList.add("vega-hidden-layer");
+          layers.appendChild(div);
+          target = div;
+        }
 
-  let prevHasAxes = prevMeta.axes;
-  let currHasAxes = currMeta.axes;
+        vegaEmbed(target, embedSpec, { renderer: "svg" }).then(() => {
+          if (i === spec.length - 1) {
+            res();
+          }
+        });
+      });
+    });
+  } else {
+    return vegaEmbed(
+      visSelector,
+      vegaSpec || spec,
+      { renderer: "svg" }
+    );
+  }
+}
 
-  drawFrame(index, id).then(() => {
-    anim.play(visSelector);
+/**
+ * Draws an axis layer
+ * @param {Number} index specification index in vegaLiteSpecs
+ * @param {String} id root container id where vega visualizations are mounted
+ * @returns
+ */
+function drawAxis(index, id) {
+  let spec = rawSpecs[index];
 
-    // show/hide axis vega chart
-    if (prevHasAxes && !currHasAxes) {
-      d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
+  if (spec.spec && spec.spec.layer) {
+    const split = splitLayers(spec);
+    spec = split[1];
+  }
 
-      d3.select(visSelector).classed("with-axes", false);
-    } else if (!prevHasAxes && currHasAxes) {
-      d3.select(axisSelector).transition().duration(100).style("opacity", 1);
+  const columnFacet = spec.facet && spec.facet.column;
+  const { axisSelector, controls, otherLayers } = getSelectors(id);
 
-      d3.select(visSelector).classed("with-axes", true);
+  // update axis domain to matched hacked facet view
+  const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
+
+  if (!encoding.y.scale) {
+    const extentY = d3.extent(spec.data.values, (d) => d.y);
+    encoding.y.scale = { domain: extentY };
+  }
+
+  if (encoding.color) {
+    encoding.color.legend = null;
+  }
+
+  if (encoding.x && encoding.x.axis) {
+    encoding.x.axis.labelAngle = -90;
+  }
+
+  return vegaEmbed(axisSelector, spec, { renderer: "svg" }).then(() => {
+    if (columnFacet && columnFacet.title) {
+      const fn = function () {
+        const transform = d3.select(this).attr("transform");
+        const x = transform.split("(")[1].split(",")[0];
+        return `translate(${x}, 40)`;
+      };
+
+      d3.select(axisSelector + " svg > g").attr("transform", fn);
+      d3.select(otherLayers + " svg > g").attr("transform", fn);
     }
+    const width = d3.select(axisSelector).node().getBoundingClientRect().width;
+    d3.select(controls).style("width", width + "px");
   });
 }
 
+/**
+ * Animates a frame, from source to target vega specification using gemini
+ * @param {Number} index specification index in vegaLiteSpecs
+ * @param {String} id root container id where vega visualizations are mounted
+ * @returns a promise of gemini.animate
+ */
+async function animateFrame(index, id) {
+  if (!frames[index]) return;
+
+  const {
+    axisSelector,
+    visSelector,
+    otherLayers,
+    descr,
+    slider,
+    controls
+  } =  getSelectors(id);
+
+  let { source, target, gemSpec, prevMeta, currMeta } = frames[index];
+  let anim = await gemini.animate(source, target, gemSpec);
+  let currHasAxes = currMeta.axes;
+  let width = target.width;
+
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+  }
+
+  drawSpec(index, id, source).then(() => {
+    timeoutId = setTimeout(() => {
+      d3.select(descr).html(currMeta.description);
+
+      anim.play(visSelector).then(() => {
+        d3.select(slider).property("value", index + 1);
+      });
+
+      const transformX = (currMeta.transformX || 0);
+      const transformY = (currMeta.transformY || 0);
+
+      d3.select(visSelector)
+        .transition()
+        .duration(750)
+        .style("left", transformX + "px")
+        .style("top", transformY + "px");
+
+      // show/hide axis vega chart
+      if (currHasAxes) {
+        drawAxis(index + 1, id);
+        d3.select(axisSelector).transition().duration(1000).style("opacity", 1);
+        d3.select(visSelector).classed("with-axes", true);
+        d3.select(otherLayers).classed("with-axes", true);
+      } else {
+        d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
+        d3.select(visSelector).classed("with-axes", false);
+        d3.select(otherLayers).classed("with-axes", false);
+        d3.select(controls).style("width", (width + transformX + 10) + "px");
+      }
+
+      const nextSpec = vegaLiteSpecs[index + 1];
+
+      if (nextSpec && Array.isArray(nextSpec)) {
+        const statics = nextSpec.filter((d) => !d.meta.animated);
+
+        d3.select(otherLayers)
+          .html("")
+          .style("opacity", 0)
+          .transition()
+          // .delay(frameDuration / 3)
+          .duration(frameDuration / 2)
+          .style("opacity", 1);
+
+        statics.forEach((s) => {
+          const div = document.createElement("div");
+          div.classList.add("vega-hidden-layer");
+          vegaEmbed(div, s, { renderer: "svg" });
+          document.querySelector(otherLayers).appendChild(div);
+        });
+      }
+    }, frameDelay)
+
+
+  });
+}
+
+/**
+ * Loads specifications using d3.json
+ * @param {Array} specUrls list of urls
+ * @returns a promise of Promise.all
+ */
 function loadData(specUrls) {
   return Promise.all(
     specUrls.map((url) => {
       return d3.json(url);
     })
   )
-    .then((files) => {
-      // make adjustments here if needed
-      return files.map((d, i) => {
-        // todo: ask sharla to remove axis: null and use them to define which axis needs to be rendered
-        // if (i >= 4) {
-        //   d.meta = {
-        //     ...d.meta,
-        //     axes: true,
-        //   };
-        //   delete d.spec.encoding.x.axis;
-        //   delete d.spec.encoding.y.axis;
-        // }
+  .then(res => {
+    res[3].meta.splitField = "sex";
+    res[5].spec.encoding.x.axis.values = [1, 2, 3];
+    console.log(res[5]);
+    return res;
+  })
+  .catch((e) => {
+    console.error(e.message);
+  });
+}
 
-        // if (i === 5) {
-        //   const encoding = d.spec.encoding;
-        //   encoding.x.scale = { domain: [0.5, 3.5] }
-        // }
+/**
+ * Transforms specifications into proper format:
+ * - meta.grid = generates infogrid
+ * - meta.jitter = jitters data using d3.force
+ * - spec.layer = splits layers to stack on top on each other
+ */
+async function transformSpecs() {
+  for (let i = 0; i < vegaLiteSpecs.length; i++) {
+    const vlSpec = vegaLiteSpecs[i];
 
-        return {
-          ...d,
-          width: 600,
-          height: 300,
-        };
+    if (Array.isArray(vlSpec)) continue; // just sanity check, making sure that it is not an array
+
+    const meta = vlSpec.meta;
+    const parse = meta.parse;
+
+    // parsing
+    if (parse === "grid") {
+      const gridSpec = await getGridSpec(vlSpec);
+      const enc = gridSpec.spec ? gridSpec.spec.encoding : gridSpec.encoding;
+
+      rawSpecs[i].data.values = gridSpec.data.values;
+
+      if (rawSpecs[i].meta.axes && rawSpecs[i].meta.splitField) {
+        const encoding = rawSpecs[i].spec ? rawSpecs[i].spec.encoding : rawSpecs[i].encoding;
+        encoding.x.axis = enc.x.axis;
+        encoding.y.scale = {
+          domain: enc.y.scale.domain
+        }
+      }
+
+      vegaLiteSpecs[i] = gridSpec;
+    } else if (parse === "jitter") {
+      vegaLiteSpecs[i] = await getJitterSpec(vlSpec);
+    } else if (vlSpec.layer || (vlSpec.spec && vlSpec.spec.layer)) {
+      const arr = splitLayers(vlSpec);
+
+      vegaLiteSpecs[i] = [];
+
+      for (let j = 0; j < arr.length; j++) {
+        const s = arr[j];
+
+        // fake facets
+        if (s.facet && s.spec && s.meta.animated) {
+          const newSpec = await hackFacet(s);
+          vegaLiteSpecs[i].push(newSpec);
+          metas[i] = newSpec.meta;
+        } else {
+          vegaLiteSpecs[i].push(s);
+        }
+      }
+    }
+
+    if (vegaLiteSpecs[i]) {
+      const facet = vegaLiteSpecs[i].facet;
+      const spec = vegaLiteSpecs[i].spec;
+
+      // fake facets
+      if (facet && spec) {
+        const newSpec = await hackFacet(vegaLiteSpecs[i]);
+        vegaLiteSpecs[i] = newSpec;
+      }
+    }
+  }
+}
+
+/**
+ * Converts vega-lite to vega using vl2vg4gemini
+ */
+function toVegaSpecs() {
+  vegaSpecs = vegaLiteSpecs.map((d) => {
+    const s = Array.isArray(d) ? d.find((d) => d.meta.animated) : d;
+    return gemini.vl2vg4gemini(s);
+  });
+}
+
+/**
+ * Generates animation frames
+ */
+async function makeFrames() {
+  for (let i = 1; i < vegaSpecs.length; i++) {
+    const prev = vegaSpecs[i - 1];
+    const curr = vegaSpecs[i];
+
+    const prevMeta = metas[i - 1];
+    const currMeta = metas[i];
+
+    try {
+      const resp = await gemini.recommend(prev, curr, {
+        stageN: 1,
+
+        scales: {
+          x: {
+            domainDimension: "diff",
+          },
+          y: {
+            domainDimension: "diff",
+          },
+        },
+
+        marks: {
+          marks: {
+            change: {
+              scale: ["x", "y"],
+              data: {
+                keys: ["gemini_id"],
+                update: true,
+                enter: true,
+                exit: true,
+              },
+              encode: {
+                update: true,
+                enter: true,
+                exit: true,
+              },
+            },
+          },
+        },
+        totalDuration: frameDuration,
       });
-    })
-    .catch((e) => {
-      console.error(e.message);
-    });
+
+      const _gemSpec = resp[0] ? resp[0].spec : gemSpec;
+
+      const sync = _gemSpec.timeline.concat[0].sync;
+
+      if (!sync.some(d => d.component === "view")) {
+        sync.push({
+          "component": "view",
+          "change": {
+            "signal": [
+              "width", "height"
+            ]
+          },
+          "timing": {
+                "duration": {
+                    "ratio": 1
+                }
+            }
+        })
+      }
+
+      frames.push({
+        source: prev,
+        target: curr,
+        gemSpec: _gemSpec,
+        prevMeta,
+        currMeta,
+      });
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
+/**
+ * Slider on change callback
+ * @param {String} id root container id where vega visualizations are mounted
+ */
+function onSlide(id) {
+  const { slider } = getSelectors(id);
+  const index = document.querySelector(slider).value;
+  drawSpec(index, id);
+  if (intervalId) clearInterval(intervalId);
 }

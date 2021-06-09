@@ -92,7 +92,7 @@ dmta_summarize <- function(state1, state2, dimensions,
         mutate(Row_Coord = as.numeric(.data$Row_Coord)) %>%
         mutate(Row_Coord = pmap_dbl(
           list(.data$Time, .data$When, .data$Col_Coord),
-          F~ if_else(..1 == ..2, mid_point, ..3)
+          F ~ if_else(..1 == ..2, mid_point, ..3)
         )) %>%
         mutate(Col_Coord = pmap_dbl(
           list(.data$Time, .data$When, .data$Col_Coord),

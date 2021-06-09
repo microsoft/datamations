@@ -27,7 +27,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
     const title = facet && facet.row ? facet.row.title : null;
 
     encoding.y = {
-      field: "y",
+      field: spec.spec.mark === "errorbar" ? encoding.y.field : "y",
       type: "quantitative",
       scale: {},
       axis: axes.y ? {
@@ -42,10 +42,6 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
         orient: "right"
       } : null,
     }
-  }
-
-  if (encoding.color) {
-    encoding.color.legend = null;
   }
 
   return {
@@ -155,8 +151,8 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   newSpec.encoding.x.scale.domain = xDomain;
   newSpec.encoding.y.scale.domain = yDomain;
   newSpec.data.values = values;
-  newSpec.width = xDomain[1];
-  newSpec.height = yDomain[0];
+  newSpec.width = xDomain[1] - xDomain[0];
+  newSpec.height = yDomain[0] - yDomain[1];
 
   return newSpec;
 }
@@ -164,20 +160,36 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
 function hackFacet(spec) {
   const div = document.createElement("div");
 
+  spec.data.name = "source";
+
   return vegaEmbed(div, spec, {renderer: "svg"}).then(resp => {
     const newSpec = getHackedSpec({
       ...resp,
-      width: spec.width,
-      height: spec.height,
+      width: spec.spec.width,
+      height: spec.spec.height,
     });
 
     if (spec.config) {
       newSpec.config = spec.config;
     }
 
-    return {
-      newSpec: newSpec,
-      view: resp.view,
-    };
+    if (spec.meta) {
+      newSpec.meta = spec.meta;
+    }
+
+    let [transformX, transformY] = resp.view._origin;
+
+    if (!(spec.facet && spec.facet.row && !spec.facet.column)) {
+      transformY = 0;
+    }
+
+    if (newSpec.meta) {
+      newSpec.meta.transformX = transformX;
+      newSpec.meta.transformY = transformY;
+    } else {
+      newSpec.meta = { transformX, transformY };
+    }
+
+    return newSpec;
   });
 }

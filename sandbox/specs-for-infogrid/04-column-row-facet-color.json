@@ -1,100 +1,106 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "meta": {
-    "parse": "grid"
+    "parse": "grid",
+    "description": "Group by species, island, sex"
   },
   "data": {
     "values": [
       {
-        "island": "Biscoe",
         "species": "Adelie",
+        "island": "Biscoe",
         "sex": "female",
         "n": 22
       },
       {
-        "island": "Biscoe",
         "species": "Adelie",
+        "island": "Biscoe",
         "sex": "male",
         "n": 22
       },
       {
-        "island": "Biscoe",
-        "species": "Gentoo",
-        "sex": "female",
-        "n": 58
-      },
-      {
-        "island": "Biscoe",
-        "species": "Gentoo",
-        "sex": "male",
-        "n": 61
-      },
-      {
-        "island": "Biscoe",
-        "species": "Gentoo",
-        "n": 5
-      },
-      {
+        "species": "Adelie",
         "island": "Dream",
-        "species": "Adelie",
         "sex": "female",
         "n": 27
       },
       {
-        "island": "Dream",
         "species": "Adelie",
+        "island": "Dream",
         "sex": "male",
         "n": 28
       },
       {
-        "island": "Dream",
         "species": "Adelie",
+        "island": "Dream",
+        "sex": "NA",
         "n": 1
       },
       {
-        "island": "Dream",
-        "species": "Chinstrap",
-        "sex": "female",
-        "n": 34
-      },
-      {
-        "island": "Dream",
-        "species": "Chinstrap",
-        "sex": "male",
-        "n": 34
-      },
-      {
-        "island": "Torgersen",
         "species": "Adelie",
+        "island": "Torgersen",
         "sex": "female",
         "n": 24
       },
       {
-        "island": "Torgersen",
         "species": "Adelie",
+        "island": "Torgersen",
         "sex": "male",
         "n": 23
       },
       {
-        "island": "Torgersen",
         "species": "Adelie",
+        "island": "Torgersen",
+        "sex": "NA",
+        "n": 5
+      },
+      {
+        "species": "Chinstrap",
+        "island": "Dream",
+        "sex": "female",
+        "n": 34
+      },
+      {
+        "species": "Chinstrap",
+        "island": "Dream",
+        "sex": "male",
+        "n": 34
+      },
+      {
+        "species": "Gentoo",
+        "island": "Biscoe",
+        "sex": "female",
+        "n": 58
+      },
+      {
+        "species": "Gentoo",
+        "island": "Biscoe",
+        "sex": "male",
+        "n": 61
+      },
+      {
+        "species": "Gentoo",
+        "island": "Biscoe",
+        "sex": "NA",
         "n": 5
       }
     ]
   },
   "facet": {
     "column": {
-      "field": "island",
-      "type": "nominal",
-      "title": "island"
+      "field": "species",
+      "type": "ordinal",
+      "title": "species"
     },
     "row": {
-      "field": "species",
-      "type": "nominal",
-      "title": "species"
+      "field": "island",
+      "type": "ordinal",
+      "title": "island"
     }
   },
   "spec": {
+    "height": 100,
+    "width": 100,
     "mark": {
       "type": "point",
       "filled": true
@@ -113,7 +119,9 @@
       "color": {
         "field": "sex",
         "type": "nominal",
-        "axis": null
+        "legend": {
+          "values": ["female", "male", "NA"]
+        }
       }
     }
   }
