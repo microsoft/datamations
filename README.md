@@ -41,7 +41,9 @@ First, define the code for the pipeline, then generate the datamation
 with `datamation_sanddance()`:
 
 ``` r
-"small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
+"small_salary %>% 
+  group_by(Degree) %>%
+  summarize(mean = mean(Salary))" %>%
   datamation_sanddance()
 ```
 
@@ -51,11 +53,62 @@ You can group by multiple variables, as in this example, grouping by
 `Degree` and `Work` before calculating the mean `Salary`:
 
 ``` r
-"small_salary %>% group_by(Degree, Work) %>% summarize(mean = mean(Salary))" %>%
+"small_salary %>%
+  group_by(Degree, Work) %>% 
+  summarize(mean = mean(Salary))" %>%
   datamation_sanddance()
 ```
 
 <img src="man/figures/README-mean_salary_group_by_degree_work.gif" width="80%" />
+
+datamations has some defaults in terms of how groups are represented. As
+seen in the above two examples, when there is one grouping variable,
+it’s shown on the x-axis. When there are two grouping variables, the
+first (by what comes first in `group_by()`) is shown in column facets,
+and the second is shown on the x-axis as well as colored. If there are
+three grouping variables, the first is in column facets, the second in
+row facets, and the third on the x-axis and colored.
+
+If you would like to change these defaults, or to match an existing plot
+style, datamations can take ggplot2 code as input.
+
+For example, to match this plot, which has Work on the x-axis and Degree
+in row facets:
+
+``` r
+library(ggplot2)
+
+small_salary %>%
+  group_by(Work, Degree) %>%
+  summarize(mean_salary = mean(Salary)) %>%
+  ggplot(aes(x = Work, y = mean_salary)) + 
+  geom_point() + 
+  facet_grid(rows = vars(Degree))
+```
+
+<img src="man/figures/README-ggplot2-existing-plot-1.png" width="80%" />
+
+Simply define the code and pass to `datamation_sanddance()`, which will
+produce an animation with desired plot layout.
+
+``` r
+"small_salary %>%
+  group_by(Work, Degree) %>%
+  summarize(mean_salary = mean(Salary)) %>%
+  ggplot(aes(x = Work, y = mean_salary)) + 
+  geom_point() + 
+  facet_grid(rows = vars(Degree))" %>%
+  datamation_sanddance()
+```
+
+<img src="man/figures/README-mean_salary_group_by_degree_work_ggplot.gif" width="80%" />
+
+When ggplot2 code is provided, the order of animation is not determined
+by the order in `group_by()`, but by the plot layout. Variables are
+first animated by what’s in the column facets, then the row facets, the
+x-axis, and finally by color. If color is the same as one of the other
+grouping variables (e.g. the same as the x-axis variable), it’s animated
+in the same step.
 
 ### Table-based datamations
 
