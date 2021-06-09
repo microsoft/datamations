@@ -117,7 +117,14 @@ Simply define the code and pass to `datamation_sanddance()`, which will produce 
 knitr::include_graphics("man/figures/README-mean_salary_group_by_degree_work_ggplot.gif")
 ```
 
-When ggplot2 code is provided, the order of animation is not determined by the order in `group_by()`, but by the plot layout. Variables are first animated by what's in the column facets, then the row facets, the x-axis, and finally by color. If color is the same as one of the other grouping variables (e.g. the same as the x-axis variable), it's animated in the same step. 
+When ggplot2 code is provided, the order of animation is not determined by the order in `group_by()`, but by the plot layout. Variables are first animated by what's in the column facets, then the row facets, and finally by the x-axis. 
+
+Some limitations:
+
+* `color` mapping is not yet supported
+* `facet_wrap()` is not supported - please use `facet_grid()`
+* datamations expects different variables in the column and row facets than in the x-axis. datamations generated that do not match this layout may look different than the final plot!
+* Only `geom_point()` is supported, e.g. specifying `geom_bar()` will not produce a bar in the datamation.
 
 ### Table-based datamations
 
