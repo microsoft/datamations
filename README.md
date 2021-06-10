@@ -18,7 +18,7 @@ You can install datamations from GitHub with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("jhofman/datamations")
+devtools::install_github("microsoft/datamations")
 ```
 
 ## Usage
