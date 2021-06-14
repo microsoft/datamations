@@ -3,6 +3,12 @@ generate_mapping_from_plot <- function(plot) {
   x <- plot$mapping$x %>%
     rlang::quo_name()
 
+  # If there is no plot mapping, the mapping was done in the geom, so grab from there instead
+  if (x == "NULL" & "GeomPoint" %in% class(plot$layers[[1]]$geom)) {
+    x <- plot$layers[[1]]$mapping$x %>%
+      rlang::quo_name()
+  }
+
   #  Need to get y variable from the pipeline, since we want the "original" variable, not the transformed one that appears on the plot
 
   plot_mapping <- list(x = x)
