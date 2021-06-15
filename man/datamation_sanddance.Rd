@@ -27,5 +27,24 @@ datamation_sanddance(
 \item{width}{Width of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).}
 }
 \description{
-Generates the vega lite specs necessary for a plot datamation, based on a tidyverse pipeline.
+Generate a plot datamation from a tidyverse pipeline.
+}
+\examples{
+{
+library(dplyr)
+
+"small_salary \%>\%
+  group_by(Degree) \%>\%
+  summarize(mean = mean(Salary))" \%>\%
+  datamation_sanddance()
+
+library(ggplot2)
+"small_salary \%>\%
+  group_by(Work, Degree) \%>\%
+  summarize(mean_salary = mean(Salary)) \%>\%
+  ggplot(aes(x = Work, y = mean_salary)) +
+  geom_point() +
+  facet_grid(rows = vars(Degree))" \%>\%
+  datamation_sanddance()
+}
 }
