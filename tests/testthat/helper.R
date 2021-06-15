@@ -74,6 +74,11 @@ expect_mark_encoding_top_level <- function(specs) {
   expect_true(all(mark_encoding_in_spec))
 }
 
+# TODO: need to rework these because the groupings are different now depending on the number of grouping variables:
+# 1: x
+# 2: column, x/color
+# 3. column, row, x/color
+
 # Test that grouped specs are in a specific order - 1 group, 2 groups, then 3 groups
 expect_grouping_order <- function(specs) {
   expect_grouping_order_1(specs[[1]])
