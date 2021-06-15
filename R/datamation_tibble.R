@@ -17,9 +17,13 @@
 datamation_tibble <- function(pipeline, envir = rlang::global_env(),
                               output = "output.gif", titles = NA,
                               xlim = c(NA, NA), ylim = c(NA, NA)) {
+
+  # Specify which functions are supported, for parsing functions out and for erroring if any are not in this list
+  supported_tidy_functions <- c("group_by", "summarize")
+
+  # Convert pipeline into list
   fittings <- pipeline %>%
-    parse_expr() %>%
-    dismantle()
+    parse_pipeline(supported_tidy_functions)
 
   data_states <- fittings %>%
     snake(envir = envir)
