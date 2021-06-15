@@ -194,8 +194,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     description <- glue::glue("{description}, with errorbar, zoomed in")
     data_errorbar <- data_3 %>%
       dplyr::summarize(
-        y = y,
-        sd = sd(.data$y_raw, na.rm = TRUE),
+        y = .data$y,
+        sd = stats::sd(.data$y_raw, na.rm = TRUE),
         n = n()
       ) %>%
       dplyr::distinct() %>%

@@ -38,10 +38,9 @@ datamation_tibble <- function(pipeline, envir = rlang::global_env(),
   tidy_functions_list <- fittings %>%
     map(as.list) %>%
     map(~ .x[[1]]) %>%
-    map_chr(as.character) %>%
-    {
-      .[-1]
-    }
+    map_chr(as.character)
+
+  tidy_functions_list <- tidy_functions_list[-1]
 
   supported_tidy_functions <- c("group_by", "ungroup", "summarize", "summarise")
 

@@ -1,32 +1,26 @@
-#' @importFrom dplyr is_grouped_df mutate n left_join bind_rows select filter group_vars pull group_by summarize group_split arrange ungroup if_else
+#' @importFrom dplyr is_grouped_df mutate n left_join bind_rows select filter group_vars pull group_by summarize group_split arrange ungroup if_else as_tibble tibble
 #' @importFrom purrr map2_dfr pmap_dfr pmap_dbl map2_dbl map2_chr flatten map2 map_dfr
 #' @importFrom ggplot2 ggplot aes geom_point scale_color_manual ggtitle
-#' @importFrom gganimate transition_states ease_aes view_follow anim_save
-#' @importFrom dplyr any_of arrange bind_rows filter group_by group_size group_split group_vars is_grouped_df left_join mutate n n_groups pull select summarize ungroup group_indices
-#' @importFrom gganimate anim_save ease_aes transition_states view_follow
+#' @importFrom gganimate anim_save ease_aes transition_states view_follow transition_states ease_aes view_follow anim_save
 #' @importFrom ggplot2 aes element_blank geom_point ggplot ggtitle scale_color_manual theme
 #' @importFrom magick image_read image_write
 #' @importFrom purrr accumulate map map2 map2_dbl map2_dfr map_chr map_dbl map_dfr map_if pmap_dbl pmap_dfr reduce
 #' @importFrom rlang parse_expr
 #' @importFrom stats median
-#' @importFrom tibble as_tibble tibble
 
 dmta_summarize <- function(state1, state2, dimensions,
                            outline = TRUE, anim_title = NA) {
   # state1 <- current_state; state2 <- next_state; outline = FALSE
 
   new_columns <- state1$fitting %>%
-    as.list() %>%
-    {
-      .[-1]
-    } %>%
-    names()
+    as.list()
+  new_columns <- names(new_columns[-1])
+
   vars_that_make_new_cols <- state1$fitting %>%
-    as.list() %>%
-    {
-      .[-1]
-    } %>%
+    as.list()
+  vars_that_make_new_cols <- vars_that_make_new_cols[-1] %>%
     map(~ as.list(.x)[-1] %>% as.character())
+
   col_indices_that_make_new_cols <- colnames(state1$df) %in% (unlist(vars_that_make_new_cols) %>% unique()) %>%
     which()
   col_tbl <- tibble(
@@ -67,10 +61,8 @@ dmta_summarize <- function(state1, state2, dimensions,
     }
 
     mid_point <- state1$df %>%
-      nrow() %>%
-      {
-        median(1:.)
-      }
+      nrow()
+    mid_point <- median(1:mid_point)
 
     mover_data <- map(new_columns, ~ vars_that_make_new_cols[[.x]]) %>%
       map2_dfr(1:length(.), ~ tibble(Col_Name = .x, Summary_Col = .y)) %>%

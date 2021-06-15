@@ -11,10 +11,9 @@ dmta_group_by <- function(state1, state2, dimensions, anim_title = NA) {
   # state1 <- list(df = state2$df %>% ungroup(), coords = last_coords);state2 <- state2
 
   grouping_columns <- state2$df %>%
-    group_vars() %>%
-    {
-      which(colnames(state2$df) %in% .)
-    }
+    group_vars()
+
+  grouping_columns <- which(names(state2$df) %in% grouping_columns)
 
   n_columns <- length(state1$df)
   n_groups_ <- n_groups(state2$df)
