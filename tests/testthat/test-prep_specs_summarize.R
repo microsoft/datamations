@@ -41,16 +41,15 @@ test_that("prep_specs_summarize returns a list with four elements - one for the 
     dplyr::arrange(species, island, sex) %>%
     dplyr::mutate(
       gemini_id = dplyr::row_number(),
-      x_var = forcats::fct_explicit_na(sex),
-      x = as.numeric(x_var)
+      x = 1,
     ) %>%
+      dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::select(gemini_id, species, island, sex, x, y = bill_length_mm)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
   expect_data_values(specs[[2]], palmerpenguins::penguins %>%
     dplyr::arrange(species, island, sex) %>%
     dplyr::mutate(
       gemini_id = dplyr::row_number(),
-      x_var = forcats::fct_explicit_na(sex),
-      x = as.numeric(x_var)
+      x = 1
     ) %>%
     dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::group_by(species, island, sex) %>%
