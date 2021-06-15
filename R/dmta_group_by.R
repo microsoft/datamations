@@ -7,8 +7,6 @@
 #' @importFrom stats median
 #' @importFrom tibble as_tibble tibble
 dmta_group_by <- function(state1, state2, dimensions, anim_title = NA) {
-  # state1 <- current_state;state2 <- next_state;anim_title = NA
-  # state1 <- list(df = state2$df %>% ungroup(), coords = last_coords);state2 <- state2
 
   grouping_columns <- state2$df %>%
     group_vars()
@@ -26,16 +24,6 @@ dmta_group_by <- function(state1, state2, dimensions, anim_title = NA) {
       mutate(Row_Ungrouped_Coord = .data$Row_Coord)
   }
 
-  # color_lookup_names <- state2$df %>%
-  #                   select(any_of(group_vars(state2$df))) %>%
-  #                   unlist() %>%
-  #                   unique()
-  # color_lookup <- dm_color_pal(length(color_lookup_names))
-  # names(color_lookup) <- color_lookup_names
-  # color_tbl <- state2$df %>%
-  #   select(any_of(group_vars(state2$df))) %>%
-  #   map(~color_lookup[.x]) %>%
-  #   as_tibble()
   color_tbl <- state2$df %>%
     select(any_of(group_vars(state2$df))) %>%
     map(as.factor) %>%
