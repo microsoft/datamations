@@ -11,21 +11,21 @@
 #' @export
 #'
 #' @examples {
-#' library(dplyr)
+#'   library(dplyr)
 #'
-#' "small_salary %>%
+#'   "small_salary %>%
 #'   group_by(Degree) %>%
 #'   summarize(mean = mean(Salary))" %>%
-#'   datamation_sanddance()
+#'     datamation_sanddance()
 #'
-#' library(ggplot2)
-#' "small_salary %>%
+#'   library(ggplot2)
+#'   "small_salary %>%
 #'   group_by(Work, Degree) %>%
 #'   summarize(mean_salary = mean(Salary)) %>%
 #'   ggplot(aes(x = Work, y = mean_salary)) +
 #'   geom_point() +
 #'   facet_grid(rows = vars(Degree))" %>%
-#'   datamation_sanddance()
+#'     datamation_sanddance()
 #' }
 datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty = TRUE, elementId = NULL, height = 300, width = 300) {
 

@@ -102,7 +102,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
     meta <- list(parse = "grid", description = description)
 
     # Split on X if it's the same as the row mapping
-    if(identical(mapping$x, mapping$row)) {
+    if (identical(mapping$x, mapping$row)) {
       meta <- append(meta, list(splitField = mapping$x))
     }
 

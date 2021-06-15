@@ -216,7 +216,6 @@ generate_x_domain <- function(data) {
 }
 
 generate_summarize_description <- function(summary_variable, summary_function = NULL, errorbar = FALSE, group_by = TRUE) {
-
   if (errorbar) {
     return(glue::glue("Plot mean {summary_variable}{group_description}, with errorbar",
       group_description = ifelse(group_by, " of each group", "")

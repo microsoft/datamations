@@ -18,7 +18,7 @@ generate_mapping_from_plot <- function(plot) {
     unlist() %>%
     purrr::pluck(1)
 
-  if(!is.null(row)) {
+  if (!is.null(row)) {
     plot_mapping <- append(plot_mapping, list(row = rlang::quo_name(row)))
   }
 
@@ -26,7 +26,7 @@ generate_mapping_from_plot <- function(plot) {
     unlist() %>%
     purrr::pluck(1)
 
-  if(!is.null(column)) {
+  if (!is.null(column)) {
     plot_mapping <- append(plot_mapping, list(column = rlang::quo_name(column)))
   }
 

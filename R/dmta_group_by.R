@@ -7,7 +7,6 @@
 #' @importFrom stats median
 #' @importFrom tibble as_tibble tibble
 dmta_group_by <- function(state1, state2, dimensions, anim_title = NA) {
-
   grouping_columns <- state2$df %>%
     group_vars()
 
