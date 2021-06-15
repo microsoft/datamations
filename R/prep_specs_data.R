@@ -1,4 +1,4 @@
-#' Generate spec of data in ungrouped icon array
+#' Generate spec of data for initial data step of datamations
 #'
 #' @param .data Input data
 #' @param mapping Mapping, unused.
@@ -30,7 +30,7 @@ prep_specs_data <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height
   # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
 
   specs_list[[1]] <- generate_vega_specs(data_1,
-                                         mapping = mapping,
+    mapping = mapping,
     meta = list(parse = "grid", description = description),
     spec_encoding = spec_encoding,
     height = height, width = width,

@@ -5,7 +5,6 @@
 #' @importFrom magick image_read image_write
 #' @importFrom purrr map reduce
 #' @importFrom magrittr "%>%"
-#' @export
 #' @examples
 #' \dontrun{
 #'

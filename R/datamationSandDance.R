@@ -4,8 +4,6 @@
 #' @param width Width of widget. Not currently used
 #' @param height Height of widget. Not currently used
 #' @param elementId Optional element ID for widget
-#'
-#' @export
 datamationSandDance <- function(specs, width = NULL, height = NULL, elementId = NULL) {
 
   # forward options using x

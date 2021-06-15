@@ -2,7 +2,7 @@
 % Please edit documentation in R/prep_specs_group_by.R
 \name{prep_specs_group_by}
 \alias{prep_specs_group_by}
-\title{Generate specs of data in grouped icon array}
+\title{Generate specs of data for group by step of datamation}
 \usage{
 prep_specs_group_by(
   .data,
@@ -27,5 +27,5 @@ prep_specs_group_by(
 \item{width}{Width of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).}
 }
 \description{
-Generate specs of data in grouped icon array
+Generate specs of data for group by step of datamation
 }

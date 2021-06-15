@@ -19,6 +19,12 @@ datamation_tibble(
 \item{envir}{An environment.}
 
 \item{output}{Path to where gif will be saved.}
+
+\item{titles}{Optional titles for the datamation frames}
+
+\item{xlim}{Optional x limits}
+
+\item{ylim}{Optional y limits}
 }
 \description{
 Create a tibble datamation

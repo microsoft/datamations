@@ -1,4 +1,3 @@
-#' @export
 theme_zilch <- function(...) {
   theme(
     axis.line = element_blank(),

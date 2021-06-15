@@ -1,9 +1,10 @@
 test_that("snake properly evaluates the pipeline at each stage", {
   pipeline <- "small_salary %>% group_by(Degree) %>% summarise(mean = mean(Salary))"
 
+  supported_tidy_functions <- c("group_by", "summarize")
+
   fittings <- pipeline %>%
-    parse_expr() %>%
-    dismantle()
+    parse_pipeline(supported_tidy_functions)
 
   states <- fittings %>%
     snake()

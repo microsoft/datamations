@@ -1,13 +1,16 @@
 # General ----
 
+# Generate vega specs
+# Faceted and unfaceted ones need to be generated separately because the encoding is embedded in the faceted case
 generate_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column = FALSE, row = FALSE, color = FALSE, errorbar = FALSE) {
-  if (!column & !row) {
+  if (!column & !row) { # No facets
     generate_unfacet_vega_specs(.data, meta, spec_encoding, height, width, color, errorbar)
-  } else {
+  } else { # Facets
     generate_facet_vega_specs(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column, row, color, errorbar)
   }
 }
 
+# Generate vega specs that are not faceted
 generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, width, color = FALSE, errorbar = FALSE) {
 
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
@@ -16,7 +19,9 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
     spec_encoding <- spec_encoding[c("x", "y")]
   }
 
-  # todo - handle color
+  # TODO - handle color
+
+  # If there's no errorbar, everything can be on one layer
   if (!errorbar) {
     list(
       height = height,
@@ -28,7 +33,9 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
       encoding = spec_encoding
     ) %>%
       vegawidget::as_vegaspec()
-  } else {
+  } else { # If there is an error bar, then we need to put the points and error bars on multiple layers
+
+    # The errorbar has its own encoding, and it uses data y_raw (the actual raw values) to calculate the errorbar
     errorbar_spec_encoding <- spec_encoding
     errorbar_spec_encoding$y$field <- "y_raw"
 
@@ -39,10 +46,12 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
       meta = meta,
       data = list(values = .data),
       layer = list(
+        # Errorbar layer
         list(
           mark = "errorbar",
           encoding = errorbar_spec_encoding
         ),
+        # Point layer
         list(
           mark = list(type = "point", filled = TRUE),
           encoding = spec_encoding
@@ -53,6 +62,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
   }
 }
 
+# Generate vega specs that are faceted
 generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column = FALSE, row = FALSE, color = FALSE, errorbar = FALSE) {
 
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
@@ -76,6 +86,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
     facet_dims$nrow <- 1
   }
 
+  # If there's no errorbar, everything can be on one layer
   if (!errorbar) {
     list(
       `$schema` = vegawidget::vega_schema(),
@@ -91,6 +102,9 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
     ) %>%
       vegawidget::as_vegaspec()
   } else {
+    # If there is an error bar, then we need to put the points and error bars on multiple layers
+
+    # The errorbar has its own encoding, and it uses data y_raw (the actual raw values) to calculate the errorbar
     errorbar_spec_encoding <- spec_encoding
     errorbar_spec_encoding$y$field <- "y_raw"
 
@@ -103,10 +117,12 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
         height = height / facet_dims[["nrow"]],
         width = width / facet_dims[["ncol"]],
         layer = list(
+          # Errorbar layer
           list(
             mark = "errorbar",
             encoding = errorbar_spec_encoding
           ),
+          # Point layer
           list(
             mark = list(type = "point", filled = TRUE),
             encoding = spec_encoding
@@ -120,6 +136,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
 
 # Group by ----
 
+# Generate a description for group by steps
 generate_group_by_description <- function(mapping, ...) {
   mapping_sep <- mapping[c(...)] %>%
     unlist() %>%
@@ -127,6 +144,7 @@ generate_group_by_description <- function(mapping, ...) {
   glue::glue("Group by {mapping_sep}")
 }
 
+# Handle NAs in data by coercing to literal "NA", and order grouping levels alphabetically (with "NA" last) so that they appear consistently (and get consistent IDs) across frames
 arrange_by_groups_coalesce_na <- function(.data, group_vars, group_vars_chr) {
   .data %>%
     # Remove any existing grouping
@@ -152,6 +170,7 @@ arrange_by_groups_coalesce_na <- function(.data, group_vars, group_vars_chr) {
     dplyr::arrange(!!!group_vars)
 }
 
+# Calculate the dimensions (number of rows and columns) of a faceted plot to set the size of each, since we want sizing to approximately be consistent across frames
 calculate_facet_dimensions <- function(.data, group_vars, mapping) {
   .group_keys <- .data %>%
     dplyr::group_by(!!!group_vars) %>%
@@ -187,6 +206,9 @@ calculate_facet_dimensions <- function(.data, group_vars, mapping) {
 
 # Summarize ----
 
+# Create an expression to label axes with values instead of numbers
+# Similar to breaks = c(1, 2, 3), labels = c("One", "Two", "Three") etc in ggplot
+# But more of an expression like an ifelse()
 generate_labelsExpr <- function(data) {
   if (is.null(data)) {
     return(list(
@@ -207,6 +229,9 @@ generate_labelsExpr <- function(data) {
   list(breaks = breaks, labelExpr = labelExpr)
 }
 
+# Generate the x-axis domain
+# They have values e.g. 1, 2, 3, but we want some padding on either end so it goes from 0.5 to 3.5
+# And this ensures a consistent domain across frames
 generate_x_domain <- function(data) {
   if (is.null(data)) {
     list(domain = c(0.5, 1.5))
@@ -215,8 +240,9 @@ generate_x_domain <- function(data) {
   }
 }
 
+# Generate description for summarize steps
+# Depending on whether there's errorbars, any grousp, etc.
 generate_summarize_description <- function(summary_variable, summary_function = NULL, errorbar = FALSE, group_by = TRUE) {
-
   if (errorbar) {
     return(glue::glue("Plot mean {summary_variable}{group_description}, with errorbar",
       group_description = ifelse(group_by, " of each group", "")

@@ -1,10 +1,11 @@
-#' Generate specs of data in grouped icon array
+#' Generate specs of data for group by step of datamation
 #'
 #' @param .data Input data
 #' @param mapping A list that describes mapping for the datamations, including x and y variables, summary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
+
   # Extract mapping ----
 
   # Extract grouping variables from mapping
@@ -62,8 +63,13 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
   # Order of grouping should go column -> row -> x/color
   # But only if they actually exist in the mapping!
 
+  # TODO to handle: In ggplot2, color is not necessarily along with x
+  # It might be the column variable, or row variable, or a totally different variable etc
+  # Right now color isn't extracted from ggplot2 at all :(
+
   # State 1: Grouped icon array, by column ----
 
+  # Flag whether to create a column frame
   do_column <- !is.null(mapping$column)
 
   if (do_column) {
@@ -90,18 +96,22 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   # State 2: Grouped icon array, by column and row ----
 
+  # Flag whether to do a row frame
   do_row <- !is.null(mapping$row)
 
   if (do_row) {
+    # Add a count (grouped) to each record
     count_data <- .data %>%
       dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row))))
 
+    # Generate description
     description <- generate_group_by_description(mapping, "column", "row")
 
     meta <- list(parse = "grid", description = description)
 
     # Split on X if it's the same as the row mapping
-    if(identical(mapping$x, mapping$row)) {
+    # This is a variable needed by the JS code in order to split the infogrid "within" a facet frame
+    if (identical(mapping$x, mapping$row)) {
       meta <- append(meta, list(splitField = mapping$x))
     }
 

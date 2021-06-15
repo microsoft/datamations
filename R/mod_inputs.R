@@ -74,7 +74,6 @@ mod_inputs_server <- function(id) {
     # Update group by and summary variables based on dataset ----
 
     shiny::observe({
-
       group_by_vars <- dataset() %>%
         dplyr::select_if(~ is.factor(.x) | is.character(.x)) %>%
         names()

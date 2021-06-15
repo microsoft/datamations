@@ -14,8 +14,8 @@ app_ui <- function(request) {
   Shiny.onInputChange("slider_state", $(this).val());
   })
   })')),
-  # Listen to tab value, for changing slider!
-  shiny::tags$script("
+    # Listen to tab value, for changing slider!
+    shiny::tags$script("
       Shiny.addCustomMessageHandler('slider-from-tab', function(tab) {
       document.getElementById('datamation_sanddance-datamation').getElementsByClassName('slider')[0].value = tab;
       onSlide('datamation_sanddance-datamation');

@@ -4,21 +4,22 @@
 #'
 #' @param pipeline Input pipeline, as a string.
 #' @param supported_tidy_functions Functions that are supported by datamations: \code{group_by} and \code{summarize}/\code{summarise}.
-#'
-#' @export
+#' @noRd
 #'
 #' @examples
 #' "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
-#'   parse_pipeline()
+#'   datamations:::parse_pipeline()
 #'
 #' "group_by(small_salary, Degree) %>% summarize(mean = mean(Salary))" %>%
-#'   parse_pipeline()
+#'   datamations:::parse_pipeline()
 parse_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "summarize")) {
   pipeline %>%
     split_pipeline(supported_tidy_functions = supported_tidy_functions) %>%
     purrr::map(rlang::parse_expr)
 }
 
+#' Split pipeline into components
+#' @noRd
 split_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "summarize")) {
   pipeline <- pipeline %>%
     stringr::str_split("%>%") %>%
@@ -28,11 +29,14 @@ split_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "s
   # Convert summarise to summarize
   pipeline <- stringr::str_replace(pipeline, "summarise", "summarize")
 
+  # Extract out data if it's the first argument of the first function
   pipeline <- parse_data_from_first_function(pipeline, supported_tidy_functions = supported_tidy_functions)
 
   pipeline
 }
 
+#' Parse out data from the first function in a pipeline
+#' @noRd
 parse_data_from_first_function <- function(pipeline, supported_tidy_functions = c("group_by", "summarize")) {
   # If the first element of the pipeline is a supported function, the data is probably embedded in it
   if (any(stringr::str_detect(pipeline[[1]], supported_tidy_functions))) {

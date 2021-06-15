@@ -1,6 +1,6 @@
 #' Generate a plot datamation
 #'
-#' Generates the vega lite specs necessary for a plot datamation, based on a tidyverse pipeline.
+#' Generate a plot datamation from a tidyverse pipeline.
 #'
 #' @param pipeline Tidyverse pipeline
 #' @param envir Environment where code is evaluated. Defaults to the global environment.
@@ -9,7 +9,32 @@
 #' @param height Height of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).
 #' @param width Width of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).
 #' @export
+#'
+#' @examples {
+#'   library(dplyr)
+#'
+#'   "small_salary %>%
+#'   group_by(Degree) %>%
+#'   summarize(mean = mean(Salary))" %>%
+#'     datamation_sanddance()
+#'
+#'   library(ggplot2)
+#'
+#'   "small_salary %>%
+#'   group_by(Work, Degree) %>%
+#'   summarize(mean_salary = mean(Salary)) %>%
+#'   ggplot(aes(x = Work, y = mean_salary)) +
+#'   geom_point() +
+#'   facet_grid(rows = vars(Degree))" %>%
+#'     datamation_sanddance()
+#' }
 datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty = TRUE, elementId = NULL, height = 300, width = 300) {
+
+  # Check that dplyr is loaded
+  if (!"dplyr" %in% (.packages())) {
+    stop("Please load dplyr via `library(dplyr)` to generate this datamation.", call. = FALSE)
+  }
+
   # Specify which functions are supported, for parsing functions out and for erroring if any are not in this list
   supported_tidy_functions <- c("group_by", "summarize")
 
@@ -22,6 +47,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
 
   # If there is, assume the last element is the plotting
   if (contains_ggplot) {
+    # Remove the ggplot element
     fittings <- full_fittings[1:(length(full_fittings) - 1)]
 
     # Check that ggplot2 is loaded, error if not
@@ -57,6 +83,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     purrr::map(as.list) %>%
     purrr::map(as.character)
 
+  # If there's a ggplot specification, get the mapping (x and facets) from the final plot
   if (contains_ggplot) {
     # Evaluate plot
     pipeline_plot <- pipeline %>%
@@ -69,12 +96,13 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     plot_mapping <- NULL
   }
 
-  # Construct mapping
+  # Construct mapping - x, y, facets, etc
   names(data_states) <- tidy_functions_list
   names(tidy_function_args) <- tidy_functions_list
 
   mapping <- generate_mapping(data_states, tidy_function_args, plot_mapping)
 
+  # Iterate over each step of the pipeline
   res <- purrr::map(1:length(fittings), function(i) {
 
     # Starts with data in the previous stage, unless it is the first stage (the data itself)
@@ -86,12 +114,14 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
       verb <- tidy_function_args[[i]][[1]]
     }
 
+    # Define which function to call for that step in the pipeline
     call_verb <- switch(verb,
       data = prep_specs_data,
       group_by = prep_specs_group_by,
       summarize = prep_specs_summarize
     )
 
+    # Call that function with the data and mapping
     do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
   })
 
