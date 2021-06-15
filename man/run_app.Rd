@@ -6,9 +6,6 @@
 \usage{
 run_app()
 }
-\arguments{
-\item{...}{A series of options to be used inside the app.}
-}
 \description{
 Run the Shiny Application
 }

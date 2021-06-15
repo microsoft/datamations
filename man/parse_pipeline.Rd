@@ -16,8 +16,8 @@ Parses a tidyverse pipeline, input as a string, into a list of its components as
 }
 \examples{
 "small_salary \%>\% group_by(Degree) \%>\% summarize(mean = mean(Salary))" \%>\%
-  parse_pipeline()
+  datamations:::parse_pipeline()
 
 "group_by(small_salary, Degree) \%>\% summarize(mean = mean(Salary))" \%>\%
-  parse_pipeline()
+  datamations:::parse_pipeline()
 }

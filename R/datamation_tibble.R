@@ -13,6 +13,9 @@
 #' @param pipeline A tidyverse pipeline.
 #' @param envir An environment.
 #' @param output Path to where gif will be saved.
+#' @param titles Optional titles for the datamation frames
+#' @param xlim Optional x limits
+#' @param ylim Optional y limits
 #' @export
 datamation_tibble <- function(pipeline, envir = rlang::global_env(),
                               output = "output.gif", titles = NA,

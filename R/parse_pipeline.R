@@ -7,10 +7,10 @@
 #'
 #' @examples
 #' "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
-#'   parse_pipeline()
+#'   datamations:::parse_pipeline()
 #'
 #' "group_by(small_salary, Degree) %>% summarize(mean = mean(Salary))" %>%
-#'   parse_pipeline()
+#'   datamations:::parse_pipeline()
 parse_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "summarize")) {
   pipeline %>%
     split_pipeline(supported_tidy_functions = supported_tidy_functions) %>%
