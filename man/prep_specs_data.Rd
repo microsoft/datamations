@@ -2,7 +2,7 @@
 % Please edit documentation in R/prep_specs_data.R
 \name{prep_specs_data}
 \alias{prep_specs_data}
-\title{Generate spec of data in ungrouped icon array}
+\title{Generate spec of data for initial data step of datamations}
 \usage{
 prep_specs_data(
   .data,
@@ -27,5 +27,5 @@ prep_specs_data(
 \item{width}{Width of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).}
 }
 \description{
-Generate spec of data in ungrouped icon array
+Generate spec of data for initial data step of datamations
 }

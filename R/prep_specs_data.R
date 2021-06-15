@@ -1,4 +1,4 @@
-#' Generate spec of data in ungrouped icon array
+#' Generate spec of data for initial data step of datamations
 #'
 #' @param .data Input data
 #' @param mapping Mapping, unused.

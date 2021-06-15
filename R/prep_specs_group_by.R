@@ -1,4 +1,4 @@
-#' Generate specs of data in grouped icon array
+#' Generate specs of data for group by step of datamation
 #'
 #' @param .data Input data
 #' @param mapping A list that describes mapping for the datamations, including x and y variables, summary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.

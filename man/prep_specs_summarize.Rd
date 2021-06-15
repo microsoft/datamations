@@ -2,7 +2,7 @@
 % Please edit documentation in R/prep_specs_summarize.R
 \name{prep_specs_summarize}
 \alias{prep_specs_summarize}
-\title{Generate specs of data distribution and summarized data}
+\title{Generate specs of data distribution and summarized data steps of datamations}
 \usage{
 prep_specs_summarize(
   .data,
@@ -27,5 +27,5 @@ prep_specs_summarize(
 \item{width}{Width of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).}
 }
 \description{
-Generate specs of data distribution and summarized data
+Generate specs of data distribution and summarized data steps of datamations
 }
