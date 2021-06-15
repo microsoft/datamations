@@ -4,6 +4,10 @@
   (global = global || self, factory(global.gemini = {}, global.vega, global.d3, global.vegaLite));
 }(this, (function (exports, vega, d3, vegaLite) { 'use strict';
 
+  var vega__default = 'default' in vega ? vega['default'] : vega;
+  var d3__default = 'default' in d3 ? d3['default'] : d3;
+  var vegaLite__default = 'default' in vegaLite ? vegaLite['default'] : vegaLite;
+
   class Animation {
     constructor(schedule, rawInfo, spec) {
       this.schedule = schedule;
@@ -105,7 +109,6 @@
     }
     return arr;
   };
-
   Array.prototype.sample = function(N) {
     const tempThis = this.slice();
     const sampled = [];
@@ -128,7 +131,7 @@
     return JSON.parse(JSON.stringify(this));
   };
   function stringifyDatumValue(value) {
-    if (value === null || value === undefined) {
+    if (value === null) {
       return "__null__";
     }
     return value.toString();
@@ -267,6 +270,39 @@
 
   function isEmpty(o) {
     return typeof o === "object" && Object.keys(o).length === 0;
+  }
+  function isDefinitelyNaN(o) {
+    return ((typeof(v) === "number" ) && isNaN(v))
+  }
+  function isValue(v) {
+    return (v !== undefined) && (v !== null) && !(isDefinitelyNaN())
+  }
+
+  function crossJoinArrays(arrs) {
+    return arrs.reduce((acc, currArray) => {
+      return currArray.reduce((result, b) => {
+        return result.concat(acc.map(a => [...a, b]))
+      }, [])
+    }, [[]])
+  }
+
+  //Enumerate all ways of splitting arr into N non-empty arrays
+  function NSplits(arr, N) {
+    if (N === 1) {
+      return [[arr]]
+    } else if (arr.length === N) {
+      return [arr.map(item => { return [item] })];
+    } else if (arr.length < N) {
+      throw new Error(`Cannot split ${arr.length}-long array into ${N}.`)
+    }
+    let results = [];
+    for (let i = 1; arr.length -i >= N-1; i++) {
+      let division = NSplits(arr.slice(i), N-1).map(division => {
+        return [arr.slice(0,i)].concat(division)
+      });
+      results = results.concat(division);
+    }
+    return results;
   }
 
   function collectResolves(parsedBlock, parsedSteps) {
@@ -516,7 +552,7 @@
   }
 
   var uri_all = createCommonjsModule(function (module, exports) {
-  /** @license URI.js v4.4.0 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
+  /** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
   (function (global, factory) {
   	 factory(exports) ;
   }(commonjsGlobal, (function (exports) {
@@ -3572,8 +3608,8 @@
   // For the source: https://gist.github.com/dperini/729294
   // For test cases: https://mathiasbynens.be/demo/url-regex
   // @todo Delete current URL in favour of the commented out URL rule when this issue is fixed https://github.com/eslint/eslint/issues/7983.
-  // var URL = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u{00a1}-\u{ffff}0-9]+-?)*[a-z\u{00a1}-\u{ffff}0-9]+)(?:\.(?:[a-z\u{00a1}-\u{ffff}0-9]+-?)*[a-z\u{00a1}-\u{ffff}0-9]+)*(?:\.(?:[a-z\u{00a1}-\u{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/iu;
-  var URL = /^(?:(?:http[s\u017F]?|ftp):\/\/)(?:(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+(?::(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])*)?@)?(?:(?!10(?:\.[0-9]{1,3}){3})(?!127(?:\.[0-9]{1,3}){3})(?!169\.254(?:\.[0-9]{1,3}){2})(?!192\.168(?:\.[0-9]{1,3}){2})(?!172\.(?:1[6-9]|2[0-9]|3[01])(?:\.[0-9]{1,3}){2})(?:[1-9][0-9]?|1[0-9][0-9]|2[01][0-9]|22[0-3])(?:\.(?:1?[0-9]{1,2}|2[0-4][0-9]|25[0-5])){2}(?:\.(?:[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-4]))|(?:(?:(?:[0-9KSa-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+-?)*(?:[0-9KSa-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+)(?:\.(?:(?:[0-9KSa-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+-?)*(?:[0-9KSa-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+)*(?:\.(?:(?:[KSa-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]){2,})))(?::[0-9]{2,5})?(?:\/(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])*)?$/i;
+  // var URL = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u{00a1}-\u{ffff}0-9]+-)*[a-z\u{00a1}-\u{ffff}0-9]+)(?:\.(?:[a-z\u{00a1}-\u{ffff}0-9]+-)*[a-z\u{00a1}-\u{ffff}0-9]+)*(?:\.(?:[a-z\u{00a1}-\u{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/iu;
+  var URL = /^(?:(?:http[s\u017F]?|ftp):\/\/)(?:(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+(?::(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])*)?@)?(?:(?!10(?:\.[0-9]{1,3}){3})(?!127(?:\.[0-9]{1,3}){3})(?!169\.254(?:\.[0-9]{1,3}){2})(?!192\.168(?:\.[0-9]{1,3}){2})(?!172\.(?:1[6-9]|2[0-9]|3[01])(?:\.[0-9]{1,3}){2})(?:[1-9][0-9]?|1[0-9][0-9]|2[01][0-9]|22[0-3])(?:\.(?:1?[0-9]{1,2}|2[0-4][0-9]|25[0-5])){2}(?:\.(?:[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-4]))|(?:(?:(?:[0-9a-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+-)*(?:[0-9a-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+)(?:\.(?:(?:[0-9a-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+-)*(?:[0-9a-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])+)*(?:\.(?:(?:[a-z\xA1-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]){2,})))(?::[0-9]{2,5})?(?:\/(?:[\0-\x08\x0E-\x1F!-\x9F\xA1-\u167F\u1681-\u1FFF\u200B-\u2027\u202A-\u202E\u2030-\u205E\u2060-\u2FFF\u3001-\uD7FF\uE000-\uFEFE\uFF00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])*)?$/i;
   var UUID = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i;
   var JSON_POINTER$1 = /^(?:\/(?:[^~/]|~0|~1)*)*$/;
   var JSON_POINTER_URI_FRAGMENT = /^#(?:\/(?:[a-z0-9_\-.!$&'()*+,;:=@]|%[0-9a-f]{2}|~0|~1)*)*$/i;
@@ -10246,33 +10282,36 @@
   }
 
   function legendLablePos(spec) {
-    let grLength = spec ? spec.gradientLength : undefined;
-    grLength = isNaN(grLength) ? vegaConfig.legend.gradientLength : grLength;
-    let grThickness = spec ? spec.gradientThickness : undefined;
-    grThickness = isNaN(grThickness) ? vegaConfig.legend.gradientThickness : grThickness;
-    let grLabelOffset = spec ? spec.gradientLabelOffset : undefined;
-    grLabelOffset = isNaN(grLabelOffset) ? vegaConfig.legend.gradientLabelOffset : grLabelOffset;
+    const columns = !spec ? 1 : (spec.columns || (spec.direction === "vertical" ? 1 : 0));
+    const clipHeight = (spec && spec.clipHeight) ? spec.clipHeight : null;
 
     if (spec.type === "symbol") {
       return {
-        x: { value: 0 },
-        y: { value: 0 },
-        dx: { value: 16 },
-        dy: { value: 6 }
+        x: { signal: columns ? `datum['offset']` : `datum['size']`, offset: vegaConfig.legend.labelOffset },
+        y: { signal: clipHeight ? `${clipHeight}` : `datum['size']`, mult: 0.5}
       };
-    }
-    if (spec.direction === "vertical") {
+    } else {
+      let grLength = spec ? spec.gradientLength : undefined;
+      grLength = isNaN(grLength) ? vegaConfig.legend.gradientLength : grLength;
+      let grThickness = spec ? spec.gradientThickness : undefined;
+      grThickness = isNaN(grThickness) ? vegaConfig.legend.gradientThickness : grThickness;
+      let grLabelOffset = spec ? spec.gradientLabelOffset : undefined;
+      grLabelOffset = isNaN(grLabelOffset) ? vegaConfig.legend.gradientLabelOffset : grLabelOffset;
+
+      if (spec.direction === "vertical") {
+        return {
+          x: { value: 0, },
+          y: { signal: `(1-datum.perc) * clamp(height, 64, ${grLength})` },
+          dx: { value: grThickness + grLabelOffset }
+        };
+      }
       return {
-        x: { value: 0, },
-        y: { signal: `(1-datum.perc) * clamp(height, 64, ${grLength})` },
-        dx: { value: grThickness + grLabelOffset }
+        x: { signal: `(datum.perc) * clamp(width, 64, ${grLength})` },
+        y: { value: 0, },
+        dy: { value: grThickness + grLabelOffset }
       };
     }
-    return {
-      x: { signal: `(datum.perc) * clamp(width, 64, ${grLength})` },
-      y: { value: 0, },
-      dy: { value: grThickness + grLabelOffset }
-    };
+
   }
 
 
@@ -10496,9 +10535,11 @@
       };
     },
     symbols: spec => {
+      const columns = !spec ? 1 : (spec.columns || (spec.direction === "vertical" ? 1 : 0));
+      const clipHeight = (spec && spec.clipHeight) ? spec.clipHeight : null;
       const defaultEncode = {
-        y: { value: 6 },
-        x: { value: 6 },
+        y: { signal: clipHeight ? `${clipHeight}` : `datum['size']`, mult: 0.5},
+        x: { signal: columns ? `datum['offset']` : `datum['size']`, mult: 0.5, offset: vegaConfig.legend.symbolOffset },
         shape: { value: vegaConfig.legend.symbolType },
         size: { value: vegaConfig.legend.symbolSize },
         strokeWidth: { value: vegaConfig.legend.symbolStrokeWidth }
@@ -10826,10 +10867,10 @@
       result = result.concat([
         { type: "text", val: "text" },
         { type: "attr", val: "transform" },
-        { type: "style", val: "opacity" },
-        { type: "style", val: "font" },
-        { type: "style", val: "fontSize" },
-        { type: "style", val: "fontWeight" },
+        { type: "attr", val: "opacity" },
+        { type: "attr", val: "font" },
+        { type: "attr", val: "fontSize" },
+        { type: "attr", val: "fontWeight" },
         { type: "style", val: "fill" }
       ]);
       break;
@@ -10837,10 +10878,10 @@
       result = result.concat([
         { type: "text", val: "text" },
         { type: "attr", val: "transform" },
-        { type: "style", val: "opacity" },
-        { type: "style", val: "font" },
-        { type: "style", val: "fontSize" },
-        { type: "style", val: "fontWeight" },
+        { type: "attr", val: "opacity" },
+        { type: "attr", val: "font" },
+        { type: "attr", val: "fontSize" },
+        { type: "attr", val: "fontWeight" },
         { type: "style", val: "fill" }
       ]);
       break;
@@ -11047,7 +11088,7 @@
 
   class Enumerator {
     constructor(enumDef, spec, rawInfo) {
-      this.views = getStops(enumDef, spec, rawInfo);
+      this.views = [];
       this.stopN = this.views.length;
       this.enumDef = enumDef;
       this.currSpec = spec;
@@ -11055,6 +11096,21 @@
       this.delay = enumDef.delay || 0;
       this.staggering = enumDef.staggering;
       this.rawInfo = rawInfo;
+    }
+
+    async init() {
+      const workingSpec = copy(this.currSpec);
+
+      const enumVals = computeFilteringValues(this.enumDef, this.rawInfo);
+      const filter = findFilter(workingSpec, this.enumDef.filter);
+
+
+      for (const v of enumVals) {
+        this.views.push(await new vega.View(vega.parse(computeNewSpec(workingSpec, filter, v)), {
+          renderer: "svg"
+        }).runAsync());
+      }
+      this.stopN = this.views.length;
     }
 
     _getScales(stop_n) {
@@ -11214,20 +11270,6 @@
     filter.expr = newFilterExpr;
 
     return copy(workingSpec);
-  }
-  function getStops(enumDef, spec, rawInfo) {
-    const workingSpec = copy(spec);
-
-    const enumVals = computeFilteringValues(enumDef, rawInfo);
-    const filter = findFilter(workingSpec, enumDef.filter);
-
-    const views = enumVals.map(v => {
-      return new vega.View(vega.parse(computeNewSpec(workingSpec, filter, v)), {
-        renderer: "none"
-      }).run();
-    });
-
-    return views;
   }
 
   function enumerateSteps(block, rawInfo, enumDefs) {
@@ -11724,7 +11766,7 @@
 
   function joinData(step, rawInfo, initialData) {
     const iData = initialData;
-    const eView = rawInfo.eVis.view;
+    const eView = rawInfo.eVis.view, sView = rawInfo.sVis.view;
     const {change} = step;
     const isAdd = !change.initial && !!change.final;
     const isRemove = !!change.initial && !change.final;
@@ -11933,11 +11975,12 @@
         doUpdate = change.data.update === false ? false : doUpdate;
         doEnter = change.data.enter === false ? false : doEnter;
         doExit = change.data.exit === false ? false : doExit;
-        joinFields = Array.isArray(change.data) ? change.data : change.data.keys;
+        joinFields = (Array.isArray(change.data) ? change.data : change.data.keys) || null;
       }
 
 
       const aggregate = step.aggregates;
+      const bin = step.bins;
       const isGroupingMarktypes = {
         initial: isGroupingMarktype(marktypes.initial || marktypes.final),
         final: isGroupingMarktype(marktypes.final || marktypes.initial)
@@ -12039,6 +12082,16 @@
             });
           }
         } else if (!isGroupingMarktypes.initial && !isGroupingMarktypes.final) {
+
+          // if iData or fData are binned, attach the representative fields.
+          // E.g., bin_A, bin_A_end -> A
+          if (bin.initial) {
+            extendBinnedData(iData, bin.initial);
+          }
+          if (bin.final) {
+            extendBinnedData(fData, bin.final);
+          }
+
           if (
             aggregate.initial &&
             aggregate.final &&
@@ -12070,10 +12123,12 @@
             });
 
             if (!aggregate.initial && aggregate.final) {
-              attachAggData(fData, iData, computeId.final, aggregate.final);
+              attachAggData(fData, iData, computeId.final, aggregate.final, eView, change.final.from.data, computeIdMaker(joinFields));
+              extendAggData(fData, aggregate.final);
               preFetchCurrData = true;
             } else if (aggregate.initial && !aggregate.final) {
-              attachAggData(iData, fData, computeId.initial, aggregate.initial);
+              attachAggData(iData, fData, computeId.initial, aggregate.initial, sView, change.initial.from.data, computeIdMaker(joinFields));
+              extendAggData(iData, aggregate.initial);
               preFetchCurrData = true;
             }
           }
@@ -12245,16 +12300,63 @@
       exit: exitData
     };
   }
-  function attachAggData(aggData, rawData, aggId, agg) {
-    rawData.forEach((rawDatum, i) => {
-      aggData.forEach((aggDatum, j) => {
-        if (aggId(rawDatum, i) === aggId(aggDatum, j)) {
-          agg.fields.forEach((f, f_i) => {
-            rawDatum.datum[agg.as[f_i]] = aggDatum.datum[agg.as[f_i]];
-          });
-        }
+
+  function extendBinnedData(binData, bin) {
+    bin.forEach(b => {
+      binData.forEach(d => {
+        d.datum[b.field] = d.datum[b.field] === undefined ? (d.datum[b.as[0]] + d.datum[b.as[1]])/2 : d.datum[b.field];
       });
     });
+  }
+  function extendAggData(aggData, agg) {
+    aggData.forEach(aggDatum => {
+      agg.as.forEach((aggField, i) => {
+        aggDatum.datum[agg.fields[i]] = aggDatum.datum[agg.as[i]];
+      });
+    });
+  }
+
+  function attachAggData(aggData, targetData, aggId, agg, aggView, dataName, computeRawId) {
+
+    let pt = aggView._runtime.data[dataName].values;
+    while (!isAggregateSource(pt, agg)) {
+      pt = pt.source;
+    }
+    let rawData = pt.source.pulse.add;
+
+
+    targetData.forEach((targetDatum, i) => {
+      let _i = rawData.findIndex((d, _i)=> computeRawId({datum: d}, _i) === computeRawId(targetDatum, i));
+      let rawDatum = rawData[_i];
+      if (rawDatum) {
+        aggData.forEach((aggDatum, j) => {
+          if (aggId({datum: rawDatum}, _i) === aggId(aggDatum, j)) {
+            agg.fields.forEach((f, f_i) => {
+              targetDatum.datum[agg.as[f_i]] = aggDatum.datum[agg.as[f_i]];
+            });
+            agg.groupby.forEach((f) => {
+              targetDatum.datum[f] = targetDatum.datum[f] || rawDatum[f];
+            });
+          }
+        });
+      } else {
+        //If targetDatum cannot find the corresponding aggregated datum, just attach its value as aggvalue
+        agg.fields.forEach((f, f_i) => {
+          targetDatum.datum[agg.as[f_i]] = targetDatum.datum[f];
+        });
+        agg.groupby.forEach((f) => {
+          targetDatum.datum[f] = targetDatum.datum[f] || rawDatum[f];
+        });
+      }
+    });
+  }
+
+  function isAggregateSource(pt, agg) {
+    let argval = pt._argVal || pt._argval;
+    if (argval && argval.as && vegaLite.deepEqual(argval.as, agg.as) ) {
+      return true
+    }
+    return false
   }
 
   function getJoinInfo$1(d, step, prop) {
@@ -12268,7 +12370,38 @@
       return computeId(d, i) + postFix;
     };
   }
+  function getBin(change, rawInfo) {
+    const bin = {};
+    if (!change.initial || !change.final) {
+      return bin;
+    }
+    const sSpec = rawInfo.sVis.spec;
+    const eSpec = rawInfo.eVis.spec;
 
+    const dataName = compSpec => {
+      return computeHasFacet(compSpec)
+        ? compSpec.parent.from.facet.data
+        : compSpec.from.data;
+    };
+
+    const dataSource_f = eSpec.data.find(
+      dset => dset.name === dataName(change.final)
+    );
+    if (dataSource_f.transform) {
+      bin.final = dataSource_f.transform.filter(
+        trsfm => trsfm.type === "bin"
+      );
+    }
+    const dataSource_i = sSpec.data.find(
+      dset => dset.name === dataName(change.initial)
+    );
+    if (dataSource_i.transform) {
+      bin.initial = dataSource_i.transform.filter(
+        trsfm => trsfm.type === "bin"
+      );
+    }
+    return bin;
+  }
   function getAggregate(change, rawInfo) {
     const aggregate = {};
     if (!change.initial || !change.final) {
@@ -12329,11 +12462,19 @@
     return tempView._runtime.scales[scName].value;
   }
 
-  function computeKeptEncode(manualEncode, referenceEncode, set) {
-    return Object.keys(manualEncode && manualEncode[set] ? manualEncode[set] : {})
-      .filter(attr => manualEncode[set][attr] === false)
+  function computeKeptEncode(manualEncode, referenceEncode, set = null) {
+
+    let manual = manualEncode;
+    if (set !== null) {
+      manual = manualEncode && manualEncode[set] ? manualEncode[set] : {};
+    }
+    const ref = set !== null ? referenceEncode[set] : referenceEncode;
+
+
+    return Object.keys(manual)
+      .filter(attr => manual[attr] === false)
       .reduce((keptEncode, attr) => {
-        keptEncode[attr] = referenceEncode[set][attr];
+        keptEncode[attr] = ref[attr];
         return keptEncode;
       }, {});
   }
@@ -12427,11 +12568,22 @@
       initial: lastState.aggregate,
       final: lastState.aggregate
     };
+    const bins = {
+      initial: lastState.bin,
+      final: lastState.bin
+    };
 
     if (change.data) {
       // aggregates.done = true;
       aggregates.final = getAggregate(change, rawInfo).final;
+      bins.final = getBin(change, rawInfo).final;
     }
+
+    const beingAggregated = change.data && !aggregates.initial && aggregates.final;
+    const beingDisaggregated = change.data && aggregates.initial && !aggregates.final;
+    const beingBinned = change.data && !bins.initial && bins.final;
+    const beingDisbinned = change.data && bins.initial && !bins.final;
+
 
     const marktypes = {
       initial: lastState.marktype, // change.initial ? change.initial.type : undefined,
@@ -12514,6 +12666,13 @@
       });
     }
 
+    if (beingAggregated && aggregates.final.ops.indexOf("count") >= 0) {
+      step.specificScaleFor = { ...step.specificScaleFor, enter: {initial: "final"} };
+    }
+    if (beingDisaggregated && aggregates.initial.ops.indexOf("count") >= 0) {
+      step.specificScaleFor = { ...step.specificScaleFor, exit: {final: "initial"} };
+    }
+
     if (manualEncode === false) {
       throw Error("Interpolating data requires to interpolate encode.");
     }
@@ -12533,12 +12692,19 @@
       : {};
     delete manualEncodeEnterWithoutInitial.initial;
 
+
     encodes.initial.enter = Object.assign(
       {},
       lastState.encode.update,
       DEFAULT_ENCODE.mark.enter,
+      beingAggregated ? computeKeptEncode(
+        manualEncode,
+        get(change, "final", "encode", "update") || {}
+      ) : {},
       manualEncode && manualEncode.enter ? manualEncode.enter.initial : {}
     );
+
+
 
     if (get(change, "encode", "enter") === false) {
       encodes.final.enter = encodes.initial.enter;
@@ -12625,22 +12791,25 @@
         );
       }
     }
-    if (!aggregates.initial && aggregates.final && change.data ) {
+
+
+    if (beingAggregated) {
       // when aggregate
       encodes.final.exit = Object.assign(
-        !change.marktype ? encodes.final.update : replacePositionAttrs(marktypes.initial, encodes.final.exit, encodes.final.update),
+        change.marktype && (marktypes.initial !== marktypes.final) ? replacePositionAttrs(marktypes.initial, encodes.final.exit, encodes.final.update) : encodes.final.update,
         { opacity: { value: 0 } },
         manualEncode ? manualEncode.exit : {},
         computeKeptEncode(manualEncode, encodes.initial, "exit"),
       );
 
+
       encodes.final.update = copy(encodes.final.enter);
-    } else if (aggregates.initial && !aggregates.final && change.data ) {
+    } else if (beingDisaggregated) {
       // when disaggregate
 
       encodes.initial.enter = Object.assign(
         {},
-        !change.marktype ? encodes.initial.update : replacePositionAttrs(marktypes.final, encodes.initial.enter, encodes.initial.update),
+        change.marktype && (marktypes.initial !== marktypes.final) ? replacePositionAttrs(marktypes.final, encodes.initial.enter, encodes.initial.update) : encodes.initial.update,
         { opacity: { value: 0 } },
         manualEncode && manualEncode.enter ? manualEncode.enter.initial : {}
       );
@@ -12655,6 +12824,7 @@
       marktypes,
       hasFacet,
       aggregates,
+      bins,
       styleEncodes
     };
   }
@@ -13261,7 +13431,7 @@
     const components = [];
     function collectComp(mark, currComp, isRoot = false) {
       if (isRoot) {
-        mark.name = "root";
+        mark.name = mark.name || "root";
       }
       let newComp = currComp;
       if (mark.axes) {
@@ -13305,7 +13475,7 @@
       return newComp;
     }
 
-    return collectComp(vgSpec, components, true);
+    return collectComp(copy(vgSpec), components, true);
   }
   function getChanges(sComponents, eComponents) {
     const IDENTIFIERS = {
@@ -13502,16 +13672,16 @@
   }
 
 
-  function attachStates(schedule, rawInfo) {
+  async function attachStates(schedule, rawInfo) {
     const state = initializeState(schedule, rawInfo);
     const moments = getMoments(schedule);
     schedule.moments = moments;
 
-    moments.forEach(moment => {
-      moment.ending.forEach(step => {
+    for (const moment of moments) {
+      for (const step of moment.ending) {
         const lastState = state[step.trackName];
         if (step.compType === "pause") {
-          return;
+          break;
         }
 
         lastState.data = lastState.data || initialData(step, rawInfo);
@@ -13523,9 +13693,9 @@
             const filter = findFilter(state.spec, enumed.def.filter);
             state.spec = computeNewSpec(state.spec, filter, enumed.val);
           });
-          eView = new vega.View(vega.parse(state.spec), {
+          eView = await new vega.View(vega.parse(state.spec), {
             renderer: "none"
-          }).run();
+          }).runAsync();
         }
         const newRawInfo = {
           sVis: rawInfo.sVis,
@@ -13560,6 +13730,7 @@
         lastState.marktype = step.marktypes ? step.marktypes.final : undefined;
         lastState.hasFacet = step.hasFacet ? step.hasFacet.final : undefined;
         lastState.aggregate = step.aggregates ? step.aggregates.final : undefined;
+        lastState.bin = step.bins ? step.bins.final : undefined;
         lastState.isAdd = step.isAdd;
         lastState.isRemove = step.isRemove;
         lastState.sameDomainDimension = step.sameDomainDimension;
@@ -13577,7 +13748,7 @@
             const foundScale =
               lastState.scale[lastState.encode.update[prop].scale];
 
-            if (foundScale && lastState.encode.update[prop].field) {
+            if (foundScale && lastState.encode.update[prop].field && (lastState.data.length > 0)) {
               const { field } = lastState.encode.update[prop];
               let vals = lastState.data.map(d => d.datum[field]);
 
@@ -13606,18 +13777,19 @@
             track => track.name === step.trackName
           ).scaleOrderValid = valid;
         }
-      });
-      moment.starting.forEach(step => {
+      }
+      for (let step of moment.starting) {
         const lastState = state[step.trackName];
         if (get(step, "enumerator")) {
           if (step.compType === "mark") {
             // fetch enumerator
             step.enumeratorDef = step.enumerator;
             const enumerator = (step.enumerator = new Enumerator(
-              step.enumerator,
+              step.enumeratorDef,
               state.spec,
               rawInfo
             ));
+            await enumerator.init();
             // let dataName = (step.change.final || step.change.final).from.data;
             let dataName = step.compName;
 
@@ -13709,12 +13881,14 @@
             }
           } else if (step.compType === "axis") {
             step.enumeratorDef = step.enumerator;
-            step.enumerator = ["tick", "label", "grid"].reduce((acc, subComp) => {
+            step.enumerator = {};
+            for (const subComp of ["tick", "label", "grid"]) {
               const enumerator = new Enumerator(
-                step.enumerator,
+                step.enumeratorDef,
                 state.spec,
                 rawInfo
               );
+              await enumerator.init();
               const scName = step.compName;
               enumerator.joinData(
                 view => {
@@ -13725,9 +13899,9 @@
                 },
                 d => d.datum.value.toString()
               );
-              acc[subComp] = enumerator;
-              return acc;
-            }, {});
+              step.enumerator[subComp] = enumerator;
+            }
+
           } else if (step.compType === "legend") {
             step.enumeratorDef = step.enumerator;
             let legendEnumDefs = [];
@@ -13811,21 +13985,24 @@
                 "Cannot enumerate the changes when the legend type changes."
               );
             }
-            step.enumerator = legendEnumDefs.reduce((acc, enumDef) => {
+            step.enumerator = {};
+            for (const enumDef of legendEnumDefs) {
               const enumerator = new Enumerator(
                 step.enumerator,
                 state.spec,
                 rawInfo
               );
+              await enumerator.init();
               enumerator.joinData(enumDef.extractData, enumDef.identifyDatum);
               acc[enumDef.subComp] = enumerator;
               return acc;
-            }, {});
+            }
+
           }
         }
-      });
-    });
+      }
 
+    }
     return schedule;
   }
 
@@ -13885,6 +14062,11 @@
           track.steps[0].change,
           rawInfo
         ).initial;
+        compState.bin = getBin(
+          track.steps[0].change,
+          rawInfo
+        ).initial;
+
         // compState.aggregate.done = false;
       } else if (track.compType === "axis") {
         // for axis comp
@@ -15292,7 +15474,11 @@
         } else if (p.type === "attr") {
           d3Selection.attr(getStyle(p.val), function(d) {
             const oldD = prevData ? prevData.get(this) : undefined;
-            return getPropVal.bind(this)(p, encode, scales, signal, d, oldD);
+            let v = getPropVal.bind(this)(p, encode, scales, signal, d, oldD);
+            if (p.val==="fontSize" && isNumber(v)) {
+              return v + "px";
+            }
+            return v;
           });
         } else if (p.type === "text") {
           d3Selection.text(function(d) {
@@ -15467,7 +15653,7 @@
         return getShape(d, scales, encode, signal).path;
       }
       if (propInfo.val === "transform") {
-        const trfD = transformD.bind(this)(encode, scales, signal, d, false);
+        const trfD = transformD.bind(this)(encodes, scales, signal, d, false);
         return transformItem(Object.keys(trfD).length === 0 ? d : trfD);
       }
     } else if (propInfo.elmType === "gradient") {
@@ -15842,10 +16028,9 @@
   }
 
   function transformD(encodes, scales, signal, d, inherit = true) {
-    const encode = encodes.primary || encodes;
     return Object.assign(
       {},
-      Object.keys(encode)
+      Object.keys(encodes.primary || encodes.final || encodes)
         .filter(key => ["x", "y", "angle", "yc", "xc"].indexOf(key) >= 0)
         .reduce((acc, curr) => {
           const newVal = decodeEncode.bind(this)(
@@ -16014,53 +16199,51 @@
         return;
       }
       if (Array.isArray(enAttr)) {
+        let isSelected = false;
         for (let i = 0; i < enAttr.length - 1; i++) {
           // Then the items should contain 'test' prop to test (except the last)
           if (evalSignalVal(enAttr[i].test, signal, scales, d.datum)) {
-            return enAttr[i].value;
+            enAttr = copy(enAttr[i]);
+            isSelected = true;
+            break;
           }
         }
-        enAttr = copy(enAttr[enAttr.length - 1]);
+        if (!isSelected) {
+          enAttr = copy(enAttr[enAttr.length - 1]);
+        }
       }
-
-      let finalVal = enAttr.value;
-      if (enAttr.field) {
-        if (enAttr.scale) {
-          const scName = enAttr.scale;
-          finalVal = scales[scName]
-            ? scales[scName](d.datum[enAttr.field])
-            : undefined;
-        } else if (enAttr.field.group) {
+      let val, isSet = true;
+      if (isValue(enAttr.value)) {
+        val = enAttr.value;
+      } else if (enAttr.field) {
+        if (enAttr.field.group) {
           return d.mark.group[enAttr.field.group];
-        } else {
-          finalVal = d.datum[enAttr.field];
         }
+        val = d.datum[enAttr.field];
+      } else if (enAttr.signal) {
+        val = evalSignalVal(enAttr.signal, signal, scales, d.datum);
+      } else {
+        isSet = false;
       }
-      if (enAttr.signal) {
-        const val = evalSignalVal(enAttr.signal, signal, scales, d.datum);
 
-        if (enAttr.scale) {
-          const scName = enAttr.scale;
-          finalVal = scales[scName] ? scales[scName](val) : undefined;
-        } else {
-          finalVal = val;
-        }
-      }
+
       if (enAttr.scale) {
         const scName = enAttr.scale;
-
-        if (enAttr.value !== undefined) {
-          finalVal = scales[scName] ? scales[scName](enAttr.value) : undefined;
+        const sc = scales[scName];
+        if (isSet) {
+          if ((!sc) || !isValue(sc(val))){
+            return undefined
+          }
+          val = sc(val);
         }
 
         if (enAttr.band) {
-          const sc = scales[scName];
-          let bw = sc && sc.type === "band" ? sc.bandwidth() : 0;
+          let bw = (sc && sc.type === "band") ? sc.bandwidth() : 0;
           bw = Math.round(
             bw *
-              (enAttr.band === true || isNumber(enAttr.band) ? enAttr.band : 0.5)
+              ((enAttr.band === true || isNumber(enAttr.band)) ? enAttr.band : 0.5)
           );
-          finalVal = isNumber(finalVal) ? bw + finalVal : bw;
+          val = isSet ? val + bw : bw;
         }
       }
 
@@ -16069,9 +16252,9 @@
       }
       if (enAttr.mult) {
         if (isNumber(enAttr.mult)) {
-          finalVal *= enAttr.mult;
+          val *= enAttr.mult;
         } else {
-          finalVal *= decodeEncode(
+          val *= decodeEncode(
             "mult",
             { mult: enAttr.mult },
             scales,
@@ -16082,9 +16265,9 @@
       }
       if (enAttr.offset) {
         if (isNumber(enAttr.offset)) {
-          finalVal += enAttr.offset;
+          val += enAttr.offset;
         } else {
-          finalVal += decodeEncode(
+          val += decodeEncode(
             "offset",
             { offset: enAttr.offset },
             scales,
@@ -16093,11 +16276,11 @@
           );
         }
       }
-      return finalVal;
+      return val;
     }
     const fValPrimary = getVal(enAttr, scales);
     const fValSecondary = getVal(subEnAttr, subScales);
-    return fValPrimary !== undefined ? fValPrimary : fValSecondary;
+    return isValue(fValPrimary) ? fValPrimary : fValSecondary;
   }
 
 
@@ -16377,8 +16560,10 @@
         marktypes,
         scales,
         encodes,
-        signals
+        signals,
+        specificScaleFor
       } = step;
+
 
       const isAdd = !change.initial && !!change.final,
         isRemove = !!change.initial && !change.final;
@@ -16424,7 +16609,7 @@
         final: getSvgElmType(marktypes.final)
       };
 
-      let marks = d3.select(`${animVis  } .mark-${marktype}.role-mark.${change.compName}`);
+      let marks = d3.select(`${animVis} .mark-${marktype}.role-mark.${change.compName}`);
 
 
       if (
@@ -16826,11 +17011,14 @@
       ) {
         // enter
         let enterI = animMarks.enter().append(getSvgElmType(marktype));
+        let scalesForInitial = { primary: scales.initial, secondary: scales.final };
+        if (specificScaleFor && specificScaleFor.enter && specificScaleFor.enter.initial === "final") {
+          scalesForInitial.primary = scales.final;
+        }
         fetchAttributes(
           enterI,
           MARK_ATTRS[marktype],
-          // Todo: When using the final scale, it should use the final encode as well.
-          { primary: scales.initial, secondary: scales.final },
+          scalesForInitial,
           signals.initial,
           {
             primary: encodeInitial,
@@ -16892,16 +17080,24 @@
           // if (doExit && exitI.data().length > 0) {
           const setType = "initial";
           const exitF = exitI.transition();
-
+          let scalesForExit =  Object.assign({}, scales, {
+            primary: scales.final,
+            secondary: scales.initial
+          });
+          let encodes = {
+            ...encode,
+            primary: encode.final || encodes.final.exit,
+            secondary: encode.initial || encodes.final.exit
+          };
+          if (specificScaleFor && specificScaleFor.exit && specificScaleFor.exit.final === "initial") {
+            scalesForExit.primary = scales.initial;
+          }
           fetchAttributes(
             exitF,
             MARK_ATTRS[marktype],
-            Object.assign({}, scales, {
-              primary: scales.final,
-              secondary: scales.initial
-            }),
+            scalesForExit,
             signals,
-            encode || encodes.final.exit,
+            encodes, // encode || encodes.final.exit,
             prevData
           );
 
@@ -20473,20 +20669,20 @@
     return LIBRARY.mark.interpolate.others(rawInfo, step, targetElm);
   }
 
-  function autoScaleOrder(extendedSchedule, resolves, rawInfo) {
+  async function autoScaleOrder(extendedSchedule, resolves, rawInfo) {
     const mainTimeline = extendedSchedule.getTimeline(":main");
 
-    let extendedTimeline = attachStates(mainTimeline, rawInfo);
+    let extendedTimeline = await attachStates(mainTimeline, rawInfo);
     const scaleOrderResovles = resolves.filter(r => r.autoScaleOrder),
       scheduleAlternator = extendedSchedule.getTimelineAlternator(scaleOrderResovles);
 
     while (!validateScaleOrder(scaleOrderResovles, extendedTimeline)) {
       const altTimeline = scheduleAlternator();
       if (!altTimeline) {
-        extendedTimeline = attachStates(mainTimeline, rawInfo);
+        extendedTimeline = await attachStates(mainTimeline, rawInfo);
         break;
       }
-      extendedTimeline = attachStates(altTimeline, rawInfo);
+      extendedTimeline = await attachStates(altTimeline, rawInfo);
     }
     return extendedTimeline;
   }
@@ -20502,6 +20698,108 @@
       });
     });
     return valid;
+  }
+
+  class AnimationSequence {
+
+    constructor(animations) {
+      this.animations = animations;
+      this.status = "ready";
+      this.specs = animations.map(anim => anim.spec);
+      this.logs = [];
+      this.rawInfos = animations.map(anim => anim.rawInfo);
+    }
+
+    log(timestamp, message, info) {
+      if (typeof message === "string" && typeof timestamp === "number") {
+        this.logs.push({
+          timestamp,
+          message,
+          info
+        });
+      }
+      return this.logs;
+    }
+
+    async play (targetElm) {
+      // play and return the promsie
+      const globalSTime = new Date();
+
+
+      for (let i = 0; i < this.animations.length; i++) {
+        const animation = this.animations[i];
+        this.log(new Date() - globalSTime, `Start the ${i}-th animated transition.`);
+        await animation.play(targetElm);
+        if (i < (this.animations.length - 1)) {
+          const target = document.querySelector(targetElm);
+          target.textContent = "";
+          target.append(animation.rawInfo.eVis.htmlDiv);
+        }
+      }
+    }
+  }
+
+  function vl2vg4gemini(vlSpec) {
+    let vgSpec = vegaLite.compile(vlSpec).spec;
+    vgSpec.axes = mergeDuplicatedAxes(vgSpec.axes);
+    appendNamesOnGuides(vgSpec);
+    return vgSpec;
+  }
+
+
+  function castVL2VG(vlSpec) {
+    if (vlSpec && vlSpec.$schema && vlSpec.$schema.indexOf("https://vega.github.io/schema/vega-lite") >= 0){
+      return vl2vg4gemini(vlSpec)
+    }
+    return vlSpec
+  }
+
+
+  function appendNamesOnGuides(vgSpec){
+    if (vgSpec.axes) {
+      vgSpec.axes.forEach(axis => {
+        if (!axis.encode) {
+          axis.encode = {axis: {name: axis.scale}};
+        } else {
+          axis.encode.axis = { ...axis.encode.axis, name: axis.scale };
+        }
+      });
+    }
+    if (vgSpec.legends) {
+      vgSpec.legends.forEach((legend, i) => {
+        if (!legend.encode) {
+          legend.encode = {legend: {name: `legend${i}`}};
+        } else {
+          legend.encode.legend = Object.assign({}, legend.encode.legend, {name: `legend${i}`});
+        }
+      });
+    }
+  }
+
+
+  function mergeDuplicatedAxes(vegaAxes) {
+    if (!vegaAxes || vegaAxes.length <= 0) {
+      return [];
+    }
+    let axesScales = vegaAxes.filter(a => a.grid).map(a => a.scale);
+
+    return d3.rollups(vegaAxes,
+      axes => {
+        let axisWithGrid = axes.find(a => a.grid);
+        let axisWithoutGrid = { ...axes.find(a => !a.grid) };
+
+        if (axisWithGrid) {
+          axisWithoutGrid.grid = true;
+          if (axisWithGrid.gridScale) {
+            axisWithoutGrid.gridScale = axisWithGrid.gridScale;
+          }
+          axisWithoutGrid.zindex = 0;
+        }
+        return axisWithoutGrid;
+      },
+      axis => axis.scale
+    ).map(d => d[1])
+     .sort((a,b) => (axesScales.indexOf(a.scale) - axesScales.indexOf(b.scale)));
   }
 
   function attachAnimTemplates(schedule) {
@@ -20522,30 +20820,76 @@
   }
 
   class Gemini {
-    static async animate(startVisSpec, endVisSpec, spec) {
 
-      const eView = await new vega.View(vega.parse(endVisSpec), {
+    static async animateSequence(visSequence, animSpecs) {
+      // 1) compile the each hop
+      const views = new Array(visSequence.length);
+      const animations = [];
+      for (let i = 1; i < visSequence.length; i++) {
+        const sSpec = castVL2VG(visSequence[i-1]);
+        const eSpec = castVL2VG(visSequence[i]);
+        const gemSpec = animSpecs[i-1];
+        const sDiv = document.createElement("div");
+        const eDiv = document.createElement("div");
+        const sView = await new vega.View(vega.parse(sSpec), {
+          renderer: "svg"
+        }).runAsync();
+        const eView = await new vega.View(vega.parse(eSpec), {
+          renderer: "svg"
+        }).runAsync();
+
+        // create ones for replacing divs.
+        await new vega.View(vega.parse(sSpec), {
+          renderer: "svg"
+        }).initialize(sDiv).runAsync();
+        await new vega.View(vega.parse(eSpec), {
+          renderer: "svg"
+        }).initialize(eDiv).runAsync();
+
+        const rawInfo = {
+          sVis: { view: sView, spec: sSpec, htmlDiv: sDiv },
+          eVis: { view: eView, spec: eSpec, htmlDiv: eDiv }
+        };
+
+
+        animations.push(await _animate(gemSpec, rawInfo));
+
+        if (i===1 && !views[i-1]){
+          views[i-1] = sView;
+        }      if (!views[i]){
+          views[i] = eView;
+        }    }
+
+      return new AnimationSequence(animations);
+    }
+    static async animate(startVisSpec, endVisSpec, geminiSpec) {
+      const sSpec = castVL2VG(startVisSpec), eSpec = (endVisSpec);
+      const eView = await new vega.View(vega.parse(eSpec), {
         renderer: "svg"
       }).runAsync();
 
-      const sView = await new vega.View(vega.parse(startVisSpec), {
+      const sView = await new vega.View(vega.parse(sSpec), {
         renderer: "svg"
       }).runAsync();
 
       const rawInfo = {
-        sVis: { view: sView, spec: startVisSpec },
-        eVis: { view: eView, spec: endVisSpec }
+        sVis: { view: sView, spec: sSpec },
+        eVis: { view: eView, spec: eSpec }
       };
 
-      const { schedule, resolves } = parse$1(spec, rawInfo);
-      schedule.tracks = attachChanges(rawInfo, schedule.tracks);
-      const finalTimeline = autoScaleOrder(schedule, resolves, rawInfo);
 
-      return new Animation(attachAnimTemplates(finalTimeline), rawInfo, spec);
+      return await _animate(geminiSpec, rawInfo);
     }
   }
+  async function _animate(gemSpec, rawInfo){
+    const { schedule, resolves } = parse$1(gemSpec, rawInfo);
+    schedule.tracks = attachChanges(rawInfo, schedule.tracks);
+    const finalTimeline = await autoScaleOrder(schedule, resolves, rawInfo);
 
-  const MIN_POS_DELTA = 10;
+    return new Animation(attachAnimTemplates(finalTimeline), rawInfo, gemSpec);
+  }
+
+  const MIN_POS_DELTA = 3;
   const CHANNEL_TO_ATTRS = [
     { channel: "x", attrs: ["x", "x2", "xc", "width"] },
     { channel: "y", attrs: ["y", "y2", "yc", "height"] },
@@ -20614,6 +20958,20 @@
       return subEncode.y  || subEncode.yc;
     }
     return subEncode[channel];
+  }
+
+  function setUpRecomOpt(opt) {
+    let _opt = copy(opt);
+    _opt.axes = _opt.axes || {};
+    for (const scaleName in _opt.scales || {}) {
+      _opt.axes[scaleName] = _opt.axes[scaleName] || {};
+      _opt.axes[scaleName].change = _opt.axes[scaleName].change || {};
+      _opt.axes[scaleName].change.scale = _opt.axes[scaleName].change.scale || {};
+      if (_opt.axes[scaleName].change.scale !== false) {
+        _opt.axes[scaleName].change.scale.domainDimension = _opt.scales[scaleName].domainDimension;
+      }
+    }
+    return _opt
   }
 
   function detectDiffs(rawInfo, userInput = {}) {
@@ -20821,11 +21179,13 @@
     } if (!match.final) {
       return {remove: true};
     }
-    let scaleDiff = deepEqual(match.initial, match.final) ? false : {};
+
+    //get range diff
+    let rangeDelta = 0;
 
     let rangeVals_i = rawInfo.sVis.view.scale(match.initial.name).range(),
       rangeVals_f = rawInfo.eVis.view.scale(match.final.name).range();
-    let rangeDelta = 0;
+
     if (!deepEqual(rangeVals_i, rangeVals_f)){
       if ((rangeVals_i.length === 2 && isNumber(rangeVals_i[0]) && isNumber(rangeVals_i[1]))
         && (rangeVals_f.length === 2 && isNumber(rangeVals_f[0]) && isNumber(rangeVals_f[1]))) {
@@ -20833,12 +21193,24 @@
       }
     }
 
+    //get domain diff
     let domainVals_i = rawInfo.sVis.view.scale(match.initial.name).domain(),
       domainVals_f = rawInfo.eVis.view.scale(match.final.name).domain();
+    let domainValueDiff = !deepEqual(domainVals_i, domainVals_f);
 
-    if (!scaleDiff && deepEqual(domainVals_i, domainVals_f) && (rangeDelta === 0)) {
+    //get the other diffs
+    let others_i = copy(match.initial);
+    delete others_i.range;
+    delete others_i.domain;
+    let others_f = copy(match.final);
+    delete others_f.range;
+    delete others_f.domain;
+    let scaleDiff = !deepEqual(others_i, others_f);
+
+    if (!scaleDiff && !domainValueDiff && rangeDelta === 0) {
       return false;
     }
+
     scaleDiff = {
       rangeDelta: rangeDelta,
       domainValueDiff: !deepEqual(domainVals_i, domainVals_f)
@@ -21366,13 +21738,17 @@
             return { reasons: ["encode", "scale"], result: false };
           }
         }
-        if (enAttr && enAttr.field) {
-          if (data.fields.indexOf(enAttr.field) < 0) {
+        if (enAttr && enAttr.field && !enAttr.field.group) {
+          let field = enAttr.field;
+          if (enAttr.field.parent) {
+            field = enAttr.field.parent;
+          }
+          if (data.fields.indexOf(field) < 0) {
             return { result: false, reasons: ["encode", "data"] };
           }
           if (enAttr.scale) {
             const foundScale = scales[enAttr.scale];
-            const vals = data.values.map(d => d.datum[enAttr.field]);
+            const vals = data.values.map(d => d.datum[field]);
             const scaleDomain = foundScale.domain();
             let valid = true;
 
@@ -21416,7 +21792,7 @@
 
   function validate$2(pseudoTimeline, stageN) {
     return (
-      checkViewAxisConstraint(pseudoTimeline) &&
+      // checkViewAxisConstraint(pseudoTimeline) &&
       checkViewLegendConstraint(pseudoTimeline) &&
       checkUnempty(pseudoTimeline) &&
       pseudoTimeline.concat.length === stageN &&
@@ -21425,65 +21801,6 @@
   }
   function checkUnempty(pseudoTl) {
     return !pseudoTl.concat.find(stage => stage.sync.length === 0);
-  }
-
-  function checkViewAxisConstraint(pseudoTl) {
-    let yAxisViewChange, markViewChanges = [], xAxisViewChange;
-    pseudoTl.concat.forEach((stage, i) => {
-      stage.sync.forEach(pseudoStep => {
-        let deltaW = get(pseudoStep, "diff", "meta", "view", "x"),
-          deltaH = get(pseudoStep, "diff", "meta", "view", "y");
-
-        if (pseudoStep.diff.compType === "axis" && pseudoStep.diff.compName === "x" && !xAxisViewChange) {
-          xAxisViewChange = {
-            width: deltaW >= MIN_POS_DELTA ? "inc" : (deltaW <= -MIN_POS_DELTA ? "dec" : false),
-            height: deltaH >= MIN_POS_DELTA ? "inc" : (deltaH <= -MIN_POS_DELTA ? "dec" : false),
-            orient: get(pseudoStep, "diff", "initial", "orient") || get(pseudoStep, "diff", "final", "orient"),
-            when: i
-          };
-        }
-        if (pseudoStep.diff.compType === "axis" && pseudoStep.diff.compName === "y" && !yAxisViewChange) {
-          yAxisViewChange = {
-            width: deltaW >= MIN_POS_DELTA ? "inc" : (deltaW <= -MIN_POS_DELTA ? "dec" : false),
-            height: deltaH >= MIN_POS_DELTA ? "inc" : (deltaH <= -MIN_POS_DELTA ? "dec" : false),
-            orient: get(pseudoStep, "diff", "initial", "orient") || get(pseudoStep, "diff", "final", "orient"),
-            when: i
-          };
-        }
-
-        if (pseudoStep.diff.compType === "mark" ) {
-          markViewChanges.push({
-            width: deltaW >= MIN_POS_DELTA ? "inc" : (deltaW <= -MIN_POS_DELTA ? "dec" : false),
-            height: deltaH >= MIN_POS_DELTA ? "inc" : (deltaH <= -MIN_POS_DELTA ? "dec" : false),
-            when: i
-          });
-        }
-      });
-    });
-
-    for (const condition of [[xAxisViewChange, yAxisViewChange, "bottom", "height"], [yAxisViewChange, xAxisViewChange, "right", "width"]]) {
-      let [axis, otherAxis, orient, side] = condition;
-
-      if (get(axis, "orient") === orient) {
-        if (axis[side] === "inc") {
-          if (axis.when > get(otherAxis, "when")) {
-            return false;
-          } if ((markViewChanges.length > 0) &&
-            (axis.when > Math.min(...markViewChanges.map(c => c.when)))) {
-            return false;
-          }
-        } else if (axis[side] === "dec") {
-          if (axis.when < get(otherAxis, "when")) {
-            return false;
-          } else if ((markViewChanges.length > 0) &&
-            (axis.when < Math.max(...markViewChanges.map(c => c.when)))) {
-            return false;
-          }
-        }
-      }
-    }
-
-    return true;
   }
 
   function checkViewLegendConstraint(pseudoTl) {
@@ -21741,51 +22058,66 @@
           })
         };
       });
-    } else {
+    } else if (stageN ===1 ) {
+      pseudoTimelines = [
+        {
+          concat: [
+            {
+              sync: [
+                ...enumedMarksPusedoSteps.map(steps => steps[0][0]),
+                ...legendspseudoSteps,
+                ...axespseudoSteps
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    else {
       console.error(
         "Currently, Gemini Recommendation only supports a single mark without adding or removing."
       );
       console.error("TODO: cross join the pseudo timelines of each mark.");
     }
 
-    return (
-      pseudoTimelines
-        .map(pseudoTl => {
-          pseudoTl.concat = pseudoTl.concat.map(stage => {
-            let currSync = stage.sync;
 
-            // filter empty mark pStep
-            currSync = currSync.filter(pStep => {
-              return (pStep.diff.compType !== "mark") ||
-                (
-                  !(
-                    (pStep.factorSets.applied.length === 0) ||
-                    (pStep.factorSets.current.length === 0)
-                  ) &&
-                  !(
-                    (pStep.factorSets.all.indexOf("add") >= 0) &&
-                    (pStep.factorSets.applied.indexOf("add") < 0)
-                  ) &&
-                  !(
-                    (pStep.factorSets.all.indexOf("remove") >= 0) &&
-                    (pStep.factorSets.applied.length !== pStep.factorSets.current.length)
-                  )
-                );
+    pseudoTimelines = pseudoTimelines
+      .map(pseudoTl => {
+        pseudoTl.concat = pseudoTl.concat.map(stage => {
+          let currSync = stage.sync;
 
-            });
-
-
-
-            return { sync: currSync };
+          // filter empty mark pStep
+          currSync = currSync.filter(pStep => {
+            return (pStep.diff.compType !== "mark") ||
+              (
+                !(
+                  (pStep.factorSets.applied.length === 0) ||
+                  (pStep.factorSets.current.length === 0)
+                ) &&
+                !(
+                  (pStep.factorSets.all.indexOf("add") >= 0) &&
+                  (pStep.factorSets.applied.indexOf("add") < 0)
+                ) &&
+                !(
+                  (pStep.factorSets.all.indexOf("remove") >= 0) &&
+                  (pStep.factorSets.applied.length !== pStep.factorSets.current.length)
+                )
+              );
           });
-          return pseudoTl;
-        })
-        .filter(pseudoTl => validate$2(pseudoTl, stageN))
-        // .map((pseudoTl, i) => appendGuideMoves(pseudoTl, axespseudoSteps, legendspseudoSteps))
-        .map(pseudoTl => appendViewDiff(pseudoTl, diffs.viewDiffs))
-        .map(pseudoTl => appendGridChanges(pseudoTl))
-        .map(pseudoTl => appendTiming(pseudoTl, timing))
-    );
+          return { sync: currSync };
+        });
+        return pseudoTl;
+    });
+
+    pseudoTimelines = pseudoTimelines.filter(pseudoTl => validate$2(pseudoTl, stageN));
+      // .map((pseudoTl, i) => appendGuideMoves(pseudoTl, axespseudoSteps, legendspseudoSteps))
+    pseudoTimelines = pseudoTimelines.map(pseudoTl => appendViewDiff(pseudoTl, diffs.viewDiffs))
+      .map(pseudoTl => appendGridChanges(pseudoTl))
+      .map(pseudoTl => appendTiming(pseudoTl, timing));
+
+
+
+    return pseudoTimelines;
   }
 
   function appendTiming(pseudoTl, timing = {}) {
@@ -21856,6 +22188,10 @@
             Math.abs(diff.meta.view.deltaW) - MIN_POS_DELTA > 0)
       )
       .filter(diff => {
+        if (diff.meta.remove || diff.meta.add) {
+          return true;
+        }
+
         if (diff.meta.scale[diff.meta.usedScales[0]]) {
           const scaleDiff = diff.meta.scale[diff.meta.usedScales[0]];
           return scaleDiff.rangeDelta === 0 &&
@@ -22741,7 +23077,7 @@
     ) {
       step.change.encode = {
         grid: true,
-        axis: false,
+        axis: true,
         labels: false,
         title: false,
         ticks: false,
@@ -22902,45 +23238,25 @@
     );
   }
 
-  async function index$1(
+  async function recommend (
     sSpec,
     eSpec,
     opt = { marks: {}, axes: {}, legends: {}, scales: {} }
   ) {
-    const userInput = opt;
-    const stageN = Number(opt.stageN) || 2;
-    const { includeMeta } = opt;
-    const timing = { totalDuration: userInput.totalDuration || 2000 };
+    const {
+      rawInfo,
+      userInput,
+      stageN,
+      includeMeta,
+      timing
+    } = await initialSetUp(sSpec, eSpec, opt);
 
-    userInput.axes = userInput.axes || {};
-    for (const scaleName in userInput.scales || {}) {
-      userInput.axes[scaleName] = userInput.axes[scaleName] || {};
-      userInput.axes[scaleName].change = userInput.axes[scaleName].change || {};
-      userInput.axes[scaleName].change.scale =
-        userInput.axes[scaleName].change.scale || {};
-      if (userInput.axes[scaleName].change.scale !== false) {
-        userInput.axes[scaleName].change.scale.domainDimension =
-          userInput.scales[scaleName].domainDimension;
-      }
+    if (!canRecommend(sSpec, eSpec).result && stageN !== 1) {
+      return canRecommend(sSpec, eSpec);
     }
-    const eView = await new vega.View(vega.parse(eSpec), {
-      renderer: "svg"
-    }).runAsync();
-
-    const sView = await new vega.View(vega.parse(sSpec), {
-      renderer: "svg"
-    }).runAsync();
-
-
-    const rawInfo = {
-      sVis: { spec: copy(sSpec), view: sView },
-      eVis: { spec: copy(eSpec), view: eView }
-    };
 
     const detected = detectDiffs(rawInfo, userInput);
-    // for (let i = 1; i <= maxStageN; i++) {
-    //   pseudoTls = pseudoTls.concat(enumeratePseudoTimelines(detected, i, rawInfo));
-    // }
+
     let pseudoTls = enumeratePseudoTimelines(detected, stageN, rawInfo, timing);
     pseudoTls = pseudoTls
       .map(pseudoTl => {
@@ -22971,66 +23287,5198 @@
     return a.cost - b.cost;
   }
 
-  function vl2vg4gemini(vlSpec) {
-    let vgSpec = vegaLite.compile(vlSpec).spec;
-    vgSpec.axes = mergeDuplicatedAxes(vgSpec.axes);
-    appendNamesOnGuides(vgSpec);
-    return vgSpec;
+  async function initialSetUp(sSpec, eSpec, opt = { marks: {}, axes: {}, legends: {}, scales: {} }) {
+    let _opt = copy(opt);
+    const stageN = Number(opt.stageN) || 2;
+    const { includeMeta } = opt;
+    const timing = { totalDuration: _opt.totalDuration || 2000 };
+    _opt = setUpRecomOpt(_opt);
+    const eView = await new vega.View(vega.parse(castVL2VG(eSpec)), {
+      renderer: "svg"
+    }).runAsync();
+
+    const sView = await new vega.View(vega.parse(castVL2VG(sSpec)), {
+      renderer: "svg"
+    }).runAsync();
+
+
+    const rawInfo = {
+      sVis: { spec: copy(castVL2VG(sSpec)), view: sView },
+      eVis: { spec: copy(castVL2VG(eSpec)), view: eView }
+    };
+
+    return { rawInfo, userInput: _opt, stageN, includeMeta, timing}
   }
 
+  function canRecommend(sSpec, eSpec, stageN) {
 
-  function appendNamesOnGuides(vgSpec){
-    if (vgSpec.axes) {
-      vgSpec.axes.forEach(axis => {
-        if (!axis.encode) {
-          axis.encode = {axis: {name: axis.scale}};
-        } else {
-          axis.encode.axis = { ...axis.encode.axis, name: axis.scale };
-        }
-      });
+    const compDiffs = getChanges(
+      getComponents(castVL2VG(sSpec)),
+      getComponents(castVL2VG(eSpec))
+    ).filter(match => {
+      return (
+        ["root", "pathgroup"].indexOf(match.compName) < 0 &&
+        match.compType !== "scale"
+      );
+    });
+    if (compDiffs.filter(comp => comp.compType === "mark").length >= 2 && stageN >1) {
+      return { result: false, reason: "Gemini cannot recomend animations for transitions with multiple marks." };
     }
-    if (vgSpec.legends) {
-      vgSpec.legends.forEach((legend, i) => {
-        if (!legend.encode) {
-          legend.encode = {legend: {name: `legend${i}`}};
-        } else {
-          legend.encode.legend = Object.assign({}, legend.encode.legend, {name: `legend${i}`});
-        }
-      });
-    }
+    return { result: true };
   }
 
+  async function allAtOnce(sSpec,
+    eSpec,
+    opt = { marks: {}, axes: {}, legends: {}, scales: {} }
+  ) {
+    const sVGSpec = castVL2VG(sSpec), eVGSpec = castVL2VG(eSpec);
+    const {
+      rawInfo,
+      userInput,
+      stageN,
+      includeMeta,
+      timing
+    } = await initialSetUp(sVGSpec, eVGSpec, {stageN:1, ...opt});
 
-  function mergeDuplicatedAxes(vegaAxes) {
-    if (!vegaAxes || vegaAxes.length <= 0) {
-      return [];
+    const detected = detectDiffs(rawInfo, userInput);
+
+    const steps = detected.compDiffs.map(cmpDiff => {
+      let comp = {};
+      comp[cmpDiff.compType] = cmpDiff.compName;
+      return {
+        component: comp,
+        timing: {duration: {ratio: 1}}
+      }
+    });
+    for (const incOrDec of ["increase", "decrease"]) {
+      if (detected.viewDiffs.height[incOrDec] || detected.viewDiffs.width[incOrDec]) {
+        steps.push({
+          component: "view",
+          timing: {duration: {ratio: 1}}
+        });
+        break;
+      }
     }
-    let axesScales = vegaAxes.filter(a => a.grid).map(a => a.scale);
 
-    return d3.rollups(vegaAxes,
-      axes => {
-        let axisWithGrid = axes.find(a => a.grid);
-        let axisWithoutGrid = { ...axes.find(a => !a.grid) };
-
-        if (axisWithGrid) {
-          axisWithoutGrid.grid = true;
-          if (axisWithGrid.gridScale) {
-            axisWithoutGrid.gridScale = axisWithGrid.gridScale;
-          }
-          axisWithoutGrid.zindex = 0;
-        }
-        return axisWithoutGrid;
+    return {
+      timeline: {
+        sync: steps
       },
-      axis => axis.scale
-    ).map(d => d[1])
-     .sort((a,b) => (axesScales.indexOf(a.scale) - axesScales.indexOf(b.scale)));
+      totalDuration: opt.totalDuration || 2000
+    }
+
   }
 
-  const { animate } = Gemini;
+  var graphscape = createCommonjsModule(function (module, exports) {
+  (function (global, factory) {
+     module.exports = factory(d3__default, vega__default, vegaLite__default) ;
+  }(commonjsGlobal, (function (d3, vega, vl) {
+    function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
+    var d3__default = /*#__PURE__*/_interopDefaultLegacy(d3);
+    var vega__default = /*#__PURE__*/_interopDefaultLegacy(vega);
+    var vl__default = /*#__PURE__*/_interopDefaultLegacy(vl);
+
+    function accessor(fn, fields, name) {
+      fn.fields = fields || [];
+      fn.fname = name;
+      return fn;
+    }
+
+    function getter(path) {
+      return path.length === 1 ? get1(path[0]) : getN(path);
+    }
+
+    const get1 = field => function (obj) {
+      return obj[field];
+    };
+
+    const getN = path => {
+      const len = path.length;
+      return function (obj) {
+        for (let i = 0; i < len; ++i) {
+          obj = obj[path[i]];
+        }
+
+        return obj;
+      };
+    };
+
+    function error(message) {
+      throw Error(message);
+    }
+
+    function splitAccessPath(p) {
+      const path = [],
+            n = p.length;
+      let q = null,
+          b = 0,
+          s = '',
+          i,
+          j,
+          c;
+      p = p + '';
+
+      function push() {
+        path.push(s + p.substring(i, j));
+        s = '';
+        i = j + 1;
+      }
+
+      for (i = j = 0; j < n; ++j) {
+        c = p[j];
+
+        if (c === '\\') {
+          s += p.substring(i, j);
+          s += p.substring(++j, ++j);
+          i = j;
+        } else if (c === q) {
+          push();
+          q = null;
+          b = -1;
+        } else if (q) {
+          continue;
+        } else if (i === b && c === '"') {
+          i = j + 1;
+          q = c;
+        } else if (i === b && c === "'") {
+          i = j + 1;
+          q = c;
+        } else if (c === '.' && !b) {
+          if (j > i) {
+            push();
+          } else {
+            i = j + 1;
+          }
+        } else if (c === '[') {
+          if (j > i) push();
+          b = i = j + 1;
+        } else if (c === ']') {
+          if (!b) error('Access path missing open bracket: ' + p);
+          if (b > 0) push();
+          b = 0;
+          i = j + 1;
+        }
+      }
+
+      if (b) error('Access path missing closing bracket: ' + p);
+      if (q) error('Access path missing closing quote: ' + p);
+
+      if (j > i) {
+        j++;
+        push();
+      }
+
+      return path;
+    }
+
+    function field(field, name, opt) {
+      const path = splitAccessPath(field);
+      field = path.length === 1 ? path[0] : field;
+      return accessor((opt && opt.get || getter)(path), [field], name || field);
+    }
+
+    field('id');
+    accessor(_ => _, [], 'identity');
+    accessor(() => 0, [], 'zero');
+    accessor(() => 1, [], 'one');
+    accessor(() => true, [], 'true');
+    accessor(() => false, [], 'false');
+
+    function isFunction(_) {
+      return typeof _ === 'function';
+    }
+
+    const hop = Object.prototype.hasOwnProperty;
+
+    function has(object, property) {
+      return hop.call(object, property);
+    }
+
+    function isString(_) {
+      return typeof _ === 'string';
+    }
+
+    function toSet(_) {
+      const s = {},
+            n = _.length;
+
+      for (let i = 0; i < n; ++i) s[_[i]] = true;
+
+      return s;
+    }
+
+    const RawCode = 'RawCode';
+    const Literal = 'Literal';
+    const Property = 'Property';
+    const Identifier = 'Identifier';
+    const ArrayExpression = 'ArrayExpression';
+    const BinaryExpression = 'BinaryExpression';
+    const CallExpression = 'CallExpression';
+    const ConditionalExpression = 'ConditionalExpression';
+    const LogicalExpression = 'LogicalExpression';
+    const MemberExpression = 'MemberExpression';
+    const ObjectExpression = 'ObjectExpression';
+    const UnaryExpression = 'UnaryExpression';
+
+    function ASTNode(type) {
+      this.type = type;
+    }
+
+    ASTNode.prototype.visit = function (visitor) {
+      let c, i, n;
+      if (visitor(this)) return 1;
+
+      for (c = children(this), i = 0, n = c.length; i < n; ++i) {
+        if (c[i].visit(visitor)) return 1;
+      }
+    };
+
+    function children(node) {
+      switch (node.type) {
+        case ArrayExpression:
+          return node.elements;
+
+        case BinaryExpression:
+        case LogicalExpression:
+          return [node.left, node.right];
+
+        case CallExpression:
+          return [node.callee].concat(node.arguments);
+
+        case ConditionalExpression:
+          return [node.test, node.consequent, node.alternate];
+
+        case MemberExpression:
+          return [node.object, node.property];
+
+        case ObjectExpression:
+          return node.properties;
+
+        case Property:
+          return [node.key, node.value];
+
+        case UnaryExpression:
+          return [node.argument];
+
+        case Identifier:
+        case Literal:
+        case RawCode:
+        default:
+          return [];
+      }
+    }
+    /*
+      The following expression parser is based on Esprima (http://esprima.org/).
+      Original header comment and license for Esprima is included here:
+
+      Copyright (C) 2013 Ariya Hidayat <ariya.hidayat@gmail.com>
+      Copyright (C) 2013 Thaddee Tyl <thaddee.tyl@gmail.com>
+      Copyright (C) 2013 Mathias Bynens <mathias@qiwi.be>
+      Copyright (C) 2012 Ariya Hidayat <ariya.hidayat@gmail.com>
+      Copyright (C) 2012 Mathias Bynens <mathias@qiwi.be>
+      Copyright (C) 2012 Joost-Wim Boekesteijn <joost-wim@boekesteijn.nl>
+      Copyright (C) 2012 Kris Kowal <kris.kowal@cixar.com>
+      Copyright (C) 2012 Yusuke Suzuki <utatane.tea@gmail.com>
+      Copyright (C) 2012 Arpad Borsos <arpad.borsos@googlemail.com>
+      Copyright (C) 2011 Ariya Hidayat <ariya.hidayat@gmail.com>
+
+      Redistribution and use in source and binary forms, with or without
+      modification, are permitted provided that the following conditions are met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in the
+          documentation and/or other materials provided with the distribution.
+
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+      ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+      DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+      (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+      ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+      (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+      THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    */
+
+
+    var TokenName, source, index, length, lookahead;
+    var TokenBooleanLiteral = 1,
+        TokenEOF = 2,
+        TokenIdentifier = 3,
+        TokenKeyword = 4,
+        TokenNullLiteral = 5,
+        TokenNumericLiteral = 6,
+        TokenPunctuator = 7,
+        TokenStringLiteral = 8,
+        TokenRegularExpression = 9;
+    TokenName = {};
+    TokenName[TokenBooleanLiteral] = 'Boolean';
+    TokenName[TokenEOF] = '<end>';
+    TokenName[TokenIdentifier] = 'Identifier';
+    TokenName[TokenKeyword] = 'Keyword';
+    TokenName[TokenNullLiteral] = 'Null';
+    TokenName[TokenNumericLiteral] = 'Numeric';
+    TokenName[TokenPunctuator] = 'Punctuator';
+    TokenName[TokenStringLiteral] = 'String';
+    TokenName[TokenRegularExpression] = 'RegularExpression';
+    var SyntaxArrayExpression = 'ArrayExpression',
+        SyntaxBinaryExpression = 'BinaryExpression',
+        SyntaxCallExpression = 'CallExpression',
+        SyntaxConditionalExpression = 'ConditionalExpression',
+        SyntaxIdentifier = 'Identifier',
+        SyntaxLiteral = 'Literal',
+        SyntaxLogicalExpression = 'LogicalExpression',
+        SyntaxMemberExpression = 'MemberExpression',
+        SyntaxObjectExpression = 'ObjectExpression',
+        SyntaxProperty = 'Property',
+        SyntaxUnaryExpression = 'UnaryExpression'; // Error messages should be identical to V8.
+
+    var MessageUnexpectedToken = 'Unexpected token %0',
+        MessageUnexpectedNumber = 'Unexpected number',
+        MessageUnexpectedString = 'Unexpected string',
+        MessageUnexpectedIdentifier = 'Unexpected identifier',
+        MessageUnexpectedReserved = 'Unexpected reserved word',
+        MessageUnexpectedEOS = 'Unexpected end of input',
+        MessageInvalidRegExp = 'Invalid regular expression',
+        MessageUnterminatedRegExp = 'Invalid regular expression: missing /',
+        MessageStrictOctalLiteral = 'Octal literals are not allowed in strict mode.',
+        MessageStrictDuplicateProperty = 'Duplicate data property in object literal not allowed in strict mode';
+    var ILLEGAL = 'ILLEGAL',
+        DISABLED = 'Disabled.'; // See also tools/generate-unicode-regex.py.
+
+    var RegexNonAsciiIdentifierStart = new RegExp('[\\xAA\\xB5\\xBA\\xC0-\\xD6\\xD8-\\xF6\\xF8-\\u02C1\\u02C6-\\u02D1\\u02E0-\\u02E4\\u02EC\\u02EE\\u0370-\\u0374\\u0376\\u0377\\u037A-\\u037D\\u037F\\u0386\\u0388-\\u038A\\u038C\\u038E-\\u03A1\\u03A3-\\u03F5\\u03F7-\\u0481\\u048A-\\u052F\\u0531-\\u0556\\u0559\\u0561-\\u0587\\u05D0-\\u05EA\\u05F0-\\u05F2\\u0620-\\u064A\\u066E\\u066F\\u0671-\\u06D3\\u06D5\\u06E5\\u06E6\\u06EE\\u06EF\\u06FA-\\u06FC\\u06FF\\u0710\\u0712-\\u072F\\u074D-\\u07A5\\u07B1\\u07CA-\\u07EA\\u07F4\\u07F5\\u07FA\\u0800-\\u0815\\u081A\\u0824\\u0828\\u0840-\\u0858\\u08A0-\\u08B2\\u0904-\\u0939\\u093D\\u0950\\u0958-\\u0961\\u0971-\\u0980\\u0985-\\u098C\\u098F\\u0990\\u0993-\\u09A8\\u09AA-\\u09B0\\u09B2\\u09B6-\\u09B9\\u09BD\\u09CE\\u09DC\\u09DD\\u09DF-\\u09E1\\u09F0\\u09F1\\u0A05-\\u0A0A\\u0A0F\\u0A10\\u0A13-\\u0A28\\u0A2A-\\u0A30\\u0A32\\u0A33\\u0A35\\u0A36\\u0A38\\u0A39\\u0A59-\\u0A5C\\u0A5E\\u0A72-\\u0A74\\u0A85-\\u0A8D\\u0A8F-\\u0A91\\u0A93-\\u0AA8\\u0AAA-\\u0AB0\\u0AB2\\u0AB3\\u0AB5-\\u0AB9\\u0ABD\\u0AD0\\u0AE0\\u0AE1\\u0B05-\\u0B0C\\u0B0F\\u0B10\\u0B13-\\u0B28\\u0B2A-\\u0B30\\u0B32\\u0B33\\u0B35-\\u0B39\\u0B3D\\u0B5C\\u0B5D\\u0B5F-\\u0B61\\u0B71\\u0B83\\u0B85-\\u0B8A\\u0B8E-\\u0B90\\u0B92-\\u0B95\\u0B99\\u0B9A\\u0B9C\\u0B9E\\u0B9F\\u0BA3\\u0BA4\\u0BA8-\\u0BAA\\u0BAE-\\u0BB9\\u0BD0\\u0C05-\\u0C0C\\u0C0E-\\u0C10\\u0C12-\\u0C28\\u0C2A-\\u0C39\\u0C3D\\u0C58\\u0C59\\u0C60\\u0C61\\u0C85-\\u0C8C\\u0C8E-\\u0C90\\u0C92-\\u0CA8\\u0CAA-\\u0CB3\\u0CB5-\\u0CB9\\u0CBD\\u0CDE\\u0CE0\\u0CE1\\u0CF1\\u0CF2\\u0D05-\\u0D0C\\u0D0E-\\u0D10\\u0D12-\\u0D3A\\u0D3D\\u0D4E\\u0D60\\u0D61\\u0D7A-\\u0D7F\\u0D85-\\u0D96\\u0D9A-\\u0DB1\\u0DB3-\\u0DBB\\u0DBD\\u0DC0-\\u0DC6\\u0E01-\\u0E30\\u0E32\\u0E33\\u0E40-\\u0E46\\u0E81\\u0E82\\u0E84\\u0E87\\u0E88\\u0E8A\\u0E8D\\u0E94-\\u0E97\\u0E99-\\u0E9F\\u0EA1-\\u0EA3\\u0EA5\\u0EA7\\u0EAA\\u0EAB\\u0EAD-\\u0EB0\\u0EB2\\u0EB3\\u0EBD\\u0EC0-\\u0EC4\\u0EC6\\u0EDC-\\u0EDF\\u0F00\\u0F40-\\u0F47\\u0F49-\\u0F6C\\u0F88-\\u0F8C\\u1000-\\u102A\\u103F\\u1050-\\u1055\\u105A-\\u105D\\u1061\\u1065\\u1066\\u106E-\\u1070\\u1075-\\u1081\\u108E\\u10A0-\\u10C5\\u10C7\\u10CD\\u10D0-\\u10FA\\u10FC-\\u1248\\u124A-\\u124D\\u1250-\\u1256\\u1258\\u125A-\\u125D\\u1260-\\u1288\\u128A-\\u128D\\u1290-\\u12B0\\u12B2-\\u12B5\\u12B8-\\u12BE\\u12C0\\u12C2-\\u12C5\\u12C8-\\u12D6\\u12D8-\\u1310\\u1312-\\u1315\\u1318-\\u135A\\u1380-\\u138F\\u13A0-\\u13F4\\u1401-\\u166C\\u166F-\\u167F\\u1681-\\u169A\\u16A0-\\u16EA\\u16EE-\\u16F8\\u1700-\\u170C\\u170E-\\u1711\\u1720-\\u1731\\u1740-\\u1751\\u1760-\\u176C\\u176E-\\u1770\\u1780-\\u17B3\\u17D7\\u17DC\\u1820-\\u1877\\u1880-\\u18A8\\u18AA\\u18B0-\\u18F5\\u1900-\\u191E\\u1950-\\u196D\\u1970-\\u1974\\u1980-\\u19AB\\u19C1-\\u19C7\\u1A00-\\u1A16\\u1A20-\\u1A54\\u1AA7\\u1B05-\\u1B33\\u1B45-\\u1B4B\\u1B83-\\u1BA0\\u1BAE\\u1BAF\\u1BBA-\\u1BE5\\u1C00-\\u1C23\\u1C4D-\\u1C4F\\u1C5A-\\u1C7D\\u1CE9-\\u1CEC\\u1CEE-\\u1CF1\\u1CF5\\u1CF6\\u1D00-\\u1DBF\\u1E00-\\u1F15\\u1F18-\\u1F1D\\u1F20-\\u1F45\\u1F48-\\u1F4D\\u1F50-\\u1F57\\u1F59\\u1F5B\\u1F5D\\u1F5F-\\u1F7D\\u1F80-\\u1FB4\\u1FB6-\\u1FBC\\u1FBE\\u1FC2-\\u1FC4\\u1FC6-\\u1FCC\\u1FD0-\\u1FD3\\u1FD6-\\u1FDB\\u1FE0-\\u1FEC\\u1FF2-\\u1FF4\\u1FF6-\\u1FFC\\u2071\\u207F\\u2090-\\u209C\\u2102\\u2107\\u210A-\\u2113\\u2115\\u2119-\\u211D\\u2124\\u2126\\u2128\\u212A-\\u212D\\u212F-\\u2139\\u213C-\\u213F\\u2145-\\u2149\\u214E\\u2160-\\u2188\\u2C00-\\u2C2E\\u2C30-\\u2C5E\\u2C60-\\u2CE4\\u2CEB-\\u2CEE\\u2CF2\\u2CF3\\u2D00-\\u2D25\\u2D27\\u2D2D\\u2D30-\\u2D67\\u2D6F\\u2D80-\\u2D96\\u2DA0-\\u2DA6\\u2DA8-\\u2DAE\\u2DB0-\\u2DB6\\u2DB8-\\u2DBE\\u2DC0-\\u2DC6\\u2DC8-\\u2DCE\\u2DD0-\\u2DD6\\u2DD8-\\u2DDE\\u2E2F\\u3005-\\u3007\\u3021-\\u3029\\u3031-\\u3035\\u3038-\\u303C\\u3041-\\u3096\\u309D-\\u309F\\u30A1-\\u30FA\\u30FC-\\u30FF\\u3105-\\u312D\\u3131-\\u318E\\u31A0-\\u31BA\\u31F0-\\u31FF\\u3400-\\u4DB5\\u4E00-\\u9FCC\\uA000-\\uA48C\\uA4D0-\\uA4FD\\uA500-\\uA60C\\uA610-\\uA61F\\uA62A\\uA62B\\uA640-\\uA66E\\uA67F-\\uA69D\\uA6A0-\\uA6EF\\uA717-\\uA71F\\uA722-\\uA788\\uA78B-\\uA78E\\uA790-\\uA7AD\\uA7B0\\uA7B1\\uA7F7-\\uA801\\uA803-\\uA805\\uA807-\\uA80A\\uA80C-\\uA822\\uA840-\\uA873\\uA882-\\uA8B3\\uA8F2-\\uA8F7\\uA8FB\\uA90A-\\uA925\\uA930-\\uA946\\uA960-\\uA97C\\uA984-\\uA9B2\\uA9CF\\uA9E0-\\uA9E4\\uA9E6-\\uA9EF\\uA9FA-\\uA9FE\\uAA00-\\uAA28\\uAA40-\\uAA42\\uAA44-\\uAA4B\\uAA60-\\uAA76\\uAA7A\\uAA7E-\\uAAAF\\uAAB1\\uAAB5\\uAAB6\\uAAB9-\\uAABD\\uAAC0\\uAAC2\\uAADB-\\uAADD\\uAAE0-\\uAAEA\\uAAF2-\\uAAF4\\uAB01-\\uAB06\\uAB09-\\uAB0E\\uAB11-\\uAB16\\uAB20-\\uAB26\\uAB28-\\uAB2E\\uAB30-\\uAB5A\\uAB5C-\\uAB5F\\uAB64\\uAB65\\uABC0-\\uABE2\\uAC00-\\uD7A3\\uD7B0-\\uD7C6\\uD7CB-\\uD7FB\\uF900-\\uFA6D\\uFA70-\\uFAD9\\uFB00-\\uFB06\\uFB13-\\uFB17\\uFB1D\\uFB1F-\\uFB28\\uFB2A-\\uFB36\\uFB38-\\uFB3C\\uFB3E\\uFB40\\uFB41\\uFB43\\uFB44\\uFB46-\\uFBB1\\uFBD3-\\uFD3D\\uFD50-\\uFD8F\\uFD92-\\uFDC7\\uFDF0-\\uFDFB\\uFE70-\\uFE74\\uFE76-\\uFEFC\\uFF21-\\uFF3A\\uFF41-\\uFF5A\\uFF66-\\uFFBE\\uFFC2-\\uFFC7\\uFFCA-\\uFFCF\\uFFD2-\\uFFD7\\uFFDA-\\uFFDC]'),
+        // eslint-disable-next-line no-misleading-character-class
+    RegexNonAsciiIdentifierPart = new RegExp('[\\xAA\\xB5\\xBA\\xC0-\\xD6\\xD8-\\xF6\\xF8-\\u02C1\\u02C6-\\u02D1\\u02E0-\\u02E4\\u02EC\\u02EE\\u0300-\\u0374\\u0376\\u0377\\u037A-\\u037D\\u037F\\u0386\\u0388-\\u038A\\u038C\\u038E-\\u03A1\\u03A3-\\u03F5\\u03F7-\\u0481\\u0483-\\u0487\\u048A-\\u052F\\u0531-\\u0556\\u0559\\u0561-\\u0587\\u0591-\\u05BD\\u05BF\\u05C1\\u05C2\\u05C4\\u05C5\\u05C7\\u05D0-\\u05EA\\u05F0-\\u05F2\\u0610-\\u061A\\u0620-\\u0669\\u066E-\\u06D3\\u06D5-\\u06DC\\u06DF-\\u06E8\\u06EA-\\u06FC\\u06FF\\u0710-\\u074A\\u074D-\\u07B1\\u07C0-\\u07F5\\u07FA\\u0800-\\u082D\\u0840-\\u085B\\u08A0-\\u08B2\\u08E4-\\u0963\\u0966-\\u096F\\u0971-\\u0983\\u0985-\\u098C\\u098F\\u0990\\u0993-\\u09A8\\u09AA-\\u09B0\\u09B2\\u09B6-\\u09B9\\u09BC-\\u09C4\\u09C7\\u09C8\\u09CB-\\u09CE\\u09D7\\u09DC\\u09DD\\u09DF-\\u09E3\\u09E6-\\u09F1\\u0A01-\\u0A03\\u0A05-\\u0A0A\\u0A0F\\u0A10\\u0A13-\\u0A28\\u0A2A-\\u0A30\\u0A32\\u0A33\\u0A35\\u0A36\\u0A38\\u0A39\\u0A3C\\u0A3E-\\u0A42\\u0A47\\u0A48\\u0A4B-\\u0A4D\\u0A51\\u0A59-\\u0A5C\\u0A5E\\u0A66-\\u0A75\\u0A81-\\u0A83\\u0A85-\\u0A8D\\u0A8F-\\u0A91\\u0A93-\\u0AA8\\u0AAA-\\u0AB0\\u0AB2\\u0AB3\\u0AB5-\\u0AB9\\u0ABC-\\u0AC5\\u0AC7-\\u0AC9\\u0ACB-\\u0ACD\\u0AD0\\u0AE0-\\u0AE3\\u0AE6-\\u0AEF\\u0B01-\\u0B03\\u0B05-\\u0B0C\\u0B0F\\u0B10\\u0B13-\\u0B28\\u0B2A-\\u0B30\\u0B32\\u0B33\\u0B35-\\u0B39\\u0B3C-\\u0B44\\u0B47\\u0B48\\u0B4B-\\u0B4D\\u0B56\\u0B57\\u0B5C\\u0B5D\\u0B5F-\\u0B63\\u0B66-\\u0B6F\\u0B71\\u0B82\\u0B83\\u0B85-\\u0B8A\\u0B8E-\\u0B90\\u0B92-\\u0B95\\u0B99\\u0B9A\\u0B9C\\u0B9E\\u0B9F\\u0BA3\\u0BA4\\u0BA8-\\u0BAA\\u0BAE-\\u0BB9\\u0BBE-\\u0BC2\\u0BC6-\\u0BC8\\u0BCA-\\u0BCD\\u0BD0\\u0BD7\\u0BE6-\\u0BEF\\u0C00-\\u0C03\\u0C05-\\u0C0C\\u0C0E-\\u0C10\\u0C12-\\u0C28\\u0C2A-\\u0C39\\u0C3D-\\u0C44\\u0C46-\\u0C48\\u0C4A-\\u0C4D\\u0C55\\u0C56\\u0C58\\u0C59\\u0C60-\\u0C63\\u0C66-\\u0C6F\\u0C81-\\u0C83\\u0C85-\\u0C8C\\u0C8E-\\u0C90\\u0C92-\\u0CA8\\u0CAA-\\u0CB3\\u0CB5-\\u0CB9\\u0CBC-\\u0CC4\\u0CC6-\\u0CC8\\u0CCA-\\u0CCD\\u0CD5\\u0CD6\\u0CDE\\u0CE0-\\u0CE3\\u0CE6-\\u0CEF\\u0CF1\\u0CF2\\u0D01-\\u0D03\\u0D05-\\u0D0C\\u0D0E-\\u0D10\\u0D12-\\u0D3A\\u0D3D-\\u0D44\\u0D46-\\u0D48\\u0D4A-\\u0D4E\\u0D57\\u0D60-\\u0D63\\u0D66-\\u0D6F\\u0D7A-\\u0D7F\\u0D82\\u0D83\\u0D85-\\u0D96\\u0D9A-\\u0DB1\\u0DB3-\\u0DBB\\u0DBD\\u0DC0-\\u0DC6\\u0DCA\\u0DCF-\\u0DD4\\u0DD6\\u0DD8-\\u0DDF\\u0DE6-\\u0DEF\\u0DF2\\u0DF3\\u0E01-\\u0E3A\\u0E40-\\u0E4E\\u0E50-\\u0E59\\u0E81\\u0E82\\u0E84\\u0E87\\u0E88\\u0E8A\\u0E8D\\u0E94-\\u0E97\\u0E99-\\u0E9F\\u0EA1-\\u0EA3\\u0EA5\\u0EA7\\u0EAA\\u0EAB\\u0EAD-\\u0EB9\\u0EBB-\\u0EBD\\u0EC0-\\u0EC4\\u0EC6\\u0EC8-\\u0ECD\\u0ED0-\\u0ED9\\u0EDC-\\u0EDF\\u0F00\\u0F18\\u0F19\\u0F20-\\u0F29\\u0F35\\u0F37\\u0F39\\u0F3E-\\u0F47\\u0F49-\\u0F6C\\u0F71-\\u0F84\\u0F86-\\u0F97\\u0F99-\\u0FBC\\u0FC6\\u1000-\\u1049\\u1050-\\u109D\\u10A0-\\u10C5\\u10C7\\u10CD\\u10D0-\\u10FA\\u10FC-\\u1248\\u124A-\\u124D\\u1250-\\u1256\\u1258\\u125A-\\u125D\\u1260-\\u1288\\u128A-\\u128D\\u1290-\\u12B0\\u12B2-\\u12B5\\u12B8-\\u12BE\\u12C0\\u12C2-\\u12C5\\u12C8-\\u12D6\\u12D8-\\u1310\\u1312-\\u1315\\u1318-\\u135A\\u135D-\\u135F\\u1380-\\u138F\\u13A0-\\u13F4\\u1401-\\u166C\\u166F-\\u167F\\u1681-\\u169A\\u16A0-\\u16EA\\u16EE-\\u16F8\\u1700-\\u170C\\u170E-\\u1714\\u1720-\\u1734\\u1740-\\u1753\\u1760-\\u176C\\u176E-\\u1770\\u1772\\u1773\\u1780-\\u17D3\\u17D7\\u17DC\\u17DD\\u17E0-\\u17E9\\u180B-\\u180D\\u1810-\\u1819\\u1820-\\u1877\\u1880-\\u18AA\\u18B0-\\u18F5\\u1900-\\u191E\\u1920-\\u192B\\u1930-\\u193B\\u1946-\\u196D\\u1970-\\u1974\\u1980-\\u19AB\\u19B0-\\u19C9\\u19D0-\\u19D9\\u1A00-\\u1A1B\\u1A20-\\u1A5E\\u1A60-\\u1A7C\\u1A7F-\\u1A89\\u1A90-\\u1A99\\u1AA7\\u1AB0-\\u1ABD\\u1B00-\\u1B4B\\u1B50-\\u1B59\\u1B6B-\\u1B73\\u1B80-\\u1BF3\\u1C00-\\u1C37\\u1C40-\\u1C49\\u1C4D-\\u1C7D\\u1CD0-\\u1CD2\\u1CD4-\\u1CF6\\u1CF8\\u1CF9\\u1D00-\\u1DF5\\u1DFC-\\u1F15\\u1F18-\\u1F1D\\u1F20-\\u1F45\\u1F48-\\u1F4D\\u1F50-\\u1F57\\u1F59\\u1F5B\\u1F5D\\u1F5F-\\u1F7D\\u1F80-\\u1FB4\\u1FB6-\\u1FBC\\u1FBE\\u1FC2-\\u1FC4\\u1FC6-\\u1FCC\\u1FD0-\\u1FD3\\u1FD6-\\u1FDB\\u1FE0-\\u1FEC\\u1FF2-\\u1FF4\\u1FF6-\\u1FFC\\u200C\\u200D\\u203F\\u2040\\u2054\\u2071\\u207F\\u2090-\\u209C\\u20D0-\\u20DC\\u20E1\\u20E5-\\u20F0\\u2102\\u2107\\u210A-\\u2113\\u2115\\u2119-\\u211D\\u2124\\u2126\\u2128\\u212A-\\u212D\\u212F-\\u2139\\u213C-\\u213F\\u2145-\\u2149\\u214E\\u2160-\\u2188\\u2C00-\\u2C2E\\u2C30-\\u2C5E\\u2C60-\\u2CE4\\u2CEB-\\u2CF3\\u2D00-\\u2D25\\u2D27\\u2D2D\\u2D30-\\u2D67\\u2D6F\\u2D7F-\\u2D96\\u2DA0-\\u2DA6\\u2DA8-\\u2DAE\\u2DB0-\\u2DB6\\u2DB8-\\u2DBE\\u2DC0-\\u2DC6\\u2DC8-\\u2DCE\\u2DD0-\\u2DD6\\u2DD8-\\u2DDE\\u2DE0-\\u2DFF\\u2E2F\\u3005-\\u3007\\u3021-\\u302F\\u3031-\\u3035\\u3038-\\u303C\\u3041-\\u3096\\u3099\\u309A\\u309D-\\u309F\\u30A1-\\u30FA\\u30FC-\\u30FF\\u3105-\\u312D\\u3131-\\u318E\\u31A0-\\u31BA\\u31F0-\\u31FF\\u3400-\\u4DB5\\u4E00-\\u9FCC\\uA000-\\uA48C\\uA4D0-\\uA4FD\\uA500-\\uA60C\\uA610-\\uA62B\\uA640-\\uA66F\\uA674-\\uA67D\\uA67F-\\uA69D\\uA69F-\\uA6F1\\uA717-\\uA71F\\uA722-\\uA788\\uA78B-\\uA78E\\uA790-\\uA7AD\\uA7B0\\uA7B1\\uA7F7-\\uA827\\uA840-\\uA873\\uA880-\\uA8C4\\uA8D0-\\uA8D9\\uA8E0-\\uA8F7\\uA8FB\\uA900-\\uA92D\\uA930-\\uA953\\uA960-\\uA97C\\uA980-\\uA9C0\\uA9CF-\\uA9D9\\uA9E0-\\uA9FE\\uAA00-\\uAA36\\uAA40-\\uAA4D\\uAA50-\\uAA59\\uAA60-\\uAA76\\uAA7A-\\uAAC2\\uAADB-\\uAADD\\uAAE0-\\uAAEF\\uAAF2-\\uAAF6\\uAB01-\\uAB06\\uAB09-\\uAB0E\\uAB11-\\uAB16\\uAB20-\\uAB26\\uAB28-\\uAB2E\\uAB30-\\uAB5A\\uAB5C-\\uAB5F\\uAB64\\uAB65\\uABC0-\\uABEA\\uABEC\\uABED\\uABF0-\\uABF9\\uAC00-\\uD7A3\\uD7B0-\\uD7C6\\uD7CB-\\uD7FB\\uF900-\\uFA6D\\uFA70-\\uFAD9\\uFB00-\\uFB06\\uFB13-\\uFB17\\uFB1D-\\uFB28\\uFB2A-\\uFB36\\uFB38-\\uFB3C\\uFB3E\\uFB40\\uFB41\\uFB43\\uFB44\\uFB46-\\uFBB1\\uFBD3-\\uFD3D\\uFD50-\\uFD8F\\uFD92-\\uFDC7\\uFDF0-\\uFDFB\\uFE00-\\uFE0F\\uFE20-\\uFE2D\\uFE33\\uFE34\\uFE4D-\\uFE4F\\uFE70-\\uFE74\\uFE76-\\uFEFC\\uFF10-\\uFF19\\uFF21-\\uFF3A\\uFF3F\\uFF41-\\uFF5A\\uFF66-\\uFFBE\\uFFC2-\\uFFC7\\uFFCA-\\uFFCF\\uFFD2-\\uFFD7\\uFFDA-\\uFFDC]'); // Ensure the condition is true, otherwise throw an error.
+    // This is only to have a better contract semantic, i.e. another safety net
+    // to catch a logic error. The condition shall be fulfilled in normal case.
+    // Do NOT use this to enforce a certain condition on any user input.
+
+    function assert(condition, message) {
+      /* istanbul ignore next */
+      if (!condition) {
+        throw new Error('ASSERT: ' + message);
+      }
+    }
+
+    function isDecimalDigit(ch) {
+      return ch >= 0x30 && ch <= 0x39; // 0..9
+    }
+
+    function isHexDigit(ch) {
+      return '0123456789abcdefABCDEF'.indexOf(ch) >= 0;
+    }
+
+    function isOctalDigit(ch) {
+      return '01234567'.indexOf(ch) >= 0;
+    } // 7.2 White Space
+
+
+    function isWhiteSpace(ch) {
+      return ch === 0x20 || ch === 0x09 || ch === 0x0B || ch === 0x0C || ch === 0xA0 || ch >= 0x1680 && [0x1680, 0x180E, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000, 0xFEFF].indexOf(ch) >= 0;
+    } // 7.3 Line Terminators
+
+
+    function isLineTerminator(ch) {
+      return ch === 0x0A || ch === 0x0D || ch === 0x2028 || ch === 0x2029;
+    } // 7.6 Identifier Names and Identifiers
+
+
+    function isIdentifierStart(ch) {
+      return ch === 0x24 || ch === 0x5F || // $ (dollar) and _ (underscore)
+      ch >= 0x41 && ch <= 0x5A || // A..Z
+      ch >= 0x61 && ch <= 0x7A || // a..z
+      ch === 0x5C || // \ (backslash)
+      ch >= 0x80 && RegexNonAsciiIdentifierStart.test(String.fromCharCode(ch));
+    }
+
+    function isIdentifierPart(ch) {
+      return ch === 0x24 || ch === 0x5F || // $ (dollar) and _ (underscore)
+      ch >= 0x41 && ch <= 0x5A || // A..Z
+      ch >= 0x61 && ch <= 0x7A || // a..z
+      ch >= 0x30 && ch <= 0x39 || // 0..9
+      ch === 0x5C || // \ (backslash)
+      ch >= 0x80 && RegexNonAsciiIdentifierPart.test(String.fromCharCode(ch));
+    } // 7.6.1.1 Keywords
+
+
+    const keywords = {
+      'if': 1,
+      'in': 1,
+      'do': 1,
+      'var': 1,
+      'for': 1,
+      'new': 1,
+      'try': 1,
+      'let': 1,
+      'this': 1,
+      'else': 1,
+      'case': 1,
+      'void': 1,
+      'with': 1,
+      'enum': 1,
+      'while': 1,
+      'break': 1,
+      'catch': 1,
+      'throw': 1,
+      'const': 1,
+      'yield': 1,
+      'class': 1,
+      'super': 1,
+      'return': 1,
+      'typeof': 1,
+      'delete': 1,
+      'switch': 1,
+      'export': 1,
+      'import': 1,
+      'public': 1,
+      'static': 1,
+      'default': 1,
+      'finally': 1,
+      'extends': 1,
+      'package': 1,
+      'private': 1,
+      'function': 1,
+      'continue': 1,
+      'debugger': 1,
+      'interface': 1,
+      'protected': 1,
+      'instanceof': 1,
+      'implements': 1
+    };
+
+    function skipComment() {
+      while (index < length) {
+        const ch = source.charCodeAt(index);
+
+        if (isWhiteSpace(ch) || isLineTerminator(ch)) {
+          ++index;
+        } else {
+          break;
+        }
+      }
+    }
+
+    function scanHexEscape(prefix) {
+      var i,
+          len,
+          ch,
+          code = 0;
+      len = prefix === 'u' ? 4 : 2;
+
+      for (i = 0; i < len; ++i) {
+        if (index < length && isHexDigit(source[index])) {
+          ch = source[index++];
+          code = code * 16 + '0123456789abcdef'.indexOf(ch.toLowerCase());
+        } else {
+          throwError({}, MessageUnexpectedToken, ILLEGAL);
+        }
+      }
+
+      return String.fromCharCode(code);
+    }
+
+    function scanUnicodeCodePointEscape() {
+      var ch, code, cu1, cu2;
+      ch = source[index];
+      code = 0; // At least, one hex digit is required.
+
+      if (ch === '}') {
+        throwError({}, MessageUnexpectedToken, ILLEGAL);
+      }
+
+      while (index < length) {
+        ch = source[index++];
+
+        if (!isHexDigit(ch)) {
+          break;
+        }
+
+        code = code * 16 + '0123456789abcdef'.indexOf(ch.toLowerCase());
+      }
+
+      if (code > 0x10FFFF || ch !== '}') {
+        throwError({}, MessageUnexpectedToken, ILLEGAL);
+      } // UTF-16 Encoding
+
+
+      if (code <= 0xFFFF) {
+        return String.fromCharCode(code);
+      }
+
+      cu1 = (code - 0x10000 >> 10) + 0xD800;
+      cu2 = (code - 0x10000 & 1023) + 0xDC00;
+      return String.fromCharCode(cu1, cu2);
+    }
+
+    function getEscapedIdentifier() {
+      var ch, id;
+      ch = source.charCodeAt(index++);
+      id = String.fromCharCode(ch); // '\u' (U+005C, U+0075) denotes an escaped character.
+
+      if (ch === 0x5C) {
+        if (source.charCodeAt(index) !== 0x75) {
+          throwError({}, MessageUnexpectedToken, ILLEGAL);
+        }
+
+        ++index;
+        ch = scanHexEscape('u');
+
+        if (!ch || ch === '\\' || !isIdentifierStart(ch.charCodeAt(0))) {
+          throwError({}, MessageUnexpectedToken, ILLEGAL);
+        }
+
+        id = ch;
+      }
+
+      while (index < length) {
+        ch = source.charCodeAt(index);
+
+        if (!isIdentifierPart(ch)) {
+          break;
+        }
+
+        ++index;
+        id += String.fromCharCode(ch); // '\u' (U+005C, U+0075) denotes an escaped character.
+
+        if (ch === 0x5C) {
+          id = id.substr(0, id.length - 1);
+
+          if (source.charCodeAt(index) !== 0x75) {
+            throwError({}, MessageUnexpectedToken, ILLEGAL);
+          }
+
+          ++index;
+          ch = scanHexEscape('u');
+
+          if (!ch || ch === '\\' || !isIdentifierPart(ch.charCodeAt(0))) {
+            throwError({}, MessageUnexpectedToken, ILLEGAL);
+          }
+
+          id += ch;
+        }
+      }
+
+      return id;
+    }
+
+    function getIdentifier() {
+      var start, ch;
+      start = index++;
+
+      while (index < length) {
+        ch = source.charCodeAt(index);
+
+        if (ch === 0x5C) {
+          // Blackslash (U+005C) marks Unicode escape sequence.
+          index = start;
+          return getEscapedIdentifier();
+        }
+
+        if (isIdentifierPart(ch)) {
+          ++index;
+        } else {
+          break;
+        }
+      }
+
+      return source.slice(start, index);
+    }
+
+    function scanIdentifier() {
+      var start, id, type;
+      start = index; // Backslash (U+005C) starts an escaped character.
+
+      id = source.charCodeAt(index) === 0x5C ? getEscapedIdentifier() : getIdentifier(); // There is no keyword or literal with only one character.
+      // Thus, it must be an identifier.
+
+      if (id.length === 1) {
+        type = TokenIdentifier;
+      } else if (keywords.hasOwnProperty(id)) {
+        // eslint-disable-line no-prototype-builtins
+        type = TokenKeyword;
+      } else if (id === 'null') {
+        type = TokenNullLiteral;
+      } else if (id === 'true' || id === 'false') {
+        type = TokenBooleanLiteral;
+      } else {
+        type = TokenIdentifier;
+      }
+
+      return {
+        type: type,
+        value: id,
+        start: start,
+        end: index
+      };
+    } // 7.7 Punctuators
+
+
+    function scanPunctuator() {
+      var start = index,
+          code = source.charCodeAt(index),
+          code2,
+          ch1 = source[index],
+          ch2,
+          ch3,
+          ch4;
+
+      switch (code) {
+        // Check for most common single-character punctuators.
+        case 0x2E: // . dot
+
+        case 0x28: // ( open bracket
+
+        case 0x29: // ) close bracket
+
+        case 0x3B: // ; semicolon
+
+        case 0x2C: // , comma
+
+        case 0x7B: // { open curly brace
+
+        case 0x7D: // } close curly brace
+
+        case 0x5B: // [
+
+        case 0x5D: // ]
+
+        case 0x3A: // :
+
+        case 0x3F: // ?
+
+        case 0x7E:
+          // ~
+          ++index;
+          return {
+            type: TokenPunctuator,
+            value: String.fromCharCode(code),
+            start: start,
+            end: index
+          };
+
+        default:
+          code2 = source.charCodeAt(index + 1); // '=' (U+003D) marks an assignment or comparison operator.
+
+          if (code2 === 0x3D) {
+            switch (code) {
+              case 0x2B: // +
+
+              case 0x2D: // -
+
+              case 0x2F: // /
+
+              case 0x3C: // <
+
+              case 0x3E: // >
+
+              case 0x5E: // ^
+
+              case 0x7C: // |
+
+              case 0x25: // %
+
+              case 0x26: // &
+
+              case 0x2A:
+                // *
+                index += 2;
+                return {
+                  type: TokenPunctuator,
+                  value: String.fromCharCode(code) + String.fromCharCode(code2),
+                  start: start,
+                  end: index
+                };
+
+              case 0x21: // !
+
+              case 0x3D:
+                // =
+                index += 2; // !== and ===
+
+                if (source.charCodeAt(index) === 0x3D) {
+                  ++index;
+                }
+
+                return {
+                  type: TokenPunctuator,
+                  value: source.slice(start, index),
+                  start: start,
+                  end: index
+                };
+            }
+          }
+
+      } // 4-character punctuator: >>>=
+
+
+      ch4 = source.substr(index, 4);
+
+      if (ch4 === '>>>=') {
+        index += 4;
+        return {
+          type: TokenPunctuator,
+          value: ch4,
+          start: start,
+          end: index
+        };
+      } // 3-character punctuators: === !== >>> <<= >>=
+
+
+      ch3 = ch4.substr(0, 3);
+
+      if (ch3 === '>>>' || ch3 === '<<=' || ch3 === '>>=') {
+        index += 3;
+        return {
+          type: TokenPunctuator,
+          value: ch3,
+          start: start,
+          end: index
+        };
+      } // Other 2-character punctuators: ++ -- << >> && ||
+
+
+      ch2 = ch3.substr(0, 2);
+
+      if (ch1 === ch2[1] && '+-<>&|'.indexOf(ch1) >= 0 || ch2 === '=>') {
+        index += 2;
+        return {
+          type: TokenPunctuator,
+          value: ch2,
+          start: start,
+          end: index
+        };
+      }
+
+      if (ch2 === '//') {
+        throwError({}, MessageUnexpectedToken, ILLEGAL);
+      } // 1-character punctuators: < > = ! + - * % & | ^ /
+
+
+      if ('<>=!+-*%&|^/'.indexOf(ch1) >= 0) {
+        ++index;
+        return {
+          type: TokenPunctuator,
+          value: ch1,
+          start: start,
+          end: index
+        };
+      }
+
+      throwError({}, MessageUnexpectedToken, ILLEGAL);
+    } // 7.8.3 Numeric Literals
+
+
+    function scanHexLiteral(start) {
+      let number = '';
+
+      while (index < length) {
+        if (!isHexDigit(source[index])) {
+          break;
+        }
+
+        number += source[index++];
+      }
+
+      if (number.length === 0) {
+        throwError({}, MessageUnexpectedToken, ILLEGAL);
+      }
+
+      if (isIdentifierStart(source.charCodeAt(index))) {
+        throwError({}, MessageUnexpectedToken, ILLEGAL);
+      }
+
+      return {
+        type: TokenNumericLiteral,
+        value: parseInt('0x' + number, 16),
+        start: start,
+        end: index
+      };
+    }
+
+    function scanOctalLiteral(start) {
+      let number = '0' + source[index++];
+
+      while (index < length) {
+        if (!isOctalDigit(source[index])) {
+          break;
+        }
+
+        number += source[index++];
+      }
+
+      if (isIdentifierStart(source.charCodeAt(index)) || isDecimalDigit(source.charCodeAt(index))) {
+        throwError({}, MessageUnexpectedToken, ILLEGAL);
+      }
+
+      return {
+        type: TokenNumericLiteral,
+        value: parseInt(number, 8),
+        octal: true,
+        start: start,
+        end: index
+      };
+    }
+
+    function scanNumericLiteral() {
+      var number, start, ch;
+      ch = source[index];
+      assert(isDecimalDigit(ch.charCodeAt(0)) || ch === '.', 'Numeric literal must start with a decimal digit or a decimal point');
+      start = index;
+      number = '';
+
+      if (ch !== '.') {
+        number = source[index++];
+        ch = source[index]; // Hex number starts with '0x'.
+        // Octal number starts with '0'.
+
+        if (number === '0') {
+          if (ch === 'x' || ch === 'X') {
+            ++index;
+            return scanHexLiteral(start);
+          }
+
+          if (isOctalDigit(ch)) {
+            return scanOctalLiteral(start);
+          } // decimal number starts with '0' such as '09' is illegal.
+
+
+          if (ch && isDecimalDigit(ch.charCodeAt(0))) {
+            throwError({}, MessageUnexpectedToken, ILLEGAL);
+          }
+        }
+
+        while (isDecimalDigit(source.charCodeAt(index))) {
+          number += source[index++];
+        }
+
+        ch = source[index];
+      }
+
+      if (ch === '.') {
+        number += source[index++];
+
+        while (isDecimalDigit(source.charCodeAt(index))) {
+          number += source[index++];
+        }
+
+        ch = source[index];
+      }
+
+      if (ch === 'e' || ch === 'E') {
+        number += source[index++];
+        ch = source[index];
+
+        if (ch === '+' || ch === '-') {
+          number += source[index++];
+        }
+
+        if (isDecimalDigit(source.charCodeAt(index))) {
+          while (isDecimalDigit(source.charCodeAt(index))) {
+            number += source[index++];
+          }
+        } else {
+          throwError({}, MessageUnexpectedToken, ILLEGAL);
+        }
+      }
+
+      if (isIdentifierStart(source.charCodeAt(index))) {
+        throwError({}, MessageUnexpectedToken, ILLEGAL);
+      }
+
+      return {
+        type: TokenNumericLiteral,
+        value: parseFloat(number),
+        start: start,
+        end: index
+      };
+    } // 7.8.4 String Literals
+
+
+    function scanStringLiteral() {
+      var str = '',
+          quote,
+          start,
+          ch,
+          code,
+          octal = false;
+      quote = source[index];
+      assert(quote === '\'' || quote === '"', 'String literal must starts with a quote');
+      start = index;
+      ++index;
+
+      while (index < length) {
+        ch = source[index++];
+
+        if (ch === quote) {
+          quote = '';
+          break;
+        } else if (ch === '\\') {
+          ch = source[index++];
+
+          if (!ch || !isLineTerminator(ch.charCodeAt(0))) {
+            switch (ch) {
+              case 'u':
+              case 'x':
+                if (source[index] === '{') {
+                  ++index;
+                  str += scanUnicodeCodePointEscape();
+                } else {
+                  str += scanHexEscape(ch);
+                }
+
+                break;
+
+              case 'n':
+                str += '\n';
+                break;
+
+              case 'r':
+                str += '\r';
+                break;
+
+              case 't':
+                str += '\t';
+                break;
+
+              case 'b':
+                str += '\b';
+                break;
+
+              case 'f':
+                str += '\f';
+                break;
+
+              case 'v':
+                str += '\x0B';
+                break;
+
+              default:
+                if (isOctalDigit(ch)) {
+                  code = '01234567'.indexOf(ch); // \0 is not octal escape sequence
+
+                  if (code !== 0) {
+                    octal = true;
+                  }
+
+                  if (index < length && isOctalDigit(source[index])) {
+                    octal = true;
+                    code = code * 8 + '01234567'.indexOf(source[index++]); // 3 digits are only allowed when string starts
+                    // with 0, 1, 2, 3
+
+                    if ('0123'.indexOf(ch) >= 0 && index < length && isOctalDigit(source[index])) {
+                      code = code * 8 + '01234567'.indexOf(source[index++]);
+                    }
+                  }
+
+                  str += String.fromCharCode(code);
+                } else {
+                  str += ch;
+                }
+
+                break;
+            }
+          } else {
+            if (ch === '\r' && source[index] === '\n') {
+              ++index;
+            }
+          }
+        } else if (isLineTerminator(ch.charCodeAt(0))) {
+          break;
+        } else {
+          str += ch;
+        }
+      }
+
+      if (quote !== '') {
+        throwError({}, MessageUnexpectedToken, ILLEGAL);
+      }
+
+      return {
+        type: TokenStringLiteral,
+        value: str,
+        octal: octal,
+        start: start,
+        end: index
+      };
+    }
+
+    function testRegExp(pattern, flags) {
+      let tmp = pattern;
+
+      if (flags.indexOf('u') >= 0) {
+        // Replace each astral symbol and every Unicode code point
+        // escape sequence with a single ASCII symbol to avoid throwing on
+        // regular expressions that are only valid in combination with the
+        // `/u` flag.
+        // Note: replacing with the ASCII symbol `x` might cause false
+        // negatives in unlikely scenarios. For example, `[\u{61}-b]` is a
+        // perfectly valid pattern that is equivalent to `[a-b]`, but it
+        // would be replaced by `[x-b]` which throws an error.
+        tmp = tmp.replace(/\\u\{([0-9a-fA-F]+)\}/g, ($0, $1) => {
+          if (parseInt($1, 16) <= 0x10FFFF) {
+            return 'x';
+          }
+
+          throwError({}, MessageInvalidRegExp);
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, 'x');
+      } // First, detect invalid regular expressions.
+
+
+      try {
+        new RegExp(tmp);
+      } catch (e) {
+        throwError({}, MessageInvalidRegExp);
+      } // Return a regular expression object for this pattern-flag pair, or
+      // `null` in case the current environment doesn't support the flags it
+      // uses.
+
+
+      try {
+        return new RegExp(pattern, flags);
+      } catch (exception) {
+        return null;
+      }
+    }
+
+    function scanRegExpBody() {
+      var ch, str, classMarker, terminated, body;
+      ch = source[index];
+      assert(ch === '/', 'Regular expression literal must start with a slash');
+      str = source[index++];
+      classMarker = false;
+      terminated = false;
+
+      while (index < length) {
+        ch = source[index++];
+        str += ch;
+
+        if (ch === '\\') {
+          ch = source[index++]; // ECMA-262 7.8.5
+
+          if (isLineTerminator(ch.charCodeAt(0))) {
+            throwError({}, MessageUnterminatedRegExp);
+          }
+
+          str += ch;
+        } else if (isLineTerminator(ch.charCodeAt(0))) {
+          throwError({}, MessageUnterminatedRegExp);
+        } else if (classMarker) {
+          if (ch === ']') {
+            classMarker = false;
+          }
+        } else {
+          if (ch === '/') {
+            terminated = true;
+            break;
+          } else if (ch === '[') {
+            classMarker = true;
+          }
+        }
+      }
+
+      if (!terminated) {
+        throwError({}, MessageUnterminatedRegExp);
+      } // Exclude leading and trailing slash.
+
+
+      body = str.substr(1, str.length - 2);
+      return {
+        value: body,
+        literal: str
+      };
+    }
+
+    function scanRegExpFlags() {
+      var ch, str, flags;
+      str = '';
+      flags = '';
+
+      while (index < length) {
+        ch = source[index];
+
+        if (!isIdentifierPart(ch.charCodeAt(0))) {
+          break;
+        }
+
+        ++index;
+
+        if (ch === '\\' && index < length) {
+          throwError({}, MessageUnexpectedToken, ILLEGAL);
+        } else {
+          flags += ch;
+          str += ch;
+        }
+      }
+
+      if (flags.search(/[^gimuy]/g) >= 0) {
+        throwError({}, MessageInvalidRegExp, flags);
+      }
+
+      return {
+        value: flags,
+        literal: str
+      };
+    }
+
+    function scanRegExp() {
+      var start, body, flags, value;
+      lookahead = null;
+      skipComment();
+      start = index;
+      body = scanRegExpBody();
+      flags = scanRegExpFlags();
+      value = testRegExp(body.value, flags.value);
+      return {
+        literal: body.literal + flags.literal,
+        value: value,
+        regex: {
+          pattern: body.value,
+          flags: flags.value
+        },
+        start: start,
+        end: index
+      };
+    }
+
+    function isIdentifierName(token) {
+      return token.type === TokenIdentifier || token.type === TokenKeyword || token.type === TokenBooleanLiteral || token.type === TokenNullLiteral;
+    }
+
+    function advance() {
+      skipComment();
+
+      if (index >= length) {
+        return {
+          type: TokenEOF,
+          start: index,
+          end: index
+        };
+      }
+
+      const ch = source.charCodeAt(index);
+
+      if (isIdentifierStart(ch)) {
+        return scanIdentifier();
+      } // Very common: ( and ) and ;
+
+
+      if (ch === 0x28 || ch === 0x29 || ch === 0x3B) {
+        return scanPunctuator();
+      } // String literal starts with single quote (U+0027) or double quote (U+0022).
+
+
+      if (ch === 0x27 || ch === 0x22) {
+        return scanStringLiteral();
+      } // Dot (.) U+002E can also start a floating-point number, hence the need
+      // to check the next character.
+
+
+      if (ch === 0x2E) {
+        if (isDecimalDigit(source.charCodeAt(index + 1))) {
+          return scanNumericLiteral();
+        }
+
+        return scanPunctuator();
+      }
+
+      if (isDecimalDigit(ch)) {
+        return scanNumericLiteral();
+      }
+
+      return scanPunctuator();
+    }
+
+    function lex() {
+      const token = lookahead;
+      index = token.end;
+      lookahead = advance();
+      index = token.end;
+      return token;
+    }
+
+    function peek() {
+      const pos = index;
+      lookahead = advance();
+      index = pos;
+    }
+
+    function finishArrayExpression(elements) {
+      const node = new ASTNode(SyntaxArrayExpression);
+      node.elements = elements;
+      return node;
+    }
+
+    function finishBinaryExpression(operator, left, right) {
+      const node = new ASTNode(operator === '||' || operator === '&&' ? SyntaxLogicalExpression : SyntaxBinaryExpression);
+      node.operator = operator;
+      node.left = left;
+      node.right = right;
+      return node;
+    }
+
+    function finishCallExpression(callee, args) {
+      const node = new ASTNode(SyntaxCallExpression);
+      node.callee = callee;
+      node.arguments = args;
+      return node;
+    }
+
+    function finishConditionalExpression(test, consequent, alternate) {
+      const node = new ASTNode(SyntaxConditionalExpression);
+      node.test = test;
+      node.consequent = consequent;
+      node.alternate = alternate;
+      return node;
+    }
+
+    function finishIdentifier(name) {
+      const node = new ASTNode(SyntaxIdentifier);
+      node.name = name;
+      return node;
+    }
+
+    function finishLiteral(token) {
+      const node = new ASTNode(SyntaxLiteral);
+      node.value = token.value;
+      node.raw = source.slice(token.start, token.end);
+
+      if (token.regex) {
+        if (node.raw === '//') {
+          node.raw = '/(?:)/';
+        }
+
+        node.regex = token.regex;
+      }
+
+      return node;
+    }
+
+    function finishMemberExpression(accessor, object, property) {
+      const node = new ASTNode(SyntaxMemberExpression);
+      node.computed = accessor === '[';
+      node.object = object;
+      node.property = property;
+      if (!node.computed) property.member = true;
+      return node;
+    }
+
+    function finishObjectExpression(properties) {
+      const node = new ASTNode(SyntaxObjectExpression);
+      node.properties = properties;
+      return node;
+    }
+
+    function finishProperty(kind, key, value) {
+      const node = new ASTNode(SyntaxProperty);
+      node.key = key;
+      node.value = value;
+      node.kind = kind;
+      return node;
+    }
+
+    function finishUnaryExpression(operator, argument) {
+      const node = new ASTNode(SyntaxUnaryExpression);
+      node.operator = operator;
+      node.argument = argument;
+      node.prefix = true;
+      return node;
+    } // Throw an exception
+
+
+    function throwError(token, messageFormat) {
+      var error,
+          args = Array.prototype.slice.call(arguments, 2),
+          msg = messageFormat.replace(/%(\d)/g, (whole, index) => {
+        assert(index < args.length, 'Message reference must be in range');
+        return args[index];
+      });
+      error = new Error(msg);
+      error.index = index;
+      error.description = msg;
+      throw error;
+    } // Throw an exception because of the token.
+
+
+    function throwUnexpected(token) {
+      if (token.type === TokenEOF) {
+        throwError(token, MessageUnexpectedEOS);
+      }
+
+      if (token.type === TokenNumericLiteral) {
+        throwError(token, MessageUnexpectedNumber);
+      }
+
+      if (token.type === TokenStringLiteral) {
+        throwError(token, MessageUnexpectedString);
+      }
+
+      if (token.type === TokenIdentifier) {
+        throwError(token, MessageUnexpectedIdentifier);
+      }
+
+      if (token.type === TokenKeyword) {
+        throwError(token, MessageUnexpectedReserved);
+      } // BooleanLiteral, NullLiteral, or Punctuator.
+
+
+      throwError(token, MessageUnexpectedToken, token.value);
+    } // Expect the next token to match the specified punctuator.
+    // If not, an exception will be thrown.
+
+
+    function expect(value) {
+      const token = lex();
+
+      if (token.type !== TokenPunctuator || token.value !== value) {
+        throwUnexpected(token);
+      }
+    } // Return true if the next token matches the specified punctuator.
+
+
+    function match(value) {
+      return lookahead.type === TokenPunctuator && lookahead.value === value;
+    } // Return true if the next token matches the specified keyword
+
+
+    function matchKeyword(keyword) {
+      return lookahead.type === TokenKeyword && lookahead.value === keyword;
+    } // 11.1.4 Array Initialiser
+
+
+    function parseArrayInitialiser() {
+      const elements = [];
+      index = lookahead.start;
+      expect('[');
+
+      while (!match(']')) {
+        if (match(',')) {
+          lex();
+          elements.push(null);
+        } else {
+          elements.push(parseConditionalExpression());
+
+          if (!match(']')) {
+            expect(',');
+          }
+        }
+      }
+
+      lex();
+      return finishArrayExpression(elements);
+    } // 11.1.5 Object Initialiser
+
+
+    function parseObjectPropertyKey() {
+      index = lookahead.start;
+      const token = lex(); // Note: This function is called only from parseObjectProperty(), where
+      // EOF and Punctuator tokens are already filtered out.
+
+      if (token.type === TokenStringLiteral || token.type === TokenNumericLiteral) {
+        if (token.octal) {
+          throwError(token, MessageStrictOctalLiteral);
+        }
+
+        return finishLiteral(token);
+      }
+
+      return finishIdentifier(token.value);
+    }
+
+    function parseObjectProperty() {
+      var token, key, id, value;
+      index = lookahead.start;
+      token = lookahead;
+
+      if (token.type === TokenIdentifier) {
+        id = parseObjectPropertyKey();
+        expect(':');
+        value = parseConditionalExpression();
+        return finishProperty('init', id, value);
+      }
+
+      if (token.type === TokenEOF || token.type === TokenPunctuator) {
+        throwUnexpected(token);
+      } else {
+        key = parseObjectPropertyKey();
+        expect(':');
+        value = parseConditionalExpression();
+        return finishProperty('init', key, value);
+      }
+    }
+
+    function parseObjectInitialiser() {
+      var properties = [],
+          property,
+          name,
+          key,
+          map = {},
+          toString = String;
+      index = lookahead.start;
+      expect('{');
+
+      while (!match('}')) {
+        property = parseObjectProperty();
+
+        if (property.key.type === SyntaxIdentifier) {
+          name = property.key.name;
+        } else {
+          name = toString(property.key.value);
+        }
+
+        key = '$' + name;
+
+        if (Object.prototype.hasOwnProperty.call(map, key)) {
+          throwError({}, MessageStrictDuplicateProperty);
+        } else {
+          map[key] = true;
+        }
+
+        properties.push(property);
+
+        if (!match('}')) {
+          expect(',');
+        }
+      }
+
+      expect('}');
+      return finishObjectExpression(properties);
+    } // 11.1.6 The Grouping Operator
+
+
+    function parseGroupExpression() {
+      expect('(');
+      const expr = parseExpression();
+      expect(')');
+      return expr;
+    } // 11.1 Primary Expressions
+
+
+    const legalKeywords = {
+      'if': 1
+    };
+
+    function parsePrimaryExpression() {
+      var type, token, expr;
+
+      if (match('(')) {
+        return parseGroupExpression();
+      }
+
+      if (match('[')) {
+        return parseArrayInitialiser();
+      }
+
+      if (match('{')) {
+        return parseObjectInitialiser();
+      }
+
+      type = lookahead.type;
+      index = lookahead.start;
+
+      if (type === TokenIdentifier || legalKeywords[lookahead.value]) {
+        expr = finishIdentifier(lex().value);
+      } else if (type === TokenStringLiteral || type === TokenNumericLiteral) {
+        if (lookahead.octal) {
+          throwError(lookahead, MessageStrictOctalLiteral);
+        }
+
+        expr = finishLiteral(lex());
+      } else if (type === TokenKeyword) {
+        throw new Error(DISABLED);
+      } else if (type === TokenBooleanLiteral) {
+        token = lex();
+        token.value = token.value === 'true';
+        expr = finishLiteral(token);
+      } else if (type === TokenNullLiteral) {
+        token = lex();
+        token.value = null;
+        expr = finishLiteral(token);
+      } else if (match('/') || match('/=')) {
+        expr = finishLiteral(scanRegExp());
+        peek();
+      } else {
+        throwUnexpected(lex());
+      }
+
+      return expr;
+    } // 11.2 Left-Hand-Side Expressions
+
+
+    function parseArguments() {
+      const args = [];
+      expect('(');
+
+      if (!match(')')) {
+        while (index < length) {
+          args.push(parseConditionalExpression());
+
+          if (match(')')) {
+            break;
+          }
+
+          expect(',');
+        }
+      }
+
+      expect(')');
+      return args;
+    }
+
+    function parseNonComputedProperty() {
+      index = lookahead.start;
+      const token = lex();
+
+      if (!isIdentifierName(token)) {
+        throwUnexpected(token);
+      }
+
+      return finishIdentifier(token.value);
+    }
+
+    function parseNonComputedMember() {
+      expect('.');
+      return parseNonComputedProperty();
+    }
+
+    function parseComputedMember() {
+      expect('[');
+      const expr = parseExpression();
+      expect(']');
+      return expr;
+    }
+
+    function parseLeftHandSideExpressionAllowCall() {
+      var expr, args, property;
+      expr = parsePrimaryExpression();
+
+      for (;;) {
+        if (match('.')) {
+          property = parseNonComputedMember();
+          expr = finishMemberExpression('.', expr, property);
+        } else if (match('(')) {
+          args = parseArguments();
+          expr = finishCallExpression(expr, args);
+        } else if (match('[')) {
+          property = parseComputedMember();
+          expr = finishMemberExpression('[', expr, property);
+        } else {
+          break;
+        }
+      }
+
+      return expr;
+    } // 11.3 Postfix Expressions
+
+
+    function parsePostfixExpression() {
+      const expr = parseLeftHandSideExpressionAllowCall();
+
+      if (lookahead.type === TokenPunctuator) {
+        if (match('++') || match('--')) {
+          throw new Error(DISABLED);
+        }
+      }
+
+      return expr;
+    } // 11.4 Unary Operators
+
+
+    function parseUnaryExpression() {
+      var token, expr;
+
+      if (lookahead.type !== TokenPunctuator && lookahead.type !== TokenKeyword) {
+        expr = parsePostfixExpression();
+      } else if (match('++') || match('--')) {
+        throw new Error(DISABLED);
+      } else if (match('+') || match('-') || match('~') || match('!')) {
+        token = lex();
+        expr = parseUnaryExpression();
+        expr = finishUnaryExpression(token.value, expr);
+      } else if (matchKeyword('delete') || matchKeyword('void') || matchKeyword('typeof')) {
+        throw new Error(DISABLED);
+      } else {
+        expr = parsePostfixExpression();
+      }
+
+      return expr;
+    }
+
+    function binaryPrecedence(token) {
+      let prec = 0;
+
+      if (token.type !== TokenPunctuator && token.type !== TokenKeyword) {
+        return 0;
+      }
+
+      switch (token.value) {
+        case '||':
+          prec = 1;
+          break;
+
+        case '&&':
+          prec = 2;
+          break;
+
+        case '|':
+          prec = 3;
+          break;
+
+        case '^':
+          prec = 4;
+          break;
+
+        case '&':
+          prec = 5;
+          break;
+
+        case '==':
+        case '!=':
+        case '===':
+        case '!==':
+          prec = 6;
+          break;
+
+        case '<':
+        case '>':
+        case '<=':
+        case '>=':
+        case 'instanceof':
+        case 'in':
+          prec = 7;
+          break;
+
+        case '<<':
+        case '>>':
+        case '>>>':
+          prec = 8;
+          break;
+
+        case '+':
+        case '-':
+          prec = 9;
+          break;
+
+        case '*':
+        case '/':
+        case '%':
+          prec = 11;
+          break;
+      }
+
+      return prec;
+    } // 11.5 Multiplicative Operators
+    // 11.6 Additive Operators
+    // 11.7 Bitwise Shift Operators
+    // 11.8 Relational Operators
+    // 11.9 Equality Operators
+    // 11.10 Binary Bitwise Operators
+    // 11.11 Binary Logical Operators
+
+
+    function parseBinaryExpression() {
+      var marker, markers, expr, token, prec, stack, right, operator, left, i;
+      marker = lookahead;
+      left = parseUnaryExpression();
+      token = lookahead;
+      prec = binaryPrecedence(token);
+
+      if (prec === 0) {
+        return left;
+      }
+
+      token.prec = prec;
+      lex();
+      markers = [marker, lookahead];
+      right = parseUnaryExpression();
+      stack = [left, token, right];
+
+      while ((prec = binaryPrecedence(lookahead)) > 0) {
+        // Reduce: make a binary expression from the three topmost entries.
+        while (stack.length > 2 && prec <= stack[stack.length - 2].prec) {
+          right = stack.pop();
+          operator = stack.pop().value;
+          left = stack.pop();
+          markers.pop();
+          expr = finishBinaryExpression(operator, left, right);
+          stack.push(expr);
+        } // Shift.
+
+
+        token = lex();
+        token.prec = prec;
+        stack.push(token);
+        markers.push(lookahead);
+        expr = parseUnaryExpression();
+        stack.push(expr);
+      } // Final reduce to clean-up the stack.
+
+
+      i = stack.length - 1;
+      expr = stack[i];
+      markers.pop();
+
+      while (i > 1) {
+        markers.pop();
+        expr = finishBinaryExpression(stack[i - 1].value, stack[i - 2], expr);
+        i -= 2;
+      }
+
+      return expr;
+    } // 11.12 Conditional Operator
+
+
+    function parseConditionalExpression() {
+      var expr, consequent, alternate;
+      expr = parseBinaryExpression();
+
+      if (match('?')) {
+        lex();
+        consequent = parseConditionalExpression();
+        expect(':');
+        alternate = parseConditionalExpression();
+        expr = finishConditionalExpression(expr, consequent, alternate);
+      }
+
+      return expr;
+    } // 11.14 Comma Operator
+
+
+    function parseExpression() {
+      const expr = parseConditionalExpression();
+
+      if (match(',')) {
+        throw new Error(DISABLED); // no sequence expressions
+      }
+
+      return expr;
+    }
+
+    function parser(code) {
+      source = code;
+      index = 0;
+      length = source.length;
+      lookahead = null;
+      peek();
+      const expr = parseExpression();
+
+      if (lookahead.type !== TokenEOF) {
+        throw new Error('Unexpect token after expression.');
+      }
+
+      return expr;
+    }
+
+    var Constants = {
+      NaN: 'NaN',
+      E: 'Math.E',
+      LN2: 'Math.LN2',
+      LN10: 'Math.LN10',
+      LOG2E: 'Math.LOG2E',
+      LOG10E: 'Math.LOG10E',
+      PI: 'Math.PI',
+      SQRT1_2: 'Math.SQRT1_2',
+      SQRT2: 'Math.SQRT2',
+      MIN_VALUE: 'Number.MIN_VALUE',
+      MAX_VALUE: 'Number.MAX_VALUE'
+    };
+
+    function Functions(codegen) {
+      function fncall(name, args, cast, type) {
+        let obj = codegen(args[0]);
+
+        if (cast) {
+          obj = cast + '(' + obj + ')';
+          if (cast.lastIndexOf('new ', 0) === 0) obj = '(' + obj + ')';
+        }
+
+        return obj + '.' + name + (type < 0 ? '' : type === 0 ? '()' : '(' + args.slice(1).map(codegen).join(',') + ')');
+      }
+
+      function fn(name, cast, type) {
+        return args => fncall(name, args, cast, type);
+      }
+
+      const DATE = 'new Date',
+            STRING = 'String',
+            REGEXP = 'RegExp';
+      return {
+        // MATH functions
+        isNaN: 'Number.isNaN',
+        isFinite: 'Number.isFinite',
+        abs: 'Math.abs',
+        acos: 'Math.acos',
+        asin: 'Math.asin',
+        atan: 'Math.atan',
+        atan2: 'Math.atan2',
+        ceil: 'Math.ceil',
+        cos: 'Math.cos',
+        exp: 'Math.exp',
+        floor: 'Math.floor',
+        log: 'Math.log',
+        max: 'Math.max',
+        min: 'Math.min',
+        pow: 'Math.pow',
+        random: 'Math.random',
+        round: 'Math.round',
+        sin: 'Math.sin',
+        sqrt: 'Math.sqrt',
+        tan: 'Math.tan',
+        clamp: function (args) {
+          if (args.length < 3) error('Missing arguments to clamp function.');
+          if (args.length > 3) error('Too many arguments to clamp function.');
+          const a = args.map(codegen);
+          return 'Math.max(' + a[1] + ', Math.min(' + a[2] + ',' + a[0] + '))';
+        },
+        // DATE functions
+        now: 'Date.now',
+        utc: 'Date.UTC',
+        datetime: DATE,
+        date: fn('getDate', DATE, 0),
+        day: fn('getDay', DATE, 0),
+        year: fn('getFullYear', DATE, 0),
+        month: fn('getMonth', DATE, 0),
+        hours: fn('getHours', DATE, 0),
+        minutes: fn('getMinutes', DATE, 0),
+        seconds: fn('getSeconds', DATE, 0),
+        milliseconds: fn('getMilliseconds', DATE, 0),
+        time: fn('getTime', DATE, 0),
+        timezoneoffset: fn('getTimezoneOffset', DATE, 0),
+        utcdate: fn('getUTCDate', DATE, 0),
+        utcday: fn('getUTCDay', DATE, 0),
+        utcyear: fn('getUTCFullYear', DATE, 0),
+        utcmonth: fn('getUTCMonth', DATE, 0),
+        utchours: fn('getUTCHours', DATE, 0),
+        utcminutes: fn('getUTCMinutes', DATE, 0),
+        utcseconds: fn('getUTCSeconds', DATE, 0),
+        utcmilliseconds: fn('getUTCMilliseconds', DATE, 0),
+        // sequence functions
+        length: fn('length', null, -1),
+        join: fn('join', null),
+        indexof: fn('indexOf', null),
+        lastindexof: fn('lastIndexOf', null),
+        slice: fn('slice', null),
+        reverse: function (args) {
+          return '(' + codegen(args[0]) + ').slice().reverse()';
+        },
+        // STRING functions
+        parseFloat: 'parseFloat',
+        parseInt: 'parseInt',
+        upper: fn('toUpperCase', STRING, 0),
+        lower: fn('toLowerCase', STRING, 0),
+        substring: fn('substring', STRING),
+        split: fn('split', STRING),
+        replace: fn('replace', STRING),
+        trim: fn('trim', STRING, 0),
+        // REGEXP functions
+        regexp: REGEXP,
+        test: fn('test', REGEXP),
+        // Control Flow functions
+        if: function (args) {
+          if (args.length < 3) error('Missing arguments to if function.');
+          if (args.length > 3) error('Too many arguments to if function.');
+          const a = args.map(codegen);
+          return '(' + a[0] + '?' + a[1] + ':' + a[2] + ')';
+        }
+      };
+    }
+
+    function stripQuotes(s) {
+      const n = s && s.length - 1;
+      return n && (s[0] === '"' && s[n] === '"' || s[0] === '\'' && s[n] === '\'') ? s.slice(1, -1) : s;
+    }
+
+    function codegen(opt) {
+      opt = opt || {};
+      const allowed = opt.allowed ? toSet(opt.allowed) : {},
+            forbidden = opt.forbidden ? toSet(opt.forbidden) : {},
+            constants = opt.constants || Constants,
+            functions = (opt.functions || Functions)(visit),
+            globalvar = opt.globalvar,
+            fieldvar = opt.fieldvar,
+            outputGlobal = isFunction(globalvar) ? globalvar : id => "".concat(globalvar, "[\"").concat(id, "\"]");
+      let globals = {},
+          fields = {},
+          memberDepth = 0;
+
+      function visit(ast) {
+        if (isString(ast)) return ast;
+        const generator = Generators[ast.type];
+        if (generator == null) error('Unsupported type: ' + ast.type);
+        return generator(ast);
+      }
+
+      const Generators = {
+        Literal: n => n.raw,
+        Identifier: n => {
+          const id = n.name;
+
+          if (memberDepth > 0) {
+            return id;
+          } else if (has(forbidden, id)) {
+            return error('Illegal identifier: ' + id);
+          } else if (has(constants, id)) {
+            return constants[id];
+          } else if (has(allowed, id)) {
+            return id;
+          } else {
+            globals[id] = 1;
+            return outputGlobal(id);
+          }
+        },
+        MemberExpression: n => {
+          const d = !n.computed,
+                o = visit(n.object);
+          if (d) memberDepth += 1;
+          const p = visit(n.property);
+
+          if (o === fieldvar) {
+            // strip quotes to sanitize field name (#1653)
+            fields[stripQuotes(p)] = 1;
+          }
+
+          if (d) memberDepth -= 1;
+          return o + (d ? '.' + p : '[' + p + ']');
+        },
+        CallExpression: n => {
+          if (n.callee.type !== 'Identifier') {
+            error('Illegal callee type: ' + n.callee.type);
+          }
+
+          const callee = n.callee.name,
+                args = n.arguments,
+                fn = has(functions, callee) && functions[callee];
+          if (!fn) error('Unrecognized function: ' + callee);
+          return isFunction(fn) ? fn(args) : fn + '(' + args.map(visit).join(',') + ')';
+        },
+        ArrayExpression: n => '[' + n.elements.map(visit).join(',') + ']',
+        BinaryExpression: n => '(' + visit(n.left) + ' ' + n.operator + ' ' + visit(n.right) + ')',
+        UnaryExpression: n => '(' + n.operator + visit(n.argument) + ')',
+        ConditionalExpression: n => '(' + visit(n.test) + '?' + visit(n.consequent) + ':' + visit(n.alternate) + ')',
+        LogicalExpression: n => '(' + visit(n.left) + n.operator + visit(n.right) + ')',
+        ObjectExpression: n => '{' + n.properties.map(visit).join(',') + '}',
+        Property: n => {
+          memberDepth += 1;
+          const k = visit(n.key);
+          memberDepth -= 1;
+          return k + ':' + visit(n.value);
+        }
+      };
+
+      function codegen(ast) {
+        const result = {
+          code: visit(ast),
+          globals: Object.keys(globals),
+          fields: Object.keys(fields)
+        };
+        globals = {};
+        fields = {};
+        return result;
+      }
+
+      codegen.functions = functions;
+      codegen.constants = constants;
+      return codegen;
+    }
+
+    var vegaExpression_module = /*#__PURE__*/Object.freeze({
+      __proto__: null,
+      ASTNode: ASTNode,
+      ArrayExpression: ArrayExpression,
+      BinaryExpression: BinaryExpression,
+      CallExpression: CallExpression,
+      ConditionalExpression: ConditionalExpression,
+      Identifier: Identifier,
+      Literal: Literal,
+      LogicalExpression: LogicalExpression,
+      MemberExpression: MemberExpression,
+      ObjectExpression: ObjectExpression,
+      Property: Property,
+      RawCode: RawCode,
+      UnaryExpression: UnaryExpression,
+      codegen: codegen,
+      constants: Constants,
+      functions: Functions,
+      parse: parser
+    });
+
+    var TYPES = {
+      QUANTITATIVE: 'quantitative',
+      ORDINAL: 'ordinal',
+      TEMPORAL: 'temporal',
+      NOMINAL: 'nominal',
+      GEOJSON: 'geojson'
+    };
+    var CHANNELS = ["x", "y", "color", "shape", "size", "text", "row", "column"];
+    var OPS = ["equal", "lt", "lte", "gt", "gte", "range", "oneOf", "valid"];
+    var LOGIC_OPS = ["and", "or", "not"];
+    var constants = {
+      TYPES: TYPES,
+      CHANNELS: CHANNELS,
+      OPS: OPS,
+      LOGIC_OPS: LOGIC_OPS
+    };
+
+    function createCommonjsModule(fn, basedir, module) {
+    	return module = {
+    		path: basedir,
+    		exports: {},
+    		require: function (path, base) {
+    			return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
+    		}
+    	}, fn(module, module.exports), module.exports;
+    }
+
+    function getAugmentedNamespace(n) {
+    	if (n.__esModule) return n;
+    	var a = Object.defineProperty({}, '__esModule', {value: true});
+    	Object.keys(n).forEach(function (k) {
+    		var d = Object.getOwnPropertyDescriptor(n, k);
+    		Object.defineProperty(a, k, d.get ? d : {
+    			enumerable: true,
+    			get: function () {
+    				return n[k];
+    			}
+    		});
+    	});
+    	return a;
+    }
+
+    function commonjsRequire () {
+    	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+    }
+
+    var util = createCommonjsModule(function (module, exports) {
+
+      exports.isArray = Array.isArray || function (obj) {
+        return {}.toString.call(obj) === '[object Array]';
+      };
+
+      function isString(item) {
+        return typeof item === 'string' || item instanceof String;
+      }
+
+      exports.isString = isString;
+
+      function isin(item, array) {
+        return array.indexOf(item) !== -1;
+      }
+
+      exports.isin = isin;
+
+      function json(s, sp) {
+        return JSON.stringify(s, null, sp);
+      }
+
+      exports.json = json;
+
+      function keys(obj) {
+        var k = [],
+            x;
+
+        for (x in obj) {
+          k.push(x);
+        }
+
+        return k;
+      }
+
+      exports.keys = keys;
+
+      function duplicate(obj) {
+        if (obj === undefined) {
+          return undefined;
+        }
+
+        return JSON.parse(JSON.stringify(obj));
+      }
+
+      exports.duplicate = duplicate;
+      exports.copy = duplicate;
+
+      function forEach(obj, f, thisArg) {
+        if (obj.forEach) {
+          obj.forEach.call(thisArg, f);
+        } else {
+          for (var k in obj) {
+            f.call(thisArg, obj[k], k, obj);
+          }
+        }
+      }
+
+      exports.forEach = forEach;
+
+      function any(arr, f) {
+        var i = 0,
+            k;
+
+        for (k in arr) {
+          if (f(arr[k], k, i++)) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+
+      exports.any = any;
+
+      function nestedMap(collection, f, level, filter) {
+        return level === 0 ? collection.map(f) : collection.map(function (v) {
+          var r = nestedMap(v, f, level - 1);
+          return filter ? r.filter(nonEmpty) : r;
+        });
+      }
+
+      exports.nestedMap = nestedMap;
+
+      function nestedReduce(collection, f, level, filter) {
+        return level === 0 ? collection.reduce(f, []) : collection.map(function (v) {
+          var r = nestedReduce(v, f, level - 1);
+          return filter ? r.filter(nonEmpty) : r;
+        });
+      }
+
+      exports.nestedReduce = nestedReduce;
+
+      function nonEmpty(grp) {
+        return !exports.isArray(grp) || grp.length > 0;
+      }
+
+      exports.nonEmpty = nonEmpty;
+
+      function traverse(node, arr) {
+        if (node.value !== undefined) {
+          arr.push(node.value);
+        } else {
+          if (node.left) {
+            traverse(node.left, arr);
+          }
+
+          if (node.right) {
+            traverse(node.right, arr);
+          }
+        }
+
+        return arr;
+      }
+
+      exports.traverse = traverse;
+
+      function extend(obj, b) {
+        var rest = [];
+
+        for (var _i = 2; _i < arguments.length; _i++) {
+          rest[_i - 2] = arguments[_i];
+        }
+
+        for (var x, name, i = 1, len = arguments.length; i < len; ++i) {
+          x = arguments[i];
+
+          for (name in x) {
+            obj[name] = x[name];
+          }
+        }
+
+        return obj;
+      }
+
+      exports.extend = extend;
+
+      function union(arr1, arr2, accessor = d => d) {
+        let result = [...arr1];
+        return result.concat(arr2.filter(x => !arr1.find(y => accessor(x) === accessor(y))));
+      }
+
+      exports.union = union;
+
+      (function (gen) {
+        function getOpt(opt) {
+          return (opt ? keys(opt) : []).reduce(function (c, k) {
+            c[k] = opt[k];
+            return c;
+          }, Object.create({}));
+        }
+
+        gen.getOpt = getOpt;
+      })(exports.gen || (exports.gen = {}));
+
+      function powerset(list) {
+        var ps = [[]];
+
+        for (var i = 0; i < list.length; i++) {
+          for (var j = 0, len = ps.length; j < len; j++) {
+            ps.push(ps[j].concat(list[i]));
+          }
+        }
+
+        return ps;
+      }
+
+      exports.powerset = powerset;
+
+      function chooseKorLess(list, k) {
+        var subset = [[]];
+
+        for (var i = 0; i < list.length; i++) {
+          for (var j = 0, len = subset.length; j < len; j++) {
+            var sub = subset[j].concat(list[i]);
+
+            if (sub.length <= k) {
+              subset.push(sub);
+            }
+          }
+        }
+
+        return subset;
+      }
+
+      exports.chooseKorLess = chooseKorLess;
+
+      function chooseK(list, k) {
+        var subset = [[]];
+        var kArray = [];
+
+        for (var i = 0; i < list.length; i++) {
+          for (var j = 0, len = subset.length; j < len; j++) {
+            var sub = subset[j].concat(list[i]);
+
+            if (sub.length < k) {
+              subset.push(sub);
+            } else if (sub.length === k) {
+              kArray.push(sub);
+            }
+          }
+        }
+
+        return kArray;
+      }
+
+      exports.chooseK = chooseK;
+
+      function cross(a, b) {
+        var x = [];
+
+        for (var i = 0; i < a.length; i++) {
+          for (var j = 0; j < b.length; j++) {
+            x.push(a[i].concat(b[j]));
+          }
+        }
+
+        return x;
+      }
+
+      exports.cross = cross;
+
+      function find(array, f, obj) {
+        for (var i = 0; i < array.length; i += 1) {
+          if (f(obj) === f(array[i])) {
+            return i;
+          }
+        }
+
+        return -1;
+      }
+
+      exports.find = find;
+
+      function rawEqual(a, b) {
+        return JSON.stringify(a) === JSON.stringify(b);
+      }
+
+      exports.rawEqual = rawEqual;
+
+      function arrayDiff(a, b, f) {
+        return a.filter(function (x) {
+          if (!f) {
+            return b.findIndex(y => deepEqual(x, y)) < 0;
+          } else return find(b, f, x) < 0;
+        });
+      }
+
+      exports.arrayDiff = arrayDiff;
+
+      function unionObjectArray(a, b, f) {
+        return arrayDiff(a, b, f).concat(b);
+      }
+
+      exports.unionObjectArray = unionObjectArray;
+
+      function deepEqual(obj1, obj2) {
+        if (obj1 === obj2) {
+          return true;
+        }
+
+        if (isDate(obj1) && isDate(obj2)) {
+          return Number(obj1) === Number(obj2);
+        }
+
+        if (typeof obj1 === "object" && obj1 !== undefined && typeof obj2 === "object" && obj2 !== undefined) {
+          const props1 = Object.keys(obj1);
+          const props2 = Object.keys(obj2);
+
+          if (props1.length !== props2.length) {
+            return false;
+          }
+
+          for (let i = 0; i < props1.length; i++) {
+            const prop = props1[i];
+
+            if (!Object.prototype.hasOwnProperty.call(obj2, prop) || !deepEqual(obj1[prop], obj2[prop])) {
+              return false;
+            }
+          }
+
+          return true;
+        }
+
+        return false;
+      }
+
+      exports.deepEqual = deepEqual;
+
+      function isDate(o) {
+        return o !== undefined && typeof o.getMonth === "function";
+      } // partitioning the array into N_p arrays
+
+
+      function partition(arr, N_p) {
+        if (arr.length === N_p) {
+          return [arr.map(item => [item])];
+        } else if (N_p === 1) {
+          return [[arr]];
+        } else if (N_p > arr.length) {
+          throw new Error("Cannot partition the array of ".concat(arr.length, " into ").concat(N_p, "."));
+        } else if (arr.length === 0) {
+          return;
+        }
+
+        let item = [arr[0]];
+        let newArr = arr.slice(1);
+        let results = partition(newArr, N_p - 1).map(pt => {
+          let newPt = duplicate(pt);
+          newPt.push(item);
+          return newPt;
+        });
+        return partition(newArr, N_p).reduce((results, currPt) => {
+          return results.concat(currPt.map((p, i, currPt) => {
+            let newPt = duplicate(currPt);
+            let newP = duplicate(p);
+            newP.push(item[0]);
+            newPt[i] = newP;
+            return newPt;
+          }));
+        }, results);
+      }
+
+      exports.partition = partition;
+
+      function permutate(arr) {
+        if (arr.length === 1) {
+          return [arr];
+        }
+
+        if (arr.length === 2) {
+          return [arr, [arr[1], arr[0]]];
+        }
+
+        return arr.reduce((acc, anchor, i) => {
+          const workingArr = duplicate(arr);
+          workingArr.splice(i, 1);
+          acc = acc.concat(permutate(workingArr).map(newArr => {
+            return [anchor].concat(newArr);
+          }));
+          return acc;
+        }, []);
+      }
+
+      exports.permutate = permutate;
+
+      function intersection(arr1, arr2, accessor = d => d) {
+        return arr2.filter(x => arr1.filter(y => accessor(x) === accessor(y)).length > 0);
+      }
+
+      exports.intersection = intersection;
+
+      function unique(arr, accessor = d => d) {
+        let maps = arr.map(accessor).reduce((acc, curr) => {
+          acc[curr] = true;
+          return acc;
+        }, {});
+        return Object.keys(maps);
+      }
+
+      exports.unique = unique;
+    });
+
+    var DEFAULT_EDIT_OPS = {
+      "markEditOps": {
+        "AREA_BAR": {
+          "name": "AREA_BAR",
+          "cost": 0.03
+        },
+        "AREA_LINE": {
+          "name": "AREA_LINE",
+          "cost": 0.02
+        },
+        "AREA_POINT": {
+          "name": "AREA_POINT",
+          "cost": 0.04
+        },
+        "AREA_TEXT": {
+          "name": "AREA_TEXT",
+          "cost": 0.08
+        },
+        "AREA_TICK": {
+          "name": "AREA_TICK",
+          "cost": 0.04
+        },
+        "BAR_LINE": {
+          "name": "BAR_LINE",
+          "cost": 0.04
+        },
+        "BAR_POINT": {
+          "name": "BAR_POINT",
+          "cost": 0.02
+        },
+        "BAR_TEXT": {
+          "name": "BAR_TEXT",
+          "cost": 0.06
+        },
+        "BAR_TICK": {
+          "name": "BAR_TICK",
+          "cost": 0.02
+        },
+        "LINE_POINT": {
+          "name": "LINE_POINT",
+          "cost": 0.03
+        },
+        "LINE_TEXT": {
+          "name": "LINE_TEXT",
+          "cost": 0.07
+        },
+        "LINE_TICK": {
+          "name": "LINE_TICK",
+          "cost": 0.03
+        },
+        "POINT_TEXT": {
+          "name": "POINT_TEXT",
+          "cost": 0.05
+        },
+        "POINT_TICK": {
+          "name": "POINT_TICK",
+          "cost": 0.01
+        },
+        "TEXT_TICK": {
+          "name": "TEXT_TICK",
+          "cost": 0.05
+        }
+      },
+      "transformEditOps": {
+        "SCALE": {
+          "name": "SCALE",
+          "cost": 0.6
+        },
+        "SORT": {
+          "name": "SORT",
+          "cost": 0.61
+        },
+        "BIN": {
+          "name": "BIN",
+          "cost": 0.62
+        },
+        "AGGREGATE": {
+          "name": "AGGREGATE",
+          "cost": 0.63
+        },
+        "ADD_FILTER": {
+          "name": "ADD_FILTER",
+          "cost": 0.65
+        },
+        "REMOVE_FILTER": {
+          "name": "REMOVE_FILTER",
+          "cost": 0.65
+        },
+        "MODIFY_FILTER": {
+          "name": "MODIFY_FILTER",
+          "cost": 0.64
+        }
+      },
+      "encodingEditOps": {
+        "ADD_X": {
+          "name": "ADD_X",
+          "cost": 4.59
+        },
+        "ADD_Y": {
+          "name": "ADD_Y",
+          "cost": 4.59
+        },
+        "ADD_COLOR": {
+          "name": "ADD_COLOR",
+          "cost": 4.55
+        },
+        "ADD_SHAPE": {
+          "name": "ADD_SHAPE",
+          "cost": 4.51
+        },
+        "ADD_SIZE": {
+          "name": "ADD_SIZE",
+          "cost": 4.53
+        },
+        "ADD_ROW": {
+          "name": "ADD_ROW",
+          "cost": 4.57
+        },
+        "ADD_COLUMN": {
+          "name": "ADD_COLUMN",
+          "cost": 4.57
+        },
+        "ADD_TEXT": {
+          "name": "ADD_TEXT",
+          "cost": 4.49
+        },
+        "ADD_X_COUNT": {
+          "name": "ADD_X_COUNT",
+          "cost": 4.58
+        },
+        "ADD_Y_COUNT": {
+          "name": "ADD_Y_COUNT",
+          "cost": 4.58
+        },
+        "ADD_COLOR_COUNT": {
+          "name": "ADD_COLOR_COUNT",
+          "cost": 4.54
+        },
+        "ADD_SHAPE_COUNT": {
+          "name": "ADD_SHAPE_COUNT",
+          "cost": 4.5
+        },
+        "ADD_SIZE_COUNT": {
+          "name": "ADD_SIZE_COUNT",
+          "cost": 4.52
+        },
+        "ADD_ROW_COUNT": {
+          "name": "ADD_ROW_COUNT",
+          "cost": 4.56
+        },
+        "ADD_COLUMN_COUNT": {
+          "name": "ADD_COLUMN_COUNT",
+          "cost": 4.56
+        },
+        "ADD_TEXT_COUNT": {
+          "name": "ADD_TEXT_COUNT",
+          "cost": 4.48
+        },
+        "REMOVE_X_COUNT": {
+          "name": "REMOVE_X_COUNT",
+          "cost": 4.58
+        },
+        "REMOVE_Y_COUNT": {
+          "name": "REMOVE_Y_COUNT",
+          "cost": 4.58
+        },
+        "REMOVE_COLOR_COUNT": {
+          "name": "REMOVE_COLOR_COUNT",
+          "cost": 4.54
+        },
+        "REMOVE_SHAPE_COUNT": {
+          "name": "REMOVE_SHAPE_COUNT",
+          "cost": 4.5
+        },
+        "REMOVE_SIZE_COUNT": {
+          "name": "REMOVE_SIZE_COUNT",
+          "cost": 4.52
+        },
+        "REMOVE_ROW_COUNT": {
+          "name": "REMOVE_ROW_COUNT",
+          "cost": 4.56
+        },
+        "REMOVE_COLUMN_COUNT": {
+          "name": "REMOVE_COLUMN_COUNT",
+          "cost": 4.56
+        },
+        "REMOVE_TEXT_COUNT": {
+          "name": "REMOVE_TEXT_COUNT",
+          "cost": 4.48
+        },
+        "REMOVE_X": {
+          "name": "REMOVE_X",
+          "cost": 4.59
+        },
+        "REMOVE_Y": {
+          "name": "REMOVE_Y",
+          "cost": 4.59
+        },
+        "REMOVE_COLOR": {
+          "name": "REMOVE_COLOR",
+          "cost": 4.55
+        },
+        "REMOVE_SHAPE": {
+          "name": "REMOVE_SHAPE",
+          "cost": 4.51
+        },
+        "REMOVE_SIZE": {
+          "name": "REMOVE_SIZE",
+          "cost": 4.53
+        },
+        "REMOVE_ROW": {
+          "name": "REMOVE_ROW",
+          "cost": 4.57
+        },
+        "REMOVE_COLUMN": {
+          "name": "REMOVE_COLUMN",
+          "cost": 4.57
+        },
+        "REMOVE_TEXT": {
+          "name": "REMOVE_TEXT",
+          "cost": 4.49
+        },
+        "MODIFY_X": {
+          "name": "MODIFY_X",
+          "cost": 4.71
+        },
+        "MODIFY_Y": {
+          "name": "MODIFY_Y",
+          "cost": 4.71
+        },
+        "MODIFY_COLOR": {
+          "name": "MODIFY_COLOR",
+          "cost": 4.67
+        },
+        "MODIFY_SHAPE": {
+          "name": "MODIFY_SHAPE",
+          "cost": 4.63
+        },
+        "MODIFY_SIZE": {
+          "name": "MODIFY_SIZE",
+          "cost": 4.65
+        },
+        "MODIFY_ROW": {
+          "name": "MODIFY_ROW",
+          "cost": 4.69
+        },
+        "MODIFY_COLUMN": {
+          "name": "MODIFY_COLUMN",
+          "cost": 4.69
+        },
+        "MODIFY_TEXT": {
+          "name": "MODIFY_TEXT",
+          "cost": 4.61
+        },
+        "MODIFY_X_ADD_COUNT": {
+          "name": "MODIFY_X_ADD_COUNT",
+          "cost": 4.7
+        },
+        "MODIFY_Y_ADD_COUNT": {
+          "name": "MODIFY_Y_ADD_COUNT",
+          "cost": 4.7
+        },
+        "MODIFY_COLOR_ADD_COUNT": {
+          "name": "MODIFY_COLOR_ADD_COUNT",
+          "cost": 4.66
+        },
+        "MODIFY_SHAPE_ADD_COUNT": {
+          "name": "MODIFY_SHAPE_ADD_COUNT",
+          "cost": 4.62
+        },
+        "MODIFY_SIZE_ADD_COUNT": {
+          "name": "MODIFY_SIZE_ADD_COUNT",
+          "cost": 4.64
+        },
+        "MODIFY_ROW_ADD_COUNT": {
+          "name": "MODIFY_ROW_ADD_COUNT",
+          "cost": 4.68
+        },
+        "MODIFY_COLUMN_ADD_COUNT": {
+          "name": "MODIFY_COLUMN_ADD_COUNT",
+          "cost": 4.68
+        },
+        "MODIFY_TEXT_ADD_COUNT": {
+          "name": "MODIFY_TEXT_ADD_COUNT",
+          "cost": 4.6
+        },
+        "MODIFY_X_REMOVE_COUNT": {
+          "name": "MODIFY_X_REMOVE_COUNT",
+          "cost": 4.7
+        },
+        "MODIFY_Y_REMOVE_COUNT": {
+          "name": "MODIFY_Y_REMOVE_COUNT",
+          "cost": 4.7
+        },
+        "MODIFY_COLOR_REMOVE_COUNT": {
+          "name": "MODIFY_COLOR_REMOVE_COUNT",
+          "cost": 4.66
+        },
+        "MODIFY_SHAPE_REMOVE_COUNT": {
+          "name": "MODIFY_SHAPE_REMOVE_COUNT",
+          "cost": 4.62
+        },
+        "MODIFY_SIZE_REMOVE_COUNT": {
+          "name": "MODIFY_SIZE_REMOVE_COUNT",
+          "cost": 4.64
+        },
+        "MODIFY_ROW_REMOVE_COUNT": {
+          "name": "MODIFY_ROW_REMOVE_COUNT",
+          "cost": 4.68
+        },
+        "MODIFY_COLUMN_REMOVE_COUNT": {
+          "name": "MODIFY_COLUMN_REMOVE_COUNT",
+          "cost": 4.68
+        },
+        "MODIFY_TEXT_REMOVE_COUNT": {
+          "name": "MODIFY_TEXT_REMOVE_COUNT",
+          "cost": 4.6
+        },
+        "MOVE_X_ROW": {
+          "name": "MOVE_X_ROW",
+          "cost": 4.45
+        },
+        "MOVE_X_COLUMN": {
+          "name": "MOVE_X_COLUMN",
+          "cost": 4.43
+        },
+        "MOVE_X_SIZE": {
+          "name": "MOVE_X_SIZE",
+          "cost": 4.46
+        },
+        "MOVE_X_SHAPE": {
+          "name": "MOVE_X_SHAPE",
+          "cost": 4.46
+        },
+        "MOVE_X_COLOR": {
+          "name": "MOVE_X_COLOR",
+          "cost": 4.46
+        },
+        "MOVE_X_Y": {
+          "name": "MOVE_X_Y",
+          "cost": 4.44
+        },
+        "MOVE_X_TEXT": {
+          "name": "MOVE_X_TEXT",
+          "cost": 4.46
+        },
+        "MOVE_Y_ROW": {
+          "name": "MOVE_Y_ROW",
+          "cost": 4.43
+        },
+        "MOVE_Y_COLUMN": {
+          "name": "MOVE_Y_COLUMN",
+          "cost": 4.45
+        },
+        "MOVE_Y_SIZE": {
+          "name": "MOVE_Y_SIZE",
+          "cost": 4.46
+        },
+        "MOVE_Y_SHAPE": {
+          "name": "MOVE_Y_SHAPE",
+          "cost": 4.46
+        },
+        "MOVE_Y_COLOR": {
+          "name": "MOVE_Y_COLOR",
+          "cost": 4.46
+        },
+        "MOVE_Y_X": {
+          "name": "MOVE_Y_X",
+          "cost": 4.44
+        },
+        "MOVE_Y_TEXT": {
+          "name": "MOVE_Y_TEXT",
+          "cost": 4.46
+        },
+        "MOVE_COLOR_ROW": {
+          "name": "MOVE_COLOR_ROW",
+          "cost": 4.47
+        },
+        "MOVE_COLOR_COLUMN": {
+          "name": "MOVE_COLOR_COLUMN",
+          "cost": 4.47
+        },
+        "MOVE_COLOR_SIZE": {
+          "name": "MOVE_COLOR_SIZE",
+          "cost": 4.43
+        },
+        "MOVE_COLOR_SHAPE": {
+          "name": "MOVE_COLOR_SHAPE",
+          "cost": 4.43
+        },
+        "MOVE_COLOR_Y": {
+          "name": "MOVE_COLOR_Y",
+          "cost": 4.46
+        },
+        "MOVE_COLOR_X": {
+          "name": "MOVE_COLOR_X",
+          "cost": 4.46
+        },
+        "MOVE_COLOR_TEXT": {
+          "name": "MOVE_COLOR_TEXT",
+          "cost": 4.43
+        },
+        "MOVE_SHAPE_ROW": {
+          "name": "MOVE_SHAPE_ROW",
+          "cost": 4.47
+        },
+        "MOVE_SHAPE_COLUMN": {
+          "name": "MOVE_SHAPE_COLUMN",
+          "cost": 4.47
+        },
+        "MOVE_SHAPE_SIZE": {
+          "name": "MOVE_SHAPE_SIZE",
+          "cost": 4.43
+        },
+        "MOVE_SHAPE_COLOR": {
+          "name": "MOVE_SHAPE_COLOR",
+          "cost": 4.43
+        },
+        "MOVE_SHAPE_Y": {
+          "name": "MOVE_SHAPE_Y",
+          "cost": 4.46
+        },
+        "MOVE_SHAPE_X": {
+          "name": "MOVE_SHAPE_X",
+          "cost": 4.46
+        },
+        "MOVE_SHAPE_TEXT": {
+          "name": "MOVE_SHAPE_TEXT",
+          "cost": 4.43
+        },
+        "MOVE_SIZE_ROW": {
+          "name": "MOVE_SIZE_ROW",
+          "cost": 4.47
+        },
+        "MOVE_SIZE_COLUMN": {
+          "name": "MOVE_SIZE_COLUMN",
+          "cost": 4.47
+        },
+        "MOVE_SIZE_SHAPE": {
+          "name": "MOVE_SIZE_SHAPE",
+          "cost": 4.43
+        },
+        "MOVE_SIZE_COLOR": {
+          "name": "MOVE_SIZE_COLOR",
+          "cost": 4.43
+        },
+        "MOVE_SIZE_Y": {
+          "name": "MOVE_SIZE_Y",
+          "cost": 4.46
+        },
+        "MOVE_SIZE_X": {
+          "name": "MOVE_SIZE_X",
+          "cost": 4.46
+        },
+        "MOVE_SIZE_TEXT": {
+          "name": "MOVE_SIZE_TEXT",
+          "cost": 4.43
+        },
+        "MOVE_TEXT_ROW": {
+          "name": "MOVE_TEXT_ROW",
+          "cost": 4.47
+        },
+        "MOVE_TEXT_COLUMN": {
+          "name": "MOVE_TEXT_COLUMN",
+          "cost": 4.47
+        },
+        "MOVE_TEXT_SHAPE": {
+          "name": "MOVE_TEXT_SHAPE",
+          "cost": 4.43
+        },
+        "MOVE_TEXT_COLOR": {
+          "name": "MOVE_TEXT_COLOR",
+          "cost": 4.43
+        },
+        "MOVE_TEXT_Y": {
+          "name": "MOVE_TEXT_Y",
+          "cost": 4.46
+        },
+        "MOVE_TEXT_X": {
+          "name": "MOVE_TEXT_X",
+          "cost": 4.46
+        },
+        "MOVE_TEXT_SIZE": {
+          "name": "MOVE_TEXT_SIZE",
+          "cost": 4.43
+        },
+        "MOVE_COLUMN_ROW": {
+          "name": "MOVE_COLUMN_ROW",
+          "cost": 4.44
+        },
+        "MOVE_COLUMN_SIZE": {
+          "name": "MOVE_COLUMN_SIZE",
+          "cost": 4.47
+        },
+        "MOVE_COLUMN_SHAPE": {
+          "name": "MOVE_COLUMN_SHAPE",
+          "cost": 4.47
+        },
+        "MOVE_COLUMN_COLOR": {
+          "name": "MOVE_COLUMN_COLOR",
+          "cost": 4.47
+        },
+        "MOVE_COLUMN_Y": {
+          "name": "MOVE_COLUMN_Y",
+          "cost": 4.45
+        },
+        "MOVE_COLUMN_X": {
+          "name": "MOVE_COLUMN_X",
+          "cost": 4.43
+        },
+        "MOVE_COLUMN_TEXT": {
+          "name": "MOVE_COLUMN_TEXT",
+          "cost": 4.47
+        },
+        "MOVE_ROW_COLUMN": {
+          "name": "MOVE_ROW_COLUMN",
+          "cost": 4.44
+        },
+        "MOVE_ROW_SIZE": {
+          "name": "MOVE_ROW_SIZE",
+          "cost": 4.47
+        },
+        "MOVE_ROW_SHAPE": {
+          "name": "MOVE_ROW_SHAPE",
+          "cost": 4.47
+        },
+        "MOVE_ROW_COLOR": {
+          "name": "MOVE_ROW_COLOR",
+          "cost": 4.47
+        },
+        "MOVE_ROW_Y": {
+          "name": "MOVE_ROW_Y",
+          "cost": 4.43
+        },
+        "MOVE_ROW_X": {
+          "name": "MOVE_ROW_X",
+          "cost": 4.45
+        },
+        "MOVE_ROW_TEXT": {
+          "name": "MOVE_ROW_TEXT",
+          "cost": 4.47
+        },
+        "SWAP_X_Y": {
+          "name": "SWAP_X_Y",
+          "cost": 4.42
+        },
+        "SWAP_ROW_COLUMN": {
+          "name": "SWAP_ROW_COLUMN",
+          "cost": 4.41
+        },
+        "ceiling": {
+          "cost": 47.1,
+          "alternatingCost": 51.81
+        }
+      }
+    };
+    var editOpSet = {
+      DEFAULT_EDIT_OPS: DEFAULT_EDIT_OPS
+    };
+
+    function neighbors(spec, additionalFields, additionalChannels, importedEncodingEditOps) {
+      var neighbors = [];
+      var encodingEditOps = importedEncodingEditOps || editOpSet.DEFAULT_ENCODING_EDIT_OPS;
+      var inChannels = util.keys(spec.encoding);
+      var exChannels = additionalChannels;
+      inChannels.forEach(function (channel) {
+        var newNeighbor = util.duplicate(spec);
+        var editOpType = "REMOVE_" + channel.toUpperCase();
+        editOpType += spec.encoding[channel].field === "*" ? "_COUNT" : "";
+        var editOp = util.duplicate(encodingEditOps[editOpType]);
+        var newAdditionalFields = util.duplicate(additionalFields);
+
+        if (util.find(newAdditionalFields, util.rawEqual, newNeighbor.encoding[channel]) === -1) {
+          newAdditionalFields.push(newNeighbor.encoding[channel]);
+        }
+
+        var newAdditionalChannels = util.duplicate(additionalChannels);
+        editOp.detail = {
+          "before": {
+            "field": newNeighbor.encoding[channel].field,
+            channel
+          },
+          "after": undefined
+        };
+        newAdditionalChannels.push(channel);
+        delete newNeighbor.encoding[channel];
+
+        {
+          newNeighbor.editOp = editOp;
+          newNeighbor.additionalFields = newAdditionalFields;
+          newNeighbor.additionalChannels = newAdditionalChannels;
+          neighbors.push(newNeighbor);
+        }
+        additionalFields.forEach(function (field, index) {
+          if (field.field !== spec.encoding[channel].field || field.type !== spec.encoding[channel].type) {
+            newNeighbor = util.duplicate(spec);
+            editOpType = "MODIFY_" + channel.toUpperCase();
+
+            if (spec.encoding[channel].field === "*" && field.field !== "*") {
+              editOpType += "_REMOVE_COUNT";
+            } else if (spec.encoding[channel].field !== "*" && field.field === "*") {
+              editOpType += "_ADD_COUNT";
+            }
+
+            editOp = util.duplicate(encodingEditOps[editOpType]);
+            newAdditionalFields = util.duplicate(additionalFields);
+            newAdditionalFields.splice(index, 1);
+
+            if (util.find(newAdditionalFields, util.rawEqual, newNeighbor.encoding[channel]) === -1) {
+              newAdditionalFields.push(newNeighbor.encoding[channel]);
+            }
+
+            newAdditionalChannels = util.duplicate(additionalChannels);
+            newNeighbor.encoding[channel] = field;
+            editOp.detail = {
+              "before": { ...spec.encoding[channel],
+                channel
+              },
+              "after": { ...field,
+                channel
+              }
+            };
+
+            {
+              newNeighbor.editOp = editOp;
+              newNeighbor.additionalFields = newAdditionalFields;
+              newNeighbor.additionalChannels = newAdditionalChannels;
+              neighbors.push(newNeighbor);
+            }
+          }
+        });
+        inChannels.forEach(function (anotherChannel) {
+          if (anotherChannel === channel || ["x", "y"].indexOf(channel) < 0 || ["x", "y"].indexOf(anotherChannel) < 0) {
+            return;
+          }
+
+          newNeighbor = util.duplicate(spec);
+          editOp = util.duplicate(encodingEditOps["SWAP_X_Y"]);
+          newAdditionalFields = util.duplicate(additionalFields);
+          newAdditionalChannels = util.duplicate(additionalChannels);
+          var tempChannel = util.duplicate(newNeighbor.encoding[channel]);
+          newNeighbor.encoding[channel] = newNeighbor.encoding[anotherChannel];
+          newNeighbor.encoding[anotherChannel] = tempChannel;
+          editOp.detail = {
+            "before": {
+              "field": spec.encoding["x"].field,
+              "channel": "x"
+            },
+            "after": {
+              "field": spec.encoding["y"].field,
+              "channel": "y"
+            }
+          };
+
+          {
+            newNeighbor.editOp = editOp;
+            newNeighbor.additionalFields = newAdditionalFields;
+            newNeighbor.additionalChannels = newAdditionalChannels;
+            neighbors.push(newNeighbor);
+          }
+        });
+        exChannels.forEach(function (exChannel, index) {
+          newNeighbor = util.duplicate(spec);
+          var newNeighborChannels = (channel + "_" + exChannel).toUpperCase();
+          editOp = util.duplicate(encodingEditOps["MOVE_" + newNeighborChannels]);
+          newAdditionalFields = util.duplicate(additionalFields);
+          newAdditionalChannels = util.duplicate(additionalChannels);
+          newAdditionalChannels.splice(index, 1);
+          newAdditionalChannels.push(channel);
+          newNeighbor.encoding[exChannel] = util.duplicate(newNeighbor.encoding[channel]);
+          delete newNeighbor.encoding[channel];
+          editOp.detail = {
+            "before": {
+              channel
+            },
+            "after": {
+              "channel": exChannel
+            }
+          };
+
+          {
+            newNeighbor.editOp = editOp;
+            newNeighbor.additionalFields = newAdditionalFields;
+            newNeighbor.additionalChannels = newAdditionalChannels;
+            neighbors.push(newNeighbor);
+          }
+        });
+      });
+      exChannels.forEach(function (channel, chIndex) {
+        additionalFields.forEach(function (field, index) {
+          var newNeighbor = util.duplicate(spec);
+          var editOpType = "ADD_" + channel.toUpperCase();
+          editOpType += field.field === "*" ? "_COUNT" : "";
+          var editOp = util.duplicate(encodingEditOps[editOpType]);
+          var newAdditionalFields = util.duplicate(additionalFields);
+          var newAdditionalChannels = util.duplicate(additionalChannels);
+          newAdditionalFields.splice(index, 1);
+          newNeighbor.encoding[channel] = field;
+          newAdditionalChannels.splice(chIndex, 1);
+          editOp.detail = {
+            "before": undefined,
+            "after": {
+              "field": field.field,
+              channel
+            }
+          };
+
+          {
+            newNeighbor.editOp = editOp;
+            newNeighbor.additionalFields = newAdditionalFields;
+            newNeighbor.additionalChannels = newAdditionalChannels;
+            neighbors.push(newNeighbor);
+          }
+        });
+      });
+
+      for (var i = 0; i < neighbors.length; i += 1) {
+        for (var j = i + 1; j < neighbors.length; j += 1) {
+          if (sameEncoding(neighbors[i].encoding, neighbors[j].encoding)) {
+            neighbors.splice(j, 1);
+            j -= 1;
+          }
+        }
+      }
+
+      return neighbors;
+    }
+
+    var neighbors_1 = neighbors;
+
+    function sameEncoding(a, b) {
+      var aKeys = util.keys(a);
+      var bKeys = util.keys(b);
+
+      if (aKeys.length !== bKeys.length) {
+        return false;
+      }
+
+      var allKeys = util.union(aKeys, bKeys);
+
+      for (var i = 0; i < allKeys.length; i += 1) {
+        var key = allKeys[i];
+
+        if (!(a[key] && b[key])) {
+          return false;
+        }
+
+        if (a[key].field !== b[key].field || a[key].type !== b[key].type) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    var sameEncoding_1 = sameEncoding;
+    var neighbor = {
+      neighbors: neighbors_1,
+      sameEncoding: sameEncoding_1
+    };
+
+    var expr = /*@__PURE__*/getAugmentedNamespace(vegaExpression_module);
+
+    const {
+      TYPES: TYPES$1,
+      CHANNELS: CHANNELS$1,
+      OPS: OPS$1,
+      LOGIC_OPS: LOGIC_OPS$1
+    } = constants;
+    const DEFAULT_EDIT_OPS$1 = editOpSet.DEFAULT_EDIT_OPS;
+
+    async function transition(s, d, importedTransitionCosts, transOptions) {
+      var importedMarkEditOps = importedTransitionCosts ? importedTransitionCosts.markEditOps : DEFAULT_EDIT_OPS$1["markEditOps"];
+      var importedTransformEditOps = importedTransitionCosts ? importedTransitionCosts.transformEditOps : DEFAULT_EDIT_OPS$1["transformEditOps"];
+      var importedEncodingEditOps = importedTransitionCosts ? importedTransitionCosts.encodingEditOps : DEFAULT_EDIT_OPS$1["encodingEditOps"];
+
+      let _transformEditOps = await transformEditOps(s, d, importedTransformEditOps, transOptions);
+
+      var trans = {
+        mark: markEditOps(s, d, importedMarkEditOps).map(eo => {
+          return { ...eo,
+            type: "mark"
+          };
+        }),
+        transform: _transformEditOps.map(eo => {
+          return { ...eo,
+            type: "transform"
+          };
+        }),
+        encoding: encodingEditOps(s, d, importedEncodingEditOps).map(eo => {
+          return { ...eo,
+            type: "encoding"
+          };
+        })
+      }; //Todo: if there is a MOVE_A_B and the field has Transform, ignore the transform
+
+      const re = new RegExp("^MOVE_");
+      trans.transform = trans.transform.filter(editOp => {
+        if (editOp.name.indexOf("FILTER") >= 0) {
+          return true;
+        }
+
+        let moveEditOps = trans.encoding.filter(eo => re.test(eo.name));
+
+        if (moveEditOps.length === 0) {
+          return true;
+        }
+
+        moveEditOps.forEach(moveEditOp => {
+          let sChannel = moveEditOp.detail.before.channel,
+              dChannel = moveEditOp.detail.after.channel;
+          let removed = editOp.detail.findIndex(dt => dt.how === "removed" && dt.channel === sChannel);
+          let added = editOp.detail.findIndex(dt => dt.how === "added" && dt.channel === dChannel);
+
+          if (removed >= 0 && added >= 0) {
+            editOp.detail = editOp.detail.filter((dt, i) => [removed, added].indexOf(i) < 0);
+          }
+        });
+        return editOp.detail.length > 0;
+      });
+      var cost = 0;
+      cost = trans.encoding.reduce(function (prev, editOp) {
+        if (editOp.name.indexOf('_COUNT') >= 0) {
+          var channel = editOp.name.replace(/COUNT/g, '').replace(/ADD/g, '').replace(/REMOVE/g, '').replace(/MODIFY/g, '').replace(/_/g, '').toLowerCase();
+          var aggEditOp = trans.transform.filter(function (editOp) {
+            return editOp.name === "AGGREGATE";
+          })[0];
+
+          if (aggEditOp && aggEditOp.detail.length === 1 && aggEditOp.detail.filter(function (dt) {
+            return dt.channel.toLowerCase() === channel;
+          }).length) {
+            aggEditOp.cost = 0;
+          }
+
+          var binEditOp = trans.transform.filter(function (editOp) {
+            return editOp.name === "BIN";
+          })[0];
+
+          if (binEditOp && binEditOp.detail.filter(function (dt) {
+            if (dt.how === "added") {
+              return d.encoding[dt.channel].type === TYPES$1.QUANTITATIVE;
+            } else {
+              return s.encoding[dt.channel].type === TYPES$1.QUANTITATIVE;
+            }
+          }).length > 0) {
+            binEditOp.cost = 0;
+          }
+        }
+
+        prev += editOp.cost;
+        return prev;
+      }, cost);
+      cost = trans.mark.reduce(function (prev, editOp) {
+        prev += editOp.cost;
+        return prev;
+      }, cost);
+      cost = trans.transform.reduce(function (prev, editOp) {
+        prev += editOp.cost;
+        return prev;
+      }, cost);
+      return { ...trans,
+        cost
+      };
+    }
+
+    var transition_1 = transition;
+
+    function markEditOps(s, d, importedMarkEditOps) {
+      var editOps = [];
+      var markEditOps = importedMarkEditOps || DEFAULT_EDIT_OPS$1["markEditOps"];
+      var newEditOp;
+      const sMarkType = typeof s.mark === "object" ? s.mark.type : s.mark;
+      const dMarkType = typeof d.mark === "object" ? d.mark.type : d.mark;
+
+      if (!sMarkType || !dMarkType || sMarkType === dMarkType || sMarkType === "null" || dMarkType === "null") {
+        return editOps;
+      } else {
+        var editOpName = [sMarkType.toUpperCase(), dMarkType.toUpperCase()].sort().join("_");
+
+        if (markEditOps[editOpName]) {
+          newEditOp = util.duplicate(markEditOps[editOpName]);
+          newEditOp.detail = {
+            "before": sMarkType,
+            "after": dMarkType
+          };
+          editOps.push(newEditOp);
+        } else {
+          console.error("Cannot find ".concat(editOpName, " marktype change edit op."));
+        }
+      }
+
+      return editOps;
+    }
+
+    var markEditOps_1 = markEditOps;
+
+    async function transformEditOps(s, d, importedTransformEditOps, transOptions) {
+      const TRANSFORM_TYPES = ["SCALE", "SORT", "AGGREGATE", "BIN", "SETTYPE"];
+      var transformEditOps = importedTransformEditOps || DEFAULT_EDIT_OPS$1["transformEditOps"];
+      var editOps = [];
+
+      for (let i = 0; i < CHANNELS$1.length; i++) {
+        const channel = CHANNELS$1[i];
+
+        for (let j = 0; j < TRANSFORM_TYPES.length; j++) {
+          const transformType = TRANSFORM_TYPES[j];
+          let editOp;
+
+          if (transformType === "SETTYPE" && transformEditOps[transformType]) {
+            editOp = transformSettype(s, d, channel, transformEditOps);
+          } else if (transformType === "SCALE" && transformEditOps[transformType]) {
+            editOp = await scaleEditOps(s, d, channel, transformEditOps[transformType], transOptions);
+          } else if (transformEditOps[transformType]) {
+            editOp = transformBasic(s, d, channel, transformType, transformEditOps);
+          }
+
+          if (editOp) {
+            let found = editOps.find(eo => eo.name === editOp.name);
+
+            if (found) {
+              found.detail.push(editOp.detail);
+            } else {
+              editOp.detail = [editOp.detail];
+              editOps.push(editOp);
+            }
+          }
+        }
+      }
+      var importedFilterEditOps = {
+        "MODIFY_FILTER": transformEditOps["MODIFY_FILTER"],
+        "ADD_FILTER": transformEditOps["ADD_FILTER"],
+        "REMOVE_FILTER": transformEditOps["REMOVE_FILTER"]
+      };
+      editOps = editOps.concat(filterEditOps(s, d, importedFilterEditOps));
+      return editOps;
+    }
+
+    var transformEditOps_1 = transformEditOps;
+
+    function transformBasic(s, d, channel, transform, transformEditOps) {
+      var sHas = false;
+      var dHas = false;
+      var editOp;
+      var sEditOp, dEditOp;
+
+      if (s.encoding[channel] && s.encoding[channel][transform.toLowerCase()]) {
+        sHas = true;
+        sEditOp = s.encoding[channel][transform.toLowerCase()];
+      }
+
+      if (d.encoding[channel] && d.encoding[channel][transform.toLowerCase()]) {
+        dHas = true;
+        dEditOp = d.encoding[channel][transform.toLowerCase()];
+      }
+
+      if (sHas && dHas && !util.rawEqual(sEditOp, dEditOp)) {
+        editOp = util.duplicate(transformEditOps[transform]);
+        editOp.detail = {
+          how: "modified",
+          channel: channel
+        };
+        return editOp;
+      } else if (sHas && !dHas) {
+        editOp = util.duplicate(transformEditOps[transform]);
+        editOp.detail = {
+          how: "removed",
+          channel: channel
+        };
+        return editOp;
+      } else if (!sHas && dHas) {
+        editOp = util.duplicate(transformEditOps[transform]);
+        editOp.detail = {
+          how: "added",
+          channel: channel
+        };
+        return editOp;
+      }
+    }
+
+    var transformBasic_1 = transformBasic;
+
+    async function scaleEditOps(s, d, channel, scaleTransformEditOps, transOptions) {
+      var sHas = false,
+          sOnlyHasDomainRelated = false;
+      var dHas = false,
+          dOnlyHasDomainRelated = false;
+      var editOp, sScaleDef, dScaleDef;
+
+      if (s.encoding[channel] && s.encoding[channel].scale) {
+        sHas = true;
+        sScaleDef = { ...s.encoding[channel].scale
+        };
+
+        if (!Object.keys(sScaleDef).find(key => ["domain", "zero"].indexOf(key) < 0)) {
+          sOnlyHasDomainRelated = true;
+        }
+      }
+
+      if (d.encoding[channel] && d.encoding[channel].scale) {
+        dHas = true;
+        dScaleDef = { ...d.encoding[channel].scale
+        };
+
+        if (!Object.keys(dScaleDef).find(key => ["domain", "zero"].indexOf(key) < 0)) {
+          dOnlyHasDomainRelated = true;
+        }
+      }
+
+      if (transOptions && transOptions.omitIncludeRawDomain) {
+        if (sScaleDef && sScaleDef.domain && dScaleDef.domain === "unaggregated") {
+          delete sScaleDef.domain;
+
+          if (Object.keys(sScaleDef).length === 0) {
+            sOnlyHasDomainRelated = false;
+            sHas = false;
+          }
+        }
+
+        if (dScaleDef && dScaleDef.domain && dScaleDef.domain === "unaggregated") {
+          delete dScaleDef.domain;
+
+          if (Object.keys(dScaleDef).length === 0) {
+            dOnlyHasDomainRelated = false;
+            dHas = false;
+          }
+        }
+      }
+
+      if (sHas && dHas && !util.rawEqual(sScaleDef, dScaleDef)) {
+        if (sOnlyHasDomainRelated && dOnlyHasDomainRelated && (await sameDomain(s, d, channel))) {
+          return;
+        }
+
+        editOp = util.duplicate(scaleTransformEditOps);
+        editOp.detail = {
+          how: "modified",
+          channel: channel,
+          fieldType: {
+            from: s.encoding[channel].type,
+            to: d.encoding[channel].type
+          }
+        };
+        return editOp;
+      } else if (sHas && !dHas) {
+        if (sOnlyHasDomainRelated && (await sameDomain(s, d, channel))) {
+          return;
+        }
+
+        editOp = util.duplicate(scaleTransformEditOps);
+        editOp.detail = {
+          how: "removed",
+          channel: channel,
+          fieldType: s.encoding[channel].type
+        };
+        return editOp;
+      } else if (!sHas && dHas) {
+        if (dOnlyHasDomainRelated && (await sameDomain(s, d, channel))) {
+          return;
+        }
+
+        editOp = util.duplicate(scaleTransformEditOps);
+        editOp.detail = {
+          how: "added",
+          channel: channel,
+          fieldType: d.encoding[channel].type
+        };
+        return editOp;
+      }
+    }
+
+    var scaleEditOps_1 = scaleEditOps;
+
+    async function sameDomain(s, d, channel) {
+      let dView, sView;
+
+      try {
+        dView = await new vega__default['default'].View(vega__default['default'].parse(vl__default['default'].compile(util.duplicate(d)).spec), {
+          renderer: "svg"
+        }).runAsync();
+        sView = await new vega__default['default'].View(vega__default['default'].parse(vl__default['default'].compile(util.duplicate(s)).spec), {
+          renderer: "svg"
+        }).runAsync();
+      } catch (e) {
+        return false;
+      }
+
+      const sScale = sView._runtime.scales[channel].value;
+      const dScale = dView._runtime.scales[channel].value;
+      return util.deepEqual(sScale.domain(), dScale.domain());
+    }
+
+    var sameDomain_1 = sameDomain;
+
+    function filterEditOps(s, d, importedFilterEditOps) {
+      var sFilters = [],
+          dFilters = [];
+      var editOps = [];
+
+      if (s.transform) {
+        sFilters = getFilters(s.transform.filter(trsfm => trsfm.filter).map(trsfm => trsfm.filter));
+      }
+
+      if (d.transform) {
+        dFilters = getFilters(d.transform.filter(trsfm => trsfm.filter).map(trsfm => trsfm.filter));
+      }
+
+      if (sFilters.length === 0 && dFilters.length === 0) {
+        return editOps;
+      }
+
+      var dOnly = util.arrayDiff(dFilters, sFilters);
+      var sOnly = util.arrayDiff(sFilters, dFilters);
+      var isFind = false;
+
+      for (var i = 0; i < dOnly.length; i++) {
+        for (var j = 0; j < sOnly.length; j++) {
+          if (dOnly[i].id === sOnly[j].id) {
+            var newEditOp = util.duplicate(importedFilterEditOps["MODIFY_FILTER"]);
+            newEditOp.detail = {
+              "what": [],
+              "id": sOnly[j].id,
+              "before": [],
+              "after": [],
+              "sFilter": sOnly[j],
+              "eFilter": dOnly[i]
+            };
+
+            if (!util.deepEqual(sOnly[j].op, dOnly[i].op)) {
+              newEditOp.detail.what.push("op");
+              newEditOp.detail.before.push(sOnly[j].op);
+              newEditOp.detail.after.push(dOnly[i].op);
+            }
+
+            if (!util.deepEqual(sOnly[j].value, dOnly[i].value)) {
+              newEditOp.detail.what.push("value");
+              newEditOp.detail.before.push(sOnly[j].value);
+              newEditOp.detail.after.push(dOnly[i].value);
+            }
+
+            editOps.push(newEditOp);
+            dOnly.splice(i, 1);
+            sOnly.splice(j, 1);
+            isFind = true;
+            break;
+          }
+        }
+
+        if (isFind) {
+          isFind = false;
+          i--;
+          continue;
+        }
+      }
+
+      for (var i = 0; i < dOnly.length; i++) {
+        var newEditOp = util.duplicate(importedFilterEditOps["ADD_FILTER"]);
+        newEditOp.detail = newEditOp.detail = {
+          "id": dOnly[i].id,
+          "what": ["field", "op", "value"],
+          "before": [undefined, undefined, undefined],
+          "after": [dOnly[i].field, dOnly[i].op, dOnly[i].value],
+          "eFilter": dOnly[i],
+          "sFilter": undefined
+        };
+        editOps.push(newEditOp);
+      }
+
+      for (var i = 0; i < sOnly.length; i++) {
+        var newEditOp = util.duplicate(importedFilterEditOps["REMOVE_FILTER"]);
+        newEditOp.detail = newEditOp.detail = {
+          "id": sOnly[i].id,
+          "what": ["field", "op", "value"],
+          "before": [sOnly[i].field, sOnly[i].op, sOnly[i].value],
+          "after": [undefined, undefined, undefined],
+          "sFilter": sOnly[i],
+          "eFilter": undefined
+        };
+        editOps.push(newEditOp);
+      }
+
+      return editOps;
+    }
+
+    var filterEditOps_1 = filterEditOps;
+
+    function getFilters(filterExpression) {
+      let filters;
+
+      if (util.isArray(filterExpression)) {
+        filters = filterExpression.reduce((acc, expression) => {
+          return acc.concat(parsePredicateFilter(expression));
+        }, []);
+      } else {
+        filters = parsePredicateFilter(filterExpression);
+      }
+
+      filters = d3__default['default'].groups(filters, filter => filter.id).map(group => {
+        return {
+          id: group[0],
+          field: group[1].map(filter => filter.field),
+          op: group[1].map(filter => filter.op),
+          value: group[1].map(filter => filter.value)
+        };
+      });
+      return filters;
+    }
+
+    var getFilters_1 = getFilters;
+
+    function parsePredicateFilter(expression) {
+      let parsed = [];
+
+      if (util.isString(expression)) {
+        parsed = parsed.concat(stringFilter(expression));
+      } else {
+        LOGIC_OPS$1.filter(logicOp => expression.hasOwnProperty(logicOp)).forEach(logicOp => {
+          let subParsed;
+
+          if (util.isArray(expression[logicOp])) {
+            subParsed = expression[logicOp].reduce((subParsed, expr) => {
+              return subParsed.concat(parsePredicateFilter(expr));
+            }, []);
+          } else {
+            subParsed = parsePredicateFilter(expression[logicOp]);
+          }
+
+          let id = subParsed.map(f => f.id).join("_");
+          parsed.push({
+            "id": "".concat(logicOp, ">[").concat(id, "]"),
+            "op": logicOp,
+            "value": subParsed
+          });
+        });
+        OPS$1.filter(op => expression.hasOwnProperty(op)).forEach(op => {
+          parsed.push({
+            "id": expression.field,
+            "field": expression.field,
+            "op": op,
+            "value": JSON.stringify(expression[op])
+          });
+        });
+      }
+
+      if (parsed.length === 0) {
+        console.log("WARN: cannot parse filters.");
+      }
+
+      return parsed;
+    }
+
+    var parsePredicateFilter_1 = parsePredicateFilter;
+
+    function stringFilter(expression) {
+      var parser = expr["parse"];
+      var expressionTree = parser(expression);
+      return binaryExprsFromExprTree(expressionTree, [], 0).map(function (bExpr) {
+        return {
+          "id": bExpr.left.property.name,
+          "field": bExpr.left.property.name,
+          "op": bExpr.operator,
+          "value": bExpr.right.raw
+        };
+      });
+
+      function binaryExprsFromExprTree(tree, arr, depth) {
+        if (tree.operator === '||' || tree.operator === '&&') {
+          arr = binaryExprsFromExprTree(tree.left, arr, depth + 1);
+          arr = binaryExprsFromExprTree(tree.right, arr, depth + 1);
+        } else if (['==', '===', '!==', '!=', '<', '<=', '>', '>='].indexOf(tree.operator) >= 0) {
+          tree.depth = depth;
+          arr.push(tree);
+        }
+
+        return arr;
+      }
+    }
+
+    function transformSettype(s, d, channel, transformEditOps) {
+      var editOp;
+
+      if (s.encoding[channel] && d.encoding[channel] && d.encoding[channel]["field"] === s.encoding[channel]["field"] && d.encoding[channel]["type"] !== s.encoding[channel]["type"]) {
+        editOp = util.duplicate(transformEditOps["SETTYPE"]);
+        editOp.detail = {
+          "before": s.encoding[channel]["type"],
+          "after": d.encoding[channel]["type"],
+          channel: channel
+        };
+        return editOp;
+      }
+    }
+
+    var transformSettype_1 = transformSettype;
+
+    function encodingEditOps(s, d, importedEncodingEditOps) {
+      if (neighbor.sameEncoding(s.encoding, d.encoding)) {
+        return [];
+      }
+
+      var sChannels = util.keys(s.encoding);
+      var sFields = sChannels.map(function (key) {
+        return s.encoding[key];
+      });
+      var dChannels = util.keys(d.encoding);
+      var dFields = dChannels.map(function (key) {
+        return d.encoding[key];
+      });
+      var additionalFields = util.union(dFields, sFields, function (field) {
+        return field.field + "_" + field.type;
+      });
+      var additionalChannels = util.arrayDiff(dChannels, sChannels);
+      var u;
+
+      function nearestNode(nodes) {
+        var minD = Infinity;
+        var argMinD = -1;
+        nodes.forEach(function (node, index) {
+          if (node.distance < minD) {
+            minD = node.distance;
+            argMinD = index;
+          }
+        });
+        return nodes.splice(argMinD, 1)[0];
+      }
+
+      var nodes = neighbor.neighbors(s, additionalFields, additionalChannels, importedEncodingEditOps).map(function (neighbor) {
+        neighbor.distance = neighbor.editOp.cost, neighbor.prev = [s];
+        return neighbor;
+      });
+      s.distance = 0;
+      s.prev = [];
+      var doneNodes = [s];
+
+      while (nodes.length > 0) {
+        u = nearestNode(nodes);
+
+        if (neighbor.sameEncoding(u.encoding, d.encoding)) {
+          break;
+        }
+
+        if (u.distance >= importedEncodingEditOps.ceiling.cost) {
+          return [{
+            name: 'OVER_THE_CEILING',
+            cost: importedEncodingEditOps.ceiling.alternatingCost
+          }];
+        }
+
+        var newNodes = neighbor.neighbors(u, additionalFields, u.additionalChannels, importedEncodingEditOps);
+        newNodes.forEach(function (newNode) {
+          var node;
+
+          for (var i = 0; i < doneNodes.length; i += 1) {
+            if (neighbor.sameEncoding(doneNodes[i].encoding, newNode.encoding)) {
+              return;
+            }
+          }
+
+          for (var i = 0; i < nodes.length; i += 1) {
+            if (neighbor.sameEncoding(nodes[i].encoding, newNode.encoding)) {
+              node = nodes[i];
+              break;
+            }
+          }
+
+          if (node) {
+            if (node.distance > u.distance + newNode.editOp.cost) {
+              node.distance = u.distance + newNode.editOp.cost;
+              node.editOp = newNode.editOp;
+              node.prev = u.prev.concat([u]);
+            }
+          } else {
+            newNode.distance = u.distance + newNode.editOp.cost;
+            newNode.prev = u.prev.concat([u]);
+            nodes.push(newNode);
+          }
+        });
+        doneNodes.push(u);
+      }
+
+      if (!neighbor.sameEncoding(u.encoding, d.encoding) && nodes.length === 0) {
+        return [{
+          name: "UNREACHABLE",
+          cost: 999
+        }];
+      }
+
+      var result = [].concat(u.prev.map(function (node) {
+        return node.editOp;
+      }).filter(function (editOp) {
+        return editOp;
+      }));
+      result.push(u.editOp);
+      return result;
+    }
+
+    var encodingEditOps_1 = encodingEditOps;
+    var trans = {
+      transition: transition_1,
+      markEditOps: markEditOps_1,
+      transformEditOps: transformEditOps_1,
+      transformBasic: transformBasic_1,
+      scaleEditOps: scaleEditOps_1,
+      sameDomain: sameDomain_1,
+      filterEditOps: filterEditOps_1,
+      getFilters: getFilters_1,
+      parsePredicateFilter: parsePredicateFilter_1,
+      transformSettype: transformSettype_1,
+      encodingEditOps: encodingEditOps_1
+    };
+
+    function TSP(matrix, value, fixFirst) {
+      var head, sequences;
+
+      function enumSequences(arr) {
+        var out = [];
+
+        if (arr.length === 1) {
+          out.push(arr);
+          return out;
+        } else {
+          for (var i = 0; i < arr.length; i++) {
+            var arrTemp = JSON.parse(JSON.stringify(arr));
+            var head = arrTemp.splice(i, 1);
+            enumSequences(arrTemp).map(function (seq) {
+              out.push(head.concat(seq));
+            });
+          }
+
+          return out;
+        }
+      }
+
+      var sequence = matrix[0].map(function (elem, i) {
+        return i;
+      });
+
+      if (!isNaN(fixFirst)) {
+        head = sequence.splice(fixFirst, 1);
+        sequences = enumSequences(sequence).map(function (elem) {
+          return head.concat(elem);
+        });
+      } else {
+        sequences = enumSequences(sequence);
+      }
+
+      var minDistance = Infinity;
+      var distance = 0;
+      var out = [];
+      var all = [];
+
+      for (var i = 0; i < sequences.length; i++) {
+        if (i * 100 / sequences.length % 10 === 0) ;
+
+        for (var j = 0; j < sequences[i].length - 1; j++) {
+          distance += matrix[sequences[i][j]][sequences[i][j + 1]][value];
+        }
+
+        distance = Math.round(distance * 10000) / 10000;
+        all.push({
+          sequence: sequences[i],
+          distance: distance
+        });
+
+        if (distance <= minDistance) {
+          if (distance === minDistance) {
+            out.push({
+              sequence: sequences[i],
+              distance: minDistance
+            });
+          } else {
+            out = [];
+            out.push({
+              sequence: sequences[i],
+              distance: distance
+            });
+          }
+          minDistance = distance; // console.log(i,minDistance);
+        }
+
+        distance = 0;
+      }
+
+      return {
+        out: out,
+        all: all
+      };
+    } // var matrix = JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+    // var fixFirst = Number(process.argv[3]);
+    // console.log(TSP(matrix,"rank",fixFirst));
+
+
+    var TSP_1 = {
+      TSP: TSP
+    };
+
+    function scoreSimple(coverage, patternLength, inputLength) {
+      var w_c = 1,
+          w_l = 0;
+      return (coverage * w_c + patternLength / inputLength * w_l) / (w_c + w_l);
+    }
+
+    function PatternOptimizer(inputArray, uniqTransitionSets) {
+      var Optimized = [],
+          maxScore = 0; // var inputDistance = distance(inputArray, uniqTransitionSets);
+
+      for (var l = 1; l <= inputArray.length; l++) {
+        for (var i = 0; i < inputArray.length - l + 1; i++) {
+          var appear = [i];
+
+          for (var j = 0; j < inputArray.length - l + 1; j++) {
+            if (i !== j && isSameSub(inputArray, i, i + (l - 1), j)) {
+              appear.push(j);
+            }
+          }
+
+          var overlap = false;
+
+          for (var k = 0; k < appear.length - 1; k++) {
+            if (appear[k + 1] - appear[k] < l) {
+              overlap = true;
+              break;
+            } // if(period !== 0 && period !== appear[k+1] - appear[k]){
+            //   rythmic = false;
+            //   break;
+            // }
+            // period = appear[k+1] - appear[k];
+
+          } // if (appear.length > 1 && !overlap && rythmic ){
+
+
+          if (appear.length > 1 && !overlap) {
+            var newPattern = dup(inputArray).splice(i, l);
+            var RPcoverage = coverage(inputArray, l, appear);
+
+            if (!Optimized.find(function (rp) {
+              return s(rp.pattern) === s(newPattern);
+            })) {
+              newPattern = {
+                'pattern': newPattern,
+                'appear': appear,
+                'coverage': RPcoverage
+              };
+              newPattern.patternScore = scoreSimple(newPattern.coverage, l, inputArray.length);
+
+              if (newPattern.patternScore > maxScore) {
+                maxScore = newPattern.patternScore;
+                Optimized = [newPattern];
+              } else if (newPattern.patternScore === maxScore) {
+                Optimized.push(newPattern);
+              }
+            }
+          }
+        }
+      }
+
+      return Optimized;
+    }
+
+    function coverage(array, Patternlength, appear) {
+      var s,
+          coverage = 0;
+
+      for (var i = 0; i < appear.length - 1; i++) {
+        s = i;
+
+        while (appear[i] + Patternlength > appear[i + 1]) {
+          i++;
+        }
+
+        coverage += appear[i] + Patternlength - appear[s];
+      }
+
+      if (i === appear.length - 1) {
+        coverage += Patternlength;
+      }
+      return coverage / array.length;
+    }
+
+    function isSameSub(array, i1, f1, i2, f2) {
+      for (var i = 0; i < f1 - i1 + 1; i++) {
+        if (array[i1 + i] !== array[i2 + i]) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    function s(a) {
+      return JSON.stringify(a);
+    }
+
+    function dup(a) {
+      return JSON.parse(s(a));
+    } // console.log(PatternOptimizer("231111".split(''),[1,1,1,1]));
+    // console.log(coverage("sdsdxxxasdsdsdaasdsdsdsdsdsdsdsd".split(''), 2, [ 0, 2, 8, 10, 12, 16, 18, 20, 22, 24, 26, 28, 30 ]))
+
+
+    var PatternOptimizer_1 = {
+      PatternOptimizer: PatternOptimizer
+    };
+
+    function TieBreaker(result, transitionSetsFromEmptyVis) {
+      var filterState = {};
+      var filterScore = [];
+      var filterSequenceCost = 0;
+
+      for (var i = 0; i < result.charts.length; i++) {
+        let spec = result.charts[i];
+
+        if (spec.transform) {
+          let filters = spec.transform.filter(trsfm => trsfm.filter).map(trsfm => trsfm.filter);
+
+          for (var j = 0; j < filters.length; j++) {
+            let filter = filters[j];
+
+            if (filter.hasOwnProperty("field") && filter.hasOwnProperty("equal")) {
+              if (filterState[filter.field]) {
+                filterState[filter.field].push(filter.equal);
+              } else {
+                filterState[filter.field] = [filter.equal];
+                filterScore.push({
+                  "field": filter.field,
+                  "score": 0
+                });
+              }
+            }
+          }
+        }
+      }
+
+      for (var i = 0; i < filterScore.length; i++) {
+        for (var j = 1; j < filterState[filterScore[i].field].length; j++) {
+          if (filterState[filterScore[i].field][j - 1] < filterState[filterScore[i].field][j]) {
+            filterScore[i].score += 1;
+          } else if (filterState[filterScore[i].field][j - 1] > filterState[filterScore[i].field][j]) {
+            filterScore[i].score -= 1;
+          }
+        }
+
+        filterSequenceCost += Math.abs(filterScore[i].score + 0.1) / (filterState[filterScore[i].field].length - 1 + 0.1);
+      }
+
+      filterSequenceCost = filterScore.length > 0 ? 1 - filterSequenceCost / filterScore.length : 0;
+      return {
+        'tiebreakCost': filterSequenceCost,
+        'reasons': filterScore
+      };
+    }
+
+    var TieBreaker_1 = {
+      TieBreaker: TieBreaker
+    };
+
+    async function sequence(specs, options, editOpSet$1, callback) {
+      if (!editOpSet$1) {
+        editOpSet$1 = editOpSet.DEFAULT_EDIT_OPS;
+      }
+
+      function distanceWithPattern(dist, globalWeightingTerm, filterCost) {
+        return (dist + filterCost / 1000) * globalWeightingTerm;
+      }
+
+      var transitionSetsFromEmptyVis = await getTransitionSetsFromSpec({
+        "mark": "null",
+        "encoding": {}
+      }, specs, editOpSet$1);
+
+      if (!options.fixFirst) {
+        var startingSpec = {
+          "mark": "null",
+          "encoding": {}
+        };
+        specs = [startingSpec].concat(specs);
+      }
+
+      var transitions = await getTransitionSets(specs, editOpSet$1);
+      transitions = extendTransitionSets(transitions);
+      var TSPResult = TSP_1.TSP(transitions, "cost", options.fixFirst === true ? 0 : undefined);
+      var TSPResultAll = TSPResult.all.filter(function (seqWithDist) {
+        return seqWithDist.sequence[0] === 0;
+      }).map(function (tspR) {
+        var sequence = tspR.sequence;
+        var transitionSet = [];
+
+        for (var i = 0; i < sequence.length - 1; i++) {
+          transitionSet.push(transitions[sequence[i]][sequence[i + 1]]);
+        }
+        var pattern = transitionSet.map(function (r) {
+          return r.id;
+        });
+        var POResult = PatternOptimizer_1.PatternOptimizer(pattern, transitions.uniq);
+        var result = {
+          "sequence": sequence,
+          "transitions": transitionSet,
+          "sumOfTransitionCosts": tspR.distance,
+          "patterns": POResult,
+          "globalWeightingTerm": !!POResult[0] ? 1 - POResult[0].patternScore : 1,
+          "charts": sequence.map(function (index) {
+            return specs[index];
+          })
+        };
+        var tbResult = TieBreaker_1.TieBreaker(result, transitionSetsFromEmptyVis);
+        result.filterSequenceCost = tbResult.tiebreakCost;
+        result.filterSequenceCostReasons = tbResult.reasons;
+        result.sequenceCost = distanceWithPattern(result.sumOfTransitionCosts, result.globalWeightingTerm, tbResult.tiebreakCost);
+        return result;
+      }).sort(function (a, b) {
+        if (a.sequenceCost > b.sequenceCost) {
+          return 1;
+        }
+
+        if (a.sequenceCost < b.sequenceCost) {
+          return -1;
+        } else {
+          return a.sequence.join(',') > b.sequence.join(',') ? 1 : -1;
+        }
+      });
+      var minSequenceCost = TSPResultAll[0].sequenceCost;
+
+      for (var i = 0; i < TSPResultAll.length; i++) {
+        if (TSPResultAll[i].sequenceCost === minSequenceCost) {
+          TSPResultAll[i].isOptimum = true;
+        } else {
+          break;
+        }
+      }
+
+      var returnValue = TSPResultAll;
+
+      if (callback) {
+        callback(returnValue);
+      }
+
+      return returnValue;
+    }
+
+    async function getTransitionSetsFromSpec(spec, specs, editOpSet) {
+      var transitions = [];
+
+      for (var i = 0; i < specs.length; i++) {
+        transitions.push(await trans.transition(specs[i], spec, editOpSet, {
+          omitIncludeRawDomin: true
+        }));
+      }
+
+      return transitions;
+    }
+
+    async function getTransitionSets(specs, editOpSet) {
+      var transitions = [];
+
+      for (var i = 0; i < specs.length; i++) {
+        transitions.push([]);
+
+        for (var j = 0; j < specs.length; j++) {
+          transitions[i].push(await trans.transition(specs[i], specs[j], editOpSet, {
+            omitIncludeRawDomin: true
+          }));
+        }
+      }
+
+      return transitions;
+    }
+
+    function extendTransitionSets(transitions) {
+      var uniqTransitionSets = [];
+      var flatCosts = transitions.reduce(function (prev, curr) {
+        for (var i = 0; i < curr.length; i++) {
+          prev.push(curr[i].cost);
+          var transitionSetSH = transitionShorthand(curr[i]);
+          var index = uniqTransitionSets.map(function (tr) {
+            return tr.shorthand;
+          }).indexOf(transitionSetSH);
+
+          if (index === -1) {
+            curr[i]["id"] = uniqTransitionSets.push({
+              tr: curr[i],
+              shorthand: transitionSetSH
+            }) - 1;
+          } else {
+            curr[i]["id"] = index;
+          }
+        }
+        return prev;
+      }, []);
+      var uniqueCosts = [...new Set(flatCosts)].map(function (val) {
+        return Number(val);
+      }).sort(function (a, b) {
+        return a - b;
+      });
+      var rank = d3__default['default'].scaleOrdinal().domain(uniqueCosts).range([0, uniqueCosts.length]);
+
+      for (var i = 0; i < transitions.length; i++) {
+        for (var j = 0; j < transitions[i].length; j++) {
+          transitions[i][j]["start"] = i;
+          transitions[i][j]["destination"] = j;
+          transitions[i][j]["rank"] = Math.floor(rank(transitions[i][j].cost));
+        }
+      }
+
+      transitions.uniq = uniqTransitionSets;
+      return transitions;
+    }
+
+    function transitionShorthand(transition) {
+      return transition.mark.concat(transition.transform).concat(transition.encoding).map(function (tr) {
+        if (tr.detail) {
+          if (tr.name === "MODIFY_FILTER") {
+            return tr.name + '(' + JSON.stringify(tr.detail.id) + ')';
+          }
+
+          return tr.name + '(' + JSON.stringify(tr.detail) + ')';
+        }
+
+        return tr.name;
+      }).sort().join('|');
+    }
+
+    var sequence_2 = sequence;
+    var sequence_1 = {
+      sequence: sequence_2
+    };
+
+    const {
+      parsePredicateFilter: parsePredicateFilter$1
+    } = trans;
+
+    function apply(sSpec, eSpec, editOps) {
+      checkApplyingEditOps(editOps);
+      let resultSpec = editOps.reduce((resultSpec, editOp) => {
+        if (editOp.type === "mark") {
+          resultSpec = applyMarkEditOp(resultSpec, eSpec);
+        } else if (editOp.type === "transform") {
+          resultSpec = applyTransformEditOp(resultSpec, eSpec, editOp);
+        } else if (editOp.type === "encoding") {
+          resultSpec = applyEncodingEditOp(resultSpec, eSpec, editOp);
+        }
+
+        return resultSpec;
+      }, util.duplicate(sSpec)); //an intermediate spec by applying edit operations on the sSpec
+
+      checkSpec(resultSpec);
+      return resultSpec;
+    }
+
+    var apply_2 = apply;
+
+    function applyMarkEditOp(targetSpec, eSpec, editOp) {
+      let resultSpec = util.duplicate(targetSpec);
+      resultSpec.mark = eSpec.mark;
+      return resultSpec;
+    }
+
+    var applyMarkEditOp_1 = applyMarkEditOp;
+
+    function applyTransformEditOp(targetSpec, eSpec, editOp) {
+      let resultSpec = util.duplicate(targetSpec);
+      const transformType = editOp.name.toLowerCase();
+      const details = !util.isArray(editOp.detail) ? [editOp.detail] : editOp.detail;
+
+      if (transformType.indexOf("filter") >= 0) {
+        if (editOp.name === "REMOVE_FILTER" || editOp.name === "MODIFY_FILTER") {
+          resultSpec.transform.filter(tfm => {
+            return tfm.filter && parsePredicateFilter$1(tfm.filter)[0].id === editOp.detail.id;
+          }).forEach(filter => {
+            if (resultSpec.transform) {
+              let i = resultSpec.transform.findIndex(trsfm => util.deepEqual(trsfm, filter));
+              resultSpec.transform.splice(i, 1);
+            }
+          });
+        }
+
+        if (editOp.name === "ADD_FILTER" || editOp.name === "MODIFY_FILTER") {
+          eSpec.transform.filter(tfm => {
+            return tfm.filter && parsePredicateFilter$1(tfm.filter)[0].id === editOp.detail.id;
+          }).forEach(filter => {
+            if (!resultSpec.transform) {
+              resultSpec.transform = [filter];
+            } else if (!resultSpec.transform.find(trsfm => util.deepEqual(filter, trsfm))) {
+              resultSpec.transform.push(filter);
+            }
+          });
+        }
+      } else {
+        details.forEach(detail => {
+          let fieldDef = resultSpec.encoding[detail.channel];
+
+          if (fieldDef) {
+            //Todo: cannot apply SCALE if the channel has a different type.
+            if (detail.how === "removed") {
+              delete fieldDef[transformType];
+            } else {
+              // console.log(fieldDef.type, detail.fieldType)
+              if (transformType === "scale" && fieldDef.type !== detail.fieldType) {
+                throw new UnapplicableEditOPError("Cannot apply ".concat(editOp.name, " since it requires \"").concat(detail.fieldType, "\" field instead of \"").concat(fieldDef.type, "\"."));
+              }
+
+              fieldDef[transformType] = eSpec.encoding[detail.channel][transformType];
+            }
+          } else {
+            throw new UnapplicableEditOPError("Cannot apply ".concat(editOp.name, " since there is no \"").concat(detail.channel, "\" channel."));
+          }
+        });
+      }
+
+      return resultSpec;
+    }
+
+    var applyTransformEditOp_1 = applyTransformEditOp;
+
+    function applyEncodingEditOp(targetSpec, eSpec, editOp) {
+      let resultSpec = util.duplicate(targetSpec);
+
+      if (editOp.name.indexOf("REMOVE") === 0) {
+        let channel = editOp.detail.before.channel;
+
+        if (resultSpec.encoding[channel]) {
+          delete resultSpec.encoding[channel];
+        } else {
+          throw new UnapplicableEditOPError("Cannot apply ".concat(editOp.name, " since there is no \"").concat(channel, "\" channel."));
+        }
+      } else if (editOp.name.indexOf("ADD") === 0) {
+        let channel = editOp.detail.after.channel;
+
+        if (resultSpec.encoding[channel]) {
+          throw new UnapplicableEditOPError("Cannot apply ".concat(editOp.name, " since \"").concat(channel, "\" already exists."));
+        } else {
+          resultSpec.encoding[channel] = util.duplicate(eSpec.encoding[channel]);
+        }
+      } else if (editOp.name.indexOf("MOVE") === 0) {
+        let sChannel = editOp.detail.before.channel,
+            dChannel = editOp.detail.after.channel;
+
+        if (!resultSpec.encoding[sChannel]) {
+          throw new UnapplicableEditOPError("Cannot apply ".concat(editOp.name, " since there is no \"").concat(sChannel, "\" channel."));
+        } else if (resultSpec.encoding[dChannel]) {
+          throw new UnapplicableEditOPError("Cannot apply ".concat(editOp.name, " since \"").concat(dChannel, "\" already exists."));
+        } else {
+          resultSpec.encoding[dChannel] = util.duplicate(resultSpec.encoding[sChannel]);
+          delete resultSpec.encoding[sChannel];
+        }
+      } else if (editOp.name.indexOf("MODIFY") === 0) {
+        let channel = editOp.detail.before.channel,
+            field = editOp.detail.after.field,
+            type = editOp.detail.after.type;
+
+        if (!resultSpec.encoding[channel]) {
+          throw new UnapplicableEditOPError("Cannot apply ".concat(editOp.name, " since there is no \"").concat(channel, "\" channel."));
+        } else {
+          resultSpec.encoding[channel].field = field;
+          resultSpec.encoding[channel].type = type;
+        }
+      } else if (editOp.name.indexOf("SWAP_X_Y") === 0) {
+        if (!resultSpec.encoding.x || !resultSpec.encoding.y) {
+          throw new UnapplicableEditOPError("Cannot apply ".concat(editOp.name, " since there is no \"x\" and \"y\" channels."));
+        } else {
+          let temp = util.duplicate(resultSpec.encoding.y);
+          resultSpec.encoding.y = util.duplicate(resultSpec.encoding.x);
+          resultSpec.encoding.x = temp;
+        }
+      }
+
+      return resultSpec;
+    }
+
+    var applyEncodingEditOp_1 = applyEncodingEditOp;
+
+    function checkSpec(spec) {
+      let lg = vega__default['default'].logger();
+      const warnings = [],
+            errors = [];
+
+      lg.warn = m => {
+        warnings.push(m);
+      };
+
+      lg.error = m => {
+        errors.push(m);
+      };
+
+      vl__default['default'].compile(spec, {
+        logger: lg
+      });
+      let hasAggregate = false;
+
+      for (const key in spec.encoding) {
+        if (spec.encoding.hasOwnProperty(key)) {
+          const fieldDef = spec.encoding[key];
+
+          if (fieldDef.aggregate) {
+            hasAggregate = true;
+          }
+
+          if (fieldDef.field === "*" && !fieldDef.aggregate) {
+            warnings.push("'*' field should innclude aggregate.");
+          }
+        }
+      }
+
+      if (hasAggregate) {
+        const hasNoAggOnQField = Object.keys(spec.encoding).filter(ch => {
+          return spec.encoding[ch].type === "quantitative" && !spec.encoding[ch].aggregate;
+        }).length > 0;
+
+        if (hasNoAggOnQField) {
+          warnings.push("Aggregate should be applied on all quantitative fields.");
+        }
+      }
+
+      if (warnings.length > 0 || errors.length > 0) {
+        throw new InvalidVLSpecError("The resulted spec is not valid Vega-Lite Spec.", {
+          warnings,
+          errors
+        });
+      }
+    }
+
+    function checkApplyingEditOps(editOps) {
+      // _COUNT encodig should be applied with AGGREGATE
+      if (editOps.find(eo => eo.name.indexOf("_COUNT") >= 0) && !editOps.find(eo => eo.name === "AGGREGATE")) {
+        throw new UnapplicableEditOpsError("_COUNT encoding edit operations cannot be applied without AGGREGATE.");
+      }
+    }
+
+    class UnapplicableEditOPError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "UnapplicableEditOPError";
+      }
+
+    }
+
+    class InvalidVLSpecError extends Error {
+      constructor(message, info) {
+        super(message);
+        this.name = "InvalidVLSpecError";
+        this.info = info;
+      }
+
+    }
+
+    class UnapplicableEditOpsError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "UnapplicableEditOpsError";
+      }
+
+    }
+
+    var apply_1 = {
+      apply: apply_2,
+      applyMarkEditOp: applyMarkEditOp_1,
+      applyTransformEditOp: applyTransformEditOp_1,
+      applyEncodingEditOp: applyEncodingEditOp_1
+    };
+
+    const {
+      copy,
+      deepEqual,
+      partition,
+      permutate,
+      union,
+      intersection
+    } = util;
+    const apply$1 = apply_1.apply; // Take two vega-lite specs and enumerate paths [{sequence, editOpPartition (aka transition)}]:
+
+    async function enumerate(sVLSpec, eVLSpec, editOps, transM, withExcluded = false) {
+      if (editOps.length < transM) {
+        throw new CannotEnumStagesMoreThanTransitions(editOps.length, transM);
+      }
+
+      const editOpPartitions = partition(editOps, transM);
+      const orderedEditOpPartitions = editOpPartitions.reduce((ordered, pt) => {
+        return ordered.concat(permutate(pt));
+      }, []);
+      const sequences = [];
+      let excludedPaths = [];
+
+      for (const editOpPartition of orderedEditOpPartitions) {
+        let sequence = [copy(sVLSpec)];
+        let currSpec = copy(sVLSpec);
+        let valid = true;
+
+        for (let i = 0; i < editOpPartition.length; i++) {
+          const editOps = editOpPartition[i];
+
+          if (i === editOpPartition.length - 1) {
+            sequence.push(eVLSpec);
+            break; // The last spec should be the same as eVLSpec;
+          }
+
+          try {
+            currSpec = apply$1(copy(currSpec), eVLSpec, editOps);
+          } catch (e) {
+            if (["UnapplicableEditOPError", "InvalidVLSpecError", "UnapplicableEditOpsError"].indexOf(e.name) < 0) {
+              throw e;
+            } else {
+              valid = false;
+              excludedPaths.push({
+                info: e,
+                editOpPartition,
+                invalidSpec: currSpec
+              });
+              break;
+            }
+          }
+
+          sequence.push(copy(currSpec));
+        }
+
+        const mergedScaleDomain = await getMergedScale(sequence);
+        sequence = sequence.map((currSpec, i) => {
+          if (i === 0 || i === sequence.length - 1) {
+            return currSpec;
+          }
+
+          return applyMergedScale(currSpec, mergedScaleDomain, editOpPartition[i - 1]);
+        });
+
+        if (valid && validate(sequence)) {
+          sequences.push({
+            sequence,
+            editOpPartition
+          });
+        }
+      }
+
+      if (withExcluded) {
+        return {
+          sequences,
+          excludedPaths
+        };
+      }
+
+      return sequences;
+    }
+
+    var enumerate_2 = enumerate;
+
+    function applyMergedScale(vlSpec, mergedScaleDomain, currEditOps) {
+      let currSpec = copy(vlSpec);
+      let sortEditOp = currEditOps.find(eo => eo.name === "SORT");
+
+      for (const channel in mergedScaleDomain) {
+        // When sort editOps are applied, do not change the corresponding scale domain.
+        if (sortEditOp && sortEditOp.detail.find(dt => dt.channel === channel)) {
+          continue;
+        }
+
+        if (mergedScaleDomain.hasOwnProperty(channel)) {
+          if (currSpec.encoding[channel]) {
+            if (!currSpec.encoding[channel].scale) {
+              currSpec.encoding[channel].scale = {};
+            }
+
+            currSpec.encoding[channel].scale.domain = mergedScaleDomain[channel];
+
+            if (currSpec.encoding[channel].scale.zero !== undefined) {
+              delete currSpec.encoding[channel].scale.zero;
+            }
+          }
+        }
+      }
+
+      return currSpec;
+    } // Get the scales including all data points while doing transitions.
+
+
+    async function getMergedScale(sequence) {
+      const views = await Promise.all(sequence.map(vlSpec => {
+        return new vega__default['default'].View(vega__default['default'].parse(vl__default['default'].compile(vlSpec).spec), {
+          renderer: "svg"
+        }).runAsync();
+      }));
+      let commonEncoding = sequence.reduce((commonEncoding, vlSpec, i) => {
+        let encoding = Object.keys(vlSpec.encoding).map(channel => {
+          return {
+            channel,
+            ...vlSpec.encoding[channel],
+            runtimeScale: views[i]._runtime.scales[channel]
+          };
+        });
+
+        if (i === 0) {
+          return encoding;
+        }
+
+        return intersection(encoding, commonEncoding, ch => {
+          return [ch.channel, ch.field || "", ch.type || "", ch.runtimeScale ? ch.runtimeScale.type : ""].join("_");
+        });
+      }, []).map(encoding => {
+        return { ...encoding,
+          domains: views.map(view => {
+            return view._runtime.scales[encoding.channel] ? view._runtime.scales[encoding.channel].value.domain() : undefined;
+          })
+        };
+      });
+      commonEncoding = commonEncoding.filter(encoding => {
+        //if all the domains are the same, then don't need to merge
+        return !encoding.domains.filter(d => d).reduce((accDomain, domain) => {
+          if (deepEqual(domain, accDomain)) {
+            return domain;
+          }
+
+          return undefined;
+        }, encoding.domains[0]);
+      });
+      return commonEncoding.reduce((mergedScaleDomains, encoding) => {
+        if (!encoding.runtimeScale) {
+          return mergedScaleDomains;
+        }
+
+        const vlType = encoding.type,
+              domains = encoding.domains;
+
+        if (vlType === "quantitative") {
+          mergedScaleDomains[encoding.channel] = [Math.min(...domains.map(domain => domain[0])), Math.max(...domains.map(domain => domain[1]))];
+        } else if (vlType === "nominal" || vlType === "ordinal") {
+          mergedScaleDomains[encoding.channel] = domains.reduce((merged, domain) => {
+            return union(merged, domain);
+          }, []);
+        } else if (vlType === "temporal") {
+          mergedScaleDomains[encoding.channel] = [Math.min(...domains.map(domain => domain[0])), Math.max(...domains.map(domain => domain[1]))];
+        }
+
+        return mergedScaleDomains;
+      }, {});
+    }
+
+    var getMergedScale_1 = getMergedScale;
+
+    function validate(sequence) {
+      //Todo: check if the sequence is a valid vega-lite spec.
+      let prevChart = sequence[0];
+
+      for (let i = 1; i < sequence.length; i++) {
+        const currChart = sequence[i];
+
+        if (deepEqual(prevChart, currChart)) {
+          return false;
+        }
+
+        prevChart = sequence[i];
+      }
+
+      return true;
+    }
+
+    var validate_1 = validate;
+
+    class CannotEnumStagesMoreThanTransitions extends Error {
+      constructor(editOpsN, transM) {
+        super("Cannot enumerate ".concat(transM, " transitions for ").concat(editOpsN, " edit operations. The number of transitions should lesser than the number of possible edit operations."));
+        this.name = "CannotEnumStagesMoreThanTransitions";
+      }
+
+    }
+
+    var enumerate_1 = {
+      enumerate: enumerate_2,
+      getMergedScale: getMergedScale_1,
+      validate: validate_1
+    };
+
+    const {
+      unique
+    } = util;
+    var HEURISTIC_RULES = [{
+      name: "filter-then-aggregate",
+      type: "A-Then-B",
+      editOps: ["FILTER", "AGGREGATE"],
+      condition: (filter, aggregate) => {
+        return aggregate.detail && aggregate.detail.find(dt => dt.how === "added");
+      },
+      score: 1
+    }, {
+      name: "disaggregate-then-filter",
+      type: "A-Then-B",
+      editOps: ["AGGREGATE", "FILTER"],
+      condition: (aggregate, filter) => {
+        return aggregate.detail && aggregate.detail.find(dt => dt.how === "removed");
+      },
+      score: 1
+    }, {
+      name: "filter-then-bin",
+      type: "A-Then-B",
+      editOps: ["FILTER", "BIN"],
+      condition: (filter, bin) => {
+        return bin.detail && bin.detail.find(dt => dt.how === "added");
+      },
+      score: 1
+    }, {
+      name: "unbin-then-filter",
+      type: "A-Then-B",
+      editOps: ["BIN", "FILTER"],
+      condition: (bin, filter) => {
+        return bin.detail && bin.detail.find(dt => dt.how === "removed");
+      },
+      score: 1
+    }, {
+      name: "no-aggregate-then-bin",
+      type: "A-Then-B",
+      editOps: ["AGGREGATE", "BIN"],
+      condition: (aggregate, bin) => {
+        return aggregate.detail && aggregate.detail.find(dt => dt.how === "added");
+      },
+      score: -1
+    }, {
+      name: "no-unbin-then-disaggregate",
+      type: "A-Then-B",
+      editOps: ["BIN", "AGGREGATE"],
+      condition: (bin, aggregate) => {
+        return aggregate.detail && aggregate.detail.find(dt => dt.how === "removed");
+      },
+      score: -1
+    }, {
+      name: "encoding(MODIFY)-then-aggregate",
+      type: "A-Then-B",
+      editOps: ["ENCODING", "AGGREGATE"],
+      condition: (encoding, aggregate) => {
+        return encoding.name.indexOf("MODIFY") >= 0 && aggregate.detail && aggregate.detail.find(dt => dt.how === "added");
+      },
+      score: 1
+    }, {
+      name: "disaggregate-then-encoding(MODIFY)",
+      type: "A-Then-B",
+      editOps: ["AGGREGATE", "ENCODING"],
+      condition: (aggregate, encoding) => {
+        return encoding.name.indexOf("MODIFY") >= 0 && aggregate.detail && aggregate.detail.find(dt => dt.how === "removed");
+      },
+      score: 1
+    }, {
+      name: "encoding(add)-then-aggregate",
+      type: "A-Then-B",
+      editOps: ["ENCODING", "AGGREGATE"],
+      condition: (encoding, aggregate) => {
+        return encoding.name.indexOf("ADD") >= 0 && aggregate.detail && aggregate.detail.find(dt => dt.how === "added");
+      },
+      score: 1
+    }, {
+      name: "disaggregate-then-encoding(remove)",
+      type: "A-Then-B",
+      editOps: ["AGGREGATE", "ENCODING"],
+      condition: (aggregate, encoding) => {
+        return encoding.name.indexOf("REMOVE") >= 0 && aggregate.detail && aggregate.detail.find(dt => dt.how === "removed");
+      },
+      score: 1
+    }, {
+      name: "no-mark-then-aggregate",
+      type: "A-Then-B",
+      editOps: ["MARK", "AGGREGATE"],
+      condition: (mark, aggregate) => {
+        return aggregate.detail && aggregate.detail.find(dt => dt.how === "added");
+      },
+      score: -1
+    }, {
+      name: "no-disaggregate-then-mark",
+      type: "A-Then-B",
+      editOps: ["AGGREGATE", "MARK"],
+      condition: (aggregate, mark) => {
+        return aggregate.detail && aggregate.detail.find(dt => dt.how === "removed");
+      },
+      score: -1
+    }, {
+      name: "modifying-with-scale",
+      type: "A-With-B",
+      editOps: ["ENCODING.MODIFY", "SCALE"],
+      score: 1
+    }, {
+      name: "no-filtering-with-filtering",
+      type: "A-With-B",
+      editOps: ["FILTER"],
+      condition: editOps => {
+        return unique(editOps.FILTER, f => f.position).length < editOps.FILTER.length;
+      },
+      score: -1
+    }, {
+      name: "bin-with-aggregate",
+      type: "A-With-B",
+      editOps: ["AGGREGATE", "BIN"],
+      score: 1
+    } // {
+    //   editOps: [TRANSFORM, ENCODING.REMOVE],
+    //   condition: (transform, remove) => {
+    //     return transform.detail.field === remove.detail.before.field
+    //   },
+    //   score: 1
+    // },
+    // {
+    //   editOps: [TRANSFORM, ENCODING.MODIFY],
+    //   condition: (transform, modify) => {
+    //     return transform.detail.field === modify.detail.after.field
+    //   },
+    //   score: 1
+    // },
+    // {
+    //   editOps: [TRANSFORM, ENCODING.ADD],
+    //   condition: (transform, add) => {
+    //     return transform.detail.field === add.detail.after.field
+    //   },
+    //   score: 1
+    // },
+    // {
+    //   editOps: [ENCODING.MODIFY, TRANSFORM],
+    //   condition: (transform, modify) => {
+    //     return transform.detail.field === modify.detail.before.field
+    //   },
+    //   score: 1
+    // }
+    ];
+    var evaluateRules = {
+      HEURISTIC_RULES: HEURISTIC_RULES
+    };
+
+    const RULES = evaluateRules.HEURISTIC_RULES;
+    const {
+      copy: copy$1,
+      intersection: intersection$1
+    } = util;
+
+    function evaluate(editOpPartition) {
+      let satisfiedRules = findRules(editOpPartition, RULES);
+      let score = satisfiedRules.reduce((score, rule) => {
+        return score + rule.score;
+      }, 0);
+      return {
+        score,
+        satisfiedRules
+      };
+    }
+
+    var evaluate_2 = evaluate;
+
+    function findRules(editOpPartition, rules = RULES) {
+      return rules.filter(_rule => {
+        let rule = copy$1(_rule);
+
+        for (let j = 0; j < rule.editOps.length; j++) {
+          const ruleEditOp = rule.editOps[j];
+          rule[ruleEditOp] = [];
+
+          for (let i = 0; i < editOpPartition.length; i++) {
+            const editOpPart = editOpPartition[i];
+            let newFoundEditOps = findEditOps(editOpPart, ruleEditOp);
+
+            if (newFoundEditOps.length > 0) {
+              rule[ruleEditOp] = [...rule[ruleEditOp], ...newFoundEditOps.map(eo => {
+                return { ...eo,
+                  position: i
+                };
+              })];
+            }
+          }
+
+          if (rule[ruleEditOp].length === 0) {
+            return false; // when there is no corresponding edit op for the rule in given editOp partition.
+          }
+        }
+
+        if (rule.type === "A-With-B") {
+          let foundEditOps = rule.editOps.map(eo => rule[eo]);
+
+          if (foundEditOps.filter(eo => !eo).length !== 0) {
+            return false;
+          }
+
+          let positions = rule.editOps.reduce((positions, eo, i) => {
+            let currPositions = rule[eo].map(d => d.position);
+
+            if (i === 0) {
+              return currPositions;
+            }
+
+            return intersection$1(positions, currPositions);
+          }, []);
+
+          if (positions.length === 0) {
+            return false;
+          } else if (_rule.condition) {
+            let mappedFoundEditOps = rule.editOps.reduce((acc, eo) => {
+              acc[eo] = rule[eo];
+              return acc;
+            }, {});
+            return _rule.condition(mappedFoundEditOps);
+          }
+
+          return true;
+        } else {
+          for (let i = 0; i < rule[rule.editOps[0]].length; i++) {
+            const followed = rule[rule.editOps[0]][i];
+
+            for (let j = 0; j < rule[rule.editOps[1]].length; j++) {
+              const following = rule[rule.editOps[1]][j];
+
+              if (followed.position >= following.position) {
+                return false;
+              }
+
+              if (_rule.condition && !_rule.condition(followed, following)) {
+                return false;
+              }
+            }
+          }
+
+          return true;
+        }
+      });
+    }
+
+    var findRules_1 = findRules;
+
+    function findEditOps(editOps, query) {
+      return editOps.filter(eo => {
+        if (query === "TRANSFORM") {
+          return eo.type === "transform";
+        } else if (query === "ENCODING") {
+          return eo.type === "encoding";
+        } else if (query === "MARK") {
+          return eo.type === "mark";
+        } else if (query === "ENCODING.MODIFY") {
+          return eo.type === "encoding" && eo.name.indexOf("MODIFY") >= 0;
+        }
+
+        return eo.name.indexOf(query) >= 0;
+      });
+    }
+
+    var evaluate_1 = {
+      evaluate: evaluate_2,
+      findRules: findRules_1
+    };
+
+    const {
+      copy: copy$2
+    } = util;
+    const {
+      enumerate: enumerate$1
+    } = enumerate_1;
+    const {
+      evaluate: evaluate$1
+    } = evaluate_1;
+    const getTransition = trans.transition;
+
+    async function path(sSpec, eSpec, transM) {
+      validateInput(sSpec, eSpec);
+      const transition = await getTransition(copy$2(sSpec), copy$2(eSpec));
+      const editOps = [...transition.mark, ...transition.transform, ...transition.encoding];
+      let result = {};
+
+      if (transM === undefined) {
+        for (let m = 1; m <= editOps.length; m++) {
+          result[m] = await enumAndEval(sSpec, eSpec, editOps, m);
+        }
+
+        return result;
+      }
+
+      return await enumAndEval(sSpec, eSpec, editOps, transM);
+    }
+
+    var path_2 = path;
+
+    async function enumAndEval(sSpec, eSpec, editOps, transM) {
+      let result = await enumerate$1(sSpec, eSpec, editOps, transM);
+      return result.map(seq => {
+        return { ...seq,
+          eval: evaluate$1(seq.editOpPartition)
+        };
+      }).sort((a, b) => {
+        return b.eval.score - a.eval.score;
+      });
+    }
+
+    function validateInput(sSpec, eSpec) {
+      //check if specs are single-view vega-lite chart
+      if (!isValidVLSpec(sSpec) || !isValidVLSpec(eSpec)) {
+        return {
+          error: "Gemini++ cannot recommend keyframes for the given Vega-Lite charts."
+        };
+      }
+    }
+
+    var validateInput_1 = validateInput;
+
+    function isValidVLSpec(spec) {
+      if (spec.layer || spec.hconcat || spec.vconcat || spec.concat || spec.spec) {
+        return false;
+      }
+
+      if (spec.$schema && spec.$schema.indexOf("https://vega.github.io/schema/vega-lite") >= 0) {
+        return true;
+      }
+
+      return false;
+    }
+
+    var isValidVLSpec_1 = isValidVLSpec;
+    var path_1 = {
+      path: path_2,
+      validateInput: validateInput_1,
+      isValidVLSpec: isValidVLSpec_1
+    };
+
+    var src = {
+      sequence: sequence_1.sequence,
+      transition: trans.transition,
+      apply: apply_1.apply,
+      path: path_1.path
+    };
+
+    return src;
+
+  })));
+
+  });
+
+  unwrapExports(graphscape);
+  var graphscape_1 = graphscape.path;
+
+  async function recommendKeyframes(sSpec, eSpec, M) {
+    return await graphscape_1(copy(sSpec),  copy(eSpec), M);
+  }
+
+
+  async function recommendWithPath(sVlSpec, eVlSpec, opt ={ stageN: 1, totalDuration: 2000 }) {
+
+    let _opt = copy(opt);
+    _opt.totalDuration = opt.totalDuration || 2000;
+    _opt.stageN = opt.stageN || 1;
+    _opt = setUpRecomOpt(_opt);
+
+    const recommendations = {};
+
+    for (let transM = 1; transM <= _opt.stageN; transM++) {
+      let paths;
+      try {
+        paths = await graphscape_1(copy(sVlSpec), copy(eVlSpec), transM);
+      } catch (error) {
+        if (error.name === "CannotEnumStagesMoreThanTransitions") {
+          continue;
+        }
+        throw error;
+      }
+
+      recommendations[transM] = [];
+      for (const path of paths) {
+        const sequence = path.sequence.map(vl2vg4gemini);
+
+        //enumerate all possible gemini++ specs for the sequence;
+        let recomsPerPath = await recommendForSeq(sequence, opt);
+        recommendations[transM].push({
+          path,
+          recommendations: recomsPerPath
+        });
+
+      }
+    }
+    return recommendations;
+  }
+
+
+
+  function splitStagesPerTransition(stageN, transitionM) {
+    return NSplits(new Array(stageN).fill(1), transitionM)
+        .map(arr => arr.map(a => a.length));
+  }
+
+  async function recommendForSeq(sequence, opt = {}) {
+    let globalOpt = copy(opt),
+      transM = sequence.length-1,
+      stageN = opt.stageN;
+    if (stageN < transM) {
+      throw new Error(`Cannot recommend ${stageN}-stage animations for a sequence with ${transM} transitions.`)
+    }
+
+    globalOpt = setUpRecomOpt(globalOpt);
+
+    let stageNSplits = splitStagesPerTransition(stageN, transM);
+    let recomsForSequence = [];
+    for (const stageNSplit of stageNSplits) {
+      const recommendationPerTransition = [];
+
+      for (let i = 0; i < transM; i++) {
+        const sVgVis = (sequence[i]),
+          eVgVis = (sequence[i+1]);
+
+        const _opt = {
+          ...globalOpt,
+          ...(opt.perTransitions || [])[i],
+          ...{includeMeta: false},
+          ...{
+            stageN: stageNSplit[i],
+            totalDuration: (opt.totalDuration || 2000) / stageN * stageNSplit[i]
+          }
+        };
+        const _recom = await recommend(sVgVis, eVgVis, _opt);
+        recommendationPerTransition.push(_recom);
+      }
+
+      recomsForSequence = recomsForSequence.concat(crossJoinArrays(recommendationPerTransition));
+    }
+
+    return recomsForSequence.map(recom => {
+      return {
+        specs: recom,
+        cost: sumCost(recom)
+      }
+    }).sort((a,b) => {
+      return a.cost - b.cost
+    });
+  }
+
+  function sumCost(geminiSpecs) {
+    return geminiSpecs.reduce((cost, spec) => {
+      cost += spec.pseudoTimeline.eval.cost;
+      return cost
+    }, 0)
+  }
+
+  function canRecommendForSeq(sequence) {
+    for (let i = 0; i < (sequence.length - 1); i++) {
+      const sVis = sequence[i], eVis = sequence[i+1];
+      let isRecommendable = canRecommend(sVis, eVis).result;
+      if (isRecommendable.result) {
+        return {result: false, reason: isRecommendable.reason}
+      }
+    }
+    return {result: true};
+  }
+
+  function canRecommendKeyframes(sSpec, eSpec) {
+    //check if specs are single-view vega-lite chart
+    if (!isValidVLSpec(sSpec) || !isValidVLSpec(eSpec)) {
+      return {result: false, reason: "Gemini++ cannot recommend keyframes for the given Vega-Lite charts."}
+    }
+    return {result: true}
+  }
+
+
+
+  function isValidVLSpec(spec) {
+    if (spec.layer || spec.hconcat || spec.vconcat || spec.concat || spec.spec) {
+      return false;
+    }
+    if (spec.$schema && (spec.$schema.indexOf("https://vega.github.io/schema/vega-lite") >= 0)){
+      return true
+    }
+    return false
+
+  }
+
+  const { animate, animateSequence } = Gemini;
+
+  exports.allAtOnce = allAtOnce;
   exports.animate = animate;
+  exports.animateSequence = animateSequence;
+  exports.canRecommend = canRecommend;
+  exports.canRecommendForSeq = canRecommendForSeq;
+  exports.canRecommendKeyframes = canRecommendKeyframes;
+  exports.castVL2VG = castVL2VG;
   exports.compareCost = compareCost;
-  exports.recommend = index$1;
+  exports.recommend = recommend;
+  exports.recommendForSeq = recommendForSeq;
+  exports.recommendKeyframes = recommendKeyframes;
+  exports.recommendWithPath = recommendWithPath;
   exports.vl2vg4gemini = vl2vg4gemini;
 
   Object.defineProperty(exports, '__esModule', { value: true });
