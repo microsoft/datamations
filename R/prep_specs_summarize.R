@@ -29,6 +29,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
   .data <- .data %>%
     arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
+    # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
+    # Not defined in any of the previous steps since the JS takes care of generating it
     dplyr::mutate(gemini_id = dplyr::row_number()) %>%
     dplyr::rename(y = {{ summary_variable }})
 
@@ -117,10 +119,13 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
   meta <- list(parse = "jitter", axes = has_facets, description = description)
 
+  # Variables that need to be passed to JS
   if (!is.null(mapping$x)) {
+    # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
     meta <- append(meta, list(splitField = mapping$x))
 
     if (!has_facets) {
+      # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
       meta <- append(meta, list(xAxisLabels = levels(data_1[[mapping$x]])))
     }
   }
@@ -131,6 +136,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     meta = meta,
     spec_encoding = spec_encoding, facet_encoding = facet_encoding,
     height = height, width = width, facet_dims = facet_dims,
+    # Flags for column / row  facets or color
     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
   )
 
@@ -154,6 +160,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     meta = list(axes = has_facets, description = description),
     spec_encoding = spec_encoding, facet_encoding = facet_encoding,
     height = height, width = width, facet_dims = facet_dims,
+    # Flags for column / row  facets or color
     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
   )
 
@@ -164,6 +171,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   if (mapping$summary_function == "mean") {
     data_3 <- data_1 %>%
+      # The errorbar is calculated by vega so we need to send the raw y values, and the summarised ones
       dplyr::mutate(y_raw = .data$y) %>%
       dplyr::group_by(!!!group_vars) %>%
       dplyr::mutate(dplyr::across(.data$y, !!summary_function, na.rm = TRUE))
@@ -192,6 +200,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   if (mapping$summary_function == "mean") {
     description <- glue::glue("{description}, with errorbar, zoomed in")
+
+    # Calculating errorbar (CI? Not actually the same as what vegalite calculates?) so that we can set the range for the zoom
     data_errorbar <- data_3 %>%
       dplyr::summarize(
         y = .data$y,
@@ -222,6 +232,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     )
   } else {
     description <- glue::glue("{description}, zoomed in")
+
+    # Range is just the range of the actual y
     range_y <- range(data_2[["y"]], na.rm = TRUE)
     spec_encoding$y$scale$domain <- range_y
 

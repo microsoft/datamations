@@ -19,6 +19,7 @@
 #'     datamation_sanddance()
 #'
 #'   library(ggplot2)
+#'
 #'   "small_salary %>%
 #'   group_by(Work, Degree) %>%
 #'   summarize(mean_salary = mean(Salary)) %>%
