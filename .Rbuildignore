@@ -13,3 +13,4 @@ start-up.R
 ^sandbox$
 azure-pipelines.yml
 ^_pkgdown\.yml$
+^R/README\.md$
