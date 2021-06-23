@@ -13,7 +13,9 @@
     * [prep_specs_data()](https://github.com/microsoft/datamations/blob/main/R/prep_specs_data.R#L8) to generate the vega lite specs for the initial infogrid
     * [prep_specs_group_by()](https://github.com/microsoft/datamations/blob/main/R/prep_specs_group_by.R#L8) to generate the specs for the grouped info grids
     * [prep_specs_summarize()](https://github.com/microsoft/datamations/blob/main/R/prep_specs_summarize.R#L8) to generate the specs for the distribution and summary (e.g. mean, error bar, etc) frames
-* Finally, all of the specs are returned and passed off to [datamationSandDance()](https://github.com/microsoft/datamations/blob/main/R/datamation_sanddance.R#L146), which actually passes them off to the javascript code.
+* Finally, all of the specs are returned and passed off to [datamationSandDance()](https://github.com/microsoft/datamations/blob/main/R/datamation_sanddance.R#L146), which actually passes them off to the Javascript code.
+
+    * [datamationSandDance_html()](https://github.com/microsoft/datamations/blob/more-docs/R/datamation_sanddance.R#L194) controls the "look" of the widget, e.g. that there is a slider, description, etc.
 
 ## [prep_specs_data()](https://github.com/microsoft/datamations/blob/main/R/prep_specs_data.R#L8)
 
@@ -74,3 +76,18 @@
 
 
 # shiny app
+
+To embed a datamation_sanddance() object in a Shiny app, use [renderDatamationSandDance()](https://github.com/microsoft/datamations/blob/more-docs/R/datamation_sanddance.R#L187) in the server function, and [datamationSandDanceOutput()](https://github.com/microsoft/datamations/blob/more-docs/R/datamation_sanddance.R#L181) in the UI function.
+
+For the actual "datamations" Shiny app:
+
+* [app.R](https://github.com/microsoft/datamations/blob/main/app.R) (in the main package directory, not in this `R/` subdirectory) actually runs the app, by calling [run_app()](https://github.com/microsoft/datamations/blob/main/R/run_app.R) It needs to live here in order to be deployed on shinyapps.io.
+
+* [run_app()](https://github.com/microsoft/datamations/blob/main/R/run_app.R) creates a shiny app by calling the UI function ([app_ui()](https://github.com/microsoft/datamations/blob/main/R/app_ui.R)) and the server function ([app_server()](https://github.com/microsoft/datamations/blob/main/R/app_server.R))
+
+    * These mainly just call the app modules (discussed below), with a couple extra things: the UI function [sends the slider value](https://github.com/microsoft/datamations/blob/main/R/app_ui.R#L11) to Shiny so that the tabs change, and [listens to the tab value](https://github.com/microsoft/datamations/blob/main/R/app_ui.R#L18) for changing the slider and frame.
+    
+* [mod_inputs.R](https://github.com/microsoft/datamations/blob/main/R/mod_inputs.R) contains the module for the app inputs (data set, group by variables, summary function and variable)
+* [mod_pipeline.R](https://github.com/microsoft/datamations/blob/main/R/mod_pipeline.R) contains the module for constructing and displaying the tidyverse pipeline, generated from the inputs
+* [mod_datamation_sanddance.R](https://github.com/microsoft/datamations/blob/main/R/mod_datamation_sanddance.R) generates the actual datamation
+* [mod_data_tabs.R](https://github.com/microsoft/datamations/blob/main/R/mod_data_tabs.R) generates the tabs that show the data at each stage
