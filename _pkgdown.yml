@@ -7,3 +7,6 @@ reference:
   - title: Table-based datamation
     contents:
     - datamation_tibble
+  - title: Data
+    contents:
+    - small_salary
