@@ -1,6 +1,7 @@
 #' Parse functions from pipeline steps
 #'
 #' @param fittings List of pipeline steps
+#' @noRd
 parse_functions <- function(fittings) {
   functions <- fittings %>%
     # Splits expressions into the functions and arguments

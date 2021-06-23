@@ -1,6 +1,6 @@
-#' Generate a plot datamation
+#' Create a plot datamation
 #'
-#' Generate a plot datamation from a tidyverse pipeline.
+#' Create a plot datamation from a tidyverse pipeline.
 #'
 #' @param pipeline Tidyverse pipeline
 #' @param envir Environment where code is evaluated. Defaults to the global environment.

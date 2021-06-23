@@ -4,7 +4,7 @@
 \alias{datamationSandDance-shiny}
 \alias{datamationSandDanceOutput}
 \alias{renderDatamationSandDance}
-\title{Shiny bindings for datamationSandDance}
+\title{Output and render functions for using datamation_sanddance in Shiny}
 \usage{
 datamationSandDanceOutput(outputId, width = "100\%", height = "400px")
 
@@ -25,6 +25,6 @@ string and have \code{'px'} appended.}
 is useful if you want to save an expression in a variable.}
 }
 \description{
-Output and render functions for using datamationSandDance within Shiny
+Output and render functions for using datamation_sanddance within Shiny
 applications and interactive Rmd documents.
 }
