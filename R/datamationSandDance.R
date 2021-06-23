@@ -1,9 +1,11 @@
-#' datamations SandDance html widget
+#' datamations_sanddance htmlwidget
 #'
 #' @param specs JSON specs for pipeline
 #' @param width Width of widget. Not currently used
 #' @param height Height of widget. Not currently used
 #' @param elementId Optional element ID for widget
+#'
+#' @noRd
 datamationSandDance <- function(specs, width = NULL, height = NULL, elementId = NULL) {
 
   # forward options using x
@@ -22,9 +24,9 @@ datamationSandDance <- function(specs, width = NULL, height = NULL, elementId = 
   )
 }
 
-#' Shiny bindings for datamationSandDance
+#' Output and render functions for using datamation_sanddance in Shiny
 #'
-#' Output and render functions for using datamationSandDance within Shiny
+#' Output and render functions for using datamation_sanddance within Shiny
 #' applications and interactive Rmd documents.
 #'
 #' @param outputId output variable to read from

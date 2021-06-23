@@ -2,7 +2,7 @@
 % Please edit documentation in R/datamation_sanddance.R
 \name{datamation_sanddance}
 \alias{datamation_sanddance}
-\title{Generate a plot datamation}
+\title{Create a plot datamation}
 \usage{
 datamation_sanddance(
   pipeline,
@@ -27,7 +27,7 @@ datamation_sanddance(
 \item{width}{Width of the plotting area of the widget (excluding axes and legends). This is an approximation and not an exact science, since sizes may vary depending on labels, legends, facets, etc! Defaults to 300 (pixels).}
 }
 \description{
-Generate a plot datamation from a tidyverse pipeline.
+Create a plot datamation from a tidyverse pipeline.
 }
 \examples{
 {

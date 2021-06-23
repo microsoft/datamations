@@ -1,4 +1,4 @@
-#' Run the Shiny Application
+#' Run datamations shiny application
 #'
 #' @export
 run_app <- function() {

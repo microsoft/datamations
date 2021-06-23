@@ -1,0 +1,12 @@
+reference:
+  - title: Plot-based datamation
+    contents:
+    - datamation_sanddance
+    - renderDatamationSandDance
+    - datamationSandDanceOutput
+  - title: Table-based datamation
+    contents:
+    - datamation_tibble
+  - title: Data
+    contents:
+    - small_salary

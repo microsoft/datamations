@@ -12,3 +12,4 @@ start-up.R
 ^rsconnect$
 ^sandbox$
 azure-pipelines.yml
+^_pkgdown\.yml$

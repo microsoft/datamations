@@ -2,6 +2,7 @@
 #'
 #' @param fittings Pipeline steps
 #' @param envir Evaluation environment
+#' @noRd
 snake <- function(fittings, envir = parent.frame()) {
   c(
     eval(fittings[[1]], envir = envir) %>%
