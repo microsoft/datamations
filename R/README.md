@@ -15,12 +15,12 @@
     * [prep_specs_summarize()](https://github.com/microsoft/datamations/blob/main/R/prep_specs_summarize.R#L8) to generate the specs for the distribution and summary (e.g. mean, error bar, etc) frames
 * Finally, all of the specs are returned and passed off to [datamationSandDance()](https://github.com/microsoft/datamations/blob/main/R/datamation_sanddance.R#L146), which actually passes them off to the javascript code.
 
-## prep_specs_data()
+## [prep_specs_data()](https://github.com/microsoft/datamations/blob/main/R/prep_specs_data.R#L8)
 
 * Preps encoding based on the mapping from the main function
 * Generates specs for an ungrouped icon array, using [generate_vega_specs()](https://github.com/microsoft/datamations/blob/more-docs/R/prep_specs_utils.R#L5)
 
-## prep_specs_group_by()
+## [prep_specs_group_by()](https://github.com/microsoft/datamations/blob/main/R/prep_specs_group_by.R#L8)
 
 * Preps encoding based on the mapping from the main function
 * Generates specs for each grouping variable, in the following order: column -> row -> x/color, based on what actually exists in the mapping, all using [generate_vega_specs()](https://github.com/microsoft/datamations/blob/more-docs/R/prep_specs_utils.R#L5)
@@ -40,9 +40,37 @@
     
         * Sends `meta.parse = "grid"` to indicate to the JS that this is not a real vega lite spec, and needs to be parsed into one
         * Sends `meta.splitField = mapping$x`, to indicate to the JS that the info grid needs to be split "within" a facet frame
-        * Sends `meta.axes = TRUE` if there is a column or row facet variable, to indicate that "fake facets" need to be drawn
+        * Sends `meta.axes = TRUE` if there are faceting variables, to indicate that "fake facets" need to be drawn
         * Sends a "colour" variable, only if colour is the same as the x variable (so they're animated in the same step)
 
-## prep_specs_summarize()
+## [prep_specs_summarize()](https://github.com/microsoft/datamations/blob/main/R/prep_specs_summarize.R#L8)
+
+* Preps encoding based on the mapping from the main function
+* Generates center points for X values, to be used as the center of jittering when distributions are shown, as well as an expression to convert these numeric X values to actual labels (e.g. 1 = Male, 2 = Female) in [generate_labelsExpr()](https://github.com/microsoft/datamations/blob/main/R/prep_specs_utils.R#L212) and the full X domain (with 0.5 padding on left and right) via [generate_x_domain()](https://github.com/microsoft/datamations/blob/main/R/prep_specs_utils.R#L212)
+
+* Step 1: Generates specs for scatter plot (with any grouping), via [generate_vega_specs()](https://github.com/microsoft/datamations/blob/more-docs/R/prep_specs_utils.R#L5)
+
+    * Sends `meta.parse = "jitter"` to indicate to the JS that the x values need to be jittered
+    * Sends `meta.axes = TRUE` if the plot has "fake facets" and axes need to be drawn, and `FALSE` if not (so the real axes can be used for X and Y)
+    * Sends `meta.splitField = mapping$x` if there's a grouping variable on the x-axis, since each jitter field needs to be split by that X
+    * Sends `meta.xAxisLabels` with the actual values of the X variable if there are facets, because if they are, they're fake and occupying the real axes, and so we need to actually send xAxisLabels to get drawn on
+    
+        * TODO for me: this has flag !has_facets, but I think it should be just has_facets (i.e. the opposite)
+        
+* Step 2: Generate specs for summary plot, e.g. mean, with any grouping, via [generate_vega_specs()](https://github.com/microsoft/datamations/blob/more-docs/R/prep_specs_utils.R#L5)
+
+    * Just sends `meta.axes = TRUE` if the plot has "fake facets" and axes need to be drawn, and `FALSE` if not (so the real axes can be used for X and Y)
+
+* Step 3: Generate specs for errorbars plot (only if the summary function is mean), via [generate_vega_specs()](https://github.com/microsoft/datamations/blob/more-docs/R/prep_specs_utils.R#L5)
+
+    * Passes both the summarized and "raw" y-values to vega lite, since the errorbar is calculated by vega lite and needs the raw y-values to calculate this
+    * Just sends `meta.axes = TRUE` if the plot has "fake facets" and axes need to be drawn, and `FALSE` if not (so the real axes can be used for X and Y)
+ 
+* Step 4: Generate specs for zoomed plot
+
+    * If the summary function is tthe mean, and there's error bars, calculate the error bars manually to get the range of the plot
+    * Otherwise, just do the range of the y-values
+    * Again, just sends `meta.axes = TRUE` if the plot has "fake facets" and axes need to be drawn, and `FALSE` if not (so the real axes can be used for X and Y)
+
 
 # shiny app
