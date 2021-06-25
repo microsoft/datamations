@@ -1,3 +1,10 @@
+/**
+ * Generates grid layout. 
+ * Groups data by facets or splitField and generates data for grid layout
+ * @param {Object} spec vega-lite specification
+ * @param {Number} rows number of rows in a grid
+ * @returns grid data
+ */
 function generateGrid(spec, rows = 10) {
   const splitField = spec.meta.splitField;
   const specValues = spec.data.values;

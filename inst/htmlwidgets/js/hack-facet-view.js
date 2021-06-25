@@ -1,3 +1,11 @@
+/**
+ * Creates vega-lite spec template
+ * @param {Number} width chart width
+ * @param {Number} height chart height
+ * @param {Object} axes which axis to include
+ * @param {Object} spec vega-lite spec
+ * @returns vega-lite spec template
+ */
 function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   const encoding = spec.spec.encoding;
   const mark = spec.spec.mark;
@@ -56,6 +64,11 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   };
 }
 
+/**
+ * Creates a vega-lite specification, without facets
+ * @param {Object} param0 some parameters to generate hacked specification
+ * @returns new vega-lite specification
+ */
 function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   const rowId = spec.facet.row ? spec.facet.row.field : null;
   const colId = spec.facet.column ? spec.facet.column.field : null;
@@ -157,6 +170,11 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   return newSpec;
 }
 
+/**
+ * 
+ * @param {Object} spec vega-lite spec
+ * @returns a promise of vegaEmbed
+ */
 function hackFacet(spec) {
   const div = document.createElement("div");
 
