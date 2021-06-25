@@ -3,8 +3,8 @@
 <dl>
 <dt><a href="#rawSpecs">rawSpecs</a></dt>
 <dd><p>Entry point of Datamations JavaScript code
-Reads vega-lite specifications, converts to vega specs and animates using gemini
-Dependencies: </p>
+Reads vega-lite specifications, converts to vega specs and animates using gemini</p>
+<h3 id="dependencies">Dependencies:</h3>
 <ul>
 <li>gemini: <a href="https://github.com/uwdata/gemini">https://github.com/uwdata/gemini</a></li>
 <li>vega-lite: <a href="https://vega.github.io/vega-lite/">https://vega.github.io/vega-lite/</a></li>
@@ -66,7 +66,8 @@ Supports single view as well as multiple view chart</p>
 ## rawSpecs
 Entry point of Datamations JavaScript code
 Reads vega-lite specifications, converts to vega specs and animates using gemini
-Dependencies: 
+
+### Dependencies: 
 - gemini: https://github.com/uwdata/gemini
 - vega-lite: https://vega.github.io/vega-lite/
 - vega: https://vega.github.io/vega/
