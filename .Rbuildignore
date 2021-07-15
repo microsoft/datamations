@@ -14,3 +14,4 @@ start-up.R
 azure-pipelines.yml
 ^_pkgdown\.yml$
 ^R/README\.md$
+^LICENSE\.md$

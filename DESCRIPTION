@@ -9,7 +9,7 @@ Authors@R: c(
     person("Giorgi", "Ghviniashvili", role = c("aut")),
     person("Jake", "Hofman", email = "jmh@microsoft.com", role = c("cre", "aut")))
 Description: Generates animations that explain plots and tables from tidyverse pipelines.
-License: What license is it under?
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
