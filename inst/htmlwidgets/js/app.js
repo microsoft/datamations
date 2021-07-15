@@ -1,12 +1,17 @@
 /**
- * Datamations JavaScript App script
- * Reads vega lite specs, converts to vega specs and animates using gemini
+ * Entry point of Datamations JavaScript code
+ * Reads vega-lite specifications, converts to vega specs and animates using gemini
+ * 
+ * ### Dependencies: 
+ * - gemini: https://github.com/uwdata/gemini
+ * - vega-lite: https://vega.github.io/vega-lite/
+ * - vega: https://vega.github.io/vega/
+ * - vega-embed: https://github.com/vega/vega-embed
  */
-
 
 let rawSpecs; // holds raw vega-lite specs, not transformed
 let vegaLiteSpecs;
-let vegaSpecs; // vega specs, converted by gemini.vl2vg4gemini (https://github.com/uwdata/gemini#vl2vg4gemini)
+let vegaSpecs; // vega specs
 let frames;
 let metas;
 let frameIndex = 0;
@@ -16,6 +21,7 @@ let initializing = false;
 
 const frameDuration = 2000;
 const frameDelay = 1000;
+
 // a fallback gemini spec in case gemini.animate could not find anything
 const gemSpec = {
   timeline: {
@@ -53,7 +59,7 @@ const gemSpec = {
 };
 
 /**
- * Resets all the instance variables
+ * Resets all the instance variables to be able to re-run animation
  */
 const reset = () => {
   vegaLiteSpecs = [];
@@ -76,8 +82,11 @@ const reset = () => {
 
 /**
  * Initializes datamation app
- * @param {String} id root container id where vega visualizations are mounted
+ * @param {String} id root div id where vega visualizations are rendered
  * @param {Object} param1 configuration object
+ * @param {Array} param1.specUrls list of urls
+ * @param {Array} param1.specs list of vega-lite specifications
+ * @param {Boolean} param1.autoPlay autoPlay yes | no
  */
 async function init(id, { specUrls, specs, autoPlay }) {
   // ignore all subsequent init calls.
@@ -152,7 +161,7 @@ function play(id) {
 }
 
 /**
- * Draws vega lite spec statically, also updates slider, description, show/hides some layers
+ * Draws vega lite spec statically (without transition), also updates slider, description, show/hides some layers
  * @param {Number} index specification index in vegaLiteSpecs
  * @param {String} id root container id where vega visualizations are mounted
  * @param {Object} vegaSpec source vega spec of current frame
@@ -199,8 +208,9 @@ function drawSpec(index, id, vegaSpec) {
 
 /**
  * Draws a chart
- * @param {Object} spec vega lite spec
- * @param {String} id root container id where vega visualizations are mounted
+ * Supports single view as well as multiple view chart
+ * @param {Object} spec vega-lite spec
+ * @param {String} id root container id where vega visualizations are rendered
  * @param {Object} vegaSpec source vega spec of current frame
  * @returns a promise of vegaEmbed
  */
@@ -243,10 +253,10 @@ function drawChart(spec, id, vegaSpec) {
 }
 
 /**
- * Draws an axis layer
+ * Draws an axis layer. This is called when meta.axes = true.
  * @param {Number} index specification index in vegaLiteSpecs
  * @param {String} id root container id where vega visualizations are mounted
- * @returns
+ * @returns a promise of vegaEmbed
  */
 function drawAxis(index, id) {
   let spec = rawSpecs[index];
@@ -399,7 +409,7 @@ function loadData(specUrls) {
 /**
  * Transforms specifications into proper format:
  * - meta.grid = generates infogrid
- * - meta.jitter = jitters data using d3.force
+ * - meta.jitter = jitters data using d3.forceCollide
  * - spec.layer = splits layers to stack on top on each other
  */
 async function transformSpecs() {
@@ -462,7 +472,7 @@ async function transformSpecs() {
 }
 
 /**
- * Converts vega-lite to vega using vl2vg4gemini
+ * Converts vega-lite specs to vega specs using vl2vg4gemini (https://github.com/uwdata/gemini#vl2vg4gemini)
  */
 function toVegaSpecs() {
   vegaSpecs = vegaLiteSpecs.map((d) => {

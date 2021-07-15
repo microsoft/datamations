@@ -1,3 +1,8 @@
+/**
+ * Gets selectors for each componenent, such as slider and animation divs
+ * @param {String} id root container id where all the animation components are rendered
+ * @returns object of selectors
+ */
 function getSelectors(id) {
   const base = "#" + id;
 
@@ -11,6 +16,11 @@ function getSelectors(id) {
   };
 }
 
+/**
+ * Splits layers into separate vega-lite specifications, removes layer field
+ * @param {Object} input vega-lite specification with layers
+ * @returns a list of specs
+ */
 function splitLayers(input) {
   const specArray = [];
   const spec = input.spec;
