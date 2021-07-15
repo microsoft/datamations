@@ -3,10 +3,13 @@ Type: Package
 Title: Animated Explanations of Data Analysis Pipelines
 Version: 0.0.0.9007
 Authors@R: c(
-    person("Xiaoying", "Pu", email = "xpu@umich.edu", role = c("cre", "aut")),
-    person("Sean", "Kross", email = "smk240@gmail.com", role = c("aut")))
+    person("Xiaoying", "Pu", email = "xpu@umich.edu", role = c("aut")),
+    person("Sean", "Kross", email = "smk240@gmail.com", role = c("aut")),
+    person("Sharla", "Gelfand", role = c("aut")),
+    person("Giorgi", "Ghviniashvili", role = c("aut")),
+    person("Jake", "Hofman", email = "jmh@microsoft.com", role = c("cre", "aut")))
 Description: Generates animations that explain plots and tables from tidyverse pipelines.
-License: What license is it under?
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
