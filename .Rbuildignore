@@ -15,3 +15,4 @@ azure-pipelines.yml
 ^_pkgdown\.yml$
 ^R/README\.md$
 ^LICENSE\.md$
+^R/app_server\.R$
