@@ -173,7 +173,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   if (mapping$summary_function == "mean") {
     data_3 <- data_1 %>%
       # The errorbar is calculated by vega so we need to send the raw y values, and the summarised ones
-      dplyr::mutate(.y_raw = !!Y_FIELD) %>%
+      dplyr::mutate(!!Y_RAW_FIELD := !!Y_FIELD) %>%
       dplyr::group_by(!!!group_vars) %>%
       dplyr::mutate(dplyr::across(!!Y_FIELD, !!summary_function, na.rm = TRUE))
 
@@ -203,11 +203,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     description <- glue::glue("{description}, with errorbar, zoomed in")
 
     # Calculating errorbar (CI? Not actually the same as what vegalite calculates?) so that we can set the range for the zoom
-    browser()
     data_errorbar <- data_3 %>%
       dplyr::summarize(
         !!Y_FIELD := !!Y_FIELD,
-        sd = stats::sd(.data$.y_raw, na.rm = TRUE),
+        sd = stats::sd(!!Y_RAW_FIELD, na.rm = TRUE),
         n = n()
       ) %>%
       dplyr::distinct() %>%
