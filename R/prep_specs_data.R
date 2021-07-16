@@ -11,8 +11,8 @@ prep_specs_data <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height
   specs_list <- vector("list", length = 1)
 
   # Prep encoding
-  x_encoding <- list(field = "x", type = "quantitative", axis = NULL)
-  y_encoding <- list(field = "y", type = "quantitative", axis = NULL)
+  x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = NULL)
+  y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", axis = NULL)
 
   spec_encoding <- list(x = x_encoding, y = y_encoding)
 
