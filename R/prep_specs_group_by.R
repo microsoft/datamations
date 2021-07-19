@@ -82,8 +82,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
     description <- generate_group_by_description(mapping, "column")
 
     # Add tooltip
-    tooltip_encoding <- generate_group_by_tooltip(count_data)
-    spec_encoding <- append(spec_encoding, list(tooltip = tooltip_encoding))
+    spec_encoding$tooltip <- generate_group_by_tooltip(count_data)
 
     spec <- generate_vega_specs(count_data,
       mapping = mapping,
@@ -113,8 +112,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
     description <- generate_group_by_description(mapping, "column", "row")
 
     # Add tooltip
-    tooltip_encoding <- generate_group_by_tooltip(count_data)
-    spec_encoding <- append(spec_encoding, list(tooltip = tooltip_encoding))
+    spec_encoding$tooltip <- generate_group_by_tooltip(count_data)
 
     meta <- list(parse = "grid", description = description)
 
@@ -151,8 +149,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
     description <- generate_group_by_description(mapping, "column", "row", "x")
 
     # Add tooltip
-    tooltip_encoding <- generate_group_by_tooltip(count_data)
-    spec_encoding <- append(spec_encoding, list(tooltip = tooltip_encoding))
+    spec_encoding$tooltip <- generate_group_by_tooltip(count_data)
 
     spec <- generate_vega_specs(count_data,
       mapping = mapping,
