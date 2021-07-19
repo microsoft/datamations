@@ -1,11 +1,3 @@
-/**
- * Creates vega-lite spec template
- * @param {Number} width chart width
- * @param {Number} height chart height
- * @param {Object} axes which axis to include
- * @param {Object} spec vega-lite spec
- * @returns vega-lite spec template
- */
 function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   const encoding = spec.spec.encoding;
   const mark = spec.spec.mark;
@@ -15,7 +7,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
     const title = facet && facet.column ? facet.column.title : null;
 
     encoding.x = {
-      field: "x",
+      field: CONF.X_FIELD,
       type: "quantitative",
       scale: {},
       axis: axes.x ? {
@@ -35,7 +27,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
     const title = facet && facet.row ? facet.row.title : null;
 
     encoding.y = {
-      field: spec.spec.mark === "errorbar" ? encoding.y.field : "y",
+      field: spec.spec.mark === "errorbar" ? encoding.y.field : CONF.Y_FIELD,
       type: "quantitative",
       scale: {},
       axis: axes.y ? {
@@ -53,7 +45,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   }
 
   return {
-    $schema: "https://vega.github.io/schema/vega-lite/v4.json",
+    $schema: CONF.SCHEME,
     data: {
       values: [],
     },
@@ -64,11 +56,6 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   };
 }
 
-/**
- * Creates a vega-lite specification, without facets
- * @param {Object} param0 some parameters to generate hacked specification
- * @returns new vega-lite specification
- */
 function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   const rowId = spec.facet.row ? spec.facet.row.field : null;
   const colId = spec.facet.column ? spec.facet.column.field : null;
@@ -154,10 +141,13 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     const xStart = colMap.get(col) || 0;
     const yStart = rowMap.get(row) || 0;
 
+    const xField = spec.meta.parse === "jitter" ? "x" : CONF.X_FIELD;
+    const yField = spec.meta.parse === "jitter" ? "y" : CONF.Y_FIELD;
+
     values.push({
       ...d,
-      x: xStart + scaleX(d.x),
-      y: (yStart + scaleY(d.y)),
+      [CONF.X_FIELD]: xStart  + scaleX(d[xField]),
+      [CONF.Y_FIELD]: (yStart + scaleY(d[yField])),
     });
   });
 
@@ -170,11 +160,6 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   return newSpec;
 }
 
-/**
- * 
- * @param {Object} spec vega-lite spec
- * @returns a promise of vegaEmbed
- */
 function hackFacet(spec) {
   const div = document.createElement("div");
 

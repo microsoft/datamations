@@ -33,7 +33,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
     # Not defined in any of the previous steps since the JS takes care of generating it
     dplyr::mutate(gemini_id = dplyr::row_number()) %>%
-    dplyr::rename(y = {{ summary_variable }})
+    dplyr::rename(!!Y_FIELD := {{ summary_variable }})
 
   # Add an x variable to use as the center of jittering
   # It can just be 1, except if mapping$x is not 1!
@@ -41,7 +41,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   if (mapping$x == 1) {
     .data <- .data %>%
-      dplyr::mutate(x = 1)
+      dplyr::mutate(!!X_FIELD := 1)
 
     x_labels <- generate_labelsExpr(NULL)
     x_domain <- generate_x_domain(NULL)
@@ -51,17 +51,17 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     .data <- .data %>%
       dplyr::mutate(
-        x = as.numeric({{ x_var }})
+        !!X_FIELD := as.numeric({{ x_var }})
       )
 
     x_labels <- .data %>%
       dplyr::ungroup() %>%
-      dplyr::distinct(.data$x, label = {{ x_var }}) %>%
+      dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
       generate_labelsExpr()
 
     x_domain <- .data %>%
       dplyr::ungroup() %>%
-      dplyr::distinct(.data$x, label = {{ x_var }}) %>%
+      dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
       generate_x_domain()
 
     x_title <- mapping$x
@@ -69,10 +69,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   # Prep encoding ----
 
-  x_encoding <- list(field = "x", type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
+  x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
 
-  y_range <- range(.data[["y"]], na.rm = TRUE)
-  y_encoding <- list(field = "y", type = "quantitative", title = mapping$y, scale = list(domain = y_range))
+  y_range <- range(.data[[Y_FIELD_CHR]], na.rm = TRUE)
+  y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y, scale = list(domain = y_range))
 
   color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
 
@@ -108,11 +108,11 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # State 1: Scatter plot (with any grouping) -----
 
   data_1 <- .data %>%
-    dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), .data$x, .data$y)
+    dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD)
 
   # Remove NA values, since their values will not be displayed - better to have them fade off
   data_1 <- data_1 %>%
-    dplyr::filter(!is.na(.data$y))
+    dplyr::filter(!is.na(!!Y_FIELD))
 
   # Generate description
   description <- generate_summarize_description(summary_variable, group_by = length(group_vars) != 0)
@@ -148,7 +148,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   data_2 <- data_1 %>%
     dplyr::group_by(!!!group_vars) %>%
-    dplyr::mutate(dplyr::across(.data$y, !!summary_function, na.rm = TRUE))
+    dplyr::mutate(dplyr::across(!!Y_FIELD, !!summary_function, na.rm = TRUE))
 
   # Generate description
   description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
@@ -173,9 +173,9 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   if (mapping$summary_function == "mean") {
     data_3 <- data_1 %>%
       # The errorbar is calculated by vega so we need to send the raw y values, and the summarised ones
-      dplyr::mutate(y_raw = .data$y) %>%
+      dplyr::mutate(!!Y_RAW_FIELD := !!Y_FIELD) %>%
       dplyr::group_by(!!!group_vars) %>%
-      dplyr::mutate(dplyr::across(.data$y, !!summary_function, na.rm = TRUE))
+      dplyr::mutate(dplyr::across(!!Y_FIELD, !!summary_function, na.rm = TRUE))
 
     description <- generate_summarize_description(summary_variable, summary_function, errorbar = TRUE, group_by = length(group_vars) != 0)
 
@@ -205,15 +205,15 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     # Calculating errorbar (CI? Not actually the same as what vegalite calculates?) so that we can set the range for the zoom
     data_errorbar <- data_3 %>%
       dplyr::summarize(
-        y = .data$y,
-        sd = stats::sd(.data$y_raw, na.rm = TRUE),
+        !!Y_FIELD := !!Y_FIELD,
+        sd = stats::sd(!!Y_RAW_FIELD, na.rm = TRUE),
         n = n()
       ) %>%
       dplyr::distinct() %>%
       dplyr::mutate(
         se = 1.96 * .data$sd / sqrt(.data$n),
-        lcl = .data$y - .data$se,
-        ucl = .data$y + .data$se
+        lcl = !!Y_FIELD - .data$se,
+        ucl = !!Y_FIELD + .data$se
       )
 
     lcl <- min(data_errorbar[["lcl"]], na.rm = TRUE)
@@ -235,7 +235,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     description <- glue::glue("{description}, zoomed in")
 
     # Range is just the range of the actual y
-    range_y <- range(data_2[["y"]], na.rm = TRUE)
+    range_y <- range(data_2[[Y_FIELD_CHR]], na.rm = TRUE)
     spec_encoding$y$scale$domain <- range_y
 
     spec <- generate_vega_specs(

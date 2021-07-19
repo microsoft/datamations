@@ -37,7 +37,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
 
     # The errorbar has its own encoding, and it uses data y_raw (the actual raw values) to calculate the errorbar
     errorbar_spec_encoding <- spec_encoding
-    errorbar_spec_encoding$y$field <- "y_raw"
+    errorbar_spec_encoding$y$field <- Y_RAW_FIELD_CHR
 
     list(
       height = height,
@@ -106,7 +106,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
 
     # The errorbar has its own encoding, and it uses data y_raw (the actual raw values) to calculate the errorbar
     errorbar_spec_encoding <- spec_encoding
-    errorbar_spec_encoding$y$field <- "y_raw"
+    errorbar_spec_encoding$y$field <- Y_RAW_FIELD_CHR
 
     list(
       `$schema` = vegawidget::vega_schema(),
@@ -221,7 +221,7 @@ generate_labelsExpr <- function(data) {
     dplyr::mutate(label = dplyr::coalesce(.data$label, "undefined"))
 
   n_breaks <- nrow(data)
-  breaks <- data[["x"]]
+  breaks <- data[[X_FIELD_CHR]]
   labels <- data[["label"]]
 
   labelExpr <- c(glue::glue("round(datum.label) == {ceiling(breaks[1:(n_breaks - 1)])} ? '{labels[1:(n_breaks - 1)]}'"), glue::glue("'{labels[n_breaks]}'")) %>% paste0(collapse = " : ")
@@ -236,7 +236,7 @@ generate_x_domain <- function(data) {
   if (is.null(data)) {
     list(domain = c(0.5, 1.5))
   } else {
-    list(domain = c(min(data[["x"]]) - 0.5, max(data[["x"]]) + 0.5))
+    list(domain = c(min(data[[X_FIELD_CHR]]) - 0.5, max(data[[X_FIELD_CHR]]) + 0.5))
   }
 }
 

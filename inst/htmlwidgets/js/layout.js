@@ -1,10 +1,3 @@
-/**
- * Generates grid layout. 
- * Groups data by facets or splitField and generates data for grid layout
- * @param {Object} spec vega-lite specification
- * @param {Number} rows number of rows in a grid
- * @returns grid data
- */
 function generateGrid(spec, rows = 10) {
   const splitField = spec.meta.splitField;
   const specValues = spec.data.values;
@@ -47,8 +40,8 @@ function generateGrid(spec, rows = 10) {
         arr.push({
           ...d,
           gemini_id: counter,
-          x,
-          y,
+          [CONF.X_FIELD]: x,
+          [CONF.Y_FIELD]: y,
         });
 
         counter++;
@@ -93,13 +86,13 @@ function getGridSpec(spec, rows = 10) {
     const yGap = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
 
     const xDomain = [
-      d3.min(grid, d => d.x) - 2,
-      d3.max(grid, d => d.x) + 2
+      d3.min(grid, d => d[CONF.X_FIELD]) - 2,
+      d3.max(grid, d => d[CONF.X_FIELD]) + 2
     ];
 
     const yDomain = [
-      d3.min(grid, (d) => d.y) - yGap,
-      d3.max(grid, (d) => d.y) + yGap,
+      d3.min(grid, (d) => d[CONF.Y_FIELD]) - yGap,
+      d3.max(grid, (d) => d[CONF.Y_FIELD]) + yGap,
     ];
 
     obj.data.values = grid;
@@ -114,8 +107,8 @@ function getGridSpec(spec, rows = 10) {
       domain: yDomain,
     };
 
-    encoding.x.field = "x";
-    encoding.y.field = "y";
+    encoding.x.field = CONF.X_FIELD;
+    encoding.y.field = CONF.Y_FIELD;
 
     if (spec.meta.splitField) {
       const labels = Array.from(
@@ -152,6 +145,7 @@ function getJitterSpec(spec) {
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const width = spec.spec ? spec.spec.width : spec.width;
   const nodes = spec.data.values;
+
   const circleRadius = 4;
 
   let innerGroupCount = 1;
@@ -163,17 +157,17 @@ function getJitterSpec(spec) {
   }
 
   const facetSize = width ? width : 150;
-  const yExtent = d3.extent(nodes, d => d.y);
+  const yExtent = d3.extent(nodes, d => d[CONF.Y_FIELD]);
   const xScale = d3.scaleBand()
     .domain(d3.range(1, innerGroupCount + 1))
     .range([0, facetSize]);
 
-  const arr = nodes.slice().filter(d => d.y !== undefined).map((d, i) => {
-    d.oldX = d.x;
-    d.oldY = d.y;
+  const arr = nodes.slice().filter(d => d[CONF.Y_FIELD] !== undefined).map((d, i) => {
+    d.oldX = d[CONF.X_FIELD];
+    d.oldY = d[CONF.Y_FIELD];
 
-    let x = xScale(d.x) + xScale.bandwidth() / 2;
-    let y = d.y;
+    let x = xScale(d[CONF.X_FIELD]) + xScale.bandwidth() / 2;
+    let y = d[CONF.Y_FIELD];
 
     return {
       ...d,
@@ -185,7 +179,7 @@ function getJitterSpec(spec) {
   const simulation = d3
     .forceSimulation(arr)
     .force("x", d3.forceX().strength(0.0001))
-    .force("y", d3.forceY().strength(0.002).y(d => d.y))
+    .force("y", d3.forceY().strength(0.002).y(d => d[CONF.Y_FIELD]))
     .force("collide", d3
       .forceCollide()
       .strength(0.001)
@@ -202,6 +196,7 @@ function getJitterSpec(spec) {
       arr.forEach(d => {
         const x = xScale(d.oldX);
         d.y = d.oldY;
+
         d.x = Math.max(
           x + xScale.bandwidth() * 0.05,
           Math.min(x + bandwidth, d.x),
@@ -216,6 +211,11 @@ function getJitterSpec(spec) {
     encoding.x.scale = {
       domain: [0, facetSize]
     }
+
+    // jitter still needs encoding fields to be x and y,
+    // because d3-force uses x and y internally.
+    encoding.x.field = "x";
+    encoding.y.field = "y";
 
     // if no axes is drawn, and we have custom x-axis
     if (!spec.meta.axes && encoding.x.axis && spec.meta.xAxisLabels) {
