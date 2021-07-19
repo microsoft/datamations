@@ -16,3 +16,4 @@ azure-pipelines.yml
 ^R/README\.md$
 ^LICENSE\.md$
 ^R/app_server\.R$
+^inst/htmlwidgets/test$

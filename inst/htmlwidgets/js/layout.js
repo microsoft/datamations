@@ -116,11 +116,16 @@ function getGridSpec(spec, rows = 10) {
       );
 
       const expr = {};
-      const maxCols = d3.max(spec.data.values, d => Math.ceil(d.n / rows));
 
-      labels.forEach((d, i) => {
-        const x = maxCols * i + Math.floor(maxCols / 2);
-        expr[x] = d;
+      labels.forEach((d) => {
+        // find min and max x values for each label
+        const extent = d3.extent(
+          spec.data.values.filter(x => x[spec.meta.splitField] === d), 
+          d => d[CONF.X_FIELD],
+        );
+
+        const middle = Math.floor(extent[0] + (extent[1] - extent[0]) / 2);
+        expr[middle] = d;
       });
 
       encoding.x.axis = {
