@@ -144,9 +144,9 @@ generate_group_by_description <- function(mapping, ...) {
   glue::glue("Group by {mapping_sep}")
 }
 
-generate_group_by_tooltip <- function(count_data) {
+generate_group_by_tooltip <- function(.data) {
 
-  tooltip_vars <- count_data %>%
+  tooltip_vars <- .data %>%
     dplyr::select(-.data$n) %>%
     names()
 
@@ -267,4 +267,21 @@ generate_summarize_description <- function(summary_variable, summary_function = 
       group_description = ifelse(group_by, " of each group", "")
     )
   }
+}
+
+generate_summarize_tooltip <- function(.data, summary_variable, summary_function = NULL) {
+
+  if (is.null(summary_function)) {
+    y_tooltip <- list(field = Y_FIELD_CHR, type = "quantitative", title = summary_variable)
+  } else {
+    y_tooltip <- list(field = Y_FIELD_CHR, type = "quantitative", title = glue::glue("{summary_function}({summary_variable})"))
+  }
+
+  tooltip_vars <- .data %>%
+    dplyr::select(-.data$gemini_id, -.data$datamations_x, -.data$datamations_y) %>%
+    names()
+
+  tooltip <- purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
+
+  append(list(y_tooltip), tooltip)
 }

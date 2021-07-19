@@ -117,6 +117,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Generate description
   description <- generate_summarize_description(summary_variable, group_by = length(group_vars) != 0)
 
+  # Generate tooltip
+  tooltip_encoding <- generate_summarize_tooltip(data_1, mapping$y)
+  spec_encoding <- append(spec_encoding, list(tooltip = tooltip_encoding))
+
   # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
   meta <- list(parse = "jitter", axes = has_facets, description = description)
 
@@ -153,6 +157,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Generate description
   description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
 
+  # Tooltip
+  tooltip_encoding <- generate_summarize_tooltip(data_1, mapping$y, mapping$summary_function)
+  spec_encoding$tooltip <- tooltip_encoding
+
   spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
 
   spec <- generate_vega_specs(
@@ -164,6 +172,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     # Flags for column / row  facets or color
     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
   )
+
+  browser()
 
   specs_list <- append(specs_list, list(spec))
 
