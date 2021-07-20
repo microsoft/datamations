@@ -37,6 +37,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
 
     # The errorbar has its own encoding, and it uses data y_raw (the actual raw values) to calculate the errorbar
     errorbar_spec_encoding <- spec_encoding
+    errorbar_spec_encoding$tooltip <- NULL
     errorbar_spec_encoding$y$field <- Y_RAW_FIELD_CHR
 
     list(
@@ -106,6 +107,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
 
     # The errorbar has its own encoding, and it uses data y_raw (the actual raw values) to calculate the errorbar
     errorbar_spec_encoding <- spec_encoding
+    errorbar_spec_encoding$tooltip <- NULL
     errorbar_spec_encoding$y$field <- Y_RAW_FIELD_CHR
 
     list(
