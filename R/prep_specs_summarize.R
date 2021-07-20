@@ -108,7 +108,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # State 1: Scatter plot (with any grouping) -----
 
   data_1 <- .data %>%
-    dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD)
+    dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
+    dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
 
   # Remove NA values, since their values will not be displayed - better to have them fade off
   data_1 <- data_1 %>%
@@ -151,7 +152,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   data_2 <- data_1 %>%
     dplyr::group_by(!!!group_vars) %>%
-    dplyr::mutate(dplyr::across(!!Y_FIELD, !!summary_function, na.rm = TRUE))
+    dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
 
   # Generate description
   description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
@@ -181,7 +182,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       # The errorbar is calculated by vega so we need to send the raw y values, and the summarised ones
       dplyr::mutate(!!Y_RAW_FIELD := !!Y_FIELD) %>%
       dplyr::group_by(!!!group_vars) %>%
-      dplyr::mutate(dplyr::across(!!Y_FIELD, !!summary_function, na.rm = TRUE))
+      dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
 
     description <- generate_summarize_description(summary_variable, summary_function, errorbar = TRUE, group_by = length(group_vars) != 0)
 

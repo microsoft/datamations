@@ -272,13 +272,13 @@ generate_summarize_description <- function(summary_variable, summary_function = 
 generate_summarize_tooltip <- function(.data, summary_variable, summary_function = NULL) {
 
   if (is.null(summary_function)) {
-    y_tooltip <- list(field = Y_FIELD_CHR, type = "quantitative", title = summary_variable)
+    y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = summary_variable)
   } else {
-    y_tooltip <- list(field = Y_FIELD_CHR, type = "quantitative", title = glue::glue("{summary_function}({summary_variable})"))
+    y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = glue::glue("{summary_function}({summary_variable})"))
   }
 
   tooltip_vars <- .data %>%
-    dplyr::select(-.data$gemini_id, -.data$datamations_x, -.data$datamations_y) %>%
+    dplyr::select(-.data$gemini_id, -!!X_FIELD, -!!Y_FIELD, -!!Y_TOOLTIP_FIELD) %>%
     names()
 
   tooltip <- purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
