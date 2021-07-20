@@ -13,6 +13,8 @@ generate_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encod
 # Generate vega specs that are not faceted
 generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, width, color = FALSE, errorbar = FALSE) {
 
+  errorbar_tooltip <- spec_encoding$errorbar_tooltip
+
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
   # So even if color = TRUE, if it's not there, it'll be removed!
   if (!color) {
@@ -37,7 +39,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
 
     # The errorbar has its own encoding, and it uses data y_raw (the actual raw values) to calculate the errorbar
     errorbar_spec_encoding <- spec_encoding
-    errorbar_spec_encoding$tooltip <- NULL
+    errorbar_spec_encoding$tooltip <- errorbar_tooltip
     errorbar_spec_encoding$y$field <- Y_RAW_FIELD_CHR
 
     list(
@@ -65,6 +67,8 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
 
 # Generate vega specs that are faceted
 generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column = FALSE, row = FALSE, color = FALSE, errorbar = FALSE) {
+
+  errorbar_tooltip <- spec_encoding$errorbar_tooltip
 
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
   # So even if color = TRUE, if it's not there, it'll be removed!
@@ -107,7 +111,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
 
     # The errorbar has its own encoding, and it uses data y_raw (the actual raw values) to calculate the errorbar
     errorbar_spec_encoding <- spec_encoding
-    errorbar_spec_encoding$tooltip <- NULL
+    errorbar_spec_encoding$tooltip <- errorbar_tooltip
     errorbar_spec_encoding$y$field <- Y_RAW_FIELD_CHR
 
     list(

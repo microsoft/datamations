@@ -174,15 +174,49 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   specs_list <- append(specs_list, list(spec))
 
-  # State 3: Error bars -----
-  # Only if the summary function is mean!
-
   if (mapping$summary_function == "mean") {
+
+    # State 3: Error bars -----
+    # Only if the summary function is mean!
+
     data_3 <- data_1 %>%
       # The errorbar is calculated by vega so we need to send the raw y values, and the summarised ones
       dplyr::mutate(!!Y_RAW_FIELD := !!Y_FIELD) %>%
       dplyr::group_by(!!!group_vars) %>%
       dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
+
+    # Calculating errorbar for tooltips and to set the range for the zoom in the next step
+    data_errorbar <- data_3 %>%
+      dplyr::summarize(
+        !!Y_FIELD := !!Y_FIELD,
+        sd = stats::sd(!!Y_RAW_FIELD, na.rm = TRUE),
+        n = n()
+      ) %>%
+      dplyr::distinct() %>%
+      dplyr::mutate(
+        se = .data$sd / sqrt(.data$n),
+        Lower = !!Y_FIELD - .data$se,
+        Upper = !!Y_FIELD + .data$se
+      ) %>%
+      dplyr::select(-!!Y_FIELD, -.data$sd, -.data$n, -.data$se)
+
+    join_vars <- data_3 %>%
+      dplyr::select(-.data$gemini_id, -!!X_FIELD, -!!Y_FIELD, -!!Y_TOOLTIP_FIELD, -!!Y_RAW_FIELD) %>%
+      names()
+
+    data_3 <- data_3 %>%
+      dplyr::left_join(data_errorbar, by = join_vars)
+
+    errorbar_tooltip <- purrr::map(c("Upper", "Lower"), ~ list(field = .x, type = "nominal", title = glue::glue("mean({summary_variable}) {sign} standard error",
+      sign = ifelse(.x == "Upper", "+", "-")
+    )))
+    tooltip_encoding_first <- list(spec_encoding$tooltip[[1]])
+    tooltip_encoding_rest <- list(spec_encoding$tooltip[[-1]])
+
+    errorbar_tooltip <- append(tooltip_encoding_first, errorbar_tooltip)
+    errorbar_tooltip <- append(errorbar_tooltip, tooltip_encoding_rest)
+
+    spec_encoding$errorbar_tooltip <- errorbar_tooltip
 
     description <- generate_summarize_description(summary_variable, summary_function, errorbar = TRUE, group_by = length(group_vars) != 0)
 
@@ -197,36 +231,19 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     )
 
     specs_list <- append(specs_list, list(spec))
-  }
 
-  # Step 4: Zoom -----
-  # Zoom in on the summarised value
-  # If it's mean (and there's error bars), need to calculate the error bars manually and get the range from there
-  # Otherwise, just do the range of the Y + some padding
+    # Step 4: Zoom -----
+    # Zoom in on the summarised value
+    # If it's mean (and there's error bars), need to calculate the error bars manually and get the range from there
+    # Otherwise, just do the range of the Y + some padding
 
-  description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
-
-  if (mapping$summary_function == "mean") {
+    description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
     description <- glue::glue("{description}, with errorbar, zoomed in")
 
-    # Calculating errorbar (CI? Not actually the same as what vegalite calculates?) so that we can set the range for the zoom
-    data_errorbar <- data_3 %>%
-      dplyr::summarize(
-        !!Y_FIELD := !!Y_FIELD,
-        sd = stats::sd(!!Y_RAW_FIELD, na.rm = TRUE),
-        n = n()
-      ) %>%
-      dplyr::distinct() %>%
-      dplyr::mutate(
-        se = 1.96 * .data$sd / sqrt(.data$n),
-        lcl = !!Y_FIELD - .data$se,
-        ucl = !!Y_FIELD + .data$se
-      )
-
-    lcl <- min(data_errorbar[["lcl"]], na.rm = TRUE)
-    ucl <- max(data_errorbar[["ucl"]], na.rm = TRUE)
-
+    lcl <- min(data_errorbar[["Lower"]], na.rm = TRUE)
+    ucl <- max(data_errorbar[["Upper"]], na.rm = TRUE)
     range_y_errorbar <- c(lcl, ucl)
+
     spec_encoding$y$scale$domain <- range_y_errorbar
 
     spec <- generate_vega_specs(
