@@ -158,7 +158,36 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       facet_encoding = facet_encoding,
       height = height, width = width,
       facet_dims = facet_dims,
-      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
+      column = !is.null(mapping$column), row = !is.null(mapping$row), color = identical(mapping$x, mapping$color)
+    )
+
+    specs_list <- specs_list %>%
+      append(list(spec))
+  }
+
+  # State 4: Grouped icon array, by column, row, x, and color
+  # If color is specified and separate from x - happens when specified via ggplot2!
+
+  browser()
+
+  # If x is the same as the row/column variable, don't do it twice
+  # AND if the mapping is not just 1
+  do_color <- !is.null(mapping$color) & !(identical(mapping$color, mapping$column) | identical(mapping$color, mapping$row) | identical(mapping$color, mapping$x))
+
+  if (do_color) {
+    count_data <- .data %>%
+      dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row, mapping$x, mapping$color))))
+
+    description <- generate_group_by_description(mapping, "column", "row", "x", "color")
+
+    spec <- generate_vega_specs(count_data,
+      mapping = mapping,
+      meta = list(parse = "grid", description = description, splitField = c(mapping$x, mapping$color), axes = !is.null(mapping$column) | (is.null(mapping$column) & !is.null(mapping$row))),
+      spec_encoding = spec_encoding,
+      facet_encoding = facet_encoding,
+      height = height, width = width,
+      facet_dims = facet_dims,
+      column = !is.null(mapping$column), row = !is.null(mapping$row), color = TRUE
     )
 
     specs_list <- specs_list %>%
