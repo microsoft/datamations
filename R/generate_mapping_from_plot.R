@@ -15,6 +15,10 @@ generate_mapping_from_plot <- function(plot) {
       rlang::quo_name()
   }
 
+  if(color == "NULL") {
+    color <- NULL
+  }
+
   #  Need to get y variable from the pipeline, since we want the "original" variable, not the transformed one that appears on the plot
 
   plot_mapping <- list(x = x, color = color)

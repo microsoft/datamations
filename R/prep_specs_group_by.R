@@ -129,7 +129,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       facet_encoding = facet_encoding,
       height = height, width = width,
       facet_dims = facet_dims,
-      column = TRUE, row = TRUE, color = identical(mapping$row, mapping$color) # Also do color if it's the same as the row variable
+      column = TRUE, row = TRUE, color = identical(mapping$row, mapping$color) | identical(mapping$row, mapping$color) # Also do color if it's the same as the row variable, or the column!
     )
 
     specs_list <- specs_list %>%
@@ -158,7 +158,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       facet_encoding = facet_encoding,
       height = height, width = width,
       facet_dims = facet_dims,
-      column = !is.null(mapping$column), row = !is.null(mapping$row), color = identical(mapping$x, mapping$color)
+      column = !is.null(mapping$column), row = !is.null(mapping$row), color = identical(mapping$row, mapping$color) | identical(mapping$column, mapping$color) | identical(mapping$x, mapping$color)
     )
 
     specs_list <- specs_list %>%
@@ -167,8 +167,6 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   # State 4: Grouped icon array, by column, row, x, and color
   # If color is specified and separate from x - happens when specified via ggplot2!
-
-  browser()
 
   # If x is the same as the row/column variable, don't do it twice
   # AND if the mapping is not just 1
