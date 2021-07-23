@@ -67,6 +67,19 @@ test_that("datamation_sanddance returns an htmlwidget", {
   expect_s3_class(widget, "htmlwidget")
 })
 
+test_that("datamation_sanddance errors if facet_wrap is used", {
+  expect_error(
+    "small_salary %>%
+  group_by(Work, Degree) %>%
+  summarize(mean_salary = median(Salary)) %>%
+  ggplot() +
+  geom_point(aes(x = Work, y = mean_salary, color = Degree)) +
+facet_wrap(vars(Degree))" %>%
+      datamation_sanddance(),
+    "does not support `facet_wrap"
+  )
+})
+
 # test_that("specs are generated as expected", {
 #   spec <- "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
 #     datamation_sanddance()
