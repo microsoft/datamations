@@ -216,7 +216,9 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     errorbar_tooltip <- append(tooltip_encoding_first, errorbar_tooltip)
     errorbar_tooltip <- append(errorbar_tooltip, tooltip_encoding_rest)
 
-    spec_encoding$errorbar_tooltip <- errorbar_tooltip
+    # Replacing the "original" tooltip with the errorbar one, since we can't visualize tooltips on errorbars because they're on another layer
+    # So just show the errorbar info on the point, too!
+    spec_encoding$tooltip <- errorbar_tooltip
 
     description <- generate_summarize_description(summary_variable, summary_function, errorbar = TRUE, group_by = length(group_vars) != 0)
 
