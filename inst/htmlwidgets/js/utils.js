@@ -61,3 +61,18 @@ function splitLayers(input) {
 
   return specArray;
 }
+
+/**
+ * Looks up a word based of buckets and value.
+ * Example: 
+ *   - words: ['a', 'b', 'c']
+ *   - buckets: [10, 20, 30]
+ *   - value: 25
+ *   will return 'c'
+ * @param {Array} words list of words
+ * @param {Array} buckets list of numbers
+ * @param {Number} value score to lookup
+ */
+ function lookupByBucket(words, buckets, value) {
+  return words[buckets.findIndex(d => value <= d)];
+}

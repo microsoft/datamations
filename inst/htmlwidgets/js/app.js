@@ -396,9 +396,6 @@ function loadData(specUrls) {
     })
   )
   .then(res => {
-    res[3].meta.splitField = "sex";
-    res[5].spec.encoding.x.axis.values = [1, 2, 3];
-    console.log(res[5]);
     return res;
   })
   .catch((e) => {

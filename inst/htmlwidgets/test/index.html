@@ -130,12 +130,18 @@
             <button onclick="play('app')">Replay</button>
           </div>
           <div class="slider-wrapper">
-            <input class="slider" type="range" min="0" value="0" onchange="onSlide('app')"/>
-          </div>     
+            <input
+              class="slider"
+              type="range"
+              min="0"
+              value="0"
+              onchange="onSlide('app')"
+            />
+          </div>
         </div>
         <div class="description"></div>
       </div>
-      
+
       <div class="vega-vis-wrapper">
         <div class="vega-for-axis"></div>
         <div class="vega-other-layers"></div>
@@ -165,8 +171,9 @@
       //   autoPlay: false
       // });
 
-      d3.json("https://raw.githubusercontent.com/microsoft/datamations/main/sandbox/generalized_specs/two_groups.json").then((res) => {
-
+      d3.json(
+        "https://raw.githubusercontent.com/microsoft/datamations/main/sandbox/generalized_specs/two_groups.json"
+      ).then((res) => {
         // const fixEncoding = (encoding) => {
         //   if (encoding.x.field === "x") {
         //     encoding.x.field = CONF.X_FIELD;
@@ -203,49 +210,68 @@
         //     });
         //   }
         // })
-        
+
         init("app", {
           specs: [
             {
-              "height": 300,
-              "width": 300,
-              "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-              "meta": {
-                "parse": "grid",
-                "description": "Group by Degree",
-                "splitField": "Degree",
-                "axes": false
+              height: 300,
+              width: 300,
+              $schema: "https://vega.github.io/schema/vega-lite/v4.json",
+              meta: {
+                parse: "grid",
+                description: "Group by Work, Degree",
+                splitField: "Work",
+                axes: false,
               },
-              "data": {
-                "values": [
+              data: {
+                values: [
                   {
-                    "Degree": "Masters",
-                    "n": 5
+                    Work: "Academia",
+                    Degree: "Masters",
+                    n: 10,
                   },
                   {
-                    "Degree": "PhD",
-                    "n": 5
+                    Work: "Academia",
+                    Degree: "PhD",
+                    n: 18,
                   },
-                ]
+                  {
+                    Work: "Industry",
+                    Degree: "Masters",
+                    n: 62,
+                  },
+                  {
+                    Work: "Industry",
+                    Degree: "PhD",
+                    n: 10,
+                  },
+                ],
               },
-              "mark": {
-                "type": "point",
-                "filled": true
+              mark: {
+                type: "point",
+                filled: true,
               },
-              "encoding": {
-                "x": {
-                  "field": "x",
-                  "type": "quantitative",
-                  "axis": null
+              encoding: {
+                x: {
+                  field: "datamations_x",
+                  type: "quantitative",
+                  axis: null,
                 },
-                "y": {
-                  "field": "y",
-                  "type": "quantitative",
-                  "axis": null
-                }
-              }
-            }
-          ]
+                y: {
+                  field: "datamations_y",
+                  type: "quantitative",
+                  axis: null,
+                },
+                color: {
+                  field: "Degree",
+                  type: "nominal",
+                  legend: {
+                    values: ["Masters", "PhD"],
+                  },
+                },
+              },
+            },
+          ],
         });
       });
     </script>

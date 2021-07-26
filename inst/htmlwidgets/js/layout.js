@@ -1,8 +1,7 @@
 function generateGrid(spec, rows = 10) {
   const splitField = spec.meta.splitField;
-  const specValues = spec.data.values;
+  const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const groupKeys = [];
-  const maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows)
 
   if (spec.facet) {
     if (spec.facet.column) {
@@ -12,6 +11,42 @@ function generateGrid(spec, rows = 10) {
       groupKeys.push(spec.facet.row.field);
     }
   }
+
+  let specValues = spec.data.values;
+  let colorField = null;
+
+  if (
+    splitField &&
+    encoding.color && 
+    encoding.color.field !== splitField && 
+    groupKeys.indexOf(encoding.color.field) === -1
+  ) {
+    colorField = encoding.color.field;
+
+    const grouped = d3.rollups(
+      specValues, 
+      arr => {
+        const obj = {};
+        let sum = 0;
+
+        arr.forEach(x => {
+          sum += x.n;
+          obj[x[encoding.color.field]] = sum;
+        });
+
+        return {
+          [splitField]: arr[0][splitField],
+          [encoding.color.field]: obj,
+          n: sum,
+        }
+      },
+      d => d[splitField]
+    );
+    
+    specValues = grouped.flatMap(d => d[1])
+  }
+
+  const maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
 
   let splitOptions = [];
 
@@ -36,9 +71,19 @@ function generateGrid(spec, rows = 10) {
       for (let i = 0; i < n; i++) {
         const x = startCol + Math.floor(i / rows);
         const y = rows - 1 - i % rows;
+        const colorFieldObj = {};
+
+        if (colorField && typeof[d[colorField]] === "object") {
+          colorFieldObj[colorField] = lookupByBucket(
+            Object.keys(d[colorField]),
+            Object.values(d[colorField]),
+            i,
+          )
+        }
 
         arr.push({
           ...d,
+          ...colorFieldObj,
           gemini_id: counter,
           [CONF.X_FIELD]: x,
           [CONF.Y_FIELD]: y,
