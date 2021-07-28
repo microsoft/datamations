@@ -16,7 +16,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
   # So even if color = TRUE, if it's not there, it'll be removed!
   if (!color) {
-    spec_encoding <- spec_encoding[c("x", "y")]
+    spec_encoding <- spec_encoding[c("x", "y", "tooltip")]
   }
 
   # TODO - handle color
@@ -68,7 +68,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
   # So even if color = TRUE, if it's not there, it'll be removed!
   if (is.null(mapping$color) | !color) {
-    spec_encoding <- spec_encoding[c("x", "y")]
+    spec_encoding <- spec_encoding[c("x", "y", "tooltip")]
   }
 
   # Remove facet encoding(s) if they're flagged not to be shown, or aren't in the mapping
@@ -142,6 +142,15 @@ generate_group_by_description <- function(mapping, ...) {
     unlist() %>%
     paste0(collapse = ", ")
   glue::glue("Group by {mapping_sep}")
+}
+
+generate_group_by_tooltip <- function(.data) {
+
+  tooltip_vars <- .data %>%
+    dplyr::select(-.data$n) %>%
+    names()
+
+  purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
 }
 
 # Handle NAs in data by coercing to literal "NA", and order grouping levels alphabetically (with "NA" last) so that they appear consistently (and get consistent IDs) across frames
@@ -258,4 +267,21 @@ generate_summarize_description <- function(summary_variable, summary_function = 
       group_description = ifelse(group_by, " of each group", "")
     )
   }
+}
+
+generate_summarize_tooltip <- function(.data, summary_variable, summary_function = NULL) {
+
+  if (is.null(summary_function)) {
+    y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = summary_variable)
+  } else {
+    y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = glue::glue("{summary_function}({summary_variable})"))
+  }
+
+  tooltip_vars <- .data %>%
+    dplyr::select(-.data$gemini_id, -!!X_FIELD, -!!Y_FIELD, -!!Y_TOOLTIP_FIELD) %>%
+    names()
+
+  tooltip <- purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
+
+  append(list(y_tooltip), tooltip)
 }

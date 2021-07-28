@@ -8,10 +8,6 @@
   left: 0;
 }
 
-.vega-vis-wrapper * {
-  pointer-events: none !important;
-}
-
 .vega-vis-wrapper .vega-vis svg {
   background-color: transparent !important;
 }
