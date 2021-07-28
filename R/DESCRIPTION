@@ -29,18 +29,12 @@ Imports:
     vegawidget,
     forcats,
     glue,
-    tidyselect,
-    htmlwidgets,
-    reactable,
-    shinyWidgets,
-    shinydashboard,
-    shinyAce,
-    golem,
-    styler,
-    shinyjs
-Suggests: 
     jsonlite,
     palmerpenguins,
+    tidyselect,
+    htmlwidgets,
+    htmltools
+Suggests: 
     testthat (>= 2.1.0)
 Depends: 
     R (>= 3.5.0)

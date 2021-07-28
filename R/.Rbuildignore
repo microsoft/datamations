@@ -2,16 +2,12 @@
 ^renv\.lock$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-start-up.R
 ^README\.Rmd$
 ^\.github$
 ^renv$
 ^README_cache$
 ^data-raw$
-^app\.R$
-^rsconnect$
 ^sandbox$
-azure-pipelines.yml
 ^_pkgdown\.yml$
 ^R/README\.md$
 ^LICENSE\.md$

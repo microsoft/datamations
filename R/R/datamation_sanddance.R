@@ -116,9 +116,9 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
 
     # Define which function to call for that step in the pipeline
     call_verb <- switch(verb,
-      data = prep_specs_data,
-      group_by = prep_specs_group_by,
-      summarize = prep_specs_summarize
+                        data = prep_specs_data,
+                        group_by = prep_specs_group_by,
+                        summarize = prep_specs_summarize
     )
 
     # Call that function with the data and mapping
@@ -194,28 +194,28 @@ renderDatamationSandDance <- function(expr, env = parent.frame(), quoted = FALSE
 datamationSandDance_html <- function(...) {
   id <- c(...)[["id"]]
 
-  shiny::tags$div(
+  htmltools::tags$div(
     ...,
-    shiny::tags$div(
+    htmltools::tags$div(
       class = "controls-wrapper",
-      shiny::tags$div(
+      htmltools::tags$div(
         class = "control-bar",
-        shiny::tags$div(
+        htmltools::tags$div(
           class = "button-wrapper",
-          shiny::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Replay")
+          htmltools::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Replay")
         ),
-        shiny::tags$div(
+        htmltools::tags$div(
           class = "slider-wrapper",
-          shiny::tags$input(class = "slider", type = "range", min = "0", value = "0", onchange = htmlwidgets::JS(paste0("onSlide('", id, "')")))
+          htmltools::tags$input(class = "slider", type = "range", min = "0", value = "0", onchange = htmlwidgets::JS(paste0("onSlide('", id, "')")))
         )
       ),
-      shiny::tags$div(class = "description")
+      htmltools::tags$div(class = "description")
     ),
-    shiny::tags$div(
+    htmltools::tags$div(
       class = "vega-vis-wrapper",
-      shiny::tags$div(class = "vega-for-axis"),
-      shiny::tags$div(class = "vega-other-layers"),
-      shiny::tags$div(class = "vega-vis")
+      htmltools::tags$div(class = "vega-for-axis"),
+      htmltools::tags$div(class = "vega-other-layers"),
+      htmltools::tags$div(class = "vega-vis")
     )
   )
 }
