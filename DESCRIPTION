@@ -1,7 +1,7 @@
 Package: datamations
 Type: Package
 Title: Animated Explanations of Data Analysis Pipelines
-Version: 0.0.0.9007
+Version: 0.0.0.9008
 Authors@R: c(
     person("Xiaoying", "Pu", email = "xpu@umich.edu", role = c("aut")),
     person("Sean", "Kross", email = "smk240@gmail.com", role = c("aut")),
