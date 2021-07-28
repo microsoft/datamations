@@ -1,7 +1,7 @@
 Package: datamations
 Type: Package
 Title: Animated Explanations of Data Analysis Pipelines
-Version: 0.0.0.9008
+Version: 0.0.0.9009
 Authors@R: c(
     person("Xiaoying", "Pu", email = "xpu@umich.edu", role = c("aut")),
     person("Sean", "Kross", email = "smk240@gmail.com", role = c("aut")),
@@ -35,13 +35,11 @@ Imports:
     shinyWidgets,
     shinydashboard,
     shinyAce,
+    jsonlite,
+    palmerpenguins,
     golem,
     styler,
     shinyjs
 Suggests: 
-    jsonlite,
-    palmerpenguins,
     testthat (>= 2.1.0)
-Depends: 
-    R (>= 3.5.0)
 Config/testthat/edition: 3

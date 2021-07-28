@@ -211,7 +211,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       sign = ifelse(.x == "Upper", "+", "-")
     )))
     tooltip_encoding_first <- list(spec_encoding$tooltip[[1]])
-    tooltip_encoding_rest <- list(spec_encoding$tooltip[[-1]])
+    tooltip_encoding_rest <- list(spec_encoding$tooltip[-1])
 
     errorbar_tooltip <- append(tooltip_encoding_first, errorbar_tooltip)
     errorbar_tooltip <- append(errorbar_tooltip, tooltip_encoding_rest)
