@@ -67,7 +67,7 @@ mod_inputs_server <- function(id) {
       switch(input$dataset,
         mtcars = datasets::mtcars,
         penguins = palmerpenguins::penguins,
-        small_salary = datamations::small_salary
+        small_salary = minimaldatamations::small_salary
       )
     })
 

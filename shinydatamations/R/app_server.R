@@ -5,7 +5,7 @@
 app_server <- function(input, output, session) {
   library(dplyr)
   library(palmerpenguins)
-  library(datamations)
+  library(minimaldatamations)
 
   inputs <- mod_inputs_server("inputs")
   pipeline <- mod_pipeline_server("pipeline", inputs)

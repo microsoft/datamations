@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList
 mod_datamation_sanddance_ui <- function(id) {
   ns <- NS(id)
-  datamations::datamationSandDanceOutput(ns("datamation"))
+  minimaldatamations::datamationSandDanceOutput(ns("datamation"))
   # See in server re: why this is commented out
   # shiny::uiOutput(ns("datamation_ui"))
 }
@@ -27,11 +27,11 @@ mod_datamation_sanddance_server <- function(id, pipeline) {
 
       # Generate datamation -----
       datamation <- shiny::reactive({
-        datamations::datamation_sanddance(pipeline(), height = 300, width = 300)
+        minimaldatamations::datamation_sanddance(pipeline(), height = 300, width = 300)
       })
 
       # Create an output for it
-      output$datamation <- datamations::renderDatamationSandDance({
+      output$datamation <- minimaldatamations::renderDatamationSandDance({
         datamation()
       })
 

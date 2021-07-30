@@ -67,5 +67,5 @@ golem_add_external_resources <- function() {
 }
 
 app_sys <- function(...) {
-  system.file(..., package = "datamations")
+  system.file(..., package = "shinydatamations")
 }

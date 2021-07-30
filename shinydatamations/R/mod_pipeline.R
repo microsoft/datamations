@@ -55,7 +55,7 @@ mod_pipeline_server <- function(id, inputs) {
       if (inputs$dataset() == "penguins") {
         text <- c("library(palmerpenguins)\n", text)
       } else if (inputs$dataset() == "small_salary") {
-        text <- c("library(datamations)\n", text)
+        text <- c("library(minimaldatamations)\n", text)
       }
       text <- styler::style_text(text)
       shinyAce::updateAceEditor(session, "pipeline_editor", value = paste0(text, collapse = "\n"))

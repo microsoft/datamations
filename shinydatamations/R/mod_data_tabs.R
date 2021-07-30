@@ -34,10 +34,10 @@ mod_data_tabs_server <- function(id, inputs, pipeline, slider_state, tab_change)
       supported_tidy_functions <- c("group_by", "summarize")
 
       fittings <- pipeline() %>%
-        datamations:::parse_pipeline(supported_tidy_functions)
+        minimaldatamations:::parse_pipeline(supported_tidy_functions)
 
       data_states <- fittings %>%
-        datamations:::snake(envir = rlang::global_env())
+        minimaldatamations:::snake(envir = rlang::global_env())
 
       data_states_tabs <- vector("list", length = ifelse(pipeline_group_by, 3, 2))
 

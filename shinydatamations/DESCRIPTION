@@ -11,7 +11,7 @@ License: MIT + file LICENSE
 Imports: 
     config,
     golem,
-    datamations,
+    minimaldatamations,
     shiny,
     magrittr,
     pkgload,
@@ -32,5 +32,5 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat (>= 3.0.0)
 Remotes:
-    microsoft/datamations
+    sharlagelfand/minimaldatamations
 Config/testthat/edition: 3
