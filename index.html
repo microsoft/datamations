@@ -71,7 +71,7 @@
 <p>You can install datamations from GitHub with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"microsoft/datamations"</span><span class="op">)</span></code></pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jhofman/datamations"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
@@ -121,11 +121,9 @@
   facet_grid(rows = vars(Degree))"</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-mean_salary_group_by_degree_work_ggplot.gif" width="80%"></p>
-<p>When ggplot2 code is provided, the order of animation is not determined by the order in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code>, but by the plot layout. Variables are first animated by what’s in the column facets, then the row facets, and finally by the x-axis.</p>
+<p>When ggplot2 code is provided, the order of animation is not determined by the order in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code>, but by the plot layout. Variables are first animated by what’s in the column facets, then the row facets, by the x-axis, and finally by color.</p>
 <p>Some limitations:</p>
 <ul>
-<li>
-<code>color</code> mapping is not yet supported</li>
 <li>
 <code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap()</a></code> is not supported - please use <code><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid()</a></code>
 </li>
