@@ -49,11 +49,16 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   if (contains_ggplot) {
     # Remove the ggplot element
     fittings <- full_fittings[1:(length(full_fittings) - 1)]
+    ggplot2_fittings <- full_fittings[[length(full_fittings)]]
+    ggplot2_fittings <- as.character(ggplot2_fittings)
 
     # Check that ggplot2 is loaded, error if not
     if (!"ggplot2" %in% (.packages())) {
       stop("Please load ggplot2 via `library(ggplot2)` to generate this datamation.", call. = FALSE)
     }
+
+    # Check ggplot2 code for what is supported
+    parse_ggplot2_code(ggplot2_fittings)
   } else {
     fittings <- full_fittings
   }

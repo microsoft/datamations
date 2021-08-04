@@ -1,3 +1,5 @@
+library(ggplot2)
+
 test_that("datamation_sanddance returns a frame for the data, one for each group, and three or four for summarize (three if the summary function is not mean, and four if it is - includes an errorbar frame too)", {
   pipeline <- "penguins %>% group_by(species)"
   specs <- datamation_sanddance(pipeline) %>%
@@ -65,6 +67,38 @@ test_that("Results are identical regardless of whether summary operation is name
 test_that("datamation_sanddance returns an htmlwidget", {
   widget <- datamation_sanddance("palmerpenguins::penguins %>% group_by(species, island) %>% summarize(mean = mean(bill_length_mm))")
   expect_s3_class(widget, "htmlwidget")
+})
+
+test_that("datamation_sanddance errors if facet_wrap is used", {
+  expect_error(
+    "small_salary %>%
+  group_by(Work, Degree) %>%
+  summarize(mean_salary = median(Salary)) %>%
+  ggplot() +
+  geom_point(aes(x = Work, y = mean_salary, color = Degree)) +
+facet_wrap(vars(Degree))" %>%
+      datamation_sanddance(),
+    "does not support `facet_wrap"
+  )
+})
+
+test_that("datamation_sanddance errors on non-geom_point", {
+  expect_error(
+    "small_salary %>%
+  group_by(Work) %>%
+  summarize(mean_salary = median(Salary)) %>%
+  ggplot() +
+  geom_col(aes(x = Work, y = mean_salary))" %>%
+      datamation_sanddance(),
+    "only supports `geom_point"
+  )
+})
+
+test_that("datamation_sanddance requires a call to geom_point", {
+  expect_error("small_salary %>%
+    group_by(Work) %>%
+    summarize(mean_salary = median(Salary)) %>%
+    ggplot(aes(x = Work, y = mean_salary))" %>% datamation_sanddance(), "requires a call to `geom_point")
 })
 
 # test_that("specs are generated as expected", {

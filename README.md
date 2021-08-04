@@ -18,7 +18,7 @@ You can install datamations from GitHub with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("microsoft/datamations")
+devtools::install_github("jhofman/datamations")
 ```
 
 ## Usage
@@ -105,12 +105,11 @@ produce an animation with desired plot layout.
 
 When ggplot2 code is provided, the order of animation is not determined
 by the order in `group_by()`, but by the plot layout. Variables are
-first animated by what’s in the column facets, then the row facets, and
-finally by the x-axis.
+first animated by what’s in the column facets, then the row facets, by
+the x-axis, and finally by color.
 
 Some limitations:
 
--   `color` mapping is not yet supported
 -   `facet_wrap()` is not supported - please use `facet_grid()`
 -   datamations expects different variables in the column and row facets
     than in the x-axis. datamations generated that do not match this

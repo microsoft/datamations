@@ -64,7 +64,7 @@ function splitLayers(input) {
 
 /**
  * Looks up a word based of buckets and value.
- * Example: 
+ * Example:
  *   - words: ['a', 'b', 'c']
  *   - buckets: [10, 20, 30]
  *   - value: 25

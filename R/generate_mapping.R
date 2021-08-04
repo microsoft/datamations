@@ -5,9 +5,9 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   pipeline_has_summarize <- any(names(data_states) == "summarize")
 
   # Extract grouping variables and count of them
-  # If there is mapping, use column -> row -> x
+  # If there is mapping, use column -> row -> x -> color
   if (!is.null(plot_mapping)) {
-    .group_vars <- plot_mapping[c("column", "row", "x")] %>%
+    .group_vars <- plot_mapping[c("column", "row", "x", "color")] %>%
       unlist() %>%
       unname() %>%
       unique()
@@ -25,8 +25,8 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   # If there is mapping from the plot, start with that
   if (!is.null(plot_mapping)) {
     x_mapping <- list(
-      x = plot_mapping$x
-      # color = plot_mapping$x
+      x = plot_mapping$x,
+      color = plot_mapping$color
     )
   } else {
     # X mapping
@@ -35,8 +35,11 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
       # 1 grouping variable = first is X
       # 2 grouping variables = second is X
       # 3 grouping variables = third is X
+      # 4 grouping variables = third is X
 
-      x_mapping <- list(x = dplyr::nth(.group_vars, n_group_vars))
+      x_location <- ifelse(n_group_vars == 4, 3, n_group_vars)
+
+      x_mapping <- list(x = dplyr::nth(.group_vars, x_location))
     } else {
       x_mapping <- list(x = 1)
     }
@@ -94,8 +97,6 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   mapping <- append(x_mapping, y_mapping) %>%
     append(group_mapping)
 
-  # Remove "empty" entries (with NA names)
-  mapping <- mapping[!is.na(names(mapping))]
-
-  mapping
+  # Remove "empty" entries
+  purrr::compact(mapping)
 }

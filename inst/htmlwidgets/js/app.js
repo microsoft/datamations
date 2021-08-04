@@ -1,8 +1,8 @@
 /**
  * Entry point of Datamations JavaScript code
  * Reads vega-lite specifications, converts to vega specs and animates using gemini
- * 
- * ### Dependencies: 
+ *
+ * ### Dependencies:
  * - gemini: https://github.com/uwdata/gemini
  * - vega-lite: https://vega.github.io/vega-lite/
  * - vega: https://vega.github.io/vega/
