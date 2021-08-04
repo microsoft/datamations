@@ -23,6 +23,8 @@ function generateGrid(spec, rows = 10) {
   ) {
     colorField = encoding.color.field;
 
+    const keys = [...groupKeys, splitField];
+
     const grouped = d3.rollups(
       specValues, 
       arr => {
@@ -34,16 +36,30 @@ function generateGrid(spec, rows = 10) {
           obj[x[encoding.color.field]] = sum;
         });
 
-        return {
+        const o = {
           [splitField]: arr[0][splitField],
           [encoding.color.field]: obj,
           n: sum,
-        }
+        };
+  
+        groupKeys.forEach(x => {
+          o[x] = arr[0][x];
+        });
+  
+        return o;
       },
-      d => d[splitField]
+      ...keys.map((key) => {
+        return (d) => d[key];
+      })
     );
-    
-    specValues = grouped.flatMap(d => d[1])
+
+    specValues = grouped.flatMap((d) => {
+      if (keys.length === 1) {
+        return d[1];
+      } else {
+        return d[1].flatMap((d) => d[1]);
+      }
+    });
   }
 
   const maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
