@@ -130,12 +130,18 @@
             <button onclick="play('app')">Replay</button>
           </div>
           <div class="slider-wrapper">
-            <input class="slider" type="range" min="0" value="0" onchange="onSlide('app')"/>
-          </div>     
+            <input
+              class="slider"
+              type="range"
+              min="0"
+              value="0"
+              onchange="onSlide('app')"
+            />
+          </div>
         </div>
         <div class="description"></div>
       </div>
-      
+
       <div class="vega-vis-wrapper">
         <div class="vega-for-axis"></div>
         <div class="vega-other-layers"></div>
@@ -149,103 +155,12 @@
     <script src="../js/hack-facet-view.js"></script>
     <script src="../js/app.js"></script>
     <script>
-      // const repoUrl = "https://raw.githubusercontent.com/jhofman/datamations";
-      // // const dataUrl = "./data/";
-      // const dataUrl = repoUrl + "/fixes/sandbox/specs-for-infogrid/";
+      d3.json(
+        "https://raw.githubusercontent.com/microsoft/datamations/ggplot2-color/sandbox/loses_facets_on_color/specs.json"
+      ).then((res) => {
 
-      // init("app", {
-      //   specUrls: [
-      //     dataUrl + "01-ungrouped.json",
-      //     dataUrl + "02-column-facet.json",
-      //     dataUrl + "03-column-row-facet.json",
-      //     dataUrl + "04-column-row-facet-color.json",
-      //     dataUrl + "05-jitter.json",
-      //     dataUrl + "06-summary.json",
-      //   ],
-      //   autoPlay: false
-      // });
-
-      d3.json("https://raw.githubusercontent.com/microsoft/datamations/main/sandbox/generalized_specs/two_groups.json").then((res) => {
-
-        // const fixEncoding = (encoding) => {
-        //   if (encoding.x.field === "x") {
-        //     encoding.x.field = CONF.X_FIELD;
-        //   }
-
-        //   if (encoding.y.field === "y") {
-        //     encoding.y.field = CONF.Y_FIELD;
-        //   }
-        // }
-
-        // res.forEach(d => {
-        //   if (d.spec) {
-        //     if (d.spec.layer) {
-        //       d.spec.layer.forEach(x => {
-        //         x.mark.tooltip = true;
-        //         fixEncoding(x.encoding);
-        //       });
-        //     } else {
-        //       d.spec.mark.tooltip = true;
-        //       fixEncoding(d.spec.encoding);
-        //     }
-        //   } else {
-        //     d.mark.tooltip = true;
-        //     fixEncoding(d.encoding);
-        //   }
-
-        //   if (d.data.values.some(x => x.hasOwnProperty("x"))) {
-        //     d.data.values.forEach(x => {
-        //       x[CONF.X_FIELD] = x.x;
-        //       x[CONF.Y_FIELD] = x.y;
-
-        //       delete x.x;
-        //       delete x.y;
-        //     });
-        //   }
-        // })
-        
         init("app", {
-          specs: [
-            {
-              "height": 300,
-              "width": 300,
-              "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-              "meta": {
-                "parse": "grid",
-                "description": "Group by Degree",
-                "splitField": "Degree",
-                "axes": false
-              },
-              "data": {
-                "values": [
-                  {
-                    "Degree": "Masters",
-                    "n": 5
-                  },
-                  {
-                    "Degree": "PhD",
-                    "n": 5
-                  },
-                ]
-              },
-              "mark": {
-                "type": "point",
-                "filled": true
-              },
-              "encoding": {
-                "x": {
-                  "field": "x",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "y": {
-                  "field": "y",
-                  "type": "quantitative",
-                  "axis": null
-                }
-              }
-            }
-          ]
+          specs: res,
         });
       });
     </script>
