@@ -17,8 +17,8 @@ function generateGrid(spec, rows = 10) {
 
   if (
     splitField &&
-    encoding.color && 
-    encoding.color.field !== splitField && 
+    encoding.color &&
+    encoding.color.field !== splitField &&
     groupKeys.indexOf(encoding.color.field) === -1
   ) {
     colorField = encoding.color.field;
@@ -26,7 +26,7 @@ function generateGrid(spec, rows = 10) {
     const keys = [...groupKeys, splitField];
 
     const grouped = d3.rollups(
-      specValues, 
+      specValues,
       arr => {
         const obj = {};
         let sum = 0;
@@ -41,11 +41,9 @@ function generateGrid(spec, rows = 10) {
           [encoding.color.field]: obj,
           n: sum,
         };
-  
         groupKeys.forEach(x => {
           o[x] = arr[0][x];
         });
-  
         return o;
       },
       ...keys.map((key) => {
@@ -181,7 +179,7 @@ function getGridSpec(spec, rows = 10) {
       labels.forEach((d) => {
         // find min and max x values for each label
         const extent = d3.extent(
-          spec.data.values.filter(x => x[spec.meta.splitField] === d), 
+          spec.data.values.filter(x => x[spec.meta.splitField] === d),
           d => d[CONF.X_FIELD],
         );
 
