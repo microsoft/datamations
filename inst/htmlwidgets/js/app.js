@@ -19,8 +19,8 @@ let intervalId;
 let timeoutId;
 let initializing = false;
 
-const frameDuration = 2000;
-const frameDelay = 1000;
+let frameDuration = 2000;
+let frameDelay = 1000;
 
 // a fallback gemini spec in case gemini.animate could not find anything
 const gemSpec = {
@@ -88,7 +88,10 @@ const reset = () => {
  * @param {Array} param1.specs list of vega-lite specifications
  * @param {Boolean} param1.autoPlay autoPlay yes | no
  */
-async function init(id, { specUrls, specs, autoPlay }) {
+async function init(id, { specUrls, specs, autoPlay, frameDur, frameDel }) {
+  if (frameDur) frameDuration = frameDur; 
+  if (frameDel) frameDelay = frameDel;
+
   // ignore all subsequent init calls.
   if (initializing) return;
   initializing = true;
