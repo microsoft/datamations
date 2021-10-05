@@ -13,16 +13,18 @@ function generateGrid(spec, rows = 10) {
   }
 
   let specValues = spec.data.values;
-  let colorField = null;
 
-  if (
-    splitField &&
-    encoding.color &&
-    encoding.color.field !== splitField &&
-    groupKeys.indexOf(encoding.color.field) === -1
-  ) {
-    colorField = encoding.color.field;
 
+  let secondarySplit = Object.keys(encoding).filter(d => {
+    const field = encoding[d].field;
+    return d !== 'x' && d !== 'y' && 
+           field !== splitField && 
+           groupKeys.indexOf(field) === -1;
+  })[0];
+  let secondaryField = null;
+
+  if (splitField && secondarySplit) {
+    secondaryField = encoding[secondarySplit].field;
     const keys = [...groupKeys, splitField];
 
     const grouped = d3.rollups(
@@ -33,17 +35,19 @@ function generateGrid(spec, rows = 10) {
 
         arr.forEach(x => {
           sum += x.n;
-          obj[x[encoding.color.field]] = sum;
+          obj[x[secondaryField]] = sum;
         });
 
         const o = {
           [splitField]: arr[0][splitField],
-          [encoding.color.field]: obj,
+          [secondaryField]: obj,
           n: sum,
         };
+
         groupKeys.forEach(x => {
           o[x] = arr[0][x];
         });
+
         return o;
       },
       ...keys.map((key) => {
@@ -87,10 +91,10 @@ function generateGrid(spec, rows = 10) {
         const y = rows - 1 - i % rows;
         const colorFieldObj = {};
 
-        if (colorField && typeof[d[colorField]] === "object") {
-          colorFieldObj[colorField] = lookupByBucket(
-            Object.keys(d[colorField]),
-            Object.values(d[colorField]),
+        if (secondaryField && typeof[d[secondaryField]] === "object") {
+          colorFieldObj[secondaryField] = lookupByBucket(
+            Object.keys(d[secondaryField]),
+            Object.values(d[secondaryField]),
             i,
           )
         }
