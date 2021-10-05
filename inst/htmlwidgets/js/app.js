@@ -104,7 +104,7 @@ function App() {
     // load or set data
     if (specs) {
       vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
-      console.log(specs);
+      // console.log(specs);
     } else if (specUrls) {
       vegaLiteSpecs = await loadData(specUrls);
     }

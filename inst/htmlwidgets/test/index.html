@@ -122,15 +122,12 @@
 
       .flex-wrap {
         width: 100%;
-        display: flex;
       }
 
       .flex-wrap > div {
-        width: 50%;
-      }
-
-      .flex-wrap > div:last-child {
-        padding-left: 10%;
+        position: relative;
+        width: 100%;
+        min-height: 600px;
       }
     </style>
   </head>
@@ -199,11 +196,9 @@
         //#                     1995	1996	Combined
         //# Derek Jeter	12/48	.250	183/582	.314	195/630	.310
         //# David Justice	104/411	.253	45/140	.321	149/551	.27
-        const size = 15;
+        const size = 10;
         const app1 = App();
         app1.init("app", {
-          frameDur: 750,
-          frameDel: 700,
           specs: [
             {
               "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -241,7 +236,7 @@
                 ]
               },
               "facet": {
-                "row": {
+                "column": {
                   "field": "player",
                   "type": "ordinal",
                   "title": "Player"
@@ -249,7 +244,7 @@
               },
               "spec": {
                 "height": 300,
-                "width": window.innerWidth * 0.35,
+                "width": window.innerWidth * 0.4,
                 "mark": {
                   "type": "point",
                   "size": size,
@@ -265,6 +260,10 @@
                     "field": "datamations_y",
                     "type": "quantitative",
                     "axis": null
+                  },
+                  "color": {
+                    "field": "player",
+                    "type": "nominal"
                   }
                 }
               }
@@ -330,7 +329,7 @@
                 ]
               },
               "facet": {
-                "row": {
+                "column": {
                   "field": "player",
                   "type": "ordinal",
                   "title": "Player"
@@ -338,10 +337,10 @@
               },
               "spec": {
                 "height": 300,
-                "width": window.innerWidth * 0.35,
+                "width": window.innerWidth * 0.4,
                 "mark": {
                   "type": "point",
-                  strokeWidth: 1,
+                  "strokeWidth": 1,
                   "size": size - 1,
                 },
                 "encoding": {
@@ -356,9 +355,9 @@
                     "axis": null
                   },
                   "color": {
-                    field: "hit",
-                    type: "nominal",
-                    scale: {
+                    "field": "hit",
+                    "type": "nominal",
+                    "scale": {
                       "domain": ["yes", "no"],
                       "range": ["#4c78a8", "#4c78a8"]
                     }
@@ -440,7 +439,7 @@
               },
               "spec": {
                 "height": 300,
-                "width": window.innerWidth * 0.20,
+                "width": window.innerWidth * 0.38,
                 "mark": {
                   "type": "point",
                   "filled": true
@@ -487,8 +486,6 @@
 
         const app2 = App();
         app2.init("app_2", {
-          frameDur: 750,
-          frameDel: 700,
           specs: [
             {
               "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -511,7 +508,7 @@
                 ]
               },
               "height": 300,
-              "width": window.innerWidth * 0.35,
+              "width": window.innerWidth * 0.4,
               "mark": {
                 "type": "point",
                 "size": size,
@@ -527,6 +524,10 @@
                     "field": "datamations_y",
                     "type": "quantitative",
                     "axis": null
+                  },
+                  "color": {
+                    "field": "player",
+                    "type": "nominal"
                   }
                 }
             },
@@ -563,7 +564,7 @@
                 ]
               },
               "height": 300,
-              "width": window.innerWidth * 0.35,
+              "width": window.innerWidth * 0.4,
               "mark": {
                 "type": "point",
                 "size": size - 1,
@@ -640,7 +641,7 @@
                 })
               },
               "height": 300,
-              "width": window.innerWidth * 0.35,
+              "width": window.innerWidth * 0.37,
               "mark": {
                 "type": "point",
                 "filled": true
