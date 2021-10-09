@@ -50,6 +50,10 @@
         display: none;
       }
 
+      .vega-vis-wrapper .vega-for-axis .role-legend {
+        display: none;
+      }
+
       .control-bar {
         width: 100%;
         display: flex;
@@ -340,8 +344,8 @@
                 "width": window.innerWidth * 0.4,
                 "mark": {
                   "type": "point",
-                  "strokeWidth": 1,
-                  "size": size - 1,
+                  "size": size,
+                  "filled": true
                 },
                 "encoding": {
                   "x": {
@@ -355,27 +359,16 @@
                     "axis": null
                   },
                   "color": {
-                    "field": "hit",
+                    "field": "player",
                     "type": "nominal",
-                    "scale": {
-                      "domain": ["yes", "no"],
-                      "range": ["#4c78a8", "#4c78a8"]
-                    }
+                    "legend": false
                   },
-                  "fill": {
+                  "shape": {
                     "field": "hit",
                     "type": "nominal",
                     "scale": {
                       "domain": ["yes", "no"],
-                      "range": ["#4c78a8", "#fff"]
-                    }
-                  },
-                  "stroke": {
-                    "field": "hit",
-                    "type": "nominal",
-                    "scale": {
-                      "domain": ["yes", "no"],
-                      "range": ["#4c78a8", "#4c78a8"]
+                      "range": ["circle", "square"]
                     }
                   }
                 }
@@ -439,7 +432,7 @@
               },
               "spec": {
                 "height": 300,
-                "width": window.innerWidth * 0.38,
+                "width": window.innerWidth * 0.6,
                 "mark": {
                   "type": "point",
                   "filled": true
@@ -508,7 +501,7 @@
                 ]
               },
               "height": 300,
-              "width": window.innerWidth * 0.4,
+              "width": window.innerWidth * 0.6,
               "mark": {
                 "type": "point",
                 "size": size,
@@ -564,11 +557,9 @@
                 ]
               },
               "height": 300,
-              "width": window.innerWidth * 0.4,
+              "width": window.innerWidth * 0.6,
               "mark": {
                 "type": "point",
-                "size": size - 1,
-                strokeWidth: 1,
                 "filled": true
               },
               "encoding": {
@@ -583,27 +574,16 @@
                   "axis": null
                 },
                 "color": {
-                  field: "hit",
-                  type: "nominal",
-                  scale: {
-                    "domain": ["yes", "no"],
-                    "range": ["#4c78a8", "#4c78a8"]
-                  }
+                  "field": "player",
+                  "type": "nominal",
+                  "legend": false
                 },
-                "fill": {
+                "shape": {
                   "field": "hit",
                   "type": "nominal",
                   "scale": {
                     "domain": ["yes", "no"],
-                    "range": ["#4c78a8", "#fff"]
-                  }
-                },
-                "stroke": {
-                  "field": "hit",
-                  "type": "nominal",
-                  "scale": {
-                    "domain": ["yes", "no"],
-                    "range": ["#4c78a8", "#4c78a8"]
+                    "range": ["circle", "square"]
                   }
                 }
               }
