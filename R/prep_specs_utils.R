@@ -166,7 +166,8 @@ arrange_by_groups_coalesce_na <- function(.data, group_vars, group_vars_chr) {
     dplyr::arrange(!!!group_vars) %>%
     dplyr::mutate_at(dplyr::all_of(group_vars_chr), function(x) {
       x <- x %>%
-        dplyr::coalesce(x, "NA") # NA to "NA"
+        as.character() %>% # Convert numeric grouping variable to character
+        dplyr::coalesce("NA") # NA to "NA"
 
       if (any(x == "NA")) {
         x %>%
