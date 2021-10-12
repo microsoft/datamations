@@ -107,11 +107,22 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Generate the data and specs for each state
   specs_list <- list()
 
-  # State 1: Scatter plot (with any grouping) -----
+  # State 1: Scatter plot or icon array (with any grouping) -----
+  # Scatter plot if the variable is continuous, icon array if discrete (categorical, binary)
 
-  data_1 <- .data %>%
-    dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
-    dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
+  # Determine whether plot is scatter or icon array
+  y_is_numeric <- check_is_numeric(.data[["datamations_y"]])
+
+  # If it is numeric, prepare to visualize data in a jittered scatterplot
+  if (y_is_numeric) {
+    data_1 <- .data %>%
+      dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
+      dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
+  } else { # Otherwise, another infogrid!
+    data_1 <- .data %>%
+      dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row, mapping$x, !!Y_FIELD_CHR)))) %>%
+      dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
+  }
 
   # Remove NA values, since their values will not be displayed - better to have them fade off
   data_1 <- data_1 %>%
@@ -123,8 +134,17 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Generate tooltip
   spec_encoding$tooltip <- generate_summarize_tooltip(data_1, mapping$y)
 
-  # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
-  meta <- list(parse = "jitter", axes = has_facets, description = description)
+  if (y_is_numeric) {
+    # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
+    meta <- list(parse = "jitter", axes = has_facets, description = description)
+  } else {
+    # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
+    # Use this if the response variable is categorical
+    meta <- list(parse = "grid", axes = has_facets, description = description)
+
+    # Add shape to spec encoding
+    spec_encoding$shape <- list(field = Y_FIELD_CHR, type = "nominal")
+  }
 
   # Variables that need to be passed to JS
   if (!is.null(mapping$x)) {
@@ -286,4 +306,14 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   # Return the specs
   specs_list
+}
+
+check_is_numeric <- function(x) {
+  if (all(x %in% c(TRUE, FALSE))) {
+    return(FALSE)
+  } else if (inherits(x, "numeric") | inherits(x, "integer")) {
+    TRUE
+  } else {
+    FALSE
+  }
 }

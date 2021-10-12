@@ -283,7 +283,7 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
   }
 
   tooltip_vars <- .data %>%
-    dplyr::select(-.data$gemini_id, -!!X_FIELD, -!!Y_FIELD, -!!Y_TOOLTIP_FIELD) %>%
+    dplyr::select(-tidyselect::any_of(c("gemini_id", X_FIELD_CHR, Y_FIELD_CHR, Y_TOOLTIP_FIELD_CHR))) %>%
     names()
 
   tooltip <- purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
