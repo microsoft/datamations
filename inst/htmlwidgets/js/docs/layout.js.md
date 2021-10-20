@@ -1,11 +1,11 @@
 ## Functions
 
 <dl>
-<dt><a href="#generateGrid">generateGrid(spec, rows)</a> ⇒</dt>
+<dt><a href="#generateGrid">generateGrid(spec)</a> ⇒</dt>
 <dd><p>Generates grid layout. 
 Groups data by facets or splitField and generates data for grid layout</p>
 </dd>
-<dt><a href="#getGridSpec">getGridSpec(spec, rows)</a> ⇒</dt>
+<dt><a href="#getGridSpec">getGridSpec(spec)</a> ⇒</dt>
 <dd><p>Generates infogrid specification</p>
 </dd>
 <dt><a href="#getJitterSpec">getJitterSpec(spec)</a> ⇒</dt>
@@ -15,7 +15,7 @@ Groups data by facets or splitField and generates data for grid layout</p>
 
 <a name="generateGrid"></a>
 
-## generateGrid(spec, rows) ⇒
+## generateGrid(spec) ⇒
 Generates grid layout. 
 Groups data by facets or splitField and generates data for grid layout
 
@@ -25,11 +25,10 @@ Groups data by facets or splitField and generates data for grid layout
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | spec | <code>Object</code> |  | vega-lite specification |
-| rows | <code>Number</code> | <code>10</code> | number of rows in a grid |
 
 <a name="getGridSpec"></a>
 
-## getGridSpec(spec, rows) ⇒
+## getGridSpec(spec) ⇒
 Generates infogrid specification
 
 **Kind**: global function  
@@ -38,7 +37,6 @@ Generates infogrid specification
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | spec | <code>Object</code> |  | vega-lite specification |
-| rows | <code>Number</code> | <code>10</code> | number of rows in a grid |
 
 <a name="getJitterSpec"></a>
 
