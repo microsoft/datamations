@@ -201,8 +201,8 @@
         //# Derek Jeter	12/48	.250	183/582	.314	195/630	.310
         //# David Justice	104/411	.253	45/140	.321	149/551	.27
         const size = 7;
-        const app1 = App();
-        app1.init("app", {
+        
+        const app1 = App("app", {
           specs: [
             {
               "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -481,8 +481,7 @@
           ]
         });
 
-        const app2 = App();
-        app2.init("app_2", {
+        const app2 = App("app_2", {
           specs: [
             {
               "$schema": "https://vega.github.io/schema/vega-lite/v4.json",

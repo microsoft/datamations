@@ -9,7 +9,16 @@
  * - vega-embed: https://github.com/vega/vega-embed
  */
 
-function App() {
+/**
+ * 
+ * @param {String} id conteiner id
+ * @param {Object} param1 configuration object
+ * @param {Array} param1.specUrls list of urls
+ * @param {Array} param1.specs list of vega-lite specifications
+ * @param {Boolean} param1.autoPlay autoPlay yes | no
+ * @returns exposed functions
+ */
+function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   let rawSpecs; // holds raw vega-lite specs, not transformed
   let vegaLiteSpecs;
   let vegaSpecs; // vega specs
@@ -20,8 +29,8 @@ function App() {
   let timeoutId;
   let initializing = false;
 
-  let frameDuration = 2000;
-  let frameDelay = 1000;
+  let frameDuration = frameDur || 2000;
+  let frameDelay = frameDel || 1000;
 
   // a fallback gemini spec in case gemini.animate could not find anything
   const gemSpec = {
@@ -83,16 +92,8 @@ function App() {
 
   /**
    * Initializes datamation app
-   * @param {String} id root div id where vega visualizations are rendered
-   * @param {Object} param1 configuration object
-   * @param {Array} param1.specUrls list of urls
-   * @param {Array} param1.specs list of vega-lite specifications
-   * @param {Boolean} param1.autoPlay autoPlay yes | no
    */
-  async function init(id, { specUrls, specs, autoPlay, frameDur, frameDel }) {
-    if (frameDur) frameDuration = frameDur; 
-    if (frameDel) frameDelay = frameDel;
-
+  async function init() {
     // ignore all subsequent init calls.
     if (initializing) return;
     initializing = true;
@@ -104,7 +105,6 @@ function App() {
     // load or set data
     if (specs) {
       vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
-      // console.log(specs);
     } else if (specUrls) {
       vegaLiteSpecs = await loadData(specUrls);
     }
@@ -129,10 +129,10 @@ function App() {
     // create frames for animation
     await makeFrames();
 
-    drawSpec(0, id);
+    drawSpec(0);
 
     if (autoPlay) {
-      setTimeout(() => play(id), 100);
+      setTimeout(() => play(), 100);
     }
 
     initializing = false;
@@ -140,12 +140,11 @@ function App() {
 
   /**
    * Plays animation
-   * @param {String} id root container id where vega visualizations are mounted
    */
-  function play(id) {
+  function play() {
     frameIndex = 0;
     const tick = () => {
-      animateFrame(frameIndex, id);
+      animateFrame(frameIndex);
       frameIndex++;
       if(typeof HTMLWidgets !== "undefined" && HTMLWidgets.shinyMode){
         var prevIndex = frameIndex - 1;
@@ -167,11 +166,10 @@ function App() {
   /**
    * Draws vega lite spec statically (without transition), also updates slider, description, show/hides some layers
    * @param {Number} index specification index in vegaLiteSpecs
-   * @param {String} id root container id where vega visualizations are mounted
    * @param {Object} vegaSpec source vega spec of current frame
    * @returns a promise of vegaEmbed
    */
-  function drawSpec(index, id, vegaSpec) {
+  function drawSpec(index, vegaSpec) {
     const spec = vegaLiteSpecs[index];
 
     if (!spec) return;
@@ -193,7 +191,7 @@ function App() {
 
     // draw axis
     if (meta.axes) {
-      drawAxis(index, id);
+      drawAxis(index);
     }
 
     const transformX = (meta.transformX || 0);
@@ -207,18 +205,17 @@ function App() {
     d3.select(controls).style("width", (spec.width + transformX + 10) + "px");
 
     // draw vis
-    return drawChart(spec, id, vegaSpec);
+    return drawChart(spec, vegaSpec);
   }
 
   /**
    * Draws a chart
    * Supports single view as well as multiple view chart
    * @param {Object} spec vega-lite spec
-   * @param {String} id root container id where vega visualizations are rendered
    * @param {Object} vegaSpec source vega spec of current frame
    * @returns a promise of vegaEmbed
    */
-  function drawChart(spec, id, vegaSpec) {
+  function drawChart(spec, vegaSpec) {
     const { visSelector, otherLayers } = getSelectors(id);
     const layers = document.querySelector(otherLayers);
     layers.innerHTML = "";
@@ -259,10 +256,9 @@ function App() {
   /**
    * Draws an axis layer. This is called when meta.axes = true.
    * @param {Number} index specification index in vegaLiteSpecs
-   * @param {String} id root container id where vega visualizations are mounted
    * @returns a promise of vegaEmbed
    */
-  function drawAxis(index, id) {
+  function drawAxis(index) {
     let spec = rawSpecs[index];
 
     if (spec.spec && spec.spec.layer) {
@@ -312,10 +308,9 @@ function App() {
   /**
    * Animates a frame, from source to target vega specification using gemini
    * @param {Number} index specification index in vegaLiteSpecs
-   * @param {String} id root container id where vega visualizations are mounted
    * @returns a promise of gemini.animate
    */
-  async function animateFrame(index, id) {
+  async function animateFrame(index) {
     if (!frames[index]) return;
 
     const {
@@ -336,7 +331,7 @@ function App() {
       clearTimeout(timeoutId);
     }
 
-    drawSpec(index, id, source).then(() => {
+    drawSpec(index, source).then(() => {
       timeoutId = setTimeout(() => {
         d3.select(descr).html(currMeta.description);
 
@@ -355,7 +350,7 @@ function App() {
 
         // show/hide axis vega chart
         if (currHasAxes) {
-          drawAxis(index + 1, id);
+          drawAxis(index + 1);
           d3.select(axisSelector).transition().duration(1000).style("opacity", 1);
           d3.select(visSelector).classed("with-axes", true);
           d3.select(otherLayers).classed("with-axes", true);
@@ -566,17 +561,17 @@ function App() {
 
   /**
    * Slider on change callback
-   * @param {String} id root container id where vega visualizations are mounted
    */
-  function onSlide(id) {
+  function onSlide() {
     const { slider } = getSelectors(id);
     const index = document.querySelector(slider).value;
-    drawSpec(index, id);
+    drawSpec(index);
     if (intervalId) clearInterval(intervalId);
   }
 
+  init();
+
   return {
-    init,
     onSlide,
     play,
   }
