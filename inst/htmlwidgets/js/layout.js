@@ -21,7 +21,20 @@ function generateGrid(spec, rows = 10) {
            field !== splitField && 
            groupKeys.indexOf(field) === -1;
   })[0];
+
   let secondaryField = null;
+
+  // combine groups
+  // for example, if splitField = player, but color = hit:
+
+  // { "n": 5,  "player": "a", "hit": "yes" },
+  // { "n": 10, "player": "a", "hit": "no" },
+  // { "n": 15, "player": "b", "hit": "yes" },
+  // { "n": 35, "player": "b", "hit": "no" }
+
+  // after this code block we will get:
+  // { "n": 15,  "player": "a", "hit": { "yes": 5, "no": 10 } },
+  // { "n": 50, "player": "b", "hit": { "yes": 15, "no": 35 } },
 
   if (splitField && secondarySplit) {
     secondaryField = encoding[secondarySplit].field;
