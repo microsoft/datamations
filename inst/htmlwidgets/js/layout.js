@@ -1,4 +1,4 @@
-function generateGrid(spec, rows = 10) {
+function generateGrid(spec) {
   const splitField = spec.meta.splitField;
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const groupKeys = [];
@@ -77,7 +77,8 @@ function generateGrid(spec, rows = 10) {
     });
   }
 
-  const maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
+  const maxN = d3.max(specValues, d => d.n);
+  const maxCols = Math.ceil(Math.sqrt(maxN));
 
   let splitOptions = [];
 
@@ -97,11 +98,11 @@ function generateGrid(spec, rows = 10) {
       const xCenter = splitField ? splitOptions.indexOf(d[splitField]) + 1 : 1;
 
       let startCol = (xCenter - 1) * maxCols + j; // inner grid start
-      startCol += Math.floor((maxCols - Math.ceil(n / rows)) / 2); // center alignment
 
       for (let i = 0; i < n; i++) {
-        const x = startCol + Math.floor(i / rows);
-        const y = rows - 1 - i % rows;
+        const x = startCol + i % maxCols;
+        const y = maxCols - 1 - Math.floor(i / maxCols);
+
         const colorFieldObj = {};
 
         if (secondaryField && typeof[d[secondaryField]] === "object") {
@@ -150,12 +151,11 @@ function generateGrid(spec, rows = 10) {
 /**
  * Generates infogrid specification
  * @param {Object} spec vega-lite specification
- * @param {Number} rows number of rows in a grid
  * @returns grid specification
  */
-function getGridSpec(spec, rows = 10) {
+function getGridSpec(spec) {
   return new Promise((res) => {
-    const grid = generateGrid(spec, rows);
+    const grid = generateGrid(spec);
     const obj = {...spec};
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
