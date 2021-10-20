@@ -50,9 +50,9 @@
         display: none;
       }
 
-      .vega-vis-wrapper .vega-for-axis .role-legend {
+      /* .vega-vis-wrapper .vega-for-axis .role-legend {
         display: none;
-      }
+      } */
 
       .control-bar {
         width: 100%;
@@ -200,7 +200,7 @@
         //#                     1995	1996	Combined
         //# Derek Jeter	12/48	.250	183/582	.314	195/630	.310
         //# David Justice	104/411	.253	45/140	.321	149/551	.27
-        const size = 10;
+        const size = 7;
         const app1 = App();
         app1.init("app", {
           specs: [
@@ -345,7 +345,8 @@
                 "mark": {
                   "type": "point",
                   "size": size,
-                  "filled": true
+                  "filled": true,
+                  "strokeWidth": 1
                 },
                 "encoding": {
                   "x": {
@@ -361,14 +362,17 @@
                   "color": {
                     "field": "player",
                     "type": "nominal",
-                    "legend": false
                   },
-                  "shape": {
-                    "field": "hit",
+                  "stroke": {
                     "type": "nominal",
+                    "field": "player"
+                  },
+                  "fillOpacity": {
+                    "type": "nominal",
+                    "field": "hit",
                     "scale": {
                       "domain": ["yes", "no"],
-                      "range": ["circle", "square"]
+                      "range": [1, 0]
                     }
                   }
                 }
@@ -504,7 +508,6 @@
               "width": window.innerWidth * 0.6,
               "mark": {
                 "type": "point",
-                "size": size,
                 "filled": true
               },
               "encoding": {
@@ -560,7 +563,8 @@
               "width": window.innerWidth * 0.6,
               "mark": {
                 "type": "point",
-                "filled": true
+                "filled": true,
+                "strokeWidth": 1.5
               },
               "encoding": {
                 "x": {
@@ -576,14 +580,17 @@
                 "color": {
                   "field": "player",
                   "type": "nominal",
-                  "legend": false
                 },
-                "shape": {
-                  "field": "hit",
+                "stroke": {
                   "type": "nominal",
+                  "field": "player"
+                },
+                "fillOpacity": {
+                  "type": "nominal",
+                  "field": "hit",
                   "scale": {
                     "domain": ["yes", "no"],
-                    "range": ["circle", "square"]
+                    "range": [1, 0]
                   }
                 }
               }
@@ -664,8 +671,6 @@
             },
           ],
         });
-   
-   
    </script>
   </body>
 </html>
