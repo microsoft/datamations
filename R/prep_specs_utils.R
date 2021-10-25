@@ -19,6 +19,8 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
     spec_encoding <- spec_encoding[c("x", "y", "tooltip")]
   }
 
+  spec_encoding <- purrr::compact(spec_encoding)
+
   # TODO - handle color
 
   # If there's no errorbar, everything can be on one layer
@@ -70,6 +72,8 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
   if (is.null(mapping$color) | !color) {
     spec_encoding <- spec_encoding[c("x", "y", "tooltip")]
   }
+
+  spec_encoding <- purrr::compact(spec_encoding)
 
   # Remove facet encoding(s) if they're flagged not to be shown, or aren't in the mapping
   # So even if e.g. row = TRUE, if there's no variable to facet by, it'll be removed!
