@@ -15,8 +15,8 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
 
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
   # So even if color = TRUE, if it's not there, it'll be removed!
-  if (!color) {
-    spec_encoding <- spec_encoding[c("x", "y", "tooltip")]
+  if (!color & "color" %in% names(spec_encoding)) {
+    spec_encoding <- within(spec_encoding, rm("color"))
   }
 
   spec_encoding <- purrr::compact(spec_encoding)
@@ -31,7 +31,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
       `$schema` = vegawidget::vega_schema(),
       meta = meta,
       data = list(values = .data),
-      mark = list(type = "point", filled = TRUE),
+      mark = list(type = "circle", filled = TRUE),
       encoding = spec_encoding
     ) %>%
       vegawidget::as_vegaspec()
@@ -55,7 +55,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
         ),
         # Point layer
         list(
-          mark = list(type = "point", filled = TRUE),
+          mark = list(type = "circle", filled = TRUE),
           encoding = spec_encoding
         )
       )
@@ -69,8 +69,8 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
 
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
   # So even if color = TRUE, if it's not there, it'll be removed!
-  if (is.null(mapping$color) | !color) {
-    spec_encoding <- spec_encoding[c("x", "y", "tooltip")]
+  if ((is.null(mapping$color) | !color) & "color" %in% names(spec_encoding)) {
+    spec_encoding <- within(spec_encoding, rm("color"))
   }
 
   spec_encoding <- purrr::compact(spec_encoding)
@@ -100,7 +100,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
       spec = list(
         height = height / facet_dims[["nrow"]],
         width = width / facet_dims[["ncol"]],
-        mark = list(type = "point", filled = TRUE),
+        mark = list(type = "circle", filled = TRUE),
         encoding = spec_encoding
       )
     ) %>%
@@ -128,7 +128,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
           ),
           # Point layer
           list(
-            mark = list(type = "point", filled = TRUE),
+            mark = list(type = "circle", filled = TRUE),
             encoding = spec_encoding
           )
         )

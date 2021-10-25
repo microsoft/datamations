@@ -111,10 +111,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Scatter plot if the variable is continuous, icon array if discrete (categorical, binary)
 
   # Determine whether plot is scatter or icon array
-  y_is_numeric <- check_is_numeric(.data[["datamations_y"]])
+  y_type <- check_type(.data[["datamations_y"]])
 
   # If it is numeric, prepare to visualize data in a jittered scatterplot
-  if (y_is_numeric) {
+  if (y_type == "numeric") {
     data_1 <- .data %>%
       dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
       dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
@@ -134,7 +134,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Generate tooltip
   spec_encoding$tooltip <- generate_summarize_tooltip(data_1, mapping$y)
 
-  if (y_is_numeric) {
+  if (y_type == "numeric") {
     # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
     meta <- list(parse = "jitter", axes = has_facets, description = description)
   } else {
@@ -142,8 +142,14 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     # Use this if the response variable is categorical
     meta <- list(parse = "grid", axes = has_facets, description = description)
 
-    # Add shape to spec encoding
-    spec_encoding$shape <- list(field = Y_FIELD_CHR, type = "nominal")
+    if (y_type == "binary") {
+      # Use stroke and fillOpacity
+      # spec_encoding$stroke # should be the color variable or if there is no color, that variable
+      spec_encoding$fillOpacity <- list(field = Y_FIELD_CHR, type = "nominal", scale = list(range = c(0, 1)))
+    } else if (y_type == "categorical") {
+      # Use shape
+      spec_encoding$shape <- list(field = Y_FIELD_CHR, type = "nominal")
+    }
   }
 
   # Variables that need to be passed to JS
@@ -308,12 +314,14 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   specs_list
 }
 
-check_is_numeric <- function(x) {
-  if (all(x %in% c(TRUE, FALSE))) {
-    return(FALSE)
+check_type <- function(x) {
+  if (all(x %in% c(TRUE, FALSE)) |
+      (is.factor(x) & length(levels(x)) == 2) |
+      (is.character(x) & length(unique(x)) == 2)) {
+    "binary"
   } else if (inherits(x, "numeric") | inherits(x, "integer")) {
-    TRUE
+    "numeric"
   } else {
-    FALSE
+    "categorical"
   }
 }
