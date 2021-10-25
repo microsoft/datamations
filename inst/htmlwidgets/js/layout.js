@@ -17,6 +17,7 @@ function generateGrid(spec) {
 
   let secondarySplit = Object.keys(encoding).filter(d => {
     const field = encoding[d].field;
+    if (!field) return false;
     return d !== 'x' && d !== 'y' && 
            field !== splitField && 
            groupKeys.indexOf(field) === -1;
@@ -88,16 +89,15 @@ function generateGrid(spec) {
     )
   }
 
-  let counter = 1;
-
   const reduce = (v) => {
     const arr = [];
 
     v.forEach((d, j) => {
       const n = d.n;
-      const xCenter = splitField ? splitOptions.indexOf(d[splitField]) + 1 : 1;
 
-      let startCol = (xCenter - 1) * maxCols + j; // inner grid start
+      const xCenter = splitField ? splitOptions.indexOf(d[splitField]) + 1 : 1;
+      const prev = j ? v[j - 1].n : 0;
+      const startCol = (xCenter - 1) * maxCols + j; // inner grid start
 
       for (let i = 0; i < n; i++) {
         const x = startCol + i % maxCols;
@@ -113,19 +113,33 @@ function generateGrid(spec) {
           )
         }
 
+        const r = Math.floor(i / maxCols);
+        let c = i % maxCols;
+
+        let rows = Math.floor(n / maxCols);
+
+        const full = maxCols * rows;
+        const diff = n - full;
+
+        let dx = 0;
+
+        if (diff && c >= diff) {
+          dx = 1;
+        }
+
+        let gemini_id = c * rows + r + prev + dx;
+
         arr.push({
           ...d,
           ...colorFieldObj,
-          gemini_id: counter,
+          gemini_id,
           [CONF.X_FIELD]: x,
           [CONF.Y_FIELD]: y,
         });
-
-        counter++;
       }
     });
 
-    return arr;
+    return arr.sort((a, b) => a.gemini_id - b.gemini_id);
   };
 
   if (groupKeys.length === 0) {
