@@ -116,15 +116,15 @@ function generateGrid(spec) {
         const r = Math.floor(i / maxCols);
         let c = i % maxCols;
 
-        let rows = Math.floor(n / maxCols);
+        let rows = Math.ceil(n / maxCols);
 
         const full = maxCols * rows;
-        const diff = n - full;
+        const diff = maxCols - (full - n);
 
         let dx = 0;
 
-        if (diff && c >= diff) {
-          dx = 1;
+        if (diff && c > diff) {
+          dx = -(c - diff);
         }
 
         let gemini_id = c * rows + r + prev + dx;

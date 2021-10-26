@@ -215,7 +215,7 @@
     "data": {
       "values": [
         {
-          "n": 100
+          "n": 5
         }
       ]
     },
@@ -228,16 +228,18 @@
         "field": "datamations_x",
         "type": "quantitative",
         "axis": null
-      },  
+      },
       "y": {
         "field": "datamations_y",
         "type": "quantitative",
         "axis": null
       },
-      "color": {
-        "field": null,
-        "type": "quantitative"
-      }
+      "tooltip": [
+        {
+          "field": "gemini_id",
+          "type": "nominal"
+        }
+      ]
     }
   },
   {
@@ -254,11 +256,11 @@
       "values": [
         {
           "Degree": "Masters",
-          "n": 72
+          "n": 2
         },
         {
           "Degree": "PhD",
-          "n": 28
+          "n": 3
         }
       ]
     },
@@ -279,17 +281,288 @@
       },
       "color": {
         "field": null,
-        "type": "quantitative"
+        "type": "nominal"
       },
       "tooltip": [
+        {
+          "field": "Degree",
+          "type": "nominal"
+        },
         {
           "field": "gemini_id",
           "type": "nominal"
         }
       ]
     }
+  },
+  {
+    "height": 300,
+    "width": 300,
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "parse": "jitter",
+      "axes": false,
+      "description": "Plot Salary within each group",
+      "splitField": "Degree",
+      "xAxisLabels": ["Masters", "PhD"]
+    },
+    "data": {
+      "values": [
+        {
+          "gemini_id": 0,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 81.9445013836958,
+          "datamations_y_tooltip": 81.9445013836958
+        },
+        {
+          "gemini_id": 1,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 82.8953005648218,
+          "datamations_y_tooltip": 82.8953005648218
+        },
+        {
+          "gemini_id": 2,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 84.4868333523627,
+          "datamations_y_tooltip": 84.4868333523627
+        },
+        {
+          "gemini_id": 3,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 83.8469139884692,
+          "datamations_y_tooltip": 83.8469139884692
+        },
+        {
+          "gemini_id": 4,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 83.7531382157467,
+          "datamations_y_tooltip": 83.7531382157467
+        }
+      ]
+    },
+    "mark": {
+      "type": "point",
+      "filled": true
+    },
+    "encoding": {
+      "x": {
+        "field": "datamations_x",
+        "type": "quantitative",
+        "axis": {
+          "values": [1, 2],
+          "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+          "labelAngle": -90
+        },
+        "title": "Degree",
+        "scale": {
+          "domain": [0.5, 2.5]
+        }
+      },
+      "y": {
+        "field": "datamations_y",
+        "type": "quantitative",
+        "title": "Salary",
+        "scale": {
+          "domain": [81.9445013836958, 84.4868333523627]
+        }
+      },
+      "tooltip": [
+        {
+          "field": "datamations_y_tooltip",
+          "type": "quantitative",
+          "title": "Salary"
+        },
+        {
+          "field": "Degree",
+          "type": "nominal"
+        },
+        {
+          "field": "gemini_id",
+          "type": "nominal"
+        }
+      ]
+    }
+  },
+  {
+    "height": 300,
+    "width": 300,
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "axes": false,
+      "description": "Plot median Salary of each group"
+    },
+    "data": {
+      "values": [
+        {
+          "gemini_id": 0,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 82.4199009742588,
+          "datamations_y_tooltip": 82.4199009742588
+        },
+        {
+          "gemini_id": 1,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 82.4199009742588,
+          "datamations_y_tooltip": 82.4199009742588
+        },
+        {
+          "gemini_id": 2,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 83.8469139884692,
+          "datamations_y_tooltip": 83.8469139884692
+        },
+        {
+          "gemini_id": 3,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 83.8469139884692,
+          "datamations_y_tooltip": 83.8469139884692
+        },
+        {
+          "gemini_id": 4,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 83.8469139884692,
+          "datamations_y_tooltip": 83.8469139884692
+        }
+      ]
+    },
+    "mark": {
+      "type": "point",
+      "filled": true
+    },
+    "encoding": {
+      "x": {
+        "field": "datamations_x",
+        "type": "quantitative",
+        "axis": {
+          "values": [1, 2],
+          "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+          "labelAngle": -90
+        },
+        "title": "Degree",
+        "scale": {
+          "domain": [0.5, 2.5]
+        }
+      },
+      "y": {
+        "field": "datamations_y",
+        "type": "quantitative",
+        "title": "median(Salary)",
+        "scale": {
+          "domain": [81.9445013836958, 84.4868333523627]
+        }
+      },
+      "tooltip": [
+        {
+          "field": "datamations_y_tooltip",
+          "type": "quantitative",
+          "title": "median(Salary)"
+        },
+        {
+          "field": "Degree",
+          "type": "nominal"
+        }
+      ]
+    }
+  },
+  {
+    "height": 300,
+    "width": 300,
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "axes": false,
+      "description": "Plot median Salary of each group, zoomed in"
+    },
+    "data": {
+      "values": [
+        {
+          "gemini_id": 0,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 82.4199009742588,
+          "datamations_y_tooltip": 82.4199009742588
+        },
+        {
+          "gemini_id": 1,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 82.4199009742588,
+          "datamations_y_tooltip": 82.4199009742588
+        },
+        {
+          "gemini_id": 2,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 83.8469139884692,
+          "datamations_y_tooltip": 83.8469139884692
+        },
+        {
+          "gemini_id": 3,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 83.8469139884692,
+          "datamations_y_tooltip": 83.8469139884692
+        },
+        {
+          "gemini_id": 4,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 83.8469139884692,
+          "datamations_y_tooltip": 83.8469139884692
+        }
+      ]
+    },
+    "mark": {
+      "type": "point",
+      "filled": true
+    },
+    "encoding": {
+      "x": {
+        "field": "datamations_x",
+        "type": "quantitative",
+        "axis": {
+          "values": [1, 2],
+          "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+          "labelAngle": -90
+        },
+        "title": "Degree",
+        "scale": {
+          "domain": [0.5, 2.5]
+        }
+      },
+      "y": {
+        "field": "datamations_y",
+        "type": "quantitative",
+        "title": "median(Salary)",
+        "scale": {
+          "domain": [82.4199009742588, 83.8469139884692]
+        }
+      },
+      "tooltip": [
+        {
+          "field": "datamations_y_tooltip",
+          "type": "quantitative",
+          "title": "median(Salary)"
+        },
+        {
+          "field": "Degree",
+          "type": "nominal"
+        }
+      ]
+    }
   }
 ] 
+
+
         })
         
         // const app1 = App("app", {

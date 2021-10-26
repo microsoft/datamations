@@ -469,6 +469,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         }
       }
     }
+
+    console.log(vegaLiteSpecs)
   }
 
   /**
