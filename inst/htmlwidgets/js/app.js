@@ -413,6 +413,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * - spec.layer = splits layers to stack on top on each other
    */
   async function transformSpecs() {
+    const n = vegaLiteSpecs[0].data.values[0].n;
+    const rows = Math.ceil(Math.sqrt(n));
+
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
       const vlSpec = vegaLiteSpecs[i];
 
@@ -423,8 +426,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
       // parsing
       if (parse === "grid") {
-        const gridSpec = await getGridSpec(vlSpec);
+        const gridSpec = await getGridSpec(vlSpec, rows);
         const enc = gridSpec.spec ? gridSpec.spec.encoding : gridSpec.encoding;
+        
 
         rawSpecs[i].data.values = gridSpec.data.values;
 

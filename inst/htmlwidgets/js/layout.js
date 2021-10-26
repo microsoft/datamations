@@ -1,4 +1,4 @@
-function generateGrid(spec) {
+function generateGrid(spec, rows = 10) {
   const splitField = spec.meta.splitField;
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const groupKeys = [];
@@ -17,7 +17,6 @@ function generateGrid(spec) {
 
   let secondarySplit = Object.keys(encoding).filter(d => {
     const field = encoding[d].field;
-    if (!field) return false;
     return d !== 'x' && d !== 'y' && 
            field !== splitField && 
            groupKeys.indexOf(field) === -1;
@@ -78,8 +77,7 @@ function generateGrid(spec) {
     });
   }
 
-  const maxN = d3.max(specValues, d => d.n);
-  const maxCols = Math.ceil(Math.sqrt(maxN));
+  const maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
 
   let splitOptions = [];
 
@@ -89,20 +87,21 @@ function generateGrid(spec) {
     )
   }
 
+  let counter = 1;
+
   const reduce = (v) => {
     const arr = [];
 
     v.forEach((d, j) => {
       const n = d.n;
-
       const xCenter = splitField ? splitOptions.indexOf(d[splitField]) + 1 : 1;
-      const prev = j ? v[j - 1].n : 0;
-      const startCol = (xCenter - 1) * maxCols + j; // inner grid start
+
+      let startCol = (xCenter - 1) * maxCols + j; // inner grid start
+      startCol += Math.floor((maxCols - Math.ceil(n / rows)) / 2); // center alignment
 
       for (let i = 0; i < n; i++) {
-        const x = startCol + i % maxCols;
-        const y = maxCols - 1 - Math.floor(i / maxCols);
-
+        const x = startCol + Math.floor(i / rows);
+        const y = rows - 1 - i % rows;
         const colorFieldObj = {};
 
         if (secondaryField && typeof[d[secondaryField]] === "object") {
@@ -113,33 +112,19 @@ function generateGrid(spec) {
           )
         }
 
-        const r = Math.floor(i / maxCols);
-        let c = i % maxCols;
-
-        let rows = Math.ceil(n / maxCols);
-
-        const full = maxCols * rows;
-        const diff = maxCols - (full - n);
-
-        let dx = 0;
-
-        if (diff && c > diff) {
-          dx = -(c - diff);
-        }
-
-        let gemini_id = c * rows + r + prev + dx;
-
         arr.push({
           ...d,
           ...colorFieldObj,
-          gemini_id,
+          gemini_id: counter,
           [CONF.X_FIELD]: x,
           [CONF.Y_FIELD]: y,
         });
+
+        counter++;
       }
     });
 
-    return arr.sort((a, b) => a.gemini_id - b.gemini_id);
+    return arr;
   };
 
   if (groupKeys.length === 0) {
@@ -165,11 +150,12 @@ function generateGrid(spec) {
 /**
  * Generates infogrid specification
  * @param {Object} spec vega-lite specification
+ * @param {Number} rows number of rows in a grid
  * @returns grid specification
  */
-function getGridSpec(spec) {
+function getGridSpec(spec, rows = 10) {
   return new Promise((res) => {
-    const grid = generateGrid(spec);
+    const grid = generateGrid(spec, rows);
     const obj = {...spec};
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
