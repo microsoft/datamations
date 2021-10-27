@@ -209,11 +209,11 @@ datamationSandDance_html <- function(...) {
         class = "control-bar",
         shiny::tags$div(
           class = "button-wrapper",
-          shiny::tags$button(onclick = htmlwidgets::JS(paste0("play('", id, "')")), "Replay")
+          shiny::tags$button(onclick = htmlwidgets::JS(paste0("window.app.play('", id, "')")), "Replay")
         ),
         shiny::tags$div(
           class = "slider-wrapper",
-          shiny::tags$input(class = "slider", type = "range", min = "0", value = "0", onchange = htmlwidgets::JS(paste0("onSlide('", id, "')")))
+          shiny::tags$input(class = "slider", type = "range", min = "0", value = "0", onchange = htmlwidgets::JS(paste0("window.app.onSlide('", id, "')")))
         )
       ),
       shiny::tags$div(class = "description")
