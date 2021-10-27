@@ -32,7 +32,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
     # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
     # Not defined in any of the previous steps since the JS takes care of generating it
-    dplyr::mutate(gemini_id = dplyr::row_number()) %>%
+    dplyr::mutate(
+      gemini_id = dplyr::row_number(),
+      gemini_id = .data$gemini_id - 1
+    ) %>%
     dplyr::rename(!!Y_FIELD := {{ summary_variable }})
 
   # Add an x variable to use as the center of jittering
