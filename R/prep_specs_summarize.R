@@ -73,8 +73,15 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
 
-  y_range <- range(.data[[Y_FIELD_CHR]], na.rm = TRUE)
-  y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y, scale = list(domain = y_range))
+  # The y range should be the range of the Y variable, but only if it's numeric - otherwise it doesn't make sense
+  y_type <- check_type(.data[["datamations_y"]])
+
+  if (y_type == "numeric") {
+    y_range <- range(.data[[Y_FIELD_CHR]], na.rm = TRUE)
+    y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y, scale = list(domain = y_range))
+  } else {
+    y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y)
+  }
 
   color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
 
@@ -111,7 +118,6 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Scatter plot if the variable is continuous, icon array if discrete (categorical, binary)
 
   # Determine whether plot is scatter or icon array
-  y_type <- check_type(.data[["datamations_y"]])
 
   # If it is numeric, prepare to visualize data in a jittered scatterplot
   if (y_type == "numeric") {
@@ -120,7 +126,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
   } else { # Otherwise, another infogrid!
     data_1 <- .data %>%
-      dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row, mapping$x, !!Y_FIELD_CHR)))) %>%
+      dplyr::count(dplyr::across(tidyselect::any_of(c(group_vars_chr, !!X_FIELD_CHR, !!Y_FIELD_CHR)))) %>%
       dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
   }
 
@@ -144,7 +150,16 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     if (y_type == "binary") {
       # Use stroke and fillOpacity
-      # spec_encoding$stroke # should be the color variable or if there is no color, that variable
+      # stroke should be the color variable, or a constant if there is not one
+
+      if (is.null(mapping$color)) {
+        data_1 <- data_1 %>%
+          dplyr::mutate(stroke = 1)
+        spec_encoding$stroke <- list(field = "stroke", legend = NULL)
+      } else {
+        spec_encoding$stroke <- list(field = mapping$color)
+      }
+
       spec_encoding$fillOpacity <- list(field = Y_FIELD_CHR, type = "nominal", scale = list(range = c(0, 1)))
     } else if (y_type == "categorical") {
       # Use shape
@@ -182,6 +197,14 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     dplyr::group_by(!!!group_vars) %>%
     dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
 
+  # Remove n if previous plot was an info grid, otherwise it appears in the tooltip
+
+  if (y_type != "numeric") {
+    data_2 <- data_2 %>%
+      dplyr::select(-.data$n) %>%
+      dplyr::distinct()
+  }
+
   # Generate description
   description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
 
@@ -189,6 +212,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   spec_encoding$tooltip <- generate_summarize_tooltip(data_2, mapping$y, mapping$summary_function)
 
   spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
+
+  # Remove any stroke/fillOpacity/shape
+
+  spec_encoding$stroke <- spec_encoding$fillOpacity <- spec_encoding$shape <- NULL
 
   spec <- generate_vega_specs(
     .data = data_2,
