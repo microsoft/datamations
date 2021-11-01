@@ -24,11 +24,13 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       gemini_id = .data$gemini_id - 1
     )
 
+  summary_variable_chr <- rlang::as_name(summary_variable)
+
   # Check whether the response variable is numeric or binary / categorical
   # If it is numeric, the first summary frame should be a jittered distribution
   # If it is binary / categorical, the first summary frame is an info grid (and so much of the same logic needs to be pulled in from prep_specs_group_by)
 
-  y_type <- check_type(.data[[Y_FIELD_CHR]])
+  y_type <- check_type(.data[[summary_variable]])
 
   # Mapping and encoding for numeric ----
   if (y_type == "numeric") {
@@ -49,7 +51,9 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
       # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
       # Not defined in any of the previous steps since the JS takes care of generating it
-      dplyr::mutate(gemini_id = dplyr::row_number() - 1)
+      dplyr::mutate(gemini_id = dplyr::row_number() - 1) %>%
+      dplyr::rename(!!Y_FIELD := {{ summary_variable }})
+
 
     # Add an x variable to use as the center of jittering
     # It can just be 1, except if mapping$x is not 1!
@@ -188,21 +192,17 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     data_1 <- .data %>%
       dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
       dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
+
+    # Generate tooltip
+    spec_encoding$tooltip <- generate_summarize_tooltip(data_1, mapping$y)
   } else { # Otherwise, another infogrid!
     data_1 <- .data %>%
-      dplyr::count(!!!group_vars, datamations_y) %>%
-      dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
+      dplyr::count(!!!group_vars, !!summary_variable) %>%
+      dplyr::mutate(!!Y_TOOLTIP_FIELD := !!summary_variable)
   }
-
-  # Remove NA values, since their values will not be displayed - better to have them fade off
-  data_1 <- data_1 %>%
-    dplyr::filter(!is.na(!!Y_FIELD))
 
   # Generate description
   description <- generate_summarize_description(summary_variable, group_by = length(group_vars) != 0)
-
-  # Generate tooltip
-  spec_encoding$tooltip <- generate_summarize_tooltip(data_1, mapping$y)
 
   if (y_type == "numeric") {
     # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
@@ -227,7 +227,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       spec_encoding$fillOpacity <- list(field = Y_FIELD_CHR, type = "nominal", scale = list(range = c(0, 1)))
     } else if (y_type == "categorical") {
       # Use shape
-      spec_encoding$shape <- list(field = Y_FIELD_CHR, type = "nominal")
+      spec_encoding$shape <- list(field = summary_variable_chr, type = "nominal")
     }
   }
 
@@ -266,7 +266,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
       # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
       # Not defined in any of the previous steps since the JS takes care of generating it
-      dplyr::mutate(gemini_id = dplyr::row_number() - 1)
+      dplyr::mutate(gemini_id = dplyr::row_number() - 1) %>%
+      dplyr::rename(!!Y_FIELD := {{ summary_variable }})
 
     # Add an x variable to use as the center of jittering
     # It can just be 1, except if mapping$x is not 1!
@@ -346,7 +347,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     spec_encoding = spec_encoding, facet_encoding = facet_encoding,
     height = height, width = width, facet_dims = facet_dims,
     # Flags for column / row  facets or color
-    column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
+    column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color),
+    y_type = y_type
   )
 
   specs_list <- append(specs_list, list(spec))

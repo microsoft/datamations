@@ -133,8 +133,6 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   # Unlist into a single list
   res <- unlist(res, recursive = FALSE)
 
-  browser()
-
   # Convert to JSON
   res <- jsonlite::toJSON(res, auto_unbox = TRUE, pretty = pretty, null = "null", digits = NA)
 
