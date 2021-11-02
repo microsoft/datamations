@@ -224,7 +224,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
         spec_encoding$stroke <- list(field = mapping$color)
       }
 
-      spec_encoding$fillOpacity <- list(field = Y_FIELD_CHR, type = "nominal", scale = list(range = c(0, 1)))
+      spec_encoding$fillOpacity <- list(field = summary_variable_chr, type = "nominal", scale = list(range = c(0, 1)))
     } else if (y_type == "categorical") {
       # Use shape
       spec_encoding$shape <- list(field = summary_variable_chr, type = "nominal")
