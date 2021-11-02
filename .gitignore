@@ -5,4 +5,6 @@
 rsconnect/
 .vs/
 *.egg-info/
+lib/
 dist/
+build/
