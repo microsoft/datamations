@@ -50,9 +50,9 @@
         display: none;
       }
 
-      /* .vega-vis-wrapper .vega-for-axis .role-legend {
+      .vega-vis-wrapper .vega-for-axis .role-legend {
         display: none;
-      } */
+      }
 
       .control-bar {
         width: 100%;
@@ -197,578 +197,496 @@
     <script src="../js/hack-facet-view.js"></script>
     <script src="../js/app.js"></script>
     <script>
-        //#                     1995	1996	Combined
-        //# Derek Jeter	12/48	.250	183/582	.314	195/630	.310
-        //# David Justice	104/411	.253	45/140	.321	149/551	.27
-        // const size = 7;
+      //#                     1995	1996	Combined
+      //# Derek Jeter	12/48	.250	183/582	.314	195/630	.310
+      //# David Justice	104/411	.253	45/140	.321	149/551	.27
+      const size = 7;
 
-        const app1 = App("app", {
-          specs: [
-  {
-    "height": 300,
-    "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-    "meta": {
-      "parse": "grid",
-      "description": "Initial data"
-    },
-    "data": {
-      "values": [
-        {
-          "n": 100
-        }
-      ]
-    },
-    "mark": {
-      "type": "point",
-      "filled": true
-    },
-    "encoding": {
-      "x": {
-        "field": "datamations_x",
-        "type": "quantitative",
-        "axis": null
-      },
-      "y": {
-        "field": "datamations_y",
-        "type": "quantitative",
-        "axis": null
-      },
-      "tooltip": [
-        {
-          "field": "gemini_id",
-          "type": "nominal"
-        }
-      ],
-      color: {
-        field: "gemini_id",
-        type: "quantitative"
-      }
-    }
-  },
-  {
-    "height": 300,
-    "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-    "meta": {
-      "parse": "grid",
-      "description": "Group by Degree",
-      "splitField": "Degree",
-      "axes": false
-    },
-    "data": {
-      "values": [
-        {
-          "Degree": "Masters",
-          "n": 89
+      const shape = {
+        "type": "nominal",
+        "field": "hit",
+        "scale": {
+          "domain": ["yes", "no"],
+          "range": ["circle", "circle"]
         },
-        {
-          "Degree": "PhD",
-          "n": 11
+        "legend": {
+          "symbolFillColor": {
+            "expr": "datum.label == 'yes' ? '#888' : 'transparent'"
+          }
         }
-      ]
-    },
-    "mark": {
-      "type": "point",
-      "filled": true
-    },
-    "encoding": {
-      "x": {
-        "field": "datamations_x",
-        "type": "quantitative",
-        "axis": null
-      },
-      "y": {
-        "field": "datamations_y",
-        "type": "quantitative",
-        "axis": null
-      },
-      "color": {
-        "field": null,
-        "type": "nominal"
-      },
-      "tooltip": [
-        {
-          "field": "gemini_id",
-          "type": "nominal"
-        }
-      ]
-    }
-  }
-] 
+      };
 
-        })
-        
-        // const app1 = App("app", {
-        //   specs: [
-        //     {
-        //       "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-        //       "meta": {
-        //         "parse": "grid",
-        //         "description": "Group by player, year",
-        //         "splitField": "year",
-        //         "axes": true
-        //       },
-        //       "data": {
-        //         "values": [
-        //           {
-        //             "player": "Derek Jeter",
-        //             "year": 1995,
-        //             "n": 48,
-        //           },
+      const app1 = App("app", {
+        specs: [
+          {
+            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+            "meta": {
+              "parse": "grid",
+              "description": "Group by player, year",
+              "splitField": "player",
+              "axes": true
+            },
+            "data": {
+              "values": [
+                {
+                  "player": "Derek Jeter",
+                  "year": 1995,
+                  "n": 48,
+                },
 
-        //           {
-        //             "player": "Derek Jeter",
-        //             "year": 1996,
-        //             "n": 582
-        //           },
+                {
+                  "player": "David Justice",
+                  "year": 1995,
+                  "n": 411,
+                },
 
-        //           {
-        //             "player": "David Justice",
-        //             "year": 1995,
-        //             "n": 411,
-        //           },
+                {
+                  "player": "Derek Jeter",
+                  "year": 1996,
+                  "n": 582
+                },
 
-        //           {
-        //             "player": "David Justice",
-        //             "year": 1996,
-        //             "n": 140
-        //           },
-        //         ]
-        //       },
-        //       "facet": {
-        //         "column": {
-        //           "field": "player",
-        //           "type": "ordinal",
-        //           "title": "Player"
-        //         }
-        //       },
-        //       "spec": {
-        //         "height": 300,
-        //         "width": window.innerWidth * 0.4,
-        //         "mark": {
-        //           "type": "point",
-        //           "size": size,
-        //           "filled": true
-        //         },
-        //         "encoding": {
-        //           "x": {
-        //             "field": "datamations_x",
-        //             "type": "quantitative",
-        //             "axis": null
-        //           },
-        //           "y": {
-        //             "field": "datamations_y",
-        //             "type": "quantitative",
-        //             "axis": null
-        //           },
-        //           "color": {
-        //             "field": "player",
-        //             "type": "nominal"
-        //           }
-        //         }
-        //       }
-        //     },
-        //     {
-        //       "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-        //       "meta": {
-        //         "parse": "grid",
-        //         "description": "Group by player, year",
-        //         "splitField": "year",
-        //         "axes": true
-        //       },
-        //       "data": {
-        //         "values": [
-        //           {
-        //             "player": "Derek Jeter",
-        //             "hit": "yes",
-        //             "year": 1995,
-        //             "n": 12
-        //           },
-        //           {
-        //             "player": "Derek Jeter",
-        //             "hit": "no",
-        //             "year": 1995,
-        //             "n": 48 - 12
-        //           },
-        //           {
-        //             "player": "Derek Jeter",
-        //             "hit": "yes",
-        //             "year": 1996,
-        //             "n": 183
-        //           },
-        //           {
-        //             "player": "Derek Jeter",
-        //             "hit": "no",
-        //             "year": 1996,
-        //             "n": 582 - 183
-        //           },
-        //           {
-        //             "player": "David Justice",
-        //             "year": 1995,
-        //             "hit": "yes",
-        //             "n": 104
-        //           },
-        //           {
-        //             "player": "David Justice",
-        //             "year": 1995,
-        //             "hit": "no",
-        //             "n": 411 - 104
-        //           },
-        //           {
-        //             "player": "David Justice",
-        //             "year": 1996,
-        //             "hit": "yes",
-        //             "n": 45
-        //           },
-        //           {
-        //             "player": "David Justice",
-        //             "year": 1996,
-        //             "hit": "no",
-        //             "n": 140 - 45
-        //           },
-        //         ]
-        //       },
-        //       "facet": {
-        //         "column": {
-        //           "field": "player",
-        //           "type": "ordinal",
-        //           "title": "Player"
-        //         }
-        //       },
-        //       "spec": {
-        //         "height": 300,
-        //         "width": window.innerWidth * 0.4,
-        //         "mark": {
-        //           "type": "point",
-        //           "size": size,
-        //           "filled": true,
-        //           "strokeWidth": 1
-        //         },
-        //         "encoding": {
-        //           "x": {
-        //             "field": "datamations_x",
-        //             "type": "quantitative",
-        //             "axis": null
-        //           },
-        //           "y": {
-        //             "field": "datamations_y",
-        //             "type": "quantitative",
-        //             "axis": null
-        //           },
-        //           "color": {
-        //             "field": "player",
-        //             "type": "nominal",
-        //           },
-        //           "stroke": {
-        //             "type": "nominal",
-        //             "field": "player"
-        //           },
-        //           "fillOpacity": {
-        //             "type": "nominal",
-        //             "field": "hit",
-        //             "scale": {
-        //               "domain": ["yes", "no"],
-        //               "range": [1, 0]
-        //             }
-        //           }
-        //         }
-        //       }
-        //     },
-        //     {
-        //       "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-        //       "meta": {
-        //         "description": "Batting averages each year",
-        //         "axes": true
-        //       },
-        //       "data": {
-        //         "values": [
-        //           ...d3.range(1, 48 + 1).map(d => {
-        //             return {
-        //               "player": "Derek Jeter",
-        //               year: 1995,
-        //               datamations_x: 1,
-        //               datamations_y: 0.250,
-        //             }
-        //           }),
+                {
+                  "player": "David Justice",
+                  "year": 1996,
+                  "n": 140
+                },
+              ]
+            },
+            "facet": {
+              "column": {
+                "field": "year",
+                "type": "ordinal",
+                "title": "Year"
+              }
+            },
+            "spec": {
+              "height": 300,
+              "width": window.innerWidth * 0.4,
+              "mark": {
+                "type": "point",
+                "size": size,
+                "filled": true
+              },
+              "encoding": {
+                "x": {
+                  "field": "datamations_x",
+                  "type": "quantitative",
+                  "axis": null
+                },
+                "y": {
+                  "field": "datamations_y",
+                  "type": "quantitative",
+                  "axis": null
+                },
+                "color": {
+                  "field": "player",
+                  "type": "nominal"
+                }
+              }
+            }
+          },
+          {
+            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+            "meta": {
+              "parse": "grid",
+              "description": "Group by player, year",
+              "splitField": "player",
+              "axes": true
+            },
+            "data": {
+              "values": [
+                {
+                  "player": "Derek Jeter",
+                  "hit": "yes",
+                  "year": 1995,
+                  "n": 12
+                },
+                {
+                  "player": "Derek Jeter",
+                  "hit": "no",
+                  "year": 1995,
+                  "n": 48 - 12
+                },
+                {
+                  "player": "Derek Jeter",
+                  "hit": "yes",
+                  "year": 1996,
+                  "n": 183
+                },
+                {
+                  "player": "Derek Jeter",
+                  "hit": "no",
+                  "year": 1996,
+                  "n": 582 - 183
+                },
+                {
+                  "player": "David Justice",
+                  "year": 1995,
+                  "hit": "yes",
+                  "n": 104
+                },
+                {
+                  "player": "David Justice",
+                  "year": 1995,
+                  "hit": "no",
+                  "n": 411 - 104
+                },
+                {
+                  "player": "David Justice",
+                  "year": 1996,
+                  "hit": "yes",
+                  "n": 45
+                },
+                {
+                  "player": "David Justice",
+                  "year": 1996,
+                  "hit": "no",
+                  "n": 140 - 45
+                },
+              ]
+            },
+            "facet": {
+              "column": {
+                "field": "year",
+                "type": "ordinal",
+                "title": "Year"
+              }
+            },
+            "spec": {
+              "height": 300,
+              "width": window.innerWidth * 0.4,
+              "mark": {
+                "type": "point",
+                "size": size,
+                "filled": true,
+                "strokeWidth": 1
+              },
+              "encoding": {
+                "x": {
+                  "field": "datamations_x",
+                  "type": "quantitative",
+                  "axis": null
+                },
+                "y": {
+                  "field": "datamations_y",
+                  "type": "quantitative",
+                  "axis": null
+                },
+                "color": {
+                  "field": "player",
+                  "type": "nominal",
+                },
+                "stroke": {
+                  "type": "nominal",
+                  "field": "player"
+                },
+                "fillOpacity": {
+                  "type": "nominal",
+                  "field": "hit",
+                  "scale": {
+                    "domain": ["yes", "no"],
+                    "range": [1, 0]
+                  }
+                },
+                shape
+              }
+            }
+          },
+          {
+            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+            "meta": {
+              "description": "Batting averages each year",
+              "axes": true
+            },
+            "data": {
+              "values": [
+                ...d3.range(1, 48 + 1).map(d => {
+                  return {
+                    "player": "Derek Jeter",
+                    year: 1995,
+                    datamations_x: 1,
+                    datamations_y: 0.250,
+                  }
+                }),
 
-        //           ...d3.range(1, 582 + 1).map(d => {
-        //             return {
-        //               year: 1996,
-        //               "player": "Derek Jeter",
-        //               datamations_x: 1,
-        //               datamations_y: 0.314,
-        //             }
-        //           }),
+                ...d3.range(1, 411 + 1).map(d => {
+                  return {
+                    "player": "David Justice",
+                    year: 1995,
+                    datamations_x: 2,
+                    datamations_y: 0.253,
+                  }
+                }),
 
-        //           ...d3.range(1, 411 + 1).map(d => {
-        //             return {
-        //               "player": "David Justice",
-        //               year: 1995,
-        //               datamations_x: 2,
-        //               datamations_y: 0.253,
-        //             }
-        //           }),
-        //           ...d3.range(1, 140 + 1).map(d => {
-        //             return {
-        //               year: 1996,
-        //               "player": "David Justice",
-        //               datamations_x: 2,
-        //               datamations_y: 0.321,
-        //             }
-        //           }),
-        //         ].map((d, i) => {
-        //           return {
-        //             gemini_id: i + 1,
-        //             ...d,
-        //           }
-        //         })
-        //       },
-        //       "facet": {
-        //         "column": {
-        //           "field": "year",
-        //           "type": "ordinal",
-        //           "title": "Year"
-        //         }
-        //       },
-        //       "spec": {
-        //         "height": 300,
-        //         "width": window.innerWidth * 0.4,
-        //         "mark": {
-        //           "type": "point",
-        //           "filled": true
-        //         },
-        //         "encoding": {
-        //           "x": {
-        //             "field": "datamations_x",
-        //             "type": "quantitative",
-        //             "axis": {
-        //               "values": [
-        //                 1,
-        //                 2,
-        //               ],
-        //               "labelExpr": "round(datum.label) == 1 ? 'Derek Jeter' : 'David Justice'",
-        //               "labelAngle": -90
-        //             },
-        //             "title": "island",
-        //             "scale": {
-        //               "domain": [
-        //                 0.5,
-        //                 2.5
-        //               ]
-        //             }
-        //           },
-        //           "y": {
-        //             "field": "datamations_y",
-        //             "type": "quantitative",
-        //             "scale": {
-        //               "domain": [
-        //                 0.22,
-        //                 0.34
-        //               ]
-        //             }
-        //           },
-        //           "color": {
-        //             "field": "player",
-        //             "type": "nominal",
-        //           }
-        //         }
-        //       }
-        //     },
-        //   ]
-        // });
+                ...d3.range(1, 582 + 1).map(d => {
+                  return {
+                    year: 1996,
+                    "player": "Derek Jeter",
+                    datamations_x: 1,
+                    datamations_y: 0.314,
+                  }
+                }),
 
-        // const app2 = App("app_2", {
-        //   specs: [
-        //     {
-        //       "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-        //       "meta": {
-        //         "parse": "grid",
-        //         "description": "Group by player, year",
-        //         "splitField": "player",
-        //         "axes": false
-        //       },
-        //       "data": {
-        //         "values": [
-        //           {
-        //             "player": "Derek Jeter",
-        //             "n": 630,
-        //           },
-        //           {
-        //             "player": "David Justice",
-        //             "n": 551,
-        //           },
-        //         ]
-        //       },
-        //       "height": 300,
-        //       "width": window.innerWidth * 0.6,
-        //       "mark": {
-        //         "type": "point",
-        //         "filled": true
-        //       },
-        //       "encoding": {
-        //           "x": {
-        //             "field": "datamations_x",
-        //             "type": "quantitative",
-        //             "axis": null
-        //           },
-        //           "y": {
-        //             "field": "datamations_y",
-        //             "type": "quantitative",
-        //             "axis": null
-        //           },
-        //           "color": {
-        //             "field": "player",
-        //             "type": "nominal"
-        //           }
-        //         }
-        //     },
-        //     {
-        //       "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-        //       "meta": {
-        //         "parse": "grid",
-        //         "description": "Group by player, year",
-        //         "splitField": "player",
-        //         "axes": false
-        //       },
-        //       "data": {
-        //         "values": [
-        //           {
-        //             "player": "Derek Jeter",
-        //             "hit": "yes",
-        //             "n": 12
-        //           },
-        //           {
-        //             "player": "Derek Jeter",
-        //             "hit": "no",
-        //             "n": 630 - 195
-        //           },
-        //           {
-        //             "player": "David Justice",
-        //             "hit": "yes",
-        //             "n": 104
-        //           },
-        //           {
-        //             "player": "David Justice",
-        //             "hit": "no",
-        //             "n": 551 - 149
-        //           },
-        //         ]
-        //       },
-        //       "height": 300,
-        //       "width": window.innerWidth * 0.6,
-        //       "mark": {
-        //         "type": "point",
-        //         "filled": true,
-        //         "strokeWidth": 1.5
-        //       },
-        //       "encoding": {
-        //         "x": {
-        //           "field": "datamations_x",
-        //           "type": "quantitative",
-        //           "axis": null
-        //         },
-        //         "y": {
-        //           "field": "datamations_y",
-        //           "type": "quantitative",
-        //           "axis": null
-        //         },
-        //         "color": {
-        //           "field": "player",
-        //           "type": "nominal",
-        //         },
-        //         "stroke": {
-        //           "type": "nominal",
-        //           "field": "player"
-        //         },
-        //         "fillOpacity": {
-        //           "type": "nominal",
-        //           "field": "hit",
-        //           "scale": {
-        //             "domain": ["yes", "no"],
-        //             "range": [1, 0]
-        //           }
-        //         }
-        //       }
-        //     },
-        //     {
-        //       "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-        //       "meta": {
-        //         "description": "Overall Batting averages (Simpson's Paradox)",
-        //         "axes": true
-        //       },
-        //       "data": {
-        //         "values": [
+                ...d3.range(1, 140 + 1).map(d => {
+                  return {
+                    year: 1996,
+                    "player": "David Justice",
+                    datamations_x: 2,
+                    datamations_y: 0.321,
+                  }
+                }),
+              ].map((d, i) => {
+                return {
+                  gemini_id: i,
+                  ...d,
+                }
+              })
+            },
+            "facet": {
+              "column": {
+                "field": "year",
+                "type": "ordinal",
+                "title": "Year"
+              }
+            },
+            "spec": {
+              "height": 300,
+              "width": window.innerWidth * 0.36,
+              "mark": {
+                "type": "point",
+                "filled": true
+              },
+              "encoding": {
+                "x": {
+                  "field": "datamations_x",
+                  "type": "quantitative",
+                  "axis": {
+                    "values": [
+                      1,
+                      2,
+                    ],
+                    "labelExpr": "round(datum.label) == 1 ? 'Derek Jeter' : 'David Justice'",
+                    "labelAngle": -90
+                  },
+                  "title": "year",
+                  "scale": {
+                    "domain": [
+                      0.5,
+                      2.5
+                    ]
+                  }
+                },
+                "y": {
+                  "field": "datamations_y",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      0.22,
+                      0.34
+                    ]
+                  }
+                },
+                "color": {
+                  "field": "player",
+                  "type": "nominal",
+                }
+              }
+            }
+          },
+        ]
+      });
 
-        //           ...d3.range(1, 630 + 1).map(d => {
-        //             return {
-        //               "player": "Derek Jeter",
-        //               datamations_x: 1,
-        //               datamations_y: .310,
-        //             }
-        //           }),
+      const app2 = App("app_2", {
+        specs: [
+          {
+            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+            "meta": {
+              "parse": "grid",
+              "description": "Group by player, year",
+              "splitField": "player",
+              "axes": false
+            },
+            "data": {
+              "values": [
+                {
+                  "player": "Derek Jeter",
+                  "n": 630,
+                },
+                {
+                  "player": "David Justice",
+                  "n": 551,
+                },
+              ]
+            },
+            "height": 300,
+            "width": window.innerWidth * 0.6,
+            "mark": {
+              "type": "point",
+              "filled": true
+            },
+            "encoding": {
+                "x": {
+                  "field": "datamations_x",
+                  "type": "quantitative",
+                  "axis": null
+                },
+                "y": {
+                  "field": "datamations_y",
+                  "type": "quantitative",
+                  "axis": null
+                },
+                "color": {
+                  "field": "player",
+                  "type": "nominal"
+                }
+              }
+          },
+          {
+            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+            "meta": {
+              "parse": "grid",
+              "description": "Group by player, year",
+              "splitField": "player",
+              "axes": false
+            },
+            "data": {
+              "values": [
+                {
+                  "player": "Derek Jeter",
+                  "hit": "yes",
+                  "n": 12
+                },
+                {
+                  "player": "Derek Jeter",
+                  "hit": "no",
+                  "n": 630 - 195
+                },
+                {
+                  "player": "David Justice",
+                  "hit": "yes",
+                  "n": 104
+                },
+                {
+                  "player": "David Justice",
+                  "hit": "no",
+                  "n": 551 - 149
+                },
+              ]
+            },
+            "height": 300,
+            "width": window.innerWidth * 0.6,
+            "mark": {
+              "type": "point",
+              "filled": true,
+              "strokeWidth": 1.5
+            },
+            "encoding": {
+              "x": {
+                "field": "datamations_x",
+                "type": "quantitative",
+                "axis": null
+              },
+              "y": {
+                "field": "datamations_y",
+                "type": "quantitative",
+                "axis": null
+              },
+              "color": {
+                "field": "player",
+                "type": "nominal",
+              },
+              "stroke": {
+                "type": "nominal",
+                "field": "player"
+              },
+              "fillOpacity": {
+                "type": "nominal",
+                "field": "hit",
+                "scale": {
+                  "domain": ["yes", "no"],
+                  "range": [1, 0]
+                }
+              },
+              shape
+            }
+          },
+          {
+            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+            "meta": {
+              "description": "Overall Batting averages (Simpson's Paradox)",
+              "axes": true
+            },
+            "data": {
+              "values": [
 
-        //           ...d3.range(1, 551 + 1).map(d => {
-        //             return {
-        //               "player": "David Justice",
-        //               datamations_x: 2,
-        //               datamations_y: .27,
-        //             }
-        //           }),
+                ...d3.range(1, 630 + 1).map(d => {
+                  return {
+                    "player": "Derek Jeter",
+                    datamations_x: 1,
+                    datamations_y: .310,
+                  }
+                }),
 
-        //         ].map((d, i) => {
-        //           return {
-        //             gemini_id: i + 1,
-        //             ...d,
-        //           }
-        //         })
-        //       },
-        //       "height": 300,
-        //       "width": window.innerWidth * 0.37,
-        //       "mark": {
-        //         "type": "point",
-        //         "filled": true
-        //       },
-        //       "encoding": {
-        //           "x": {
-        //             "field": "datamations_x",
-        //             "type": "quantitative",
-        //             "axis": {
-        //               "values": [
-        //                 1,
-        //                 2,
-        //               ],
-        //               "labelExpr": "round(datum.label) == 1 ? 'Derek Jeter' : 'David Justice'",
-        //               "labelAngle": -90
-        //             },
-        //             "title": "island",
-        //             "scale": {
-        //               "domain": [
-        //                 0.5,
-        //                 2.5
-        //               ]
-        //             }
-        //           },
-        //           "y": {
-        //             "field": "datamations_y",
-        //             "type": "quantitative",
-        //             "scale": {
-        //               "domain": [
-        //                 0.22,
-        //                 0.34
-        //               ]
-        //             }
-        //           },
-        //           "color": {
-        //             "field": "player",
-        //             "type": "nominal",
-        //           }
-        //         }
-        //     },
-        //   ],
-        // });
-   
-   
-   </script>
+                ...d3.range(1, 551 + 1).map(d => {
+                  return {
+                    "player": "David Justice",
+                    datamations_x: 2,
+                    datamations_y: .27,
+                  }
+                }),
+
+              ].map((d, i) => {
+                return {
+                  gemini_id: i + 1,
+                  ...d,
+                }
+              })
+            },
+            "height": 300,
+            "width": window.innerWidth * 0.37,
+            "mark": {
+              "type": "point",
+              "filled": true
+            },
+            "encoding": {
+                "x": {
+                  "field": "datamations_x",
+                  "type": "quantitative",
+                  "axis": {
+                    "values": [
+                      1,
+                      2,
+                    ],
+                    "labelExpr": "round(datum.label) == 1 ? 'Derek Jeter' : 'David Justice'",
+                    "labelAngle": -90
+                  },
+                  "title": "year",
+                  "scale": {
+                    "domain": [
+                      0.5,
+                      2.5
+                    ]
+                  }
+                },
+                "y": {
+                  "field": "datamations_y",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      0.22,
+                      0.34
+                    ]
+                  }
+                },
+                "color": {
+                  "field": "player",
+                  "type": "nominal",
+                }
+              }
+          },
+        ],
+      });
+ </script>
   </body>
 </html>
