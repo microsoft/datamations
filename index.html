@@ -88,14 +88,14 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;% 
   group_by(Degree) %&gt;%
-  summarize(mean = mean(Salary))"</span> <span class="op">%&gt;%</span>
+  summarize(mean = mean(Salary))"</span> <span class="op"><a href="reference/%&gt;%.html">%&gt;%</a></span>
   <span class="fu"><a href="reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-mean_salary_group_by_degree.gif" width="80%"></p>
 <p>You can group by multiple variables, as in this example, grouping by <code>Degree</code> and <code>Work</code> before calculating the mean <code>Salary</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Degree, Work) %&gt;% 
-  summarize(mean = mean(Salary))"</span> <span class="op">%&gt;%</span>
+  summarize(mean = mean(Salary))"</span> <span class="op"><a href="reference/%&gt;%.html">%&gt;%</a></span>
   <span class="fu"><a href="reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-mean_salary_group_by_degree_work.gif" width="80%"></p>
 <p>datamations has some defaults in terms of how groups are represented. As seen in the above two examples, when there is one grouping variable, it’s shown on the x-axis. When there are two grouping variables, the first (by what comes first in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code>) is shown in column facets, and the second is shown on the x-axis as well as colored. If there are three grouping variables, the first is in column facets, the second in row facets, and the third on the x-axis and colored.</p>
@@ -104,9 +104,9 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 
-<span class="va">small_salary</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Work</span>, <span class="va">Degree</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>mean_salary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Salary</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<span class="va">small_salary</span> <span class="op"><a href="reference/%&gt;%.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Work</span>, <span class="va">Degree</span><span class="op">)</span> <span class="op"><a href="reference/%&gt;%.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>mean_salary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Salary</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="reference/%&gt;%.html">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Work</span>, y <span class="op">=</span> <span class="va">mean_salary</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span>rows <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html">vars</a></span><span class="op">(</span><span class="va">Degree</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -118,7 +118,7 @@
   summarize(mean_salary = mean(Salary)) %&gt;%
   ggplot(aes(x = Work, y = mean_salary)) + 
   geom_point() + 
-  facet_grid(rows = vars(Degree))"</span> <span class="op">%&gt;%</span>
+  facet_grid(rows = vars(Degree))"</span> <span class="op"><a href="reference/%&gt;%.html">%&gt;%</a></span>
   <span class="fu"><a href="reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-mean_salary_group_by_degree_work_ggplot.gif" width="80%"></p>
 <p>When ggplot2 code is provided, the order of animation is not determined by the order in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code>, but by the plot layout. Variables are first animated by what’s in the column facets, then the row facets, by the x-axis, and finally by color.</p>
