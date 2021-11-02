@@ -4,3 +4,5 @@
 .DS_Store
 rsconnect/
 .vs/
+*.egg-info/
+dist/
