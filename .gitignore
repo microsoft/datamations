@@ -8,3 +8,4 @@ rsconnect/
 lib/
 dist/
 build/
+__pycache__/
