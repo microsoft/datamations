@@ -1,11 +1,12 @@
-from setuptools import setup
+import setuptools
 
-setup(
+setuptools.setup(
    name='datamations',
    version='1.0',
    description='Automatic generation of explanation of plots and tables from analysis code',
    author='Chinmay Singh',
    author_email='chsingh@microsoft.com',
    packages=['datamations'],
-   install_requires=['pandas'],
+   package_data={'datamations': ['small_salary.csv']},
+   install_requires=['pandas']
 )
