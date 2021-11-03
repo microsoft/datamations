@@ -15,15 +15,6 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   summary_variable <- mapping$y %>%
     rlang::parse_expr()
 
-  .data <- .data %>%
-    arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
-    # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
-    # Not defined in any of the previous steps since the JS takes care of generating it
-    dplyr::mutate(
-      gemini_id = dplyr::row_number(),
-      gemini_id = .data$gemini_id - 1
-    )
-
   summary_variable_chr <- rlang::as_name(summary_variable)
 
   # Check whether the response variable is numeric or binary / categorical
@@ -51,7 +42,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
       # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
       # Not defined in any of the previous steps since the JS takes care of generating it
-      dplyr::mutate(gemini_id = dplyr::row_number() - 1) %>%
+      dplyr::mutate(gemini_id = dplyr::row_number()) %>%
       dplyr::rename(!!Y_FIELD := {{ summary_variable }})
 
 
@@ -199,6 +190,20 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     data_1 <- .data %>%
       dplyr::count(!!!group_vars, !!summary_variable) %>%
       dplyr::mutate(!!Y_TOOLTIP_FIELD := !!summary_variable)
+
+    # If the summary variable is a factor, order according to its values to match the legend
+
+    # If it's TRUE / FALSE, the order in R is FALSE / TRUE or 0 / 1 but change so that it's actually T/F 1/0
+
+    # This isn't working right now - TODO
+
+    # if (is.factor(data_1[[summary_variable_chr]])) {
+    #   data_1 <- data_1 %>%
+    #     dplyr::arrange(!!summary_variable)
+    # } else if (all(data_1[[summary_variable_chr]] %in% c(TRUE, FALSE))) {
+    #   data_1 <- data_1 %>%
+    #     dplyr::arrange(-!!summary_variable)
+    # }
   }
 
   # Generate description
@@ -213,18 +218,79 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     meta <- list(parse = "grid", axes = has_facets, description = description)
 
     if (y_type == "binary") {
-      # Use stroke and fillOpacity
-      # stroke should be the color variable, or a constant if there is not one
+      if (!is.null(mapping$color)) {
 
-      if (is.null(mapping$color)) {
-        data_1 <- data_1 %>%
-          dplyr::mutate(stroke = 1)
-        spec_encoding$stroke <- list(field = "stroke", legend = NULL)
-      } else {
+        # If there is a variable mapped to color:
+        # color: mapping$color
+        # stroke: mapping$color
+        # fillOpacity: mapping$y, scale: domain: 0, 1
+        # shape: mapping$y, scale: range: circle, legend: symbolFillColor: expr: first value set to grey color, second value is transparent
+
         spec_encoding$stroke <- list(field = mapping$color)
-      }
 
-      spec_encoding$fillOpacity <- list(field = summary_variable_chr, type = "nominal", scale = list(range = c(0, 1)))
+        spec_encoding$fillOpacity <- list(field = summary_variable_chr, type = "nominal", scale = list(range = c(0, 1)))
+
+        # Set shape to control legend
+
+        # For the fill, if it's a factor, take the first
+        # If it's TRUE / FALSE, do TRUE first
+
+        values <- unique(.data[[summary_variable_chr]])
+
+        first_value <- if (all(values %in% c(0, 1))) {
+          1
+        } else if (all(values %in% c(TRUE, FALSE))) {
+          TRUE
+        } else if (is.factor(values)) {
+          levels(values)[[1]]
+        } else {
+          values[[1]]
+        }
+
+        shape_fill_legend_expr <- glue::glue("datum.label == '{first_value}' ? '#888' : 'transparent'",
+          first_value = first_value
+        )
+
+        value_order <- if(all(values %in% c(0, 1))) {
+          c(1, 0)
+        } else if (all(values %in% c(TRUE, FALSE))) {
+          c(TRUE, FALSE)
+        } else if (is.factor(values)) {
+          levels(values)
+        } else {
+          values
+        }
+
+        spec_encoding$shape <- list(
+          field = summary_variable_chr,
+          scale = list(
+            domain = value_order,
+            range = c("circle", "circle")
+          ),
+          legend = list(symbolFillColor = list(expr = shape_fill_legend_expr))
+        )
+      } else {
+        color <- "#4c78a8"
+        white <- "#ffffff"
+        # If there is NOT a variable mapped to color:
+        # fill: mapping$y, scale: range: grey, white
+        # stroke: mapping$y, scale: range: grey, grey
+
+        values <- unique(.data[[summary_variable_chr]])
+
+        value_order <- if(all(values %in% c(0, 1))) {
+          c(1, 0)
+        } else if (all(values %in% c(TRUE, FALSE))) {
+          c(TRUE, FALSE)
+        } else if (is.factor(values)) {
+          levels(values)
+        } else {
+          values
+        }
+
+        spec_encoding$fill <- list(field = summary_variable_chr, scale = list(domain = value_order, range = c(color, white)))
+        spec_encoding$stroke <- list(field = summary_variable_chr, scale = list(domain = value_order, range = c(color, color)))
+      }
     } else if (y_type == "categorical") {
       # Use shape
       spec_encoding$shape <- list(field = summary_variable_chr, type = "nominal")
@@ -266,7 +332,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
       # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
       # Not defined in any of the previous steps since the JS takes care of generating it
-      dplyr::mutate(gemini_id = dplyr::row_number() - 1) %>%
+      dplyr::mutate(gemini_id = dplyr::row_number()) %>%
       dplyr::rename(!!Y_FIELD := {{ summary_variable }})
 
     # Add an x variable to use as the center of jittering

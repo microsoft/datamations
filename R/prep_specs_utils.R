@@ -21,8 +21,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
 
   spec_encoding <- purrr::compact(spec_encoding)
 
-  # Set mark to circle if y_type is binary, or point otherwise (point is required to map shape)
-  mark_type <- ifelse(identical(y_type, "binary"), "circle", "point")
+  mark_type <- "point"
 
   # TODO - handle color
 
@@ -78,8 +77,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
 
   spec_encoding <- purrr::compact(spec_encoding)
 
-  # Set mark to circle if y_type is binary, or point otherwise (point is required to map shape)
-  mark_type <- ifelse(identical(y_type, "binary"), "circle", "point")
+  mark_type <- "point"
 
   # Remove facet encoding(s) if they're flagged not to be shown, or aren't in the mapping
   # So even if e.g. row = TRUE, if there's no variable to facet by, it'll be removed!
