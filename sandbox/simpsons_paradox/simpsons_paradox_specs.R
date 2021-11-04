@@ -35,18 +35,26 @@ df <- bind_rows(
 
 # datamation #1:
 # jeter has a higher batting average than justice overall
-"df %>%
+x <- "df %>%
   group_by(player) %>%
   summarize(
     batting_average = mean(is_hit)
   )" %>%
   datamation_sanddance()
 
+x
+
+write(x$x$specs, here::here("sandbox", "simpsons_paradox", "group_by_player.json"))
+
 # datamation #2:
 # but justice has a higher batting average than jeter within each year
-"df %>%
+x <- "df %>%
   group_by(player, year) %>%
   summarize(
     batting_average = mean(is_hit)
   )" %>%
   datamation_sanddance()
+
+x
+
+write(x$x$specs, here::here("sandbox", "simpsons_paradox", "group_by_player_year.json"))

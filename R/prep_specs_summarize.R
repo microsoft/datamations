@@ -218,6 +218,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     meta <- list(parse = "grid", axes = has_facets, description = description)
 
     if (y_type == "binary") {
+
       if (!is.null(mapping$color)) {
 
         # If there is a variable mapped to color:
@@ -237,10 +238,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
         values <- unique(.data[[summary_variable_chr]])
 
-        first_value <- if (all(values %in% c(0, 1))) {
+        first_value <- if (identical(sort(values), c(0, 1))) {
           1
-        } else if (all(values %in% c(TRUE, FALSE))) {
-          TRUE
+        } else if (identical(sort(values), c(FALSE, TRUE))) {
+          "true"
         } else if (is.factor(values)) {
           levels(values)[[1]]
         } else {
@@ -251,9 +252,9 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
           first_value = first_value
         )
 
-        value_order <- if(all(values %in% c(0, 1))) {
+        value_order <- if(identical(sort(values), c(0, 1))) {
           c(1, 0)
-        } else if (all(values %in% c(TRUE, FALSE))) {
+        } else if (identical(sort(values), c(FALSE, TRUE))) {
           c(TRUE, FALSE)
         } else if (is.factor(values)) {
           levels(values)
@@ -278,9 +279,9 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
         values <- unique(.data[[summary_variable_chr]])
 
-        value_order <- if(all(values %in% c(0, 1))) {
+        value_order <- if(identical(sort(values), c(0, 1))) {
           c(1, 0)
-        } else if (all(values %in% c(TRUE, FALSE))) {
+        } else if (identical(sort(values), c(FALSE, TRUE))) {
           c(TRUE, FALSE)
         } else if (is.factor(values)) {
           levels(values)
@@ -435,6 +436,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       dplyr::summarize(
         !!Y_FIELD := !!Y_FIELD,
         sd = stats::sd(!!Y_RAW_FIELD, na.rm = TRUE),
+        sd = dplyr::coalesce(.data$sd, 0),
         n = n()
       ) %>%
       dplyr::distinct() %>%
@@ -456,7 +458,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       sign = ifelse(.x == "Upper", "+", "-")
     )))
     tooltip_encoding_first <- list(spec_encoding$tooltip[[1]])
-    tooltip_encoding_rest <- list(spec_encoding$tooltip[-1])
+    tooltip_encoding_rest <- spec_encoding$tooltip[-1]
 
     errorbar_tooltip <- append(tooltip_encoding_first, errorbar_tooltip)
     errorbar_tooltip <- append(errorbar_tooltip, tooltip_encoding_rest)
