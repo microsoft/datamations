@@ -12,5 +12,5 @@ class small_salary():
         self._data = pd.read_csv(small_salary)
 
     @property
-    def small_salary(self):
+    def df(self):
         return self._data

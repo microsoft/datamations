@@ -4,5 +4,9 @@
 #
 
 class datamation_sanddance():
-    def datamation_sanddance(pipeline, locals):
-        return eval(pipeline, {}, locals)        
+
+    def __init__(self, pipeline, locals):
+        self._value = eval(pipeline, {}, locals)
+
+    def __str__(self):
+        return str(self._value)
