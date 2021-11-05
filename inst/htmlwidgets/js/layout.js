@@ -14,12 +14,22 @@ function generateGrid(spec, rows = 10) {
 
   let specValues = spec.data.values;
 
+  const metas = [];
+
+  specValues.forEach(d => {
+    if (d.meta) {
+      metas.push(...Object.keys(d.meta));
+    }
+  });
+
+  const ingoreFields = ['tooltip', 'x', 'y', 'datamations_x', 'datamations_y'];
 
   let secondarySplit = Object.keys(encoding).filter(d => {
     const field = encoding[d].field;
-    return d !== 'x' && d !== 'y' && 
-           field !== splitField && 
-           groupKeys.indexOf(field) === -1;
+    return field !== splitField && 
+           ingoreFields.indexOf(d) === -1 &&
+           groupKeys.indexOf(field) === -1 && 
+           metas.indexOf(field) === -1;
   })[0];
 
   let secondaryField = null;
@@ -56,6 +66,8 @@ function generateGrid(spec, rows = 10) {
           [secondaryField]: obj,
           n: sum,
         };
+
+        console.log(o);
 
         groupKeys.forEach(x => {
           o[x] = arr[0][x];
@@ -99,10 +111,25 @@ function generateGrid(spec, rows = 10) {
       let startCol = (xCenter - 1) * maxCols + j; // inner grid start
       startCol += Math.floor((maxCols - Math.ceil(n / rows)) / 2); // center alignment
 
+      const metaFields = Object.keys(d.meta || {});
+
       for (let i = 0; i < n; i++) {
         const x = startCol + Math.floor(i / rows);
         const y = rows - 1 - i % rows;
         const colorFieldObj = {};
+        const additionals = {};
+
+        metaFields.forEach(f => {
+          const m = lookupByBucket(
+            Object.keys(d.meta[f]),
+            d3.cumsum(Object.values(d.meta[f])),
+            i,
+          );
+
+          if (m) {
+            additionals[f] = m;
+          }
+        });
 
         if (secondaryField && typeof[d[secondaryField]] === "object") {
           colorFieldObj[secondaryField] = lookupByBucket(
@@ -115,6 +142,7 @@ function generateGrid(spec, rows = 10) {
         arr.push({
           ...d,
           ...colorFieldObj,
+          ...additionals,
           gemini_id: counter,
           [CONF.X_FIELD]: x,
           [CONF.Y_FIELD]: y,
