@@ -141,10 +141,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   /**
    * Plays animation
    */
-  function play() {
+  function play(cb = () => {}) {
     frameIndex = 0;
     const tick = () => {
-      animateFrame(frameIndex);
+      animateFrame(frameIndex, cb);
       frameIndex++;
       if(typeof HTMLWidgets !== "undefined" && HTMLWidgets.shinyMode){
         var prevIndex = frameIndex - 1;
@@ -156,9 +156,11 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     if (intervalId) clearInterval(intervalId);
     intervalId = setInterval(() => {
       tick();
+
       if (frameIndex >= frames.length) {
         clearInterval(intervalId);
         frameIndex = 0;
+
       }
     }, frameDuration + frameDelay);
   }
@@ -203,6 +205,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       .style("top",  transformY + "px");
 
     d3.select(controls).style("width", (spec.width + transformX + 10) + "px");
+    d3.select(descr).style("width", (spec.width + transformX + 10) + "px");
 
     // draw vis
     return drawChart(spec, vegaSpec);
@@ -310,7 +313,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * @param {Number} index specification index in vegaLiteSpecs
    * @returns a promise of gemini.animate
    */
-  async function animateFrame(index) {
+  async function animateFrame(index, cb) {
     if (!frames[index]) return;
 
     const {
@@ -331,12 +334,16 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       clearTimeout(timeoutId);
     }
 
+    if (index === 0) cb();
+
     drawSpec(index, source).then(() => {
+
       timeoutId = setTimeout(() => {
         d3.select(descr).html(currMeta.description);
 
         anim.play(visSelector).then(() => {
           d3.select(slider).property("value", index + 1);
+          cb(index + 1 >= frames.length);
         });
 
         const transformX = (currMeta.transformX || 0);
@@ -575,10 +582,40 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     if (intervalId) clearInterval(intervalId);
   }
 
+
+  function exportPNG() {
+    const { exportWrap } = getSelectors(id);
+
+    const pngs = [];
+
+    const callback = (done) => {
+
+        html2canvas(document.querySelector(exportWrap)).then(canvas => {
+          pngs.push(
+            canvas.toDataURL()
+          );
+
+          if (done) {
+            pngs.forEach((uri, i) => {
+              var a = document.createElement('a');
+              a.href = uri;
+              a.download = `frame-${i + 1}.png`;
+              a.click();
+            })
+          }
+
+        });
+
+    };
+
+    play(callback);
+  }
+
   init();
 
   return {
     onSlide,
     play,
+    exportPNG,
   }
 }

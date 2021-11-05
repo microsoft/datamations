@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.0.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
     <script src="../gemini/gemini.web.js"></script>
+    <script src="../js/html2canvas.min.js"></script>
     <style>
       .vega-vis-wrapper {
         position: relative;
@@ -123,15 +124,19 @@
       .vega-other-layers.with-axes details {
         display: none;
       }
-
+/* 
       .flex-wrap {
         width: 100%;
-      }
+      } */
 
-      .flex-wrap > div {
+      /* .flex-wrap > div {
         position: relative;
         width: 100%;
         min-height: 600px;
+      } */
+
+      .export-wrapper {
+        height: 400px;
       }
     </style>
   </head>
@@ -142,7 +147,7 @@
         <div class="controls-wrapper">
           <div class="control-bar">
             <div class="button-wrapper">
-              <button onclick="app1.play('app')">Replay</button>
+              <button onclick="app1.play()">Replay</button>
             </div>
             <div class="slider-wrapper">
               <input
@@ -154,14 +159,18 @@
               />
             </div>
           </div>
+        </div>
+        
+        <div class="export-wrapper">
           <div class="description"></div>
+          <div class="vega-vis-wrapper">
+            <div class="vega-for-axis"></div>
+            <div class="vega-other-layers"></div>
+            <div class="vega-vis"></div>
+          </div>
         </div>
-  
-        <div class="vega-vis-wrapper">
-          <div class="vega-for-axis"></div>
-          <div class="vega-other-layers"></div>
-          <div class="vega-vis"></div>
-        </div>
+        <button onclick="app1.exportPNG()">Export frames</button>
+
       </div>
 
     </div>
@@ -369,6 +378,8 @@
             }
           ] 
         });
+
+        
     
     </script>
   </body>

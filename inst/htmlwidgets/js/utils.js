@@ -13,6 +13,7 @@ function getSelectors(id) {
     slider: base + " .slider",
     otherLayers: base + " .vega-other-layers",
     controls: base + " .controls-wrapper",
+    exportWrap: base + " .export-wrapper",
   };
 }
 
