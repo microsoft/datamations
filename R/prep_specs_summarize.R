@@ -218,7 +218,6 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     meta <- list(parse = "grid", axes = has_facets, description = description)
 
     if (y_type == "binary") {
-
       if (!is.null(mapping$color)) {
 
         # If there is a variable mapped to color:
@@ -252,7 +251,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
           first_value = first_value
         )
 
-        value_order <- if(identical(sort(values), c(0, 1))) {
+        value_order <- if (identical(sort(values), c(0, 1))) {
           c(1, 0)
         } else if (identical(sort(values), c(FALSE, TRUE))) {
           c(TRUE, FALSE)
@@ -279,7 +278,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
         values <- unique(.data[[summary_variable_chr]])
 
-        value_order <- if(identical(sort(values), c(0, 1))) {
+        value_order <- if (identical(sort(values), c(0, 1))) {
           c(1, 0)
         } else if (identical(sort(values), c(FALSE, TRUE))) {
           c(TRUE, FALSE)
@@ -407,6 +406,12 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   spec_encoding$stroke <- spec_encoding$fillOpacity <- spec_encoding$shape <- NULL
 
+  # Add domain for y (only needed if y is not numeric, otherwise if it is numeric it was already added in a previous step)
+
+  if (y_type != "numeric") {
+    spec_encoding$y$scale$domain <- range(data_2[["datamations_y"]], na.rm = TRUE)
+  }
+
   spec <- generate_vega_specs(
     .data = data_2,
     mapping = mapping,
@@ -469,6 +474,16 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     description <- generate_summarize_description(summary_variable, summary_function, errorbar = TRUE, group_by = length(group_vars) != 0)
 
+    # Update domain for y to grow to errorbar domain (only needed if y is not numeric, otherwise if it is numeric it was already added in a previous step)
+
+    if (y_type != "numeric") {
+      lcl <- min(data_errorbar[["Lower"]], na.rm = TRUE)
+      ucl <- max(data_errorbar[["Upper"]], na.rm = TRUE)
+      range_y_errorbar <- c(lcl, ucl)
+
+      spec_encoding$y$scale$domain <- range_y_errorbar
+    }
+
     spec <- generate_vega_specs(
       .data = data_3,
       mapping = mapping,
@@ -486,24 +501,30 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     # If it's mean (and there's error bars), need to calculate the error bars manually and get the range from there
     # Otherwise, just do the range of the Y + some padding
 
-    description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
-    description <- glue::glue("{description}, with errorbar, zoomed in")
+    # Only do this if y is numeric, because if it's not, the errorbar frame is already zoomed in
 
-    lcl <- min(data_errorbar[["Lower"]], na.rm = TRUE)
-    ucl <- max(data_errorbar[["Upper"]], na.rm = TRUE)
-    range_y_errorbar <- c(lcl, ucl)
+    if (y_type == "numeric") {
+      description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
+      description <- glue::glue("{description}, with errorbar, zoomed in")
 
-    spec_encoding$y$scale$domain <- range_y_errorbar
+      lcl <- min(data_errorbar[["Lower"]], na.rm = TRUE)
+      ucl <- max(data_errorbar[["Upper"]], na.rm = TRUE)
+      range_y_errorbar <- c(lcl, ucl)
 
-    spec <- generate_vega_specs(
-      .data = data_3,
-      mapping = mapping,
-      meta = list(axes = has_facets, description = description),
-      spec_encoding = spec_encoding, facet_encoding = facet_encoding,
-      height = height, width = width, facet_dims = facet_dims,
-      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color),
-      errorbar = TRUE
-    )
+      spec_encoding$y$scale$domain <- range_y_errorbar
+
+      spec <- generate_vega_specs(
+        .data = data_3,
+        mapping = mapping,
+        meta = list(axes = has_facets, description = description),
+        spec_encoding = spec_encoding, facet_encoding = facet_encoding,
+        height = height, width = width, facet_dims = facet_dims,
+        column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color),
+        errorbar = TRUE
+      )
+
+      specs_list <- append(specs_list, list(spec))
+    }
   } else {
     description <- glue::glue("{description}, zoomed in")
 
@@ -519,9 +540,9 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       height = height, width = width, facet_dims = facet_dims,
       column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
     )
-  }
 
-  specs_list <- append(specs_list, list(spec))
+    specs_list <- append(specs_list, list(spec))
+  }
 
   # Convert specs to JSON
   if (toJSON) {
