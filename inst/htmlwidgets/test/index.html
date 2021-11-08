@@ -172,204 +172,104 @@
     <script src="../js/hack-facet-view.js"></script>
     <script src="../js/app.js"></script>
     <script>
-        const app1 = App("app", {
-          specs: [
-            {
-              "height": 300,
-              "width": 300,
-              "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-              "meta": {
-                "parse": "grid",
-                "description": "Initial data"
-              },
-              "data": {
-                "values": [
-                  {
-                    "n": 100
-                  }
-                ]
-              },
-              "mark": {
-                "type": "point",
-                "filled": true
-              },
-              "encoding": {
-                "x": {
-                  "field": "datamations_x",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "y": {
-                  "field": "datamations_y",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "tooltip": [
-                  {
-                    "field": "gemini_id",
-                    "type": "nominal"
-                  }
-                ]
-              }
+      const app1 = App("app", {
+        specs: [
+          {
+            "height": 300,
+            "width": 300,
+            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+            "meta": {
+              "parse": "grid",
+              "description": "Initial data"
             },
-            {
-              "height": 300,
-              "width": 300,
-              "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-              "meta": {
-                "parse": "grid",
-                "description": "Group by Degree",
-                "splitField": "Degree",
-                "axes": false
+            "data": {
+              "values": [
+                {
+                  "n": 100
+                }
+              ]
+            },
+            "mark": {
+              "type": "point",
+              "filled": true
+            },
+            "encoding": {
+              "x": {
+                "field": "datamations_x",
+                "type": "quantitative",
+                "axis": null
               },
-              "data": {
-                "values": [
-                  {
-                    "Degree": "Masters",
-                    "n": 48,
-                    "meta": {
-                      "Work": {
-                        "Academia": 28,
-                        "Industry": 20,
-                      }
-                    }
-                  },
-                  {
-                    "Degree": "PhD",
-                    "n": 52,
-                    "meta": {
-                      "Work": {
-                        "Academia": 20,
-                        "Industry": 32,
-                      }
+              "y": {
+                "field": "datamations_y",
+                "type": "quantitative",
+                "axis": null
+              },
+              "tooltip": [
+                {
+                  "field": "gemini_id",
+                  "type": "nominal"
+                }
+              ]
+            }
+          },
+          {
+            "height": 300,
+            "width": 300,
+            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+            "meta": {
+              "parse": "grid",
+              "description": "Filter Work == Academia, group by Degree.",
+              "splitField": "Degree",
+              "axes": false
+            },
+            "data": {
+              "values": [
+                {
+                  "Degree": "Masters",
+                  "n": 48,
+                  "meta": {
+                    "Work": {
+                      "Academia": 28,
+                      "Industry": 20,
                     }
                   }
-                ]
-              },
-
-              // "transform": [
-              //   { filter: "datum.Work == 'Academia'" }
-              // ],
-
-              "mark": {
-                "type": "point",
-                "filled": true,
-                "strokeWidth": 2,
-                "color": "#888",
-              },
-              "encoding": {
-                "x": {
-                  "field": "datamations_x",
-                  "type": "quantitative",
-                  "axis": null
                 },
-                "y": {
-                  "field": "datamations_y",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "fill": {
-                  "field": "Work",
-                  "type": "nominal",
-                  "scale": {
-                    "domain": ["Academia", "Industry"],
-                    "range": ["#888", "#fff"]
-                  },
-                  "legend": {
-                    "title": 'filter(Work == "Academia")'
-                  }
-                },
-                "stroke": {
-                  "field": "Work",
-                  "type": "nominal",
-                  "scale": {
-                    "domain": ["Academia", "Industry"],
-                    "range": ["#888", "#888"]
+                {
+                  "Degree": "PhD",
+                  "n": 52,
+                  "meta": {
+                    "Work": {
+                      "Academia": 20,
+                      "Industry": 32,
+                    }
                   }
                 }
-              }
+              ]
             },
 
-            {
-              "height": 300,
-              "width": 300,
-              "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-              "meta": {
-                "parse": "grid",
-                "description": "Group by Degree",
-                "splitField": "Degree",
-                "axes": false
-              },
-              "data": {
-                "values": [
-                  {
-                    "Degree": "Masters",
-                    "n": 48,
-                    "meta": {
-                      "Work": {
-                        "Academia": 28,
-                        "Industry": 20,
-                      }
-                    }
-                  },
-                  {
-                    "Degree": "PhD",
-                    "n": 52,
-                    "meta": {
-                      "Work": {
-                        "Academia": 20,
-                        "Industry": 32,
-                      }
-                    }
-                  }
-                ]
-              },
+            "transform": [{ 
+              filter: "datum.Work == 'Academia'" 
+            }],
 
-              "transform": [
-                { filter: "datum.Work == 'Academia'" }
-              ],
-
-              "mark": {
-                "type": "point",
-                "filled": true,
-                "strokeWidth": 2,
-                "color": "#888",
+            "mark": {
+              "type": "point",
+              "filled": true,
+            },
+            "encoding": {
+              "x": {
+                "field": "datamations_x",
+                "type": "quantitative",
+                "axis": null
               },
-              "encoding": {
-                "x": {
-                  "field": "datamations_x",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "y": {
-                  "field": "datamations_y",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "fill": {
-                  "field": "Work",
-                  "type": "nominal",
-                  "scale": {
-                    "domain": ["Academia", "Industry"],
-                    "range": ["#888", "#fff"]
-                  },
-                  "legend": {
-                    "title": 'filter(Work == "Academia")'
-                  }
-                },
-                "stroke": {
-                  "field": "Work",
-                  "type": "nominal",
-                  "scale": {
-                    "domain": ["Academia", "Industry"],
-                    "range": ["#888", "#888"]
-                  }
-                }
+              "y": {
+                "field": "datamations_y",
+                "type": "quantitative",
+                "axis": null
               }
             }
-          ] 
-        });
-    
+          }
+        ] 
+      });
     </script>
   </body>
 </html>

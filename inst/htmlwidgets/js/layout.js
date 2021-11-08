@@ -67,8 +67,6 @@ function generateGrid(spec, rows = 10) {
           n: sum,
         };
 
-        console.log(o);
-
         groupKeys.forEach(x => {
           o[x] = arr[0][x];
         });
