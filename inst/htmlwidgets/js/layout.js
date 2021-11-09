@@ -14,12 +14,22 @@ function generateGrid(spec, rows = 10) {
 
   let specValues = spec.data.values;
 
+  const metas = [];
+
+  specValues.forEach(d => {
+    if (d.meta) {
+      metas.push(...Object.keys(d.meta));
+    }
+  });
+
+  const ingoreFields = ['tooltip', 'x', 'y', 'datamations_x', 'datamations_y'];
 
   let secondarySplit = Object.keys(encoding).filter(d => {
     const field = encoding[d].field;
-    return d !== 'x' && d !== 'y' && 
-           field !== splitField && 
-           groupKeys.indexOf(field) === -1;
+    return field !== splitField && 
+           ingoreFields.indexOf(d) === -1 &&
+           groupKeys.indexOf(field) === -1 && 
+           metas.indexOf(field) === -1;
   })[0];
 
   let secondaryField = null;
