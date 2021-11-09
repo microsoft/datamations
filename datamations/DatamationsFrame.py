@@ -9,7 +9,7 @@ class DatamationsFrame(pd.DataFrame):
     def _constructor(self):
         return DatamationsFrame._internal_ctor
 
-    _metadata = ['new_property']
+    _metadata = ['']
 
     @classmethod
     def _internal_ctor(cls, *args, **kwargs):
