@@ -28,7 +28,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   let intervalId;
   let timeoutId;
   let initializing = false;
-
+  console.log("initial specs:", specs);
   let frameDuration = frameDur || 2000;
   let frameDelay = frameDel || 1000;
 
@@ -413,9 +413,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * - spec.layer = splits layers to stack on top on each other
    */
   async function transformSpecs() {
-    const n = vegaLiteSpecs[0].data.values[0].n;
+    const n = d3.max(vegaLiteSpecs[0].data.values, d => d.n);
     const rows = Math.ceil(Math.sqrt(n));
-
+    console.log(rows)
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
       const vlSpec = vegaLiteSpecs[i];
 
@@ -474,7 +474,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       }
     }
 
-    console.log(vegaLiteSpecs)
+    console.log("final specs:", vegaLiteSpecs)
   }
 
   /**
