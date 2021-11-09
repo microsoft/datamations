@@ -185,17 +185,19 @@ function getGridSpec(spec, rows = 10) {
     const obj = {...spec};
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
-    const yGap = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
-
     const xDomain = [
       d3.min(grid, d => d[CONF.X_FIELD]) - 2,
       d3.max(grid, d => d[CONF.X_FIELD]) + 2
     ];
 
+    const yPadding = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
+
     const yDomain = [
-      d3.min(grid, (d) => d[CONF.Y_FIELD]) - yGap,
-      d3.max(grid, (d) => d[CONF.Y_FIELD]) + yGap,
+      d3.min(grid, (d) => d[CONF.Y_FIELD]) - yPadding,
+      d3.max(grid, (d) => d[CONF.Y_FIELD]) + yPadding,
     ];
+
+    const middle = yDomain[0] + (yDomain[1] - yDomain[0]) / 2;
 
     obj.data.values = grid;
 
@@ -206,9 +208,12 @@ function getGridSpec(spec, rows = 10) {
 
     encoding.y.scale = {
       type: "linear",
-      domain: yDomain,
+      domain: [
+        Math.min(yDomain[0], middle - rows / 2),
+        Math.max(yDomain[1], middle + rows / 2)
+      ],
     };
-
+    console.log(encoding.y.scale.domain);
     encoding.x.field = CONF.X_FIELD;
     encoding.y.field = CONF.Y_FIELD;
 
