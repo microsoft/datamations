@@ -109,10 +109,25 @@ function generateGrid(spec, rows = 10) {
       let startCol = (xCenter - 1) * maxCols + j; // inner grid start
       startCol += Math.floor((maxCols - Math.ceil(n / rows)) / 2); // center alignment
 
+      const metaFields = Object.keys(d.meta || {});
+
       for (let i = 0; i < n; i++) {
         const x = startCol + Math.floor(i / rows);
         const y = rows - 1 - i % rows;
         const colorFieldObj = {};
+        const additionals = {};
+
+        metaFields.forEach(f => {
+          const m = lookupByBucket(
+            Object.keys(d.meta[f]),
+            d3.cumsum(Object.values(d.meta[f])),
+            i,
+          );
+
+          if (m) {
+            additionals[f] = m;
+          }
+        });
 
         if (secondaryField && typeof[d[secondaryField]] === "object") {
           colorFieldObj[secondaryField] = lookupByBucket(
@@ -125,6 +140,7 @@ function generateGrid(spec, rows = 10) {
         arr.push({
           ...d,
           ...colorFieldObj,
+          ...additionals,
           gemini_id: counter,
           [CONF.X_FIELD]: x,
           [CONF.Y_FIELD]: y,
