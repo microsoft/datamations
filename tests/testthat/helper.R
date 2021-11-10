@@ -30,11 +30,6 @@ expect_data_values <- function(single_spec, df) {
     dplyr::mutate_if(is.factor, as.character) %>%
     dplyr::mutate_if(is.character, dplyr::coalesce, "NA")
 
-  if (Y_FIELD_CHR %in% names(df)) {
-    df <- df %>%
-      dplyr::filter(!is.na(!!Y_FIELD))
-  }
-
   spec_data <- single_spec %>%
     jsonlite::fromJSON() %>%
     purrr::pluck("data") %>%
