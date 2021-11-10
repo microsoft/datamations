@@ -5,8 +5,9 @@
 
 from .datamation_sanddance import datamation_sanddance
 from .small_salary import small_salary
-from .DatamationsFrame import DatamationsFrame
+from .DatamationFrame import DatamationFrame
+from .DatamationGroupBy import DatamationGroupBy
 
 __all__ = [
-    "small_salary", "datamation_sanddance", "DatamationsFrame"
+    "small_salary", "datamation_sanddance", "DatamationFrame", "DatamationGroupBy"
 ]
