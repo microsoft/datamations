@@ -3,7 +3,7 @@
 # Create a subclass from a pandas DataFrame.
 #
 import pandas as pd
-from . import DatamationGroupBy
+from .datamation_groupby import DatamationGroupBy
 
 class DatamationFrame(pd.DataFrame):
     @property
@@ -28,7 +28,7 @@ class DatamationFrame(pd.DataFrame):
     def groupby(self, by):
         self._metadata.append('groupby')
         df = super(DatamationFrame, self).groupby(by=by)
-        return DatamationGroupBy.DatamationGroupBy(df, new_property='')
+        return DatamationGroupBy(df, new_property='')
 
     def mean(self):
         self._metadata.append('mean')

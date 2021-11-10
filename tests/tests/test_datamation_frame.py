@@ -3,7 +3,7 @@
 
 from datamations import *
 
-def test_smoke(capsys):
+def test_datamation_frame(capsys):
     df = small_salary().df
     df = DatamationFrame(df, new_property='')
     
