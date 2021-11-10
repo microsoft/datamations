@@ -324,6 +324,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
     let { source, target, gemSpec, prevMeta, currMeta } = frames[index];
     let anim = await gemini.animate(source, target, gemSpec);
+
     let currHasAxes = currMeta.axes;
     let width = target.width;
 
@@ -428,8 +429,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       if (parse === "grid") {
         const gridSpec = await getGridSpec(vlSpec, rows);
         const enc = gridSpec.spec ? gridSpec.spec.encoding : gridSpec.encoding;
-        
-
         rawSpecs[i].data.values = gridSpec.data.values;
 
         if (rawSpecs[i].meta.axes && rawSpecs[i].meta.splitField) {
@@ -580,5 +579,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   return {
     onSlide,
     play,
+    animateFrame,
   }
 }

@@ -14,12 +14,22 @@ function generateGrid(spec, rows = 10) {
 
   let specValues = spec.data.values;
 
+  const metas = [];
+
+  specValues.forEach(d => {
+    if (d.meta) {
+      metas.push(...Object.keys(d.meta));
+    }
+  });
+
+  const ingoreFields = ['tooltip', 'x', 'y', 'datamations_x', 'datamations_y'];
 
   let secondarySplit = Object.keys(encoding).filter(d => {
     const field = encoding[d].field;
-    return d !== 'x' && d !== 'y' && 
-           field !== splitField && 
-           groupKeys.indexOf(field) === -1;
+    return field !== splitField && 
+           ingoreFields.indexOf(d) === -1 &&
+           groupKeys.indexOf(field) === -1 && 
+           metas.indexOf(field) === -1;
   })[0];
 
   let secondaryField = null;
@@ -99,22 +109,38 @@ function generateGrid(spec, rows = 10) {
       let startCol = (xCenter - 1) * maxCols + j; // inner grid start
       startCol += Math.floor((maxCols - Math.ceil(n / rows)) / 2); // center alignment
 
+      const metaFields = Object.keys(d.meta || {});
+
       for (let i = 0; i < n; i++) {
         const x = startCol + Math.floor(i / rows);
         const y = rows - 1 - i % rows;
         const colorFieldObj = {};
+        const additionals = {};
+
+        metaFields.forEach(f => {
+          const m = lookupByBucket(
+            Object.keys(d.meta[f]),
+            d3.cumsum(Object.values(d.meta[f])),
+            i + 1,
+          );
+
+          if (m) {
+            additionals[f] = m;
+          }
+        });
 
         if (secondaryField && typeof[d[secondaryField]] === "object") {
           colorFieldObj[secondaryField] = lookupByBucket(
             Object.keys(d[secondaryField]),
             Object.values(d[secondaryField]),
-            i,
-          )
+            i + 1,
+          );
         }
 
         arr.push({
           ...d,
           ...colorFieldObj,
+          ...additionals,
           gemini_id: counter,
           [CONF.X_FIELD]: x,
           [CONF.Y_FIELD]: y,
@@ -159,17 +185,19 @@ function getGridSpec(spec, rows = 10) {
     const obj = {...spec};
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
-    const yGap = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
-
     const xDomain = [
       d3.min(grid, d => d[CONF.X_FIELD]) - 2,
       d3.max(grid, d => d[CONF.X_FIELD]) + 2
     ];
 
+    const yPadding = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
+
     const yDomain = [
-      d3.min(grid, (d) => d[CONF.Y_FIELD]) - yGap,
-      d3.max(grid, (d) => d[CONF.Y_FIELD]) + yGap,
+      d3.min(grid, (d) => d[CONF.Y_FIELD]) - yPadding,
+      d3.max(grid, (d) => d[CONF.Y_FIELD]) + yPadding,
     ];
+
+    const middle = yDomain[0] + (yDomain[1] - yDomain[0]) / 2;
 
     obj.data.values = grid;
 
@@ -180,9 +208,12 @@ function getGridSpec(spec, rows = 10) {
 
     encoding.y.scale = {
       type: "linear",
-      domain: yDomain,
+      domain: [
+        Math.min(yDomain[0], middle - rows / 2),
+        Math.max(yDomain[1], middle + rows / 2)
+      ],
     };
-
+    console.log(encoding.y.scale.domain);
     encoding.x.field = CONF.X_FIELD;
     encoding.y.field = CONF.Y_FIELD;
 
