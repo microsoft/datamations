@@ -197,13 +197,13 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     # This isn't working right now - TODO
 
-    # if (is.factor(data_1[[summary_variable_chr]])) {
-    #   data_1 <- data_1 %>%
-    #     dplyr::arrange(!!!group_vars, !!summary_variable)
-    # } else if (all(data_1[[summary_variable_chr]] %in% c(TRUE, FALSE))) {
-    #   data_1 <- data_1 %>%
-    #     dplyr::arrange(!!!group_vars, -!!summary_variable)
-    # }
+    if (is.factor(data_1[[summary_variable_chr]])) {
+      data_1 <- data_1 %>%
+        dplyr::arrange(!!!group_vars, !!summary_variable)
+    } else if (all(data_1[[summary_variable_chr]] %in% c(TRUE, FALSE))) {
+      data_1 <- data_1 %>%
+        dplyr::arrange(!!!group_vars, -!!summary_variable)
+    }
   }
 
   # Generate description
