@@ -199,10 +199,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     # if (is.factor(data_1[[summary_variable_chr]])) {
     #   data_1 <- data_1 %>%
-    #     dplyr::arrange(!!summary_variable)
+    #     dplyr::arrange(!!!group_vars, !!summary_variable)
     # } else if (all(data_1[[summary_variable_chr]] %in% c(TRUE, FALSE))) {
     #   data_1 <- data_1 %>%
-    #     dplyr::arrange(-!!summary_variable)
+    #     dplyr::arrange(!!!group_vars, -!!summary_variable)
     # }
   }
 
@@ -318,6 +318,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
   )
 
+  # browser()
+
   specs_list <- append(specs_list, list(spec))
 
   # Switch settings for states ----
@@ -409,7 +411,16 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Add domain for y (only needed if y is not numeric, otherwise if it is numeric it was already added in a previous step)
 
   if (y_type != "numeric") {
-    spec_encoding$y$scale$domain <- range(data_2[["datamations_y"]], na.rm = TRUE)
+    y_range <- range(data_2[["datamations_y"]], na.rm = TRUE)
+
+    # If all values are the same, make range from -/+ half of the value, otherwise vega lite will just make it 1.... rude!
+
+    if (min(y_range) == max(y_range)) {
+      y_value <- y_range[1]
+      y_range <- c(y_value - y_value/2, y_value + y_value/2)
+    }
+
+    spec_encoding$y$scale$domain <- y_range
   }
 
   spec <- generate_vega_specs(
