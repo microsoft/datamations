@@ -121,7 +121,7 @@ function generateGrid(spec, rows = 10) {
           const m = lookupByBucket(
             Object.keys(d.meta[f]),
             d3.cumsum(Object.values(d.meta[f])),
-            i,
+            i + 1,
           );
 
           if (m) {
@@ -133,8 +133,8 @@ function generateGrid(spec, rows = 10) {
           colorFieldObj[secondaryField] = lookupByBucket(
             Object.keys(d[secondaryField]),
             Object.values(d[secondaryField]),
-            i,
-          )
+            i + 1,
+          );
         }
 
         arr.push({
