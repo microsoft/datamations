@@ -153,7 +153,6 @@ generate_group_by_description <- function(mapping, ...) {
 }
 
 generate_group_by_tooltip <- function(.data) {
-
   tooltip_vars <- .data %>%
     dplyr::select(-.data$n) %>%
     names()
@@ -177,8 +176,7 @@ arrange_by_groups_coalesce_na <- function(.data, group_vars, group_vars_chr) {
         x %>%
           forcats::fct_inorder() %>% # Order factor alphabetically
           forcats::fct_relevel("NA", after = Inf) # Place any NAs last in factor
-      }
-      else {
+      } else {
         x %>%
           forcats::fct_inorder() %>%
           forcats::as_factor()
@@ -279,7 +277,6 @@ generate_summarize_description <- function(summary_variable, summary_function = 
 }
 
 generate_summarize_tooltip <- function(.data, summary_variable, summary_function = NULL) {
-
   if (is.null(summary_function)) {
     y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = summary_variable)
   } else {

@@ -423,7 +423,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     if (min(y_range) == max(y_range)) {
       y_value <- y_range[1]
-      y_range <- c(y_value - y_value/2, y_value + y_value/2)
+      y_range <- c(y_value - y_value / 2, y_value + y_value / 2)
     }
 
     spec_encoding$y$scale$domain <- y_range

@@ -45,5 +45,5 @@ Suggests:
 Depends:
     R (>= 2.10)
 Remotes:
-    rstudio/purrr
+    tidyverse/purrr
 Config/testthat/edition: 3
