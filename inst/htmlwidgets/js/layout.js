@@ -130,9 +130,13 @@ function generateGrid(spec, rows = 10) {
         });
 
         if (secondaryField && typeof[d[secondaryField]] === "object") {
+          const keys = Object.keys(d[secondaryField]).sort((a, b) => {
+            return d[secondaryField][a] - d[secondaryField][b];
+          });
+
           colorFieldObj[secondaryField] = lookupByBucket(
-            Object.keys(d[secondaryField]),
-            Object.values(d[secondaryField]),
+            keys,
+            keys.map(k => d[secondaryField][k]),
             i + 1,
           );
         }
