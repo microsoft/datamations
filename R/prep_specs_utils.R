@@ -33,7 +33,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
       `$schema` = vegawidget::vega_schema(),
       meta = meta,
       data = list(values = .data),
-      mark = list(type = mark_type, filled = TRUE),
+      mark = list(type = mark_type, filled = TRUE, strokeWidth = 1),
       encoding = spec_encoding
     ) %>%
       vegawidget::as_vegaspec()
@@ -57,7 +57,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
         ),
         # Point layer
         list(
-          mark = list(type = mark_type, filled = TRUE),
+          mark = list(type = mark_type, filled = TRUE, strokeWidth = 1),
           encoding = spec_encoding
         )
       )
@@ -104,7 +104,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
       spec = list(
         height = height / facet_dims[["nrow"]],
         width = width / facet_dims[["ncol"]],
-        mark = list(type = mark_type, filled = TRUE),
+        mark = list(type = mark_type, filled = TRUE, strokeWidth = 1),
         encoding = spec_encoding
       )
     ) %>%
@@ -132,7 +132,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
           ),
           # Point layer
           list(
-            mark = list(type = mark_type, filled = TRUE),
+            mark = list(type = mark_type, filled = TRUE, strokeWidth = 1),
             encoding = spec_encoding
           )
         )
