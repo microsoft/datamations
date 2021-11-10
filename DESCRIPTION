@@ -22,7 +22,7 @@ Imports:
     magick,
     tibble,
     magrittr,
-    purrr,
+    purrr (>= 3.4.9000),
     scales,
     stringr,
     shiny,
@@ -44,4 +44,6 @@ Suggests:
     testthat (>= 2.1.0)
 Depends:
     R (>= 2.10)
+Remotes:
+    rstudio/purrr
 Config/testthat/edition: 3
