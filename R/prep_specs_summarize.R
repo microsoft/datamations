@@ -195,8 +195,6 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     # If it's TRUE / FALSE, the order in R is FALSE / TRUE or 0 / 1 but change so that it's actually T/F 1/0
 
-    # This isn't working right now - TODO
-
     if (is.factor(data_1[[summary_variable_chr]])) {
       data_1 <- data_1 %>%
         dplyr::arrange(!!!group_vars, !!summary_variable)
@@ -229,8 +227,6 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
         spec_encoding$stroke <- list(field = mapping$color)
 
         spec_encoding$fillOpacity <- list(field = summary_variable_chr, type = "nominal", scale = list(range = c(0, 1)))
-
-        # Set shape to control legend
 
         # For the fill, if it's a factor, take the first
         # If it's TRUE / FALSE, do TRUE first
@@ -294,6 +290,18 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     } else if (y_type == "categorical") {
       # Use shape
       spec_encoding$shape <- list(field = summary_variable_chr, type = "nominal")
+
+      # Set the legend order to match the order in the data, or factor levels
+
+      values <- unique(.data[[summary_variable_chr]])
+
+      legend_order <- if (is.factor(values)) {
+        levels(values)
+      } else {
+        values
+      }
+
+      spec_encoding$shape$scale$domain <- legend_order
     }
   }
 
@@ -317,8 +325,6 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     # Flags for column / row  facets or color
     column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
   )
-
-  # browser()
 
   specs_list <- append(specs_list, list(spec))
 
