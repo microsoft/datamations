@@ -22,7 +22,7 @@ Imports:
     magick,
     tibble,
     magrittr,
-    purrr (>= 3.4.9000),
+    purrr (>= 0.3.4.9000),
     scales,
     stringr,
     shiny,
