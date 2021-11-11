@@ -10,4 +10,5 @@ def test_datamation_frame():
     grouped = df.groupby('Work')
 
     assert 'groupby' in grouped.operations
+    assert df in grouped.inputs
     

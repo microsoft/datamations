@@ -11,7 +11,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
     def _constructor(self):
         return DatamationGroupBy._internal_ctor
 
-    _input = None
+    _inputs = []
     _operations = []
 
     @classmethod
@@ -19,7 +19,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         return cls(*args, **kwargs)
 
     def __init__(self, obj, input, by, keys=None, axis=0, level=None):
-        self._input = input
+        self._inputs = [input]
         super(DatamationGroupBy, self).__init__(obj=obj, keys=['Work'])
                                     #   keys=keys,
                                     #   axis=axis,
@@ -28,8 +28,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         self._operations = list(obj.operations)
 
     @property
-    def input(self):
-        return self._input
+    def inputs(self):
+        return self._inputs
 
     @property
     def operations(self):
@@ -39,4 +39,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         df = super(DatamationGroupBy, self).mean()
         df = datamation_frame.DatamationFrame(df)
         df.operations.append('mean')
+        df._inputs = self._inputs
+        df._inputs.append(self)
         return df

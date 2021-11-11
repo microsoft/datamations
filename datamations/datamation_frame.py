@@ -11,7 +11,7 @@ class DatamationFrame(pd.DataFrame):
     def _constructor(self):
         return DatamationFrame._internal_ctor
 
-    _input = None
+    _inputs = []
     _operations = []
 
     @classmethod
@@ -24,11 +24,11 @@ class DatamationFrame(pd.DataFrame):
                                       columns=columns,
                                       dtype=dtype,
                                       copy=copy)
-        self._input = data
+        self._inputs.append(data)
 
     @property
-    def input(self):
-        return self._input
+    def inputs(self):
+        return self._inputs
 
     @property
     def operations(self):
@@ -37,4 +37,4 @@ class DatamationFrame(pd.DataFrame):
     def groupby(self, by):
         self._operations.append('groupby')
         df = super(DatamationFrame, self).groupby(by=by)
-        return datamation_groupby.DatamationGroupBy(self, self._input, by)
+        return datamation_groupby.DatamationGroupBy(self, self, by)
