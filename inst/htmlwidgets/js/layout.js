@@ -67,8 +67,6 @@ function generateGrid(spec, rows = 10) {
           n: sum,
         };
 
-        console.log(o);
-
         groupKeys.forEach(x => {
           o[x] = arr[0][x];
         });
@@ -123,7 +121,7 @@ function generateGrid(spec, rows = 10) {
           const m = lookupByBucket(
             Object.keys(d.meta[f]),
             d3.cumsum(Object.values(d.meta[f])),
-            i,
+            i + 1,
           );
 
           if (m) {
@@ -132,11 +130,15 @@ function generateGrid(spec, rows = 10) {
         });
 
         if (secondaryField && typeof[d[secondaryField]] === "object") {
+          const keys = Object.keys(d[secondaryField]).sort((a, b) => {
+            return d[secondaryField][a] - d[secondaryField][b];
+          });
+
           colorFieldObj[secondaryField] = lookupByBucket(
-            Object.keys(d[secondaryField]),
-            Object.values(d[secondaryField]),
-            i,
-          )
+            keys,
+            keys.map(k => d[secondaryField][k]),
+            i + 1,
+          );
         }
 
         arr.push({
@@ -187,17 +189,19 @@ function getGridSpec(spec, rows = 10) {
     const obj = {...spec};
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
-    const yGap = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
-
     const xDomain = [
       d3.min(grid, d => d[CONF.X_FIELD]) - 2,
       d3.max(grid, d => d[CONF.X_FIELD]) + 2
     ];
 
+    const yPadding = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
+
     const yDomain = [
-      d3.min(grid, (d) => d[CONF.Y_FIELD]) - yGap,
-      d3.max(grid, (d) => d[CONF.Y_FIELD]) + yGap,
+      d3.min(grid, (d) => d[CONF.Y_FIELD]) - yPadding,
+      d3.max(grid, (d) => d[CONF.Y_FIELD]) + yPadding,
     ];
+
+    const middle = yDomain[0] + (yDomain[1] - yDomain[0]) / 2;
 
     obj.data.values = grid;
 
@@ -208,9 +212,12 @@ function getGridSpec(spec, rows = 10) {
 
     encoding.y.scale = {
       type: "linear",
-      domain: yDomain,
+      domain: [
+        Math.min(yDomain[0], middle - rows / 2),
+        Math.max(yDomain[1], middle + rows / 2)
+      ],
     };
-
+    console.log(encoding.y.scale.domain);
     encoding.x.field = CONF.X_FIELD;
     encoding.y.field = CONF.Y_FIELD;
 
