@@ -15,7 +15,7 @@ generate_mapping_from_plot <- function(plot) {
       rlang::quo_name()
   }
 
-  if(color == "NULL") {
+  if (color == "NULL") {
     color <- NULL
   }
 

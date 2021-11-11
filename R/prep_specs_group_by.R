@@ -28,7 +28,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
   x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = NULL)
   y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", axis = NULL)
 
-  color_name <- if(is.null(mapping$color)) {
+  color_name <- if (is.null(mapping$color)) {
     NULL
   } else {
     rlang::quo_name(mapping$color)
