@@ -107,9 +107,11 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
 
   mapping <- generate_mapping(data_states, tidy_function_args, plot_mapping)
 
-  # Iterate over each step of the pipeline
-  res <- purrr::map(1:length(fittings), function(i) {
+  # Iterate over each step of the pipeline - using a for loop instead of purrr::map so we can intercept the intermediate results :)
 
+  res <- list()
+
+  for (i in 1:length(fittings)) {
     # Starts with data in the previous stage, unless it is the first stage (the data itself)
     if (i == 1) {
       data <- data_states[[1]]
@@ -127,8 +129,8 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     )
 
     # Call that function with the data and mapping
-    do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
-  })
+    res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
+  }
 
   # Unlist into a single list
   res <- unlist(res, recursive = FALSE)
