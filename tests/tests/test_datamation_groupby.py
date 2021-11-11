@@ -3,13 +3,15 @@
 
 from datamations import *
 
-def test_datamation_groupby(capsys):
+def test_datamation_groupby():
     df = small_salary().df
-    df = DatamationFrame(df, new_property='')
+    df = DatamationFrame(df)
     
-    print(df.groupby('Work').mean())
+    mean = df.groupby('Work').mean()
 
-    captured = capsys.readouterr()
-
-    assert "mean" in captured.out
+    assert "groupby" in mean.operations
+    #assert "mean" in mean.operations
+    
+    assert mean.Salary.Academia == 85.01222196154829
+    assert mean.Salary.Industry == 91.48376118136609
     

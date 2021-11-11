@@ -9,23 +9,31 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
     def _constructor(self):
         return DatamationGroupBy._internal_ctor
 
-    _metadata = ['']
+    _input = None
+    _operations = []
 
     @classmethod
     def _internal_ctor(cls, *args, **kwargs):
-        kwargs['new_property'] = None
         return cls(*args, **kwargs)
 
-    def __init__(self, data, new_property, index=None, columns=None, dtype=None, copy=True):
-        # super(DatamationGroupBy, self).__init__(data=data,
-        #                               index=index,
-        #                               columns=columns,
-        #                               dtype=dtype,
-        #                               copy=copy)
-        self.new_property = new_property
-    def mean(self):
-        self._metadata.append('mean')
-        return self._metadata #super(DatamationGroupBy, self).mean()
+    def __init__(self, obj, input, by, keys=None, axis=0, level=None):
+        self._input = input
+        super(DatamationGroupBy, self).__init__(obj=obj, keys=['Work'])
+                                    #   keys=keys,
+                                    #   axis=axis,
+                                    #   level=level,
+                                      #grouper=pd.Grouper(key=by))
+        self._operations = list(obj.operations)
 
-    def datamate(self, *args, **kwargs):
-        return self._metadata
+    @property
+    def input(self):
+        return self._input
+
+    @property
+    def operations(self):
+        return self._operations
+
+    def mean(self):
+        df = super(DatamationGroupBy, self).mean()
+        #df.operations.append('mean')
+        return df
