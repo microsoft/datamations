@@ -112,6 +112,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   res <- list()
 
   for (i in 1:length(fittings)) {
+
     # Starts with data in the previous stage, unless it is the first stage (the data itself)
     if (i == 1) {
       data <- data_states[[1]]
@@ -125,15 +126,23 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     call_verb <- switch(verb,
       data = prep_specs_data,
       group_by = prep_specs_group_by,
-      summarize = prep_specs_summarize
+      summarize = prep_specs_summarize,
+      filter = prep_specs_filter
     )
 
     # Call that function with the data and mapping
-    res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
+    if (verb != "filter") {
+      res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
+      res[[i]] <- unlist(res[[i]], recursive = FALSE)
+    } else if (verb == "filter") {
+      # If it's filter, need to pass the previous specs as well as the filter operation
+      res[[i]] <- do.call(call_verb, list(data, mapping,
+        previous_frame = res[[i - 1]], filter_operation = tidy_function_args[[i]][-1], # -1 instead of [[2]] because you can list multiple, separating by comma
+        toJSON = FALSE, pretty = pretty, height = height, width = width
+      ))
+      res[[i]] <- unlist(res[[i]], recursive = FALSE)
+    }
   }
-
-  # Unlist into a single list
-  res <- unlist(res, recursive = FALSE)
 
   # Convert to JSON
   res <- jsonlite::toJSON(res, auto_unbox = TRUE, pretty = pretty, null = "null", digits = NA)
