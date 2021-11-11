@@ -188,8 +188,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     spec_encoding$tooltip <- generate_summarize_tooltip(data_1, mapping$y)
   } else { # Otherwise, another infogrid!
     data_1 <- .data %>%
-      dplyr::count(!!!group_vars, !!summary_variable) %>%
-      dplyr::mutate(!!Y_TOOLTIP_FIELD := !!summary_variable)
+      dplyr::count(!!!group_vars, !!summary_variable)
 
     # If the summary variable is a factor, order according to its values to match the legend
 
@@ -202,6 +201,12 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       data_1 <- data_1 %>%
         dplyr::arrange(!!!group_vars, -!!summary_variable)
     }
+
+    # Generate tooltip
+    tooltip_groups <- generate_group_by_tooltip(data_1)
+    tooltip_y <- list(field = summary_variable_chr, type = "nominal")
+
+    spec_encoding$tooltip <- append(list(tooltip_y), tooltip_groups)
   }
 
   # Generate description
