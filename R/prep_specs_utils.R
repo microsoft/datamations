@@ -2,24 +2,26 @@
 
 # Generate vega specs
 # Faceted and unfaceted ones need to be generated separately because the encoding is embedded in the faceted case
-generate_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column = FALSE, row = FALSE, color = FALSE, errorbar = FALSE) {
+generate_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column = FALSE, row = FALSE, color = FALSE, errorbar = FALSE, y_type = NULL) {
   if (!column & !row) { # No facets
-    generate_unfacet_vega_specs(.data, meta, spec_encoding, height, width, color, errorbar)
+    generate_unfacet_vega_specs(.data, meta, spec_encoding, height, width, color, errorbar, y_type)
   } else { # Facets
-    generate_facet_vega_specs(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column, row, color, errorbar)
+    generate_facet_vega_specs(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column, row, color, errorbar, y_type)
   }
 }
 
 # Generate vega specs that are not faceted
-generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, width, color = FALSE, errorbar = FALSE) {
+generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, width, color = FALSE, errorbar = FALSE, y_type = NULL) {
 
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
   # So even if color = TRUE, if it's not there, it'll be removed!
-  if (!color) {
-    spec_encoding <- spec_encoding[c("x", "y", "tooltip")]
+  if (!color & "color" %in% names(spec_encoding)) {
+    spec_encoding <- within(spec_encoding, rm("color"))
   }
 
   spec_encoding <- purrr::compact(spec_encoding)
+
+  mark_type <- "point"
 
   # TODO - handle color
 
@@ -31,7 +33,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
       `$schema` = vegawidget::vega_schema(),
       meta = meta,
       data = list(values = .data),
-      mark = list(type = "point", filled = TRUE),
+      mark = list(type = mark_type, filled = TRUE, strokeWidth = 1),
       encoding = spec_encoding
     ) %>%
       vegawidget::as_vegaspec()
@@ -55,7 +57,7 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
         ),
         # Point layer
         list(
-          mark = list(type = "point", filled = TRUE),
+          mark = list(type = mark_type, filled = TRUE, strokeWidth = 1),
           encoding = spec_encoding
         )
       )
@@ -65,15 +67,17 @@ generate_unfacet_vega_specs <- function(.data, meta, spec_encoding, height, widt
 }
 
 # Generate vega specs that are faceted
-generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column = FALSE, row = FALSE, color = FALSE, errorbar = FALSE) {
+generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet_encoding, height, width, facet_dims, column = FALSE, row = FALSE, color = FALSE, errorbar = FALSE, y_type = NULL) {
 
   # Remove color encoding if it's flagged not to be shown, OR if it's just not in the mapping
   # So even if color = TRUE, if it's not there, it'll be removed!
-  if (is.null(mapping$color) | !color) {
-    spec_encoding <- spec_encoding[c("x", "y", "tooltip")]
+  if ((is.null(mapping$color) | !color) & "color" %in% names(spec_encoding)) {
+    spec_encoding <- within(spec_encoding, rm("color"))
   }
 
   spec_encoding <- purrr::compact(spec_encoding)
+
+  mark_type <- "point"
 
   # Remove facet encoding(s) if they're flagged not to be shown, or aren't in the mapping
   # So even if e.g. row = TRUE, if there's no variable to facet by, it'll be removed!
@@ -100,7 +104,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
       spec = list(
         height = height / facet_dims[["nrow"]],
         width = width / facet_dims[["ncol"]],
-        mark = list(type = "point", filled = TRUE),
+        mark = list(type = mark_type, filled = TRUE, strokeWidth = 1),
         encoding = spec_encoding
       )
     ) %>%
@@ -128,7 +132,7 @@ generate_facet_vega_specs <- function(.data, mapping, meta, spec_encoding, facet
           ),
           # Point layer
           list(
-            mark = list(type = "point", filled = TRUE),
+            mark = list(type = mark_type, filled = TRUE, strokeWidth = 1),
             encoding = spec_encoding
           )
         )
@@ -149,7 +153,6 @@ generate_group_by_description <- function(mapping, ...) {
 }
 
 generate_group_by_tooltip <- function(.data) {
-
   tooltip_vars <- .data %>%
     dplyr::select(-.data$n) %>%
     names()
@@ -166,14 +169,14 @@ arrange_by_groups_coalesce_na <- function(.data, group_vars, group_vars_chr) {
     dplyr::arrange(!!!group_vars) %>%
     dplyr::mutate_at(dplyr::all_of(group_vars_chr), function(x) {
       x <- x %>%
-        dplyr::coalesce(x, "NA") # NA to "NA"
+        as.character() %>% # Convert numeric grouping variable to character
+        dplyr::coalesce("NA") # NA to "NA"
 
       if (any(x == "NA")) {
         x %>%
           forcats::fct_inorder() %>% # Order factor alphabetically
           forcats::fct_relevel("NA", after = Inf) # Place any NAs last in factor
-      }
-      else {
+      } else {
         x %>%
           forcats::fct_inorder() %>%
           forcats::as_factor()
@@ -274,7 +277,6 @@ generate_summarize_description <- function(summary_variable, summary_function = 
 }
 
 generate_summarize_tooltip <- function(.data, summary_variable, summary_function = NULL) {
-
   if (is.null(summary_function)) {
     y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = summary_variable)
   } else {
@@ -282,7 +284,7 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
   }
 
   tooltip_vars <- .data %>%
-    dplyr::select(-.data$gemini_id, -!!X_FIELD, -!!Y_FIELD, -!!Y_TOOLTIP_FIELD) %>%
+    dplyr::select(-tidyselect::any_of(c("gemini_id", X_FIELD_CHR, Y_FIELD_CHR, Y_TOOLTIP_FIELD_CHR, "stroke"))) %>%
     names()
 
   tooltip <- purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))

@@ -10,7 +10,7 @@
  */
 
 /**
- * 
+ *
  * @param {String} id conteiner id
  * @param {Object} param1 configuration object
  * @param {Array} param1.specUrls list of urls

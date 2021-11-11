@@ -26,9 +26,9 @@ function generateGrid(spec, rows = 10) {
 
   let secondarySplit = Object.keys(encoding).filter(d => {
     const field = encoding[d].field;
-    return field !== splitField && 
+    return field !== splitField &&
            ingoreFields.indexOf(d) === -1 &&
-           groupKeys.indexOf(field) === -1 && 
+           groupKeys.indexOf(field) === -1 &&
            metas.indexOf(field) === -1;
   })[0];
 
