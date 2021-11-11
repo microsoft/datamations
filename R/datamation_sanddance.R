@@ -36,7 +36,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   }
 
   # Specify which functions are supported, for parsing functions out and for erroring if any are not in this list
-  supported_tidy_functions <- c("group_by", "summarize")
+  supported_tidy_functions <- c("group_by", "summarize", "filter")
 
   # Convert pipeline into list
   full_fittings <- pipeline %>%
