@@ -335,7 +335,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       clearTimeout(timeoutId);
     }
 
-    if (index === 0) cb();
+    // initial frame
+    if (index === 0) cb(0);
 
     drawSpec(index, source).then(() => {
 
@@ -344,7 +345,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
         anim.play(visSelector).then(() => {
           d3.select(slider).property("value", index + 1);
-          cb(index + 1 >= frames.length);
+          cb(index + 1);
         });
 
         const transformX = (currMeta.transformX || 0);
@@ -587,23 +588,83 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
     const pngs = [];
 
-    const callback = (done) => {
+    const callback = (index) => {
+      const done = index >= frames.length;
+
+      html2canvas(document.querySelector(exportWrap)).then(canvas => {
+        pngs.push(
+          canvas.toDataURL()
+        );
+
+        if (done) {
+          pngs.forEach((uri, i) => {
+            var a = document.createElement('a');
+            a.href = uri;
+            a.download = `frame-${i + 1}.png`;
+            a.click();
+          })
+        }
+
+      });
+    };
+
+    play(callback);
+  }
+
+  function exportGif() {
+    const { exportWrap } = getSelectors(id);
+
+    const gif = new GIF({
+      workers: 2,
+      quality: 2,
+      debug: true,
+      repeat: 0,
+      workerScript: './gif.worker.js',
+      width: 300,
+      height: 300,
+    });
+
+    gif.on("progress",function(p){
+
+    console.log(p);
+  
+    });
+
+    gif.on('finished', function(blob) {
+      console.log(blob)
+      window.open(URL.createObjectURL(blob));
+    });
+
+    let intervalId;
+
+    const startInterval = () => {
+
+      if (intervalId) clearInterval(intervalId);
+
+      intervalId = setInterval(() => {
 
         html2canvas(document.querySelector(exportWrap)).then(canvas => {
-          pngs.push(
-            canvas.toDataURL()
-          );
-
-          if (done) {
-            pngs.forEach((uri, i) => {
-              var a = document.createElement('a');
-              a.href = uri;
-              a.download = `frame-${i + 1}.png`;
-              a.click();
-            })
-          }
-
+          gif.addFrame(canvas, {delay: 200, copy: true});
         });
+  
+      }, frameDuration / 3);
+
+    };
+
+    const callback = (index) => {
+      const done = index >= frames.length;
+      
+      if (done) {
+        clearInterval(intervalId);
+
+        setTimeout(() => {
+          gif.render();
+        }, 1000);
+
+
+      } else {
+        startInterval();
+      }
 
     };
 
@@ -616,5 +677,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     onSlide,
     play,
     exportPNG,
+    exportGif,
   }
 }

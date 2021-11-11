@@ -170,9 +170,11 @@
           </div>
         </div>
         <button onclick="app1.exportPNG()">Export frames</button>
-
+        <button onclick="app1.exportGif()">GIF</button>
       </div>
     </div>
+
+    <script src="./gif.js"></script>
 
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
@@ -199,7 +201,10 @@
               },
               "mark": {
                 "type": "point",
-                "filled": true
+                "filled": true,
+                "strokeWidth": 2,
+                "color": "#888",
+                "stroke": "#888",
               },
               "encoding": {
                 "x": {
@@ -298,83 +303,84 @@
               }
             },
 
-            {
-              "height": 300,
-              "width": 300,
-              "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-              "meta": {
-                "parse": "grid",
-                "description": "Group by Degree",
-                "splitField": "Degree",
-                "axes": false
-              },
-              "data": {
-                "values": [
-                  {
-                    "Degree": "Masters",
-                    "n": 48,
-                    "meta": {
-                      "Work": {
-                        "Academia": 28,
-                        "Industry": 20,
-                      }
-                    }
-                  },
-                  {
-                    "Degree": "PhD",
-                    "n": 52,
-                    "meta": {
-                      "Work": {
-                        "Academia": 20,
-                        "Industry": 32,
-                      }
-                    }
-                  }
-                ]
-              },
+            // {
+            //   "height": 300,
+            //   "width": 300,
+            //   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+            //   "meta": {
+            //     "parse": "grid",
+            //     "description": "Group by Degree",
+            //     "splitField": "Degree",
+            //     "axes": false
+            //   },
+            //   "data": {
+            //     "values": [
+            //       {
+            //         "Degree": "Masters",
+            //         "n": 48,
+            //         "meta": {
+            //           "Work": {
+            //             "Academia": 28,
+            //             "Industry": 20,
+            //           }
+            //         }
+            //       },
+            //       {
+            //         "Degree": "PhD",
+            //         "n": 52,
+            //         "meta": {
+            //           "Work": {
+            //             "Academia": 20,
+            //             "Industry": 32,
+            //           }
+            //         }
+            //       }
+            //     ]
+            //   },
 
-              "transform": [
-                { filter: "datum.Work == 'Academia'" }
-              ],
+            //   "transform": [
+            //     { filter: "datum.Work == 'Academia'" }
+            //   ],
 
-              "mark": {
-                "type": "point",
-                "filled": true,
-                "strokeWidth": 2,
-                "color": "#888",
-              },
-              "encoding": {
-                "x": {
-                  "field": "datamations_x",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "y": {
-                  "field": "datamations_y",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "fill": {
-                  "field": "Work",
-                  "type": "nominal",
-                  "scale": {
-                    "domain": ["Academia", "Industry"],
-                    "range": ["#888", "#fff"]
-                  },
-                  "legend": {
-                    "title": 'filter(Work == "Academia")'
-                  }
-                },
-                "stroke": {
-                  "field": "Work",
-                  "type": "nominal",
-                  "scale": {
-                    "domain": ["Academia", "Industry"],
-                    "range": ["#888", "#888"]
-                  }
-                }
-              }
-            }
+            //   "mark": {
+            //     "type": "point",
+            //     "filled": true,
+            //     "strokeWidth": 2,
+            //     "color": "#888",
+            //   },
+            //   "encoding": {
+            //     "x": {
+            //       "field": "datamations_x",
+            //       "type": "quantitative",
+            //       "axis": null
+            //     },
+            //     "y": {
+            //       "field": "datamations_y",
+            //       "type": "quantitative",
+            //       "axis": null
+            //     },
+            //     "fill": {
+            //       "field": "Work",
+            //       "type": "nominal",
+            //       "scale": {
+            //         "domain": ["Academia", "Industry"],
+            //         "range": ["#888", "#fff"]
+            //       },
+            //       "legend": {
+            //         "title": 'filter(Work == "Academia")'
+            //       }
+            //     },
+            //     "stroke": {
+            //       "field": "Work",
+            //       "type": "nominal",
+            //       "scale": {
+            //         "domain": ["Academia", "Industry"],
+            //         "range": ["#888", "#888"]
+            //       }
+            //     }
+            //   }
+            // }
+          
           ] 
         });
     </script>
