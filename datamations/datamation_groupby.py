@@ -4,6 +4,8 @@
 #
 import pandas as pd
 
+from . import datamation_frame
+
 class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
     @property
     def _constructor(self):
@@ -35,5 +37,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
     def mean(self):
         df = super(DatamationGroupBy, self).mean()
-        #df.operations.append('mean')
+        df = datamation_frame.DatamationFrame(df)
+        df.operations.append('mean')
         return df

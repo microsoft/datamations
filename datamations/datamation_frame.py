@@ -3,7 +3,8 @@
 # Create a subclass from a pandas DataFrame.
 #
 import pandas as pd
-from .datamation_groupby import DatamationGroupBy
+# from .datamation_groupby import DatamationGroupBy
+from . import datamation_groupby
 
 class DatamationFrame(pd.DataFrame):
     @property
@@ -36,4 +37,4 @@ class DatamationFrame(pd.DataFrame):
     def groupby(self, by):
         self._operations.append('groupby')
         df = super(DatamationFrame, self).groupby(by=by)
-        return DatamationGroupBy(self, self._input, by)
+        return datamation_groupby.DatamationGroupBy(self, self._input, by)
