@@ -3,13 +3,11 @@
 
 from datamations import *
 
-def test_datamation_frame(capsys):
+def test_datamation_frame():
     df = small_salary().df
     df = DatamationFrame(df, new_property='')
-    
-    print(df.groupby('Work').mean())
 
-    captured = capsys.readouterr()
+    grouped = df.groupby('Work')
 
-    assert "mean" in captured.out
+    assert grouped.new_property == ''
     
