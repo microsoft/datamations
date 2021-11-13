@@ -6,6 +6,12 @@ import pandas as pd
 # from .datamation_groupby import DatamationGroupBy
 from . import datamation_groupby
 
+class Datamation:
+    def __init__(self, inputs, operations, output):
+        self.inputs = inputs
+        self.operations = operations
+        self.output = output
+
 class DatamationFrame(pd.DataFrame):
     @property
     def _constructor(self):
@@ -24,7 +30,9 @@ class DatamationFrame(pd.DataFrame):
                                       columns=columns,
                                       dtype=dtype,
                                       copy=copy)
+        self._inputs = []
         self._inputs.append(data)
+        self._operations = []
 
     @property
     def inputs(self):
@@ -37,4 +45,7 @@ class DatamationFrame(pd.DataFrame):
     def groupby(self, by):
         self._operations.append('groupby')
         df = super(DatamationFrame, self).groupby(by=by)
-        return datamation_groupby.DatamationGroupBy(self, self, by)
+        return datamation_groupby.DatamationGroupBy(self, by)
+
+    def datamate(self):
+        return Datamation(self._inputs, self._operations, self)

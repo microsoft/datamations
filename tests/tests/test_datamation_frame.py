@@ -3,12 +3,32 @@
 
 from datamations import *
 
-def test_datamation_frame():
+def test_datamation_frame_groupby():
     df = small_salary().df
     df = DatamationFrame(df)
 
     grouped = df.groupby('Work')
 
     assert 'groupby' in grouped.operations
-    assert df in grouped.inputs
+    #assert df in grouped.inputs
     
+
+def test_datamation_frame_datamate():
+    df = small_salary().df
+    df = DatamationFrame(df)
+
+    datamation = df.groupby('Work').mean().datamate()
+
+    assert len(datamation.inputs) == 2
+    assert len(datamation.operations) == 2
+    
+    #assert df is datamation.inputs[0]
+    assert isinstance(datamation.inputs[1], DatamationGroupBy)
+
+    assert 'groupby' == datamation.operations[0]
+    assert 'mean' == datamation.operations[1]
+
+    assert isinstance(datamation.output, DatamationFrame)
+
+    assert datamation.output.Salary.Academia == 85.01222196154829
+    assert datamation.output.Salary.Industry == 91.48376118136609
