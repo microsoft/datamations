@@ -10,7 +10,7 @@ def test_datamation_frame_groupby():
     grouped = df.groupby('Work')
 
     assert 'groupby' in grouped.operations
-    #assert df in grouped.inputs
+    assert df.equals(grouped.inputs[0])
     
 
 def test_datamation_frame_datamate():
@@ -22,7 +22,7 @@ def test_datamation_frame_datamate():
     assert len(datamation.inputs) == 2
     assert len(datamation.operations) == 2
     
-    #assert df is datamation.inputs[0]
+    assert df.equals(datamation.inputs[0])
     assert isinstance(datamation.inputs[1], DatamationGroupBy)
 
     assert 'groupby' == datamation.operations[0]
