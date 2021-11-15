@@ -3,7 +3,6 @@
 # Create a subclass from a pandas DataFrame.
 #
 import pandas as pd
-# from .datamation_groupby import DatamationGroupBy
 from . import datamation_groupby
 
 class Datamation:
@@ -11,6 +10,9 @@ class Datamation:
         self.inputs = inputs
         self.operations = operations
         self.output = output
+
+    def __str__(self):
+        return self.output.to_json()
 
 class DatamationFrame(pd.DataFrame):
     @property
@@ -47,5 +49,5 @@ class DatamationFrame(pd.DataFrame):
         df = super(DatamationFrame, self).groupby(by=by)
         return datamation_groupby.DatamationGroupBy(self, by)
 
-    def datamate(self):
+    def datamation(self):
         return Datamation(self._inputs, self._operations, self)

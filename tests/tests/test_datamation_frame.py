@@ -13,11 +13,11 @@ def test_datamation_frame_groupby():
     assert df.equals(grouped.inputs[0])
     
 
-def test_datamation_frame_datamate():
+def test_datamation_frame_datamation():
     df = small_salary().df
     df = DatamationFrame(df)
 
-    datamation = df.groupby('Work').mean().datamate()
+    datamation = df.groupby('Work').mean().datamation()
 
     assert len(datamation.inputs) == 2
     assert len(datamation.operations) == 2
@@ -32,3 +32,5 @@ def test_datamation_frame_datamate():
 
     assert datamation.output.Salary.Academia == 85.01222196154829
     assert datamation.output.Salary.Industry == 91.48376118136609
+
+    assert 'Salary' in str(datamation)

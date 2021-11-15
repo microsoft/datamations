@@ -8,5 +8,5 @@ setuptools.setup(
    author_email='chsingh@microsoft.com',
    packages=['datamations'],
    package_data={'datamations': ['small_salary.csv']},
-   install_requires=['pandas']
+   install_requires=['pandas', 'vega']
 )

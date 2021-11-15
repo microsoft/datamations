@@ -3,7 +3,6 @@
 # Create a subclass from a pandas DataFrame.
 #
 import pandas as pd
-
 from . import datamation_frame
 
 class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
