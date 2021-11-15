@@ -52,7 +52,8 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   if (!pipeline_has_summarize) {
     y_mapping <- list(
       y = NULL,
-      summary_function = NULL
+      summary_function = NULL,
+      summary_name = NULL
     )
   } else {
     summarize_operation <- tidy_functions_arg[["summarize"]][[2]] %>%
@@ -66,7 +67,8 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
         rlang::quo_name(),
       summary_function = summarize_operation %>%
         purrr::pluck(1) %>%
-        rlang::quo_name()
+        rlang::quo_name(),
+      summary_name = names(tidy_functions_arg[["summarize"]][2])
     )
   }
 

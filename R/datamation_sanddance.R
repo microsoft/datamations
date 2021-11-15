@@ -86,7 +86,8 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   # Extract arguments
   tidy_function_args <- fittings %>%
     purrr::map(as.list) %>%
-    purrr::map(as.character)
+    purrr::map_depth(.depth = 2, deparse) %>%
+    purrr::map(unlist)
 
   # If there's a ggplot specification, get the mapping (x and facets) from the final plot
   if (contains_ggplot) {
@@ -133,16 +134,28 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     # Call that function with the data and mapping
     if (verb != "filter") {
       res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
-      res[[i]] <- unlist(res[[i]], recursive = FALSE)
     } else if (verb == "filter") {
+      previous_frame <- res[[i - 1]]
+
+      # If the previous step has multiple frames, need to grab the _last_ of those
+      previous_step_has_multiple_frames <- purrr::map(previous_frame, names) %>%
+        purrr::map(~ "data" %in% .x) %>%
+        purrr::keep(~ .x) %>%
+        length() > 1
+
+      if (previous_step_has_multiple_frames) {
+        previous_frame <- previous_frame[[length(previous_frame)]]
+      }
       # If it's filter, need to pass the previous specs as well as the filter operation
       res[[i]] <- do.call(call_verb, list(data, mapping,
-        previous_frame = res[[i - 1]], filter_operation = tidy_function_args[[i]][-1], # -1 instead of [[2]] because you can list multiple, separating by comma
+        previous_frame = previous_frame, filter_operation = tidy_function_args[[i]][-1], # -1 instead of [[2]] because you can list multiple, separating by comma
         toJSON = FALSE, pretty = pretty, height = height, width = width
       ))
-      res[[i]] <- unlist(res[[i]], recursive = FALSE)
     }
   }
+
+  # Unlist into a single list
+  res <- unlist(res, recursive = FALSE)
 
   # Convert to JSON
   res <- jsonlite::toJSON(res, auto_unbox = TRUE, pretty = pretty, null = "null", digits = NA)
