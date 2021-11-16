@@ -9,6 +9,10 @@
 #' @noRd
 prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
 
+  if (!"data" %in% names(previous_frame)) {
+    previous_frame <- previous_frame[[length(previous_frame)]]
+  }
+
   infogrid_frame <- identical(previous_frame[["meta"]][["parse"]], "grid")
 
   # Non-infogrid case - previous step was summarize ----
@@ -86,8 +90,9 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
     spec[["transform"]] <- list(list(filter = list(field = "gemini_id", oneOf = filter_ids)))
 
     # Update title of frame
-    spec[["meta"]][["description"]] <- glue::glue("Filter {filter_operation}",
-      filter_operation = glue::glue_collapse(filter_operation, sep = ", ")
+    spec[["meta"]][["description"]] <- glue::glue("Filter {filter_operation}{within_group}",
+      filter_operation = glue::glue_collapse(filter_operation, sep = ", "),
+      within_group = ifelse(length(original_data %>% dplyr::group_vars()) > 0, " within each group", "")
     )
 
     list(spec)
