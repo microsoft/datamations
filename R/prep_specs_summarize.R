@@ -1,7 +1,7 @@
 #' Generate specs of data distribution and summarized data steps of datamations
 #'
 #' @param .data Input data
-#' @param mapping A list that describes mapping for the datamations, including x and y variables, sjummary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.
+#' @param mapping A list that describes mapping for the datamations, including x and y variables, summary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 #' @noRd
@@ -36,15 +36,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       purrr::map(rlang::parse_expr)
 
     ### Prep data ----
-
-    # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
     .data <- .data %>%
-      arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
-      # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
-      # Not defined in any of the previous steps since the JS takes care of generating it
-      dplyr::mutate(gemini_id = dplyr::row_number()) %>%
       dplyr::rename(!!Y_FIELD := {{ summary_variable }})
-
 
     # Add an x variable to use as the center of jittering
     # It can just be 1, except if mapping$x is not 1!
@@ -80,6 +73,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     ### Prep encoding ----
 
+    x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
     x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
 
     y_range <- range(.data[[Y_FIELD_CHR]], na.rm = TRUE)
@@ -125,10 +119,6 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       purrr::map(rlang::parse_expr)
 
     ### Prep data ----
-
-    # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
-    .data <- .data %>%
-      arrange_by_groups_coalesce_na(group_vars, group_vars_chr)
 
     ### Prep encoding ----
 
@@ -340,12 +330,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   if (y_type != "numeric") {
 
-    # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
     .data <- .data %>%
-      arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
-      # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
-      # Not defined in any of the previous steps since the JS takes care of generating it
-      dplyr::mutate(gemini_id = dplyr::row_number()) %>%
       dplyr::rename(!!Y_FIELD := {{ summary_variable }})
 
     # Add an x variable to use as the center of jittering

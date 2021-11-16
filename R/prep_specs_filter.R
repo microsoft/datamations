@@ -9,11 +9,9 @@
 #' @noRd
 prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
 
-  # Apply filtering to data - constructing a column that says whether values should be filtered
-  # Don't support info grid for now - just start with simple case :)
-
   infogrid_frame <- identical(previous_frame[["meta"]][["parse"]], "grid")
 
+  # Non-infogrid case - previous step was summarize ----
   if (!infogrid_frame) {
     # Get previous frame's data, rename datamations_y to the original name
     original_data <- previous_frame[["data"]][["values"]] %>%
@@ -42,6 +40,49 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
     # Reconstruct the previous spec, replacing the data and adding a filter transform
     spec <- previous_frame
     spec[["data"]][["values"]] <- original_data_with_filter_flag
+    spec[["transform"]] <- list(list(filter = list(field = "gemini_id", oneOf = filter_ids)))
+
+    # Update title of frame
+    spec[["meta"]][["description"]] <- glue::glue("Filter {filter_operation}",
+      filter_operation = glue::glue_collapse(filter_operation, sep = ", ")
+    )
+
+    list(spec)
+  } else {
+    # Infogrid case - previous step was initial data or group by ----
+
+    filter_operation_combined <- glue::glue_collapse(filter_operation, sep = "& ")
+
+    # Extract grouping variables from mapping
+    group_vars_chr <- mapping$groups
+
+    # Convert to symbol
+    group_vars <- group_vars_chr %>%
+      as.list() %>%
+      purrr::map(rlang::parse_expr)
+
+    original_data <- .data
+
+    # Take data from previous frame and apply filter
+    filtered_data <- original_data %>%
+      # Filter the data
+      dplyr::filter(eval(rlang::parse_expr(filter_operation_combined))) %>%
+      # Add a flag that the ones left are kept
+      dplyr::mutate(datamations_filter = TRUE)
+
+    # Reconstruct the original data, with a flag of TRUE / FALSE for filtered in / out
+    original_data_with_filter_flag <- original_data %>%
+      dplyr::left_join(filtered_data, by = names(original_data)) %>%
+      dplyr::mutate(datamations_filter = dplyr::coalesce(datamations_filter, FALSE))
+
+    filter_ids <- original_data_with_filter_flag %>%
+      dplyr::ungroup() %>%
+      dplyr::filter(.data$datamations_filter) %>%
+      dplyr::pull(.data$gemini_id)
+
+    # Reconstruct the previous spec
+    # Keep the same data (so all IDs are present), but just add the filter
+    spec <- previous_frame
     spec[["transform"]] <- list(list(filter = list(field = "gemini_id", oneOf = filter_ids)))
 
     # Update title of frame

@@ -154,7 +154,7 @@ generate_group_by_description <- function(mapping, ...) {
 
 generate_group_by_tooltip <- function(.data) {
   tooltip_vars <- .data %>%
-    dplyr::select(-.data$n) %>%
+    dplyr::select(-.data$n, -.data$gemini_ids) %>%
     names()
 
   purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
@@ -284,7 +284,7 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
   }
 
   tooltip_vars <- .data %>%
-    dplyr::select(-tidyselect::any_of(c("gemini_id", X_FIELD_CHR, Y_FIELD_CHR, Y_TOOLTIP_FIELD_CHR, "stroke"))) %>%
+    dplyr::select(-tidyselect::any_of(c("gemini_id", X_FIELD_CHR, Y_FIELD_CHR, Y_TOOLTIP_FIELD_CHR, "stroke", "gemini_ids"))) %>%
     names()
 
   tooltip <- purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
