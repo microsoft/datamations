@@ -36,6 +36,17 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       purrr::map(rlang::parse_expr)
 
     ### Prep data ----
+
+    # If gemini_id is not already added, e.g. if this function is called on its own for testing purposes
+    if (!"gemini_id" %in% names(.data)) {
+      # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
+      .data <- .data %>%
+        arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
+        # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
+        # Not defined in any of the previous steps since the JS takes care of generating it
+        dplyr::mutate(gemini_id = dplyr::row_number())
+    }
+
     .data <- .data %>%
       dplyr::rename(!!Y_FIELD := {{ summary_variable }})
 

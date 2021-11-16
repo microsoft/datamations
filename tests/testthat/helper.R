@@ -33,7 +33,8 @@ expect_data_values <- function(single_spec, df) {
   spec_data <- single_spec %>%
     jsonlite::fromJSON() %>%
     purrr::pluck("data") %>%
-    purrr::pluck("values")
+    purrr::pluck("values") %>%
+    dplyr::select(-tidyselect::any_of("gemini_ids"))
 
   expect_equal(spec_data, df, ignore_attr = TRUE)
 }
