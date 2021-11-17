@@ -171,79 +171,85 @@
     <script src="../js/hack-facet-view.js"></script>
     <script src="../js/app.js"></script>
     <script>
-        const app1 = App("app", {
-          specs: [{
-  "height": 300,
-  "width": 300,
-  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "meta": {
-    "parse": "grid",
-    "axes": false,
-    "description": "Plot is_hit within each group",
-    "splitField": "player",
-    "xAxisLabels": ["Jeter", "Justice"]
-  },
-  "data": {
-    "values": [
-      {
-        "player": "Jeter",
-        "is_hit": 1,
-        "n": 2,
-        "datamations_y_tooltip": 0
-      },
-      {
-        "player": "Jeter",
-        "is_hit": 0,
-        "n": 1,
-        "datamations_y_tooltip": 1
-      },
-      {
-        "player": "Justice",
-        "is_hit": 1,
-        "n": 1,
-        "datamations_y_tooltip": 0
-      },
-      {
-        "player": "Justice",
-        "is_hit": 0,
-        "n": 1,
-        "datamations_y_tooltip": 1
-      }
-    ]
-  },
-  "mark": {
-    "type": "point",
-    "filled": true
-  },
-  "encoding": {
-    "x": {
-      "field": "datamations_x",
-      "type": "quantitative",
-      "axis": null
-    },
-    "y": {
-      "field": "datamations_y",
-      "type": "quantitative",
-      "axis": null
-    },
-    "fill": {
-      "field": "is_hit",
-      "scale": {
-        "domain": [1, 0],
-        "range": ["#4c78a8", "#ffffff"]
-      }
-    },
-    "stroke": {
-      "field": "is_hit",
-      "scale": {
-        "domain": [1, 0],
-        "range": ["#4c78a8", "#4c78a8"]
-      }
-    }
-  }
-}
-]});
-   
-   </script>
+      const app1 = App("app", {
+        specs: [{
+          "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+          "meta": {
+            "parse": "grid",
+            "description": "Group by age"
+          },
+          "data": {
+            "values": [
+              {
+                "age": "<18",
+                "n": 4
+              },
+              {
+                "age": "18-29",
+                "n": 8
+              },
+              {
+                "age": "30-39",
+                "n": 18
+              },
+              {
+                "age": "40-49",
+                "n": 27
+              },
+              {
+                "age": "50-59",
+                "n": 43
+              },
+              {
+                "age": "60-69",
+                "n": 62
+              },
+              {
+                "age": "70-79",
+                "n": 92
+              },
+              {
+                "age": "80+",
+                "n": 149
+              }
+            ]
+          },
+          "facet": {
+            "column": {
+              "field": "age",
+              "type": "ordinal",
+              "title": "age",
+            }
+          },
+          "spec": {
+            "height": 300,
+            "width": 37.5,
+            "mark": {
+              "type": "point",
+              "filled": true,
+              "strokeWidth": 1
+            },
+            "encoding": {
+              "x": {
+                "field": "datamations_x",
+                "type": "quantitative",
+                "axis": null
+              },
+              "y": {
+                "field": "datamations_y",
+                "type": "quantitative",
+                "axis": null
+              },
+              "tooltip": [
+                {
+                  "field": "age",
+                  "type": "nominal"
+                }
+              ]
+            }
+          }
+        }]
+      });
+    </script>
   </body>
 </html>

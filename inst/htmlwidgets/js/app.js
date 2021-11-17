@@ -28,7 +28,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   let intervalId;
   let timeoutId;
   let initializing = false;
-  console.log("initial specs:", specs);
+  // console.log("initial specs:", specs);
   let frameDuration = frameDur || 2000;
   let frameDelay = frameDel || 1000;
 
@@ -416,7 +416,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   async function transformSpecs() {
     const n = d3.max(vegaLiteSpecs[0].data.values, d => d.n);
     const rows = Math.ceil(Math.sqrt(n));
-    console.log(rows)
+
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
       const vlSpec = vegaLiteSpecs[i];
 
@@ -473,7 +473,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       }
     }
 
-    console.log("final specs:", vegaLiteSpecs)
+    // console.log("final specs:", vegaLiteSpecs)
   }
 
   /**
