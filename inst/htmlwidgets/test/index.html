@@ -156,7 +156,7 @@
           </div>
           <div class="description"></div>
         </div>
-  
+
         <div class="vega-vis-wrapper">
           <div class="vega-for-axis"></div>
           <div class="vega-other-layers"></div>
@@ -172,83 +172,59 @@
     <script src="../js/app.js"></script>
     <script>
       const app1 = App("app", {
-        specs: [{
-          "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-          "meta": {
-            "parse": "grid",
-            "description": "Group by age"
-          },
-          "data": {
-            "values": [
-              {
-                "age": "<18",
-                "n": 4
-              },
-              {
-                "age": "18-29",
-                "n": 8
-              },
-              {
-                "age": "30-39",
-                "n": 18
-              },
-              {
-                "age": "40-49",
-                "n": 27
-              },
-              {
-                "age": "50-59",
-                "n": 43
-              },
-              {
-                "age": "60-69",
-                "n": 62
-              },
-              {
-                "age": "70-79",
-                "n": 92
-              },
-              {
-                "age": "80+",
-                "n": 149
-              }
-            ]
-          },
-          "facet": {
-            "column": {
-              "field": "age",
-              "type": "ordinal",
-              "title": "age",
-            }
-          },
-          "spec": {
-            "height": 300,
-            "width": 37.5,
-            "mark": {
-              "type": "point",
-              "filled": true,
-              "strokeWidth": 1
+        specs: [
+          {
+            $schema: "https://vega.github.io/schema/vega-lite/v4.json",
+            meta: {
+              parse: "grid",
+              description: "Filter Salary == max(Salary) within each group",
+              splitField: "Work",
+              axes: true,
             },
-            "encoding": {
-              "x": {
-                "field": "datamations_x",
-                "type": "quantitative",
-                "axis": null
-              },
-              "y": {
-                "field": "datamations_y",
-                "type": "quantitative",
-                "axis": null
-              },
-              "tooltip": [
+            data: {
+              values: [
                 {
-                  "field": "age",
-                  "type": "nominal"
-                }
-              ]
-            }
-          }
-        }]
+                  Degree: "Masters",
+                  Work: "Academia",
+                  n: 2,
+                  gemini_ids: [1, 2],
+                },
+                {
+                  Degree: "Masters",
+                  Work: "Industry",
+                  n: 2,
+                  gemini_ids: [3, 4],
+                },
+                { Degree: "PhD", Work: "Academia", n: 2, gemini_ids: [5, 6] },
+                { Degree: "PhD", Work: "Industry", n: 2, gemini_ids: [7, 8] },
+              ],
+            },
+            facet: {
+              column: { field: "Degree", type: "ordinal", title: "Degree" },
+            },
+            spec: {
+              height: 300,
+              width: 150,
+              mark: { type: "point", filled: true, strokeWidth: 1 },
+              encoding: {
+                x: { field: "datamations_x", type: "quantitative", axis: null },
+                y: { field: "datamations_y", type: "quantitative", axis: null },
+                color: {
+                  field: "Work",
+                  type: "nominal",
+                  legend: { values: ["Academia", "Industry"] },
+                },
+                tooltip: [
+                  { field: "Degree", type: "nominal" },
+                  { field: "Work", type: "nominal" },
+                ],
+              },
+            },
+            transform: [
+              { filter: { field: "gemini_id", oneOf: [2, 4, 5, 8] } },
+            ],
+          },
+        ],
       });
     </script>
   </body>

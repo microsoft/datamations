@@ -190,6 +190,7 @@ function getGridSpec(spec, rows = 10) {
   return new Promise((res) => {
     const grid = generateGrid(spec, rows);
     const obj = {...spec};
+
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
     const xDomain = [
