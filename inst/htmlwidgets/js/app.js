@@ -618,10 +618,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       workers: 2,
       quality: 2,
       debug: true,
-      repeat: 0,
+      repeat: -1,
       workerScript: './gif.worker.js',
-      width: 300,
-      height: 300,
     });
 
     gif.on("progress",function(p){
@@ -643,11 +641,18 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
       intervalId = setInterval(() => {
 
-        html2canvas(document.querySelector(exportWrap)).then(canvas => {
-          gif.addFrame(canvas, {delay: 200, copy: true});
+        html2canvas(document.querySelector(exportWrap)).then(canvas => {  
+          document.body.appendChild(canvas);
+
+          var image_gif = new Image();
+          image_gif.src = canvas.toDataURL("image/png");
+          image_gif.height = canvas.height;
+          image_gif.width = canvas.width;
+
+          gif.addFrame(image_gif, {delay: 100});
         });
   
-      }, frameDuration / 3);
+      }, frameDuration / 10);
 
     };
 
@@ -655,7 +660,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       const done = index >= frames.length;
       
       if (done) {
-        clearInterval(intervalId);
+        intervalId && clearInterval(intervalId);
 
         setTimeout(() => {
           gif.render();
@@ -663,7 +668,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
 
       } else {
-        startInterval();
+        intervalId && clearInterval(intervalId);
+        setTimeout(startInterval, frameDelay);
       }
 
     };
