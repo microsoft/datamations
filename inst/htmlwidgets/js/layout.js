@@ -6,9 +6,11 @@ function generateGrid(spec, rows = 10) {
   if (spec.facet) {
     if (spec.facet.column) {
       groupKeys.push(spec.facet.column.field);
+      spec.facet.column.sort = { "field": CONF.ORDER_FIELD };
     }
     if (spec.facet.row) {
       groupKeys.push(spec.facet.row.field);
+      spec.facet.row.sort = { "field": CONF.ORDER_FIELD };
     }
   }
 
@@ -16,7 +18,8 @@ function generateGrid(spec, rows = 10) {
 
   const metas = [];
 
-  specValues.forEach(d => {
+  specValues.forEach((d, i) => {
+    d[CONF.ORDER_FIELD] = i;
     if (d.meta) {
       metas.push(...Object.keys(d.meta));
     }
@@ -187,6 +190,7 @@ function getGridSpec(spec, rows = 10) {
   return new Promise((res) => {
     const grid = generateGrid(spec, rows);
     const obj = {...spec};
+
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
     const xDomain = [
@@ -217,7 +221,7 @@ function getGridSpec(spec, rows = 10) {
         Math.max(yDomain[1], middle + rows / 2)
       ],
     };
-    console.log(encoding.y.scale.domain);
+
     encoding.x.field = CONF.X_FIELD;
     encoding.y.field = CONF.Y_FIELD;
 
