@@ -85,7 +85,6 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     ### Prep encoding ----
 
     x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
-    x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
 
     y_range <- range(.data[[Y_FIELD_CHR]], na.rm = TRUE)
     y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y, scale = list(domain = y_range))
@@ -107,7 +106,16 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     has_facets <- !is.null(mapping$column) | !is.null(mapping$row)
 
     facet_col_encoding <- list(field = mapping$column, type = "ordinal", title = mapping$column)
+
+    if (!is.null(mapping$column)) {
+      facet_col_encoding$sort <- unique(.data[[mapping$column]])
+    }
+
     facet_row_encoding <- list(field = mapping$row, type = "ordinal", title = mapping$row)
+
+    if (!is.null(mapping$row)) {
+      facet_row_encoding$sort <- unique(.data[[mapping$row]])
+    }
 
     facet_encoding <- list(
       column = facet_col_encoding,
@@ -159,7 +167,21 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     has_facets <- !is.null(mapping$column) | !is.null(mapping$row)
 
     facet_col_encoding <- list(field = mapping$column, type = "ordinal", title = mapping$column)
+
+    if (!is.null(mapping$column)) {
+      facet_col_encoding$sort <- unique(.data[[mapping$column]])
+    }
+
     facet_row_encoding <- list(field = mapping$row, type = "ordinal", title = mapping$row)
+
+    if (!is.null(mapping$row)) {
+      facet_row_encoding$sort <- unique(.data[[mapping$row]])
+    }
+
+    facet_encoding <- list(
+      column = facet_col_encoding,
+      row = facet_row_encoding
+    )
 
     facet_encoding <- list(
       column = facet_col_encoding,
