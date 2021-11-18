@@ -416,7 +416,13 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    */
   async function transformSpecs() {
     const n = d3.max(vegaLiteSpecs[0].data.values, d => d.n);
-    const rows = Math.ceil(Math.sqrt(n));
+    // const rows = Math.max(40,  Math.ceil(Math.sqrt(n)))
+
+
+    // TODO: considering height for row number calculation!!!
+    const rows = 300 / 6;
+
+    console.log(n, rows);
 
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
       const vlSpec = vegaLiteSpecs[i];
