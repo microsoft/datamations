@@ -46,6 +46,10 @@
         display: none;
       }
 
+      /* .vega-vis {
+        opacity: 0;
+      } */
+
       .vega-vis-wrapper .vega-for-axis .role-title {
         display: none;
       }
@@ -172,59 +176,140 @@
     <script src="../js/app.js"></script>
     <script>
       const app1 = App("app", {
-        specs: [
-          {
-            $schema: "https://vega.github.io/schema/vega-lite/v4.json",
-            meta: {
-              parse: "grid",
-              description: "Filter Salary == max(Salary) within each group",
-              splitField: "Work",
-              axes: true,
-            },
-            data: {
-              values: [
-                {
-                  Degree: "Masters",
-                  Work: "Academia",
-                  n: 2,
-                  gemini_ids: [1, 2],
-                },
-                {
-                  Degree: "Masters",
-                  Work: "Industry",
-                  n: 2,
-                  gemini_ids: [3, 4],
-                },
-                { Degree: "PhD", Work: "Academia", n: 2, gemini_ids: [5, 6] },
-                { Degree: "PhD", Work: "Industry", n: 2, gemini_ids: [7, 8] },
-              ],
-            },
-            facet: {
-              column: { field: "Degree", type: "ordinal", title: "Degree" },
-            },
-            spec: {
-              height: 300,
-              width: 150,
-              mark: { type: "point", filled: true, strokeWidth: 1 },
-              encoding: {
-                x: { field: "datamations_x", type: "quantitative", axis: null },
-                y: { field: "datamations_y", type: "quantitative", axis: null },
-                color: {
-                  field: "Work",
-                  type: "nominal",
-                  legend: { values: ["Academia", "Industry"] },
-                },
-                tooltip: [
-                  { field: "Degree", type: "nominal" },
-                  { field: "Work", type: "nominal" },
-                ],
-              },
-            },
-            transform: [
-              { filter: { field: "gemini_id", oneOf: [2, 4, 5, 8] } },
-            ],
+        specs: [{
+          "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+          "meta": {
+            "parse": "grid",
+            "description": "Group by age, vaccination_status",
+            "splitField": "vaccination_status",
+            "axes": true
           },
-        ],
+          "data": {
+            "values": [
+              {
+                "age": "<18",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 4
+              },
+              {
+                "age": "18-29",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 8
+              },
+              {
+                "age": "30-39",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 16
+              },
+              {
+                "age": "30-39",
+                "vaccination_status": "fully_vaccinted",
+                "n": 2
+              },
+              {
+                "age": "40-49",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 22
+              },
+              {
+                "age": "40-49",
+                "vaccination_status": "fully_vaccinted",
+                "n": 5
+              },
+              {
+                "age": "50-59",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 37
+              },
+              {
+                "age": "50-59",
+                "vaccination_status": "fully_vaccinted",
+                "n": 6
+              },
+              {
+                "age": "60-69",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 49
+              },
+              {
+                "age": "60-69",
+                "vaccination_status": "fully_vaccinted",
+                "n": 13
+              },
+              {
+                "age": "70-79",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 70
+              },
+              {
+                "age": "70-79",
+                "vaccination_status": "fully_vaccinted",
+                "n": 22
+              },
+              {
+                "age": "80+",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 100
+              },
+              {
+                "age": "80+",
+                "vaccination_status": "fully_vaccinted",
+                "n": 49
+              }
+            ]
+          },
+          "facet": {
+            "column": {
+              "field": "age",
+              "type": "ordinal",
+              "title": "age"
+            }
+          },
+          "spec": {
+            "height": 300,
+            "width": 37.5,
+            "mark": {
+              "type": "point",
+              "filled": true,
+              "strokeWidth": 1
+            },
+            "encoding": {
+              "x": {
+                "field": "datamations_x",
+                "type": "quantitative",
+                "axis": null
+              },
+              "y": {
+                "field": "datamations_y",
+                "type": "quantitative",
+                "axis": null
+              },
+              "color": {
+                "field": "vaccination_status",
+                "type": "nominal",
+                "legend": {
+                  "values": ["not_fully_vaccinated", "fully_vaccinted"]
+                }
+              },
+              "tooltip": [
+                {
+                  "field": "age",
+                  "type": "nominal"
+                },
+                {
+                  "field": "vaccination_status",
+                  "type": "nominal"
+                }
+              ]
+            }
+          }
+          ,
+          // "config": {
+          //   "facet": {
+          //     "spacing": -20
+          //   }
+          // }
+        }]
       });
     </script>
   </body>
