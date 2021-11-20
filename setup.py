@@ -7,6 +7,8 @@ setuptools.setup(
    author='Chinmay Singh',
    author_email='chsingh@microsoft.com',
    packages=['datamations'],
-   package_data={'datamations': ['small_salary.csv']},
+   package_data={'datamations': ['../data-raw/small_salary.csv',
+                                 '../inst/htmlwidgets/d3/d3.js'
+                                 ]},
    install_requires=['pandas', 'vega']
 )

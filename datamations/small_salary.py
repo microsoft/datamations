@@ -8,7 +8,7 @@ class small_salary():
 
     def __init__(self):
         script_dir = os.path.dirname( __file__ )
-        small_salary = os.path.join(script_dir, 'small_salary.csv')
+        small_salary = os.path.join(script_dir, '../data-raw/small_salary.csv')
         self._data = pd.read_csv(small_salary)
 
     @property
