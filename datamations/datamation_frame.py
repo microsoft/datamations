@@ -69,12 +69,21 @@ class DatamationFrame(pd.DataFrame):
             app: '../files/inst/htmlwidgets/js/app'
         }});
         """))
+
+        styles = open('../inst/htmlwidgets/css/datamationSandDance.css', "r").read()
+
         with open('../sandbox/specs.json') as f:
             specs = json.load(f)
 
         display(Javascript("""
         (function(element) {
             element.append($('<div>').html(`
+            <style type="text/css">
+                %s
+                .vega-vis-wrapper > div {
+                    position: relative;
+                }
+            </style>
             <div class="flex-wrap">
             <div id="app">
                 <div class="controls-wrapper">
@@ -111,6 +120,6 @@ class DatamationFrame(pd.DataFrame):
                 window.app1 = App("app", {specs: %s, autoPlay: true});
             });            
         })(element);
-        """ % (json.dumps(specs))))
+        """ % (styles, json.dumps(specs))))
         
         return Datamation(self._inputs, self._operations, self)
