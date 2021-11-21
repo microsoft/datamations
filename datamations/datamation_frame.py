@@ -3,6 +3,7 @@
 # Create a subclass from a pandas DataFrame.
 #
 import pandas as pd
+import importlib_resources
 from . import datamation_groupby
 
 import json
@@ -70,10 +71,11 @@ class DatamationFrame(pd.DataFrame):
         }});
         """))
 
-        styles = open('../inst/htmlwidgets/css/datamationSandDance.css', "r").read()
+        resource = importlib_resources.files("datamations") / "../inst/htmlwidgets/css" / "datamationSandDance.css"
+        styles = resource.read_bytes()
 
-        with open('../sandbox/specs.json') as f:
-            specs = json.load(f)
+        resource = importlib_resources.files("datamations") / "../sandbox" / "specs.json"
+        specs = json.loads(resource.read_bytes())
 
         display(Javascript("""
         (function(element) {
