@@ -44,7 +44,12 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
     # Reconstruct the previous spec, replacing the data and adding a filter transform
     spec <- previous_frame
     spec[["data"]][["values"]] <- original_data_with_filter_flag
-    spec[["transform"]] <- list(list(filter = list(field = "gemini_id", oneOf = filter_ids)))
+
+    if (length(filter_ids) == 1) {
+      spec[["transform"]] <- list(list(filter = glue::glue("datum.gemini_id == {filter_ids}")))
+    } else {
+      spec[["transform"]] <- list(list(filter = list(field = "gemini_id", oneOf = filter_ids)))
+    }
 
     # Update title of frame
     spec[["meta"]][["description"]] <- glue::glue("Filter {filter_operation}",
@@ -87,7 +92,12 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
     # Reconstruct the previous spec
     # Keep the same data (so all IDs are present), but just add the filter
     spec <- previous_frame
-    spec[["transform"]] <- list(list(filter = list(field = "gemini_id", oneOf = filter_ids)))
+
+    if (length(filter_ids) == 1) {
+      spec[["transform"]] <- list(list(filter = glue::glue("datum.gemini_id == {filter_ids}")))
+    } else {
+      spec[["transform"]] <- list(list(filter = list(field = "gemini_id", oneOf = filter_ids)))
+    }
 
     # Update title of frame
     spec[["meta"]][["description"]] <- glue::glue("Filter {filter_operation}{within_group}",
