@@ -57,17 +57,17 @@ class DatamationFrame(pd.DataFrame):
         display(Javascript("""
         require.config({ 
             paths: { 
-            d3: '../files/inst/htmlwidgets/d3/d3',
-            vega: '../files/inst/htmlwidgets/vega/vega',
-            'vega-util': '../files/inst/htmlwidgets/vega-util/vega-util',
-            'vega-lite': '../files/inst/htmlwidgets/vega-lite/vega-lite',
-            'vega-embed': '../files/inst/htmlwidgets/vega-embed/vega-embed',
-            gemini: '../files/inst/htmlwidgets/gemini/gemini.web',
-            config: '../files/inst/htmlwidgets/js/config',
-            utils: '../files/inst/htmlwidgets/js/utils',
-            layout: '../files/inst/htmlwidgets/js/layout',
-            'hack-facet-view': '../files/inst/htmlwidgets/js/hack-facet-view',
-            app: '../files/inst/htmlwidgets/js/app'
+            d3: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/d3/d3',
+            vega: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/vega/vega',
+            'vega-util': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/vega-util/vega-util',
+            'vega-lite': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/vega-lite/vega-lite',
+            'vega-embed': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/vega-embed/vega-embed',
+            gemini: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/gemini/gemini.web',
+            config: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/config',
+            utils: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/utils',
+            layout: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/layout',
+            'hack-facet-view': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/hack-facet-view',
+            app: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/app'
         }});
         """))
 
