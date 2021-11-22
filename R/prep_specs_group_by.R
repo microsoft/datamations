@@ -218,7 +218,7 @@ add_ids_to_count_data <- function(count_data, .data, ...) {
   group_ids <- .data %>%
     dplyr::group_by(!!!group_vars) %>%
     dplyr::group_data() %>%
-    dplyr::rename(gemini_ids = .rows)
+    dplyr::rename(gemini_ids = .data$.rows)
 
   join_names <- count_data %>%
     dplyr::select(-.data$n) %>%

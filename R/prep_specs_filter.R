@@ -32,7 +32,7 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
     # Reconstruct the original data, with a flag of TRUE / FALSE for filtered in / out
     original_data_with_filter_flag <- original_data %>%
       dplyr::left_join(filtered_data, by = names(original_data)) %>%
-      dplyr::mutate(datamations_filter = dplyr::coalesce(datamations_filter, FALSE)) %>%
+      dplyr::mutate(datamations_filter = dplyr::coalesce(.data$datamations_filter, FALSE)) %>%
       # Rename Y_FIELD in the end, since it's the name used in the spec
       dplyr::rename_at(mapping$summary_name, ~ paste0(Y_FIELD_CHR))
 
@@ -82,7 +82,7 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
     # Reconstruct the original data, with a flag of TRUE / FALSE for filtered in / out
     original_data_with_filter_flag <- original_data %>%
       dplyr::left_join(filtered_data, by = names(original_data)) %>%
-      dplyr::mutate(datamations_filter = dplyr::coalesce(datamations_filter, FALSE))
+      dplyr::mutate(datamations_filter = dplyr::coalesce(.data$datamations_filter, FALSE))
 
     filter_ids <- original_data_with_filter_flag %>%
       dplyr::ungroup() %>%
