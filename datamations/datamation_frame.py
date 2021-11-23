@@ -7,7 +7,7 @@ import pandas as pd
 from . import datamation_groupby
 
 import json
-from IPython.core.display import display, Javascript, HTML
+from IPython.core.display import display, Javascript
 
 class Datamation:
     def __init__(self, states, operations, output):
