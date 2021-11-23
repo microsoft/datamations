@@ -36,30 +36,15 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
       # Rename Y_FIELD in the end, since it's the name used in the spec
       dplyr::rename_at(mapping$summary_name, ~ paste0(Y_FIELD_CHR))
 
-    filter_ids <- original_data_with_filter_flag %>%
-      dplyr::ungroup() %>%
-      dplyr::filter(.data$datamations_filter) %>%
-      dplyr::pull(.data$gemini_id)
-
-    original_data_with_filter_flag <- original_data_with_filter_flag %>%
-      dplyr::select(-.data$datamations_filter)
+    spec <- previous_frame
 
     # Reconstruct the previous spec, replacing the data and adding a filter transform
-    spec <- previous_frame
     spec[["data"]][["values"]] <- original_data_with_filter_flag
-
-    if (length(filter_ids) == 1) {
-      spec[["transform"]] <- list(list(filter = glue::glue("datum.gemini_id == {filter_ids}")))
-    } else {
-      spec[["transform"]] <- list(list(filter = list(field = "gemini_id", oneOf = filter_ids)))
-    }
 
     # Update title of frame
     spec[["meta"]][["description"]] <- glue::glue("Filter {filter_operation}",
       filter_operation = glue::glue_collapse(filter_operation, sep = ", ")
     )
-
-    list(spec)
   } else {
     # Infogrid case - previous step was initial data or group by ----
 
@@ -87,27 +72,30 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
       dplyr::left_join(filtered_data, by = names(original_data)) %>%
       dplyr::mutate(datamations_filter = dplyr::coalesce(.data$datamations_filter, FALSE))
 
-    filter_ids <- original_data_with_filter_flag %>%
-      dplyr::ungroup() %>%
-      dplyr::filter(.data$datamations_filter) %>%
-      dplyr::pull(.data$gemini_id)
-
-    # Reconstruct the previous spec
-    # Keep the same data (so all IDs are present), but just add the filter
     spec <- previous_frame
-
-    if (length(filter_ids) == 1) {
-      spec[["transform"]] <- list(list(filter = glue::glue("datum.gemini_id == {filter_ids}")))
-    } else {
-      spec[["transform"]] <- list(list(filter = list(field = "gemini_id", oneOf = filter_ids)))
-    }
 
     # Update title of frame
     spec[["meta"]][["description"]] <- glue::glue("Filter {filter_operation}{within_group}",
       filter_operation = glue::glue_collapse(filter_operation, sep = ", "),
       within_group = ifelse(length(original_data %>% dplyr::group_vars()) > 0, " within each group", "")
     )
-
-    list(spec)
   }
+
+  # IDs to filter
+  filter_ids <- original_data_with_filter_flag %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(.data$datamations_filter) %>%
+    dplyr::pull(.data$gemini_id)
+
+  # Remove datamations_filter column if present
+  spec[["data"]][["values"]] <- spec[["data"]][["values"]] %>%
+    dplyr::select(-tidyselect::any_of("datamations_filter"))
+
+  if (length(filter_ids) == 1) {
+    spec[["transform"]] <- list(list(filter = glue::glue("datum.gemini_id == {filter_ids}")))
+  } else {
+    spec[["transform"]] <- list(list(filter = list(field = "gemini_id", oneOf = filter_ids)))
+  }
+
+  list(spec)
 }
