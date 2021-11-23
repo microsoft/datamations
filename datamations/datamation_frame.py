@@ -58,6 +58,18 @@ class DatamationFrame(pd.DataFrame):
         df = super(DatamationFrame, self).groupby(by=by)
         return datamation_groupby.DatamationGroupBy(self, by)
 
+    def prep_specs_group_by(self, width=300, height=300):
+        script_dir = os.path.dirname( __file__ )
+        specs_file = open(os.path.join(script_dir, '../sandbox/specs_for_python/raw_spec.json'), 'r')
+        specs = json.load(specs_file)
+        return specs[1:3]
+
+    def prep_specs_summarize(self, width=300, height=300):
+        script_dir = os.path.dirname( __file__ )
+        specs_file = open(os.path.join(script_dir, '../sandbox/specs_for_python/raw_spec.json'), 'r')
+        specs = json.load(specs_file)
+        return specs[3:]
+
     def prep_specs_data(self, width=300, height=300):
         # Prep encoding
         x_encoding = { 'field': X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
@@ -65,7 +77,7 @@ class DatamationFrame(pd.DataFrame):
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding }
 
-        return {
+        return [{
             "height": height,
             "width": width,
             "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -86,14 +98,10 @@ class DatamationFrame(pd.DataFrame):
                 "strokeWidth": 1
             },
             "encoding": spec_encoding
-        }
+        }]
 
-    def specs(self):        
-        script_dir = os.path.dirname( __file__ )
-        specs_file = open(os.path.join(script_dir, '../sandbox/specs_for_python/raw_spec.json'), 'r')
-        specs = json.load(specs_file)
-        specs[0] = self.prep_specs_data()
-        return specs
+    def specs(self):
+        return self.prep_specs_data() + self.prep_specs_group_by() + self.prep_specs_summarize()
 
     def datamation(self):
         display(Javascript("""
