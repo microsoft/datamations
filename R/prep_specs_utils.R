@@ -257,7 +257,7 @@ generate_x_domain <- function(data) {
 }
 
 # Generate description for summarize steps
-# Depending on whether there's errorbars, any grousp, etc.
+# Depending on whether there's errorbars, any groups, etc.
 generate_summarize_description <- function(summary_variable, summary_function = NULL, errorbar = FALSE, group_by = TRUE) {
   if (errorbar) {
     return(glue::glue("Plot mean {summary_variable}{group_description}, with errorbar",
@@ -268,6 +268,10 @@ generate_summarize_description <- function(summary_variable, summary_function = 
   if (is.null(summary_function)) {
     glue::glue("Plot {summary_variable}{group_description}",
       group_description = ifelse(group_by, " within each group", "")
+    )
+  } else if (is.null(summary_variable)) {
+    glue::glue("Plot {summary_function}(){group_description}",
+      group_description = ifelse(group_by, " of each group", "")
     )
   } else {
     glue::glue("Plot {summary_function} {summary_variable}{group_description}",

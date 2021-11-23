@@ -62,14 +62,19 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
       as.list()
 
     y_mapping <- list(
-      y = summarize_operation %>%
-        purrr::pluck(2) %>%
-        rlang::quo_name(),
       summary_function = summarize_operation %>%
         purrr::pluck(1) %>%
         rlang::quo_name(),
       summary_name = names(tidy_functions_arg[["summarize"]][2])
     )
+
+    y_var <- summarize_operation %>%
+      purrr::pluck(2)
+
+    if (!identical(y_var, NULL)) {
+      y_mapping[["y"]] <- rlang::quo_name(y_var)
+    }
+
   }
 
   # Group mapping
