@@ -415,14 +415,21 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * - spec.layer = splits layers to stack on top on each other
    */
   async function transformSpecs() {
+    // calculate rows: considering spec height for rows calculation
+
     const n = d3.max(vegaLiteSpecs[0].data.values, d => d.n);
-    // const rows = Math.max(40,  Math.ceil(Math.sqrt(n)))
+    let rows = Math.ceil(Math.sqrt(n));
 
+    const gap = 2;
+    const distance = 6 + gap;
 
-    // TODO: considering height for row number calculation!!!
-    const rows = 300 / 6;
+    const {height: firstSpecHeight} = vegaLiteSpecs[0].spec || vegaLiteSpecs[0];
 
-    console.log(n, rows);
+    if (firstSpecHeight / rows > distance) {
+      rows = Math.floor(firstSpecHeight / distance)
+    }
+
+    // end of rows calculation
 
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
       const vlSpec = vegaLiteSpecs[i];
