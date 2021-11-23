@@ -41,6 +41,9 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
       dplyr::filter(.data$datamations_filter) %>%
       dplyr::pull(.data$gemini_id)
 
+    original_data_with_filter_flag <- original_data_with_filter_flag %>%
+      dplyr::select(-.data$datamations_filter)
+
     # Reconstruct the previous spec, replacing the data and adding a filter transform
     spec <- previous_frame
     spec[["data"]][["values"]] <- original_data_with_filter_flag
