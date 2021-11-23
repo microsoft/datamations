@@ -9,6 +9,11 @@ from . import datamation_groupby
 import json
 from IPython.core.display import display, Javascript
 
+X_FIELD_CHR = "datamations_x"
+Y_FIELD_CHR = "datamations_y"
+Y_RAW_FIELD_CHR = "datamations_y_raw"
+Y_TOOLTIP_FIELD_CHR = "datamations_y_tooltip"
+
 class Datamation:
     def __init__(self, states, operations, output):
         self.states = states
@@ -53,10 +58,42 @@ class DatamationFrame(pd.DataFrame):
         df = super(DatamationFrame, self).groupby(by=by)
         return datamation_groupby.DatamationGroupBy(self, by)
 
+    def prep_specs_data(self, width=300, height=300):
+        # Prep encoding
+        x_encoding = { 'field': X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
+        y_encoding = { 'field': Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
+
+        spec_encoding = { 'x': x_encoding, 'y': y_encoding }
+
+        return {
+            "height": height,
+            "width": width,
+            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+            "data": {
+                "values": [
+                    {
+                    "n": len(self.states[0])
+                    }
+                ]
+            },
+            "meta": { 
+                'parse': "grid",
+                'description': "Initial data"
+            },
+            "mark": {
+                "type": "point",
+                "filled": True,
+                "strokeWidth": 1
+            },
+            "encoding": spec_encoding
+        }
+
     def specs(self):        
         script_dir = os.path.dirname( __file__ )
         specs_file = open(os.path.join(script_dir, '../sandbox/specs_for_python/raw_spec.json'), 'r')
-        return json.load(specs_file)
+        specs = json.load(specs_file)
+        specs[0] = self.prep_specs_data()
+        return specs
 
     def datamation(self):
         display(Javascript("""
