@@ -45,3 +45,4 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         specs_file = open(os.path.join(script_dir, '../sandbox/specs_for_python/raw_spec.json'), 'r')
         specs = json.load(specs_file)
         return specs[2:]
+        

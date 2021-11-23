@@ -14,3 +14,4 @@ class small_salary():
     @property
     def df(self):
         return self._data
+        
