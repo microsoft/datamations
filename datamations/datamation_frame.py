@@ -10,8 +10,8 @@ import json
 from IPython.core.display import display, Javascript, HTML
 
 class Datamation:
-    def __init__(self, inputs, operations, output):
-        self.inputs = inputs
+    def __init__(self, states, operations, output):
+        self.states = states
         self.operations = operations
         self.output = output
 
@@ -23,7 +23,7 @@ class DatamationFrame(pd.DataFrame):
     def _constructor(self):
         return DatamationFrame._internal_ctor
 
-    _inputs = []
+    _states = []
     _operations = []
 
     @classmethod
@@ -36,13 +36,13 @@ class DatamationFrame(pd.DataFrame):
                                       columns=columns,
                                       dtype=dtype,
                                       copy=copy)
-        self._inputs = []
-        self._inputs.append(data)
+        self._states = []
+        self._states.append(data)
         self._operations = []
 
     @property
-    def inputs(self):
-        return self._inputs
+    def states(self):
+        return self._states
 
     @property
     def operations(self):
@@ -52,6 +52,11 @@ class DatamationFrame(pd.DataFrame):
         self._operations.append('groupby')
         df = super(DatamationFrame, self).groupby(by=by)
         return datamation_groupby.DatamationGroupBy(self, by)
+
+    def specs(self):        
+        script_dir = os.path.dirname( __file__ )
+        specs_file = open(os.path.join(script_dir, '../sandbox/specs.json'), 'r')
+        return json.load(specs_file)
 
     def datamation(self):
         display(Javascript("""
@@ -71,9 +76,7 @@ class DatamationFrame(pd.DataFrame):
         }});
         """))
 
-        script_dir = os.path.dirname( __file__ )
-        specs_file = open(os.path.join(script_dir, '../sandbox/specs.json'), 'r')
-        specs = json.load(specs_file)
+        specs = self.specs()
 
         display(Javascript("""
         (function(element) {
@@ -122,4 +125,4 @@ class DatamationFrame(pd.DataFrame):
         })(element);
         """ % (json.dumps(specs))))
         
-        return Datamation(self._inputs, self._operations, self)
+        return Datamation(self._states, self._operations, self)
