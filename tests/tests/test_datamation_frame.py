@@ -17,9 +17,9 @@ def test_datamation_frame_specs():
     df = small_salary().df
     df = DatamationFrame(df)
 
-    datamation = df.groupby('Work').mean().datamation()
+    specs = df.groupby('Work').mean().specs()
 
-    assert len(datamation.states) == 2
+    assert len(specs) == 5
 
 def test_datamation_frame_datamation():
     df = small_salary().df
