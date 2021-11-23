@@ -46,6 +46,10 @@
         display: none;
       }
 
+      /* .vega-vis {
+        opacity: 0;
+      } */
+
       .vega-vis-wrapper .vega-for-axis .role-title {
         display: none;
       }
@@ -156,7 +160,7 @@
           </div>
           <div class="description"></div>
         </div>
-  
+
         <div class="vega-vis-wrapper">
           <div class="vega-for-axis"></div>
           <div class="vega-other-layers"></div>
@@ -171,79 +175,142 @@
     <script src="../js/hack-facet-view.js"></script>
     <script src="../js/app.js"></script>
     <script>
-        const app1 = App("app", {
-          specs: [{
-  "height": 300,
-  "width": 300,
-  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "meta": {
-    "parse": "grid",
-    "axes": false,
-    "description": "Plot is_hit within each group",
-    "splitField": "player",
-    "xAxisLabels": ["Jeter", "Justice"]
-  },
-  "data": {
-    "values": [
-      {
-        "player": "Jeter",
-        "is_hit": 1,
-        "n": 2,
-        "datamations_y_tooltip": 0
-      },
-      {
-        "player": "Jeter",
-        "is_hit": 0,
-        "n": 1,
-        "datamations_y_tooltip": 1
-      },
-      {
-        "player": "Justice",
-        "is_hit": 1,
-        "n": 1,
-        "datamations_y_tooltip": 0
-      },
-      {
-        "player": "Justice",
-        "is_hit": 0,
-        "n": 1,
-        "datamations_y_tooltip": 1
-      }
-    ]
-  },
-  "mark": {
-    "type": "point",
-    "filled": true
-  },
-  "encoding": {
-    "x": {
-      "field": "datamations_x",
-      "type": "quantitative",
-      "axis": null
-    },
-    "y": {
-      "field": "datamations_y",
-      "type": "quantitative",
-      "axis": null
-    },
-    "fill": {
-      "field": "is_hit",
-      "scale": {
-        "domain": [1, 0],
-        "range": ["#4c78a8", "#ffffff"]
-      }
-    },
-    "stroke": {
-      "field": "is_hit",
-      "scale": {
-        "domain": [1, 0],
-        "range": ["#4c78a8", "#4c78a8"]
-      }
-    }
-  }
-}
-]});
-   
-   </script>
+      const app1 = App("app", {
+        specs: [{
+          "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+          "meta": {
+            "parse": "grid",
+            "description": "Group by age, vaccination_status",
+            "splitField": "vaccination_status",
+            "axes": true
+          },
+          "data": {
+            "values": [
+              {
+                "age": "<18",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 4
+              },
+              {
+                "age": "18-29",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 8
+              },
+              {
+                "age": "30-39",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 16
+              },
+              {
+                "age": "30-39",
+                "vaccination_status": "fully_vaccinted",
+                "n": 2
+              },
+              {
+                "age": "40-49",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 22
+              },
+              {
+                "age": "40-49",
+                "vaccination_status": "fully_vaccinted",
+                "n": 5
+              },
+              {
+                "age": "50-59",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 37
+              },
+              {
+                "age": "50-59",
+                "vaccination_status": "fully_vaccinted",
+                "n": 6
+              },
+              {
+                "age": "60-69",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 49
+              },
+              {
+                "age": "60-69",
+                "vaccination_status": "fully_vaccinted",
+                "n": 13
+              },
+              {
+                "age": "70-79",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 70
+              },
+              {
+                "age": "70-79",
+                "vaccination_status": "fully_vaccinted",
+                "n": 22
+              },
+              {
+                "age": "80+",
+                "vaccination_status": "not_fully_vaccinated",
+                "n": 100
+              },
+              {
+                "age": "80+",
+                "vaccination_status": "fully_vaccinted",
+                "n": 49
+              }
+            ]
+          },
+          "facet": {
+            "column": {
+              "field": "age",
+              "type": "ordinal",
+              "title": "age"
+            }
+          },
+          "spec": {
+            "height": 300,
+            "width": 37.5,
+            "mark": {
+              "type": "point",
+              "filled": true,
+              "strokeWidth": 1
+            },
+            "encoding": {
+              "x": {
+                "field": "datamations_x",
+                "type": "quantitative",
+                "axis": null
+              },
+              "y": {
+                "field": "datamations_y",
+                "type": "quantitative",
+                "axis": null
+              },
+              "color": {
+                "field": "vaccination_status",
+                "type": "nominal",
+                "legend": {
+                  "values": ["not_fully_vaccinated", "fully_vaccinted"]
+                }
+              },
+              "tooltip": [
+                {
+                  "field": "age",
+                  "type": "nominal"
+                },
+                {
+                  "field": "vaccination_status",
+                  "type": "nominal"
+                }
+              ]
+            }
+          }
+          ,
+          // "config": {
+          //   "facet": {
+          //     "spacing": -20
+          //   }
+          // }
+        }]
+      });
+    </script>
   </body>
 </html>

@@ -44,6 +44,12 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
     }
   }
 
+  const additionals = {};
+
+  if (spec.transform) {
+    additionals.transform = spec.transform;
+  }
+
   return {
     $schema: CONF.SCHEME,
     data: {
@@ -52,7 +58,8 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
     width: width,
     height: height,
     mark: mark,
-    encoding: encoding
+    encoding: encoding,
+    ...additionals,
   };
 }
 

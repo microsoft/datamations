@@ -16,7 +16,8 @@
     },
     "mark": {
       "type": "point",
-      "filled": true
+      "filled": true,
+      "strokeWidth": 1
     },
     "encoding": {
       "x": {
@@ -28,8 +29,7 @@
         "field": "datamations_y",
         "type": "quantitative",
         "axis": null
-      },
-      "3": null
+      }
     }
   },
   {
@@ -56,7 +56,8 @@
     },
     "mark": {
       "type": "point",
-      "filled": true
+      "filled": true,
+      "strokeWidth": 1
     },
     "encoding": {
       "x": {
@@ -68,6 +69,10 @@
         "field": "datamations_y",
         "type": "quantitative",
         "axis": null
+      },
+      "color": {
+        "field": null,
+        "type": "nominal"
       },
       "tooltip": [
         {
@@ -794,7 +799,8 @@
     },
     "mark": {
       "type": "point",
-      "filled": true
+      "filled": true,
+      "strokeWidth": 1
     },
     "encoding": {
       "x": {
@@ -1545,7 +1551,8 @@
     },
     "mark": {
       "type": "point",
-      "filled": true
+      "filled": true,
+      "strokeWidth": 1
     },
     "encoding": {
       "x": {
@@ -2645,7 +2652,8 @@
       {
         "mark": {
           "type": "point",
-          "filled": true
+          "filled": true,
+          "strokeWidth": 1
         },
         "encoding": {
           "x": {
@@ -2674,6 +2682,16 @@
               "field": "datamations_y_tooltip",
               "type": "quantitative",
               "title": "mean(Salary)"
+            },
+            {
+              "field": "Upper",
+              "type": "nominal",
+              "title": "mean(Salary) + standard error"
+            },
+            {
+              "field": "Lower",
+              "type": "nominal",
+              "title": "mean(Salary) - standard error"
             },
             {
               "field": "Degree",
@@ -3747,7 +3765,8 @@
       {
         "mark": {
           "type": "point",
-          "filled": true
+          "filled": true,
+          "strokeWidth": 1
         },
         "encoding": {
           "x": {
@@ -3776,6 +3795,16 @@
               "field": "datamations_y_tooltip",
               "type": "quantitative",
               "title": "mean(Salary)"
+            },
+            {
+              "field": "Upper",
+              "type": "nominal",
+              "title": "mean(Salary) + standard error"
+            },
+            {
+              "field": "Lower",
+              "type": "nominal",
+              "title": "mean(Salary) - standard error"
             },
             {
               "field": "Degree",
