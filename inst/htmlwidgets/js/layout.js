@@ -148,7 +148,7 @@ function generateGrid(spec, rows = 10) {
           ...d,
           ...colorFieldObj,
           ...additionals,
-          gemini_id: counter,
+          gemini_id: d.gemini_ids ? d.gemini_ids[i] : counter,
           [CONF.X_FIELD]: x,
           [CONF.Y_FIELD]: y,
         });
@@ -190,7 +190,7 @@ function getGridSpec(spec, rows = 10) {
   return new Promise((res) => {
     const grid = generateGrid(spec, rows);
     const obj = {...spec};
-
+    console.log(grid);
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
     const xDomain = [
