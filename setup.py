@@ -7,6 +7,6 @@ setuptools.setup(
    author='Chinmay Singh',
    author_email='chsingh@microsoft.com',
    packages=['datamations'],
-   package_data={'datamations': ['../data-raw/small_salary.csv']},
+   package_data={'datamations': ['../data-raw/small_salary.csv', '../sandbox/simpsons_paradox/group_by_player.json']},
    install_requires=['pandas', 'ipython']
 )
