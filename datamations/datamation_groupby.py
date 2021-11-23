@@ -2,6 +2,7 @@
 #
 # Create a subclass from a pandas DataFrame.
 #
+import os, json
 import pandas as pd
 from . import datamation_frame
 
@@ -38,3 +39,9 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         df._states = self._states
         df._operations = self._operations
         return df
+        
+    def prep_specs_summarize(self, width=300, height=300):
+        script_dir = os.path.dirname( __file__ )
+        specs_file = open(os.path.join(script_dir, '../sandbox/specs_for_python/raw_spec.json'), 'r')
+        specs = json.load(specs_file)
+        return specs[2:]

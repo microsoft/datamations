@@ -78,21 +78,14 @@ class DatamationFrame(pd.DataFrame):
         
         specs_list = []
 
+        values = list(map(lambda key: { 'Degree': key, 'n': len(self.states[1].groups[key])}, self.states[1].groups.keys()))
+
         spec = {
             "height": height,
             "width": width,
             "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
             "data": {
-                "values": [
-                    {
-                    "Degree": "Masters",
-                    "n": 72
-                    },
-                    {
-                    "Degree": "PhD",
-                    "n": 28
-                    }
-                ]
+                "values": values
             },
             "meta": { 
                 'parse': "grid",
@@ -109,86 +102,7 @@ class DatamationFrame(pd.DataFrame):
         }
         specs_list.append(spec)
 
-        x_encoding = {
-            "field": "datamations_x",
-            "type": "quantitative",
-            "axis": {
-            "values": [1, 2],
-            "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
-            "labelAngle": -90
-            },
-            "title": "Degree",
-            "scale": {
-            "domain": [0.5, 2.5]
-            }
-        }
-        y_encoding = {
-            "field": "datamations_y",
-            "type": "quantitative",
-            "title": "Salary",
-            "scale": {
-            "domain": [81.9445013836958, 94.0215112566948]
-            }
-        }
-
-        spec_encoding = { 'x': x_encoding, 'y': y_encoding }
-
-        spec_encoding["tooltip"] =  [
-            {
-            "field": "datamations_y_tooltip",
-            "type": "quantitative",
-            "title": "Salary"
-            },
-            {
-            "field": "Degree",
-            "type": "nominal"
-            }
-        ]
-
-        values = []
-        for i in range(len(self.states[0])):
-            values.append({
-                "gemini_id": i+1,
-                "Degree": "Masters",
-                "datamations_x": 1,
-                "datamations_y": 90.2263340061763,
-                "datamations_y_tooltip": 90.2263340061763
-            })
-
-        spec = {
-            "height": height,
-            "width": width,
-            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-            "data": {
-                "values": values
-            },
-            "meta": { 
-                "parse": "jitter",
-                "axes": False,
-                "description": "Plot Salary within each group",
-                "splitField": "Degree",
-                "xAxisLabels": ["Masters", "PhD"]
-            },
-            "mark": {
-                "type": "point",
-                "filled": True,
-                "strokeWidth": 1
-            },
-            "encoding": spec_encoding
-        }
-
-        script_dir = os.path.dirname( __file__ )
-        specs_file = open(os.path.join(script_dir, '../sandbox/specs_for_python/raw_spec.json'), 'r')
-        specs = json.load(specs_file)
-        specs_list.append(specs[2])
-        
         return specs_list
-
-    def prep_specs_summarize(self, width=300, height=300):
-        script_dir = os.path.dirname( __file__ )
-        specs_file = open(os.path.join(script_dir, '../sandbox/specs_for_python/raw_spec.json'), 'r')
-        specs = json.load(specs_file)
-        return specs[3:]
 
     def prep_specs_data(self, width=300, height=300):
         x_encoding = { 'field': X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
@@ -220,7 +134,8 @@ class DatamationFrame(pd.DataFrame):
         }]
 
     def specs(self):
-        return self.prep_specs_data() + self.prep_specs_group_by() + self.prep_specs_summarize()
+        specs = self.prep_specs_data() + self.prep_specs_group_by() 
+        return specs + self.states[1].prep_specs_summarize()
 
     def datamation(self):
         display(Javascript("""
