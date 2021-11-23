@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation
 # 
-
+import os, json
 from datamations import *
 
 def test_datamation_frame_groupby():
@@ -17,9 +17,12 @@ def test_datamation_frame_specs():
     df = small_salary().df
     df = DatamationFrame(df)
 
-    specs = df.groupby('Work').mean().specs()
+    specs = df.groupby('Degree').mean().specs()
 
-    assert len(specs) == 5
+    script_dir = os.path.dirname( __file__ )
+    specs_file = open(os.path.join(script_dir, '../../sandbox/specs_for_python/raw_spec.json'), 'r')
+
+    assert specs == json.load(specs_file)
 
 def test_datamation_frame_datamation():
     df = small_salary().df

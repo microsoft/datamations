@@ -55,7 +55,7 @@ class DatamationFrame(pd.DataFrame):
 
     def specs(self):        
         script_dir = os.path.dirname( __file__ )
-        specs_file = open(os.path.join(script_dir, '../sandbox/simpsons_paradox/group_by_player.json'), 'r')
+        specs_file = open(os.path.join(script_dir, '../sandbox/specs_for_python/raw_spec.json'), 'r')
         return json.load(specs_file)
 
     def datamation(self):
