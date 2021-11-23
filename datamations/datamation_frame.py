@@ -2,8 +2,8 @@
 #
 # Create a subclass from a pandas DataFrame.
 #
+import os
 import pandas as pd
-import importlib_resources
 from . import datamation_groupby
 
 import json
@@ -71,17 +71,15 @@ class DatamationFrame(pd.DataFrame):
         }});
         """))
 
-        resource = importlib_resources.files("datamations") / "../inst/htmlwidgets/css" / "datamationSandDance.css"
-        styles = resource.read_bytes()
-
-        resource = importlib_resources.files("datamations") / "../sandbox" / "specs.json"
-        specs = json.loads(resource.read_bytes())
+        script_dir = os.path.dirname( __file__ )
+        specs_file = open(os.path.join(script_dir, '../sandbox/specs.json'), 'r')
+        specs = json.load(specs_file)
 
         display(Javascript("""
         (function(element) {
             element.append($('<div>').html(`
+            <link href="https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/css/datamationSandDance.css" rel="stylesheet" type="text/css">
             <style type="text/css">
-                %s
                 .vega-vis-wrapper > div {
                     position: relative;
                 }
@@ -114,7 +112,7 @@ class DatamationFrame(pd.DataFrame):
             </div>
             </div>
             `));
-            
+
             require(['d3', 'vega', 'vega-util', 'vega-lite', 'vega-embed', 'gemini', 'app', 'utils', 'layout', 'config', 'hack-facet-view'], function(d3, vega, vegaUtil, vegaLite, vegaEmbed, gemini, app, utils, layout, config, hackFacetView) {
                 window.d3 = d3
                 window.vegaEmbed = vegaEmbed
@@ -122,6 +120,6 @@ class DatamationFrame(pd.DataFrame):
                 window.app1 = App("app", {specs: %s, autoPlay: true});
             });            
         })(element);
-        """ % (styles, json.dumps(specs))))
+        """ % (json.dumps(specs))))
         
         return Datamation(self._inputs, self._operations, self)

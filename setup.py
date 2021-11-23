@@ -7,9 +7,6 @@ setuptools.setup(
    author='Chinmay Singh',
    author_email='chsingh@microsoft.com',
    packages=['datamations'],
-   package_data={'datamations': ['../data-raw/small_salary.csv',
-                                 '../sandbox/specs.json',
-                                 '../inst/htmlwidgets/css/datamationSandDance.css'
-                                 ]},
-   install_requires=['pandas', 'importlib_resources']
+   package_data={'datamations': ['../data-raw/small_salary.csv']},
+   install_requires=['pandas']
 )
