@@ -22,8 +22,9 @@ def test_datamation_frame_specs():
     script_dir = os.path.dirname( __file__ )
     specs_file = open(os.path.join(script_dir, '../../sandbox/specs_for_python/raw_spec.json'), 'r')
 
-    assert specs == json.load(specs_file)
-
+    for i, spec in enumerate(json.load(specs_file)):
+        assert spec == specs[i]
+    
 def test_datamation_frame_datamation():
     df = small_salary().df
     df = DatamationFrame(df)
