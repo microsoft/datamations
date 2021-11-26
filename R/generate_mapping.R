@@ -3,6 +3,7 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   # Check if there is any grouping or summarizing in the pipeline
   pipeline_has_group_by <- any(names(data_states) == "group_by")
   pipeline_has_summarize <- any(names(data_states) == "summarize")
+  pipeline_has_count <- any(names(data_states) == "count")
 
   # Extract grouping variables and count of them
   # If there is mapping, use column -> row -> x -> color
@@ -18,7 +19,13 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
       group_vars()
 
     n_group_vars <- length(.group_vars)
-  } else if (!pipeline_has_group_by) {
+  } else if (pipeline_has_count) {
+    .group_vars <- data_states[["count"]] %>%
+      dplyr::select(-.data$n) %>%
+      names()
+
+    n_group_vars <- length(.group_vars)
+  } else if (!pipeline_has_group_by & !pipeline_has_count) {
     n_group_vars <- 0
   }
 
@@ -82,7 +89,7 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
     group_mapping <- plot_mapping[c("row", "column")]
     group_mapping <- append(group_mapping, list(groups = .group_vars))
   } else {
-    if (!pipeline_has_group_by) {
+    if (!pipeline_has_group_by & !pipeline_has_count) {
       group_mapping <- NULL
     } else {
 
