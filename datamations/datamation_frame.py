@@ -28,6 +28,7 @@ class DatamationFrame(pd.DataFrame):
     def _constructor(self):
         return DatamationFrame._internal_ctor
 
+    _by = []
     _states = []
     _operations = []
 
@@ -54,6 +55,7 @@ class DatamationFrame(pd.DataFrame):
         return self._operations
 
     def groupby(self, by):
+        self._by = [by]
         self._operations.append('groupby')
         df = super(DatamationFrame, self).groupby(by=by)
         return datamation_groupby.DatamationGroupBy(self, by)
@@ -69,16 +71,20 @@ class DatamationFrame(pd.DataFrame):
             "type": "nominal"
         }
         
+        by = ','.join(self._by)
+        
         spec_encoding["tooltip"] = [
             {
-            "field": "Degree",
+            "field": by,
             "type": "nominal"
             }
         ]
         
         specs_list = []
 
-        values = list(map(lambda key: { 'Degree': key, 'n': len(self.states[1].groups[key])}, self.states[1].groups.keys()))
+
+        values = list(map(lambda key: { by: key, 'n': len(self.states[1].groups[key])}, self.states[1].groups.keys()))
+
 
         spec = {
             "height": height,
@@ -89,8 +95,8 @@ class DatamationFrame(pd.DataFrame):
             },
             "meta": { 
                 'parse': "grid",
-                'description': "Group by Degree",
-                "splitField": "Degree",
+                'description': "Group by " + by,
+                "splitField": by,
                 "axes": False
             },
             "mark": {
