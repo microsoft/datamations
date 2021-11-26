@@ -86,7 +86,12 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
         x_title <- mapping$x
       }
 
-      spec[["encoding"]][["x"]] <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
+      # Handle replacing if spec has spec.encoding instead of encoding
+      if ("spec" %in% names(spec)) {
+        spec[["spec"]][["encoding"]][["x"]] <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
+      } else {
+        spec[["encoding"]][["x"]] <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
+      }
     }
 
     # Update title of frame

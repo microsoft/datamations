@@ -18,6 +18,8 @@ prep_specs_count <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heigh
 
   # Summarize ----
 
+  # TODO: change title
+
   # Fake mapping by adding summary_function and summary_name
 
   mapping$summary_function <- mapping$summary_name <- "n"
