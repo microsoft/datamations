@@ -8,7 +8,6 @@
 #' @inheritParams prep_specs_data
 #' @noRd
 prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
-
   if (!"data" %in% names(previous_frame)) {
     previous_frame <- previous_frame[[length(previous_frame)]]
   }
@@ -40,6 +39,55 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
 
     # Reconstruct the previous spec, replacing the data and adding a filter transform
     spec[["data"]][["values"]] <- original_data_with_filter_flag
+
+    final_filtered_data <- original_data_with_filter_flag %>%
+      dplyr::filter(.data$datamations_filter)
+
+    # Re-evaluate x axis values
+    if (nrow(final_filtered_data) == 0) {
+
+      # Set encoding.x.axis.scale.values = [] to remove x-axis values all together
+      spec$encoding$x$axis$values <- character()
+
+    } else if (nrow(final_filtered_data) > 0) {
+
+      if (mapping$x == 1) {
+        original_data_with_filter_flag <- final_filtered_data %>%
+          dplyr::mutate(!!X_FIELD := 1)
+
+        x_labels <- generate_labelsExpr(NULL)
+        x_domain <- generate_x_domain(NULL)
+        x_title <- ""
+      } else {
+        x_var <- rlang::parse_expr(mapping$x)
+
+        final_filtered_data <- final_filtered_data %>%
+          dplyr::mutate(
+            !!X_FIELD := as.numeric({{ x_var }})
+          )
+
+        x_labels <- final_filtered_data %>%
+          dplyr::ungroup() %>%
+          dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
+          generate_labelsExpr()
+
+        # Use I() (class AsIs) to prevent unboxing when converting to vega lite specs, edge case
+        x_labels$breaks <- if (length(x_labels$breaks) == 1) {
+          I(x_labels$breaks)
+        } else {
+          x_labels$breaks
+        }
+
+        x_domain <- final_filtered_data %>%
+          dplyr::ungroup() %>%
+          dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
+          generate_x_domain()
+
+        x_title <- mapping$x
+      }
+
+      spec[["encoding"]][["x"]] <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
+    }
 
     # Update title of frame
     spec[["meta"]][["description"]] <- glue::glue("Filter {filter_operation}",
@@ -91,6 +139,7 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
   spec[["data"]][["values"]] <- spec[["data"]][["values"]] %>%
     dplyr::select(-tidyselect::any_of("datamations_filter"))
 
+  # Apply filter transformation
   if (length(filter_ids) == 1) {
     spec[["transform"]] <- list(list(filter = glue::glue("datum.gemini_id == {filter_ids}")))
   } else {
