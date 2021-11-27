@@ -17,6 +17,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         return DatamationGroupBy._internal_ctor
 
     _by = []
+    _output = {}
+    _error = {}
     _states = []
     _operations = []
 
@@ -46,6 +48,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         df._by = self.states[1]._by
         df._states = self._states
         df._operations = self._operations
+        self._output = df
+        self._error = super(DatamationGroupBy, self).sem()
         return df
         
     def prep_specs_summarize(self, width=300, height=300):
@@ -73,7 +77,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "type": "quantitative",
             "title": y_axis,
             "scale": {
-            "domain": [81.9445013836958, 94.0215112566948]
+            "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
             }
         }
 
@@ -115,7 +119,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "type": "quantitative",
                 "title": y_axis,
                 "scale": {
-                "domain": [81.9445013836958, 94.0215112566948]
+                "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
                 }
             },
             "tooltip": [
@@ -202,7 +206,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "type": "quantitative",
                 "title": "mean(" + y_axis + ")",
                 "scale": {
-                "domain": [81.9445013836958, 94.0215112566948]
+                "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
                 }
             },
             "tooltip": [
@@ -228,8 +232,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                "datamations_y": 90.2263340061763,
-                "datamations_y_tooltip": 90.2263340061763,
+                "datamations_y": self._output[y_axis][groups[0]],
+                "datamations_y_tooltip": self._output[y_axis][groups[0]],
             })
             id = id + 1
 
@@ -240,8 +244,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                "datamations_y": 88.2456061263219,
-                "datamations_y_tooltip": 88.2456061263219
+                "datamations_y": self._output[y_axis][groups[1]],
+                "datamations_y_tooltip": self._output[y_axis][groups[1]]
             })
             id = id + 1
 
@@ -287,7 +291,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "type": "quantitative",
                         "title": "mean(" + y_axis + ")",
                         "scale": {
-                        "domain": [81.9445013836958, 94.0215112566948]
+                        "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
                         }
                     },
                     "tooltip": [
@@ -338,7 +342,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "type": "quantitative",
                         "title": "mean(" + y_axis + ")",
                         "scale": {
-                        "domain": [81.9445013836958, 94.0215112566948]
+                        "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
                         }
                     },
                     "tooltip": [
@@ -367,7 +371,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         ]
 
         values = []
-        
+
         id = 1
         for i in range(len(self.states[0])):
             if self.states[0][x_axis][i] == groups[1]:
@@ -376,11 +380,11 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                "datamations_y": 90.2263340061763,
+                "datamations_y": self._output[y_axis][groups[0]],
                 "datamations_y_raw": self.states[0][y_axis][i],
-                "datamations_y_tooltip": 90.2263340061763,
-                "Lower": 89.9152330064628,
-                "Upper": 90.5374350058899
+                "datamations_y_tooltip": self._output[y_axis][groups[0]],
+                "Lower": self._output[y_axis][groups[0]] - self._error[y_axis][groups[0]],
+                "Upper": self._output[y_axis][groups[0]] + self._error[y_axis][groups[0]]
             })
             id = id + 1
 
@@ -391,11 +395,11 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                "datamations_y": 88.2456061263219,
+                "datamations_y": self._output[y_axis][groups[1]],
                 "datamations_y_raw": self.states[0][y_axis][i],
-                "datamations_y_tooltip": 88.2456061263219,
-                "Lower": 87.5297479964919,
-                "Upper": 88.961464256152
+                "datamations_y_tooltip": self._output[y_axis][groups[1]],
+                "Lower": self._output[y_axis][groups[1]] - self._error[y_axis][groups[1]],
+                "Upper": self._output[y_axis][groups[1]] + self._error[y_axis][groups[1]]
             })
             id = id + 1
 
@@ -414,6 +418,11 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         }
 
         specs_list.append(spec)
+
+        domain = [
+                round(min(self._output[y_axis][groups[0]]-self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
+                round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13)
+        ]
 
         layer = [
             {
@@ -437,7 +446,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "type": "quantitative",
                         "title": "mean(" + y_axis + ")",
                         "scale": {
-                        "domain": [87.5297479964919, 90.5374350058899]
+                        "domain": domain
                         }
                     },
                     "tooltip": [
@@ -488,7 +497,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "type": "quantitative",
                         "title": "mean(" + y_axis + ")",
                         "scale": {
-                        "domain": [87.5297479964919, 90.5374350058899]
+                        "domain": domain
                         }
                     },
                     "tooltip": [
