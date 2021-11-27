@@ -49,15 +49,20 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         return df
         
     def prep_specs_summarize(self, width=300, height=300):
+        x_axis = self.states[1].dtypes.axes[0].name
+        y_axis = self.states[1].dtypes.axes[1].values[1]
+
+        groups = list(self.states[1].groups.keys())
+
         x_encoding = {
             "field": "datamations_x",
             "type": "quantitative",
             "axis": {
             "values": [1, 2],
-            "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+            "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '"  + groups[1] + "'",
             "labelAngle": -90
             },
-            "title": "Degree",
+            "title": x_axis,
             "scale": {
             "domain": [0.5, 2.5]
             }
@@ -66,7 +71,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
-            "title": "Salary",
+            "title": y_axis,
             "scale": {
             "domain": [81.9445013836958, 94.0215112566948]
             }
@@ -83,10 +88,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             {
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
-                "title": "Salary"
+                "title": y_axis
             },
             {
-                "field": "Degree",
+                "field": x_axis,
                 "type": "nominal"
             }
         ]
@@ -97,10 +102,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "type": "quantitative",
                 "axis": {
                 "values": [1, 2],
-                "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+                "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
                 "labelAngle": -90
                 },
-                "title": "Degree",
+                "title": x_axis,
                 "scale": {
                 "domain": [0.5, 2.5]
                 }
@@ -108,7 +113,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "y": {
                 "field": "datamations_y",
                 "type": "quantitative",
-                "title": "Salary",
+                "title": y_axis,
                 "scale": {
                 "domain": [81.9445013836958, 94.0215112566948]
                 }
@@ -117,10 +122,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 {
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
-                "title": "Salary"
+                "title": y_axis
                 },
                 {
-                "field": "Degree",
+                "field": x_axis,
                 "type": "nominal"
                 }
             ]
@@ -130,26 +135,26 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         
         id = 1
         for i in range(len(self.states[0])):
-            if self.states[0]['Degree'][i] == 'PhD':
+            if self.states[0][x_axis][i] == groups[1]:
                 continue
             values.append({
                 "gemini_id": id,
-                "Degree": self.states[0]['Degree'][i],
-                "datamations_x": 1 if self.states[0]['Degree'][i] == 'Masters'  else 2,
-                "datamations_y": self.states[0]['Salary'][i],
-                "datamations_y_tooltip": self.states[0]['Salary'][i],
+                x_axis: self.states[0][x_axis][i],
+                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                "datamations_y": self.states[0][y_axis][i],
+                "datamations_y_tooltip": self.states[0][y_axis][i],
             })
             id = id + 1
 
         for i in range(len(self.states[0])):
-            if self.states[0]['Degree'][i] == 'Masters':
+            if self.states[0][x_axis][i] == groups[0]:
                 continue
             values.append({
                 "gemini_id": id,
-                "Degree": self.states[0]['Degree'][i],
-                "datamations_x": 1 if self.states[0]['Degree'][i] == 'Masters'  else 2,
-                "datamations_y": self.states[0]['Salary'][i],
-                "datamations_y_tooltip": self.states[0]['Salary'][i]
+                x_axis: self.states[0][x_axis][i],
+                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                "datamations_y": self.states[0][y_axis][i],
+                "datamations_y_tooltip": self.states[0][y_axis][i]
             })
             id = id + 1
 
@@ -165,9 +170,9 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "meta": { 
                 "parse": "jitter",
                 "axes": False,
-                "description": "Plot Salary within each group",
-                "splitField": "Degree",
-                "xAxisLabels": ["Masters", "PhD"]
+                "description": "Plot " + y_axis + " within each group",
+                "splitField": x_axis,
+                "xAxisLabels": groups
             },
             "mark": {
                 "type": "point",
@@ -184,10 +189,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "type": "quantitative",
                 "axis": {
                 "values": [1, 2],
-                "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+                "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
                 "labelAngle": -90
                 },
-                "title": "Degree",
+                "title": x_axis,
                 "scale": {
                 "domain": [0.5, 2.5]
                 }
@@ -195,7 +200,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "y": {
                 "field": "datamations_y",
                 "type": "quantitative",
-                "title": "mean(Salary)",
+                "title": "mean(" + y_axis + ")",
                 "scale": {
                 "domain": [81.9445013836958, 94.0215112566948]
                 }
@@ -204,10 +209,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 {
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
-                "title": "mean(Salary)"
+                "title": "mean(" + y_axis + ")"
                 },
                 {
-                "field": "Degree",
+                "field": x_axis,
                 "type": "nominal"
                 }
             ]
@@ -217,24 +222,24 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         
         id = 1
         for i in range(len(self.states[0])):
-            if self.states[0]['Degree'][i] == 'PhD':
+            if self.states[0][x_axis][i] == groups[1]:
                 continue
             values.append({
                 "gemini_id": id,
-                "Degree": self.states[0]['Degree'][i],
-                "datamations_x": 1 if self.states[0]['Degree'][i] == 'Masters'  else 2,
+                x_axis: self.states[0][x_axis][i],
+                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": 90.2263340061763,
                 "datamations_y_tooltip": 90.2263340061763,
             })
             id = id + 1
 
         for i in range(len(self.states[0])):
-            if self.states[0]['Degree'][i] == 'Masters':
+            if self.states[0][x_axis][i] == groups[0]:
                 continue
             values.append({
                 "gemini_id": id,
-                "Degree": self.states[0]['Degree'][i],
-                "datamations_x": 1 if self.states[0]['Degree'][i] == 'Masters'  else 2,
+                x_axis: self.states[0][x_axis][i],
+                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": 88.2456061263219,
                 "datamations_y_tooltip": 88.2456061263219
             })
@@ -249,7 +254,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             },
             "meta": { 
                 "axes": False,
-                "description": "Plot mean Salary of each group"
+                "description": "Plot mean " + y_axis + " of each group"
             },
             "mark": {
                 "type": "point",
@@ -269,10 +274,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "type": "quantitative",
                         "axis": {
                         "values": [1, 2],
-                        "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+                        "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
                         "labelAngle": -90
                         },
-                        "title": "Degree",
+                        "title": x_axis,
                         "scale": {
                         "domain": [0.5, 2.5]
                         }
@@ -280,7 +285,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "y": {
                         "field": "datamations_y_raw",
                         "type": "quantitative",
-                        "title": "mean(Salary)",
+                        "title": "mean(" + y_axis + ")",
                         "scale": {
                         "domain": [81.9445013836958, 94.0215112566948]
                         }
@@ -289,20 +294,20 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         {
                         "field": "datamations_y_tooltip",
                         "type": "quantitative",
-                        "title": "mean(Salary)"
+                        "title": "mean(" + y_axis + ")"
                         },
                         {
                         "field": "Upper",
                         "type": "nominal",
-                        "title": "mean(Salary) + standard error"
+                        "title": "mean(" + y_axis + ") + standard error"
                         },
                         {
                         "field": "Lower",
                         "type": "nominal",
-                        "title": "mean(Salary) - standard error"
+                        "title": "mean(" + y_axis + ") - standard error"
                         },
                         {
-                        "field": "Degree",
+                        "field": x_axis,
                         "type": "nominal"
                         }
                     ]
@@ -320,10 +325,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "type": "quantitative",
                         "axis": {
                         "values": [1, 2],
-                        "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+                        "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
                         "labelAngle": -90
                         },
-                        "title": "Degree",
+                        "title": x_axis,
                         "scale": {
                         "domain": [0.5, 2.5]
                         }
@@ -331,7 +336,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "y": {
                         "field": "datamations_y",
                         "type": "quantitative",
-                        "title": "mean(Salary)",
+                        "title": "mean(" + y_axis + ")",
                         "scale": {
                         "domain": [81.9445013836958, 94.0215112566948]
                         }
@@ -340,20 +345,20 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         {
                         "field": "datamations_y_tooltip",
                         "type": "quantitative",
-                        "title": "mean(Salary)"
+                        "title": "mean(" + y_axis + ")"
                         },
                         {
                         "field": "Upper",
                         "type": "nominal",
-                        "title": "mean(Salary) + standard error"
+                        "title": "mean(" + y_axis + ") + standard error"
                         },
                         {
                         "field": "Lower",
                         "type": "nominal",
-                        "title": "mean(Salary) - standard error"
+                        "title": "mean(" + y_axis + ") - standard error"
                         },
                         {
-                        "field": "Degree",
+                        "field": x_axis,
                         "type": "nominal"
                         }
                     ]
@@ -365,14 +370,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         
         id = 1
         for i in range(len(self.states[0])):
-            if self.states[0]['Degree'][i] == 'PhD':
+            if self.states[0][x_axis][i] == groups[1]:
                 continue
             values.append({
                 "gemini_id": id,
-                "Degree": self.states[0]['Degree'][i],
-                "datamations_x": 1 if self.states[0]['Degree'][i] == 'Masters'  else 2,
+                x_axis: self.states[0][x_axis][i],
+                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": 90.2263340061763,
-                "datamations_y_raw": self.states[0]['Salary'][i],
+                "datamations_y_raw": self.states[0][y_axis][i],
                 "datamations_y_tooltip": 90.2263340061763,
                 "Lower": 89.9152330064628,
                 "Upper": 90.5374350058899
@@ -380,14 +385,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             id = id + 1
 
         for i in range(len(self.states[0])):
-            if self.states[0]['Degree'][i] == 'Masters':
+            if self.states[0][x_axis][i] == groups[0]:
                 continue
             values.append({
                 "gemini_id": id,
-                "Degree": self.states[0]['Degree'][i],
-                "datamations_x": 1 if self.states[0]['Degree'][i] == 'Masters'  else 2,
+                x_axis: self.states[0][x_axis][i],
+                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": 88.2456061263219,
-                "datamations_y_raw": self.states[0]['Salary'][i],
+                "datamations_y_raw": self.states[0][y_axis][i],
                 "datamations_y_tooltip": 88.2456061263219,
                 "Lower": 87.5297479964919,
                 "Upper": 88.961464256152
@@ -403,7 +408,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             },
             "meta": { 
                 "axes": False,
-                "description": "Plot mean Salary of each group, with errorbar"
+                "description": "Plot mean " + y_axis + " of each group, with errorbar"
             },
             "layer": layer
         }
@@ -419,10 +424,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "type": "quantitative",
                         "axis": {
                         "values": [1, 2],
-                        "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+                        "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
                         "labelAngle": -90
                         },
-                        "title": "Degree",
+                        "title": x_axis,
                         "scale": {
                         "domain": [0.5, 2.5]
                         }
@@ -430,7 +435,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "y": {
                         "field": "datamations_y_raw",
                         "type": "quantitative",
-                        "title": "mean(Salary)",
+                        "title": "mean(" + y_axis + ")",
                         "scale": {
                         "domain": [87.5297479964919, 90.5374350058899]
                         }
@@ -439,20 +444,20 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         {
                         "field": "datamations_y_tooltip",
                         "type": "quantitative",
-                        "title": "mean(Salary)"
+                        "title": "mean(" + y_axis + ")"
                         },
                         {
                         "field": "Upper",
                         "type": "nominal",
-                        "title": "mean(Salary) + standard error"
+                        "title": "mean(" + y_axis + ") + standard error"
                         },
                         {
                         "field": "Lower",
                         "type": "nominal",
-                        "title": "mean(Salary) - standard error"
+                        "title": "mean(" + y_axis + ") - standard error"
                         },
                         {
-                        "field": "Degree",
+                        "field": x_axis,
                         "type": "nominal"
                         }
                     ]
@@ -470,10 +475,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "type": "quantitative",
                         "axis": {
                         "values": [1, 2],
-                        "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+                        "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
                         "labelAngle": -90
                         },
-                        "title": "Degree",
+                        "title": x_axis,
                         "scale": {
                         "domain": [0.5, 2.5]
                         }
@@ -481,7 +486,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "y": {
                         "field": "datamations_y",
                         "type": "quantitative",
-                        "title": "mean(Salary)",
+                        "title": "mean(" + y_axis + ")",
                         "scale": {
                         "domain": [87.5297479964919, 90.5374350058899]
                         }
@@ -490,20 +495,20 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         {
                         "field": "datamations_y_tooltip",
                         "type": "quantitative",
-                        "title": "mean(Salary)"
+                        "title": "mean(" + y_axis + ")"
                         },
                         {
                         "field": "Upper",
                         "type": "nominal",
-                        "title": "mean(Salary) + standard error"
+                        "title": "mean(" + y_axis + ") + standard error"
                         },
                         {
                         "field": "Lower",
                         "type": "nominal",
-                        "title": "mean(Salary) - standard error"
+                        "title": "mean(" + y_axis + ") - standard error"
                         },
                         {
-                        "field": "Degree",
+                        "field": x_axis,
                         "type": "nominal"
                         }
                     ]
@@ -520,7 +525,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             },
             "meta": { 
                 "axes": False,
-                "description": "Plot mean Salary of each group, with errorbar, zoomed in"
+                "description": "Plot mean " + y_axis + " of each group, with errorbar, zoomed in"
             },
             "layer": layer
         }
