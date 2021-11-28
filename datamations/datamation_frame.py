@@ -2,7 +2,7 @@
 #
 # Create a subclass from a pandas DataFrame.
 #
-import os
+import time
 import pandas as pd
 from . import datamation_groupby
 
@@ -144,6 +144,7 @@ class DatamationFrame(pd.DataFrame):
         return specs + self.states[1].prep_specs_summarize()
 
     def datamation(self):
+        app = 'app' + str(int(time.time() * 1000.0))
         display(Javascript("""
             require.config({ 
                 paths: { 
@@ -169,11 +170,11 @@ class DatamationFrame(pd.DataFrame):
                     }
                 </style>
                 <div class="flex-wrap">
-                <div id="app">
+                <div id="%s">
                     <div class="controls-wrapper">
                     <div class="control-bar">
                         <div class="button-wrapper">
-                        <button onclick="window.app1.play('app')">Replay</button>
+                        <button onclick="window.%s.play('%s')">Replay</button>
                         </div>
                         <div class="slider-wrapper">
                         <input
@@ -181,7 +182,7 @@ class DatamationFrame(pd.DataFrame):
                             type="range"
                             min="0"
                             value="0"
-                            onchange="window.app1.onSlide('app')"
+                            onchange="window.%s.onSlide('%s')"
                         />
                         </div>
                     </div>
@@ -201,9 +202,9 @@ class DatamationFrame(pd.DataFrame):
                     window.d3 = d3
                     window.vegaEmbed = vegaEmbed
                     window.gemini = gemini
-                    window.app1 = App("app", {specs: %s, autoPlay: true});
+                    window.%s = App("%s", {specs: %s, autoPlay: true});
                 });            
             })(element);
-        """ % (json.dumps(self.specs()))))
+        """ % (app, app, app, app, app, app, app, json.dumps(self.specs()))))
 
         return Datamation(self._states, self._operations, self)
