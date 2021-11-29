@@ -79,9 +79,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             }
         }
 
-        spec_encoding = { 'x': x_encoding, 'y': y_encoding }
-
-        spec_encoding["tooltip"] = [
+        tooltip = [
             {
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
@@ -120,7 +118,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             })
             id = id + 1
 
-
         meta =  { 
                 "parse": "jitter",
                 "axes": False,
@@ -128,50 +125,36 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "splitField": x_axis,
                 "xAxisLabels": groups
         }
-
+        
+        spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         spec = utils.generate_vega_specs(data, meta, spec_encoding)
         specs_list.append(spec)
-
 
         meta = { 
                 "axes": False,
                 "description": "Plot mean " + y_axis + " of each group"
         }
         
-        spec_encoding = {
-            "x": {
-                "field": "datamations_x",
-                "type": "quantitative",
-                "axis": {
-                "values": [1, 2],
-                "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
-                "labelAngle": -90
-                },
-                "title": x_axis,
-                "scale": {
-                "domain": [0.5, 2.5]
-                }
-            },
-            "y": {
-                "field": "datamations_y",
-                "type": "quantitative",
-                "title": "mean(" + y_axis + ")",
-                "scale": {
-                "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
-                }
-            },
-            "tooltip": [
-                {
+        y_encoding = {
+            "field": "datamations_y",
+            "type": "quantitative",
+            "title": "mean(" + y_axis + ")",
+            "scale": {
+            "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
+            }
+        }
+
+        tooltip = [
+            {
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
                 "title": "mean(" + y_axis + ")"
-                },
-                {
+            },
+            {
                 "field": x_axis,
                 "type": "nominal"
-                }
-            ]
-        }
+            }
+        ]
 
         data = []
         
@@ -200,53 +183,32 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             })
             id = id + 1
 
+
+        spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         spec = utils.generate_vega_specs(data, meta, spec_encoding)
         specs_list.append(spec)
 
-        spec_encoding =  {
-            "x": {
-                "field": "datamations_x",
-                "type": "quantitative",
-                "axis": {
-                "values": [1, 2],
-                "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
-                "labelAngle": -90
-                },
-                "title": x_axis,
-                "scale": {
-                "domain": [0.5, 2.5]
-                }
+        tooltip = [
+            {
+            "field": "datamations_y_tooltip",
+            "type": "quantitative",
+            "title": "mean(" + y_axis + ")"
             },
-            "y": {
-                "field": "datamations_y",
-                "type": "quantitative",
-                "title": "mean(" + y_axis + ")",
-                "scale": {
-                "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
-                }
+            {
+            "field": "Upper",
+            "type": "nominal",
+            "title": "mean(" + y_axis + ") + standard error"
             },
-            "tooltip": [
-                {
-                "field": "datamations_y_tooltip",
-                "type": "quantitative",
-                "title": "mean(" + y_axis + ")"
-                },
-                {
-                "field": "Upper",
-                "type": "nominal",
-                "title": "mean(" + y_axis + ") + standard error"
-                },
-                {
-                "field": "Lower",
-                "type": "nominal",
-                "title": "mean(" + y_axis + ") - standard error"
-                },
-                {
-                "field": x_axis,
-                "type": "nominal"
-                }
-            ]
-        }
+            {
+            "field": "Lower",
+            "type": "nominal",
+            "title": "mean(" + y_axis + ") - standard error"
+            },
+            {
+            "field": x_axis,
+            "type": "nominal"
+            }
+        ]
 
         data = []
 
@@ -286,8 +248,9 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "description": "Plot mean " + y_axis + " of each group, with errorbar"
         }
 
-        spec = utils.generate_vega_specs(data, meta, spec_encoding, True)
 
+        spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
+        spec = utils.generate_vega_specs(data, meta, spec_encoding, True)
         specs_list.append(spec)
 
         domain = [
@@ -295,49 +258,13 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13)
         ]
 
-        spec_encoding = {
-                "x": {
-                    "field": "datamations_x",
-                    "type": "quantitative",
-                    "axis": {
-                    "values": [1, 2],
-                    "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
-                    "labelAngle": -90
-                    },
-                    "title": x_axis,
-                    "scale": {
-                    "domain": [0.5, 2.5]
-                    }
-                },
-                "y": {
-                    "field": "datamations_y",
-                    "type": "quantitative",
-                    "title": "mean(" + y_axis + ")",
-                    "scale": {
-                    "domain": domain
-                    }
-                },
-                "tooltip": [
-                    {
-                    "field": "datamations_y_tooltip",
-                    "type": "quantitative",
-                    "title": "mean(" + y_axis + ")"
-                    },
-                    {
-                    "field": "Upper",
-                    "type": "nominal",
-                    "title": "mean(" + y_axis + ") + standard error"
-                    },
-                    {
-                    "field": "Lower",
-                    "type": "nominal",
-                    "title": "mean(" + y_axis + ") - standard error"
-                    },
-                    {
-                    "field": x_axis,
-                    "type": "nominal"
-                    }
-                ]
+        y_encoding = {
+            "field": "datamations_y",
+            "type": "quantitative",
+            "title": "mean(" + y_axis + ")",
+            "scale": {
+            "domain": domain
+            }
         }
 
         meta = { 
@@ -345,9 +272,9 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "description": "Plot mean " + y_axis + " of each group, with errorbar, zoomed in"
         }
 
+
+        spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         spec = utils.generate_vega_specs(data, meta, spec_encoding, True)
-
         specs_list.append(spec)
-
-        specs_list = specs_list
+                
         return specs_list

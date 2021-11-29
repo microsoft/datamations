@@ -32,7 +32,12 @@ def test_datamation_frame_specs():
                 if  key == 'layer':
                     for j, encoding in enumerate(spec["layer"]):
                         for field in encoding:
-                            assert encoding[field] == specs[i][key][j][field]
+                            if field == 'encoding':
+                                for val in encoding[field]:
+                                    print(val)
+                                    assert encoding[field][val] == specs[i][key][j][field][val]
+                            else:
+                                assert encoding[field] == specs[i][key][j][field]
                 else:                    
                     assert spec[key] == specs[i][key] 
 
