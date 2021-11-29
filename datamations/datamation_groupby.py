@@ -4,12 +4,8 @@
 #
 import json
 import pandas as pd
+from . import utils
 from . import datamation_frame
-
-X_FIELD_CHR = "datamations_x"
-Y_FIELD_CHR = "datamations_y"
-Y_RAW_FIELD_CHR = "datamations_y_raw"
-Y_TOOLTIP_FIELD_CHR = "datamations_y_tooltip"
 
 class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
     @property
@@ -58,6 +54,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         groups = list(self.states[1].groups.keys())
 
+        specs_list = []
+
         x_encoding = {
             "field": "datamations_x",
             "type": "quantitative",
@@ -83,11 +81,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding }
 
-        spec_encoding["color"] = {
-            "field": None,
-            "type": "nominal"
-        }
-        
         spec_encoding["tooltip"] = [
             {
                 "field": "datamations_y_tooltip",
@@ -100,48 +93,13 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             }
         ]
 
-        spec_encoding = {
-            "x": {
-                "field": "datamations_x",
-                "type": "quantitative",
-                "axis": {
-                "values": [1, 2],
-                "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
-                "labelAngle": -90
-                },
-                "title": x_axis,
-                "scale": {
-                "domain": [0.5, 2.5]
-                }
-            },
-            "y": {
-                "field": "datamations_y",
-                "type": "quantitative",
-                "title": y_axis,
-                "scale": {
-                "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
-                }
-            },
-            "tooltip": [
-                {
-                "field": "datamations_y_tooltip",
-                "type": "quantitative",
-                "title": y_axis
-                },
-                {
-                "field": x_axis,
-                "type": "nominal"
-                }
-            ]
-        }
-
-        values = []
+        data = []
         
         id = 1
         for i in range(len(self.states[0])):
             if self.states[0][x_axis][i] == groups[1]:
                 continue
-            values.append({
+            data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
@@ -153,7 +111,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         for i in range(len(self.states[0])):
             if self.states[0][x_axis][i] == groups[0]:
                 continue
-            values.append({
+            data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
@@ -162,31 +120,24 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             })
             id = id + 1
 
-        specs_list = []
 
-        spec = {
-            "height": height,
-            "width": width,
-            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-            "data": {
-                "values": values
-            },
-            "meta": { 
+        meta =  { 
                 "parse": "jitter",
                 "axes": False,
                 "description": "Plot " + y_axis + " within each group",
                 "splitField": x_axis,
                 "xAxisLabels": groups
-            },
-            "mark": {
-                "type": "point",
-                "filled": True,
-                "strokeWidth": 1
-            },
-            "encoding": spec_encoding
         }
+
+        spec = utils.generate_vega_specs(data, meta, spec_encoding)
         specs_list.append(spec)
 
+
+        meta = { 
+                "axes": False,
+                "description": "Plot mean " + y_axis + " of each group"
+        }
+        
         spec_encoding = {
             "x": {
                 "field": "datamations_x",
@@ -222,13 +173,13 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             ]
         }
 
-        values = []
+        data = []
         
         id = 1
         for i in range(len(self.states[0])):
             if self.states[0][x_axis][i] == groups[1]:
                 continue
-            values.append({
+            data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
@@ -240,7 +191,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         for i in range(len(self.states[0])):
             if self.states[0][x_axis][i] == groups[0]:
                 continue
-            values.append({
+            data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
@@ -249,134 +200,61 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             })
             id = id + 1
 
-        spec = {
-            "height": height,
-            "width": width,
-            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-            "data": {
-                "values": values
-            },
-            "meta": { 
-                "axes": False,
-                "description": "Plot mean " + y_axis + " of each group"
-            },
-            "mark": {
-                "type": "point",
-                "filled": True,
-                "strokeWidth": 1
-            },
-            "encoding": spec_encoding
-        }
+        spec = utils.generate_vega_specs(data, meta, spec_encoding)
         specs_list.append(spec)
 
-        layer = [
-            {
-                "mark": "errorbar",
-                "encoding": {
-                    "x": {
-                        "field": "datamations_x",
-                        "type": "quantitative",
-                        "axis": {
-                        "values": [1, 2],
-                        "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
-                        "labelAngle": -90
-                        },
-                        "title": x_axis,
-                        "scale": {
-                        "domain": [0.5, 2.5]
-                        }
-                    },
-                    "y": {
-                        "field": "datamations_y_raw",
-                        "type": "quantitative",
-                        "title": "mean(" + y_axis + ")",
-                        "scale": {
-                        "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
-                        }
-                    },
-                    "tooltip": [
-                        {
-                        "field": "datamations_y_tooltip",
-                        "type": "quantitative",
-                        "title": "mean(" + y_axis + ")"
-                        },
-                        {
-                        "field": "Upper",
-                        "type": "nominal",
-                        "title": "mean(" + y_axis + ") + standard error"
-                        },
-                        {
-                        "field": "Lower",
-                        "type": "nominal",
-                        "title": "mean(" + y_axis + ") - standard error"
-                        },
-                        {
-                        "field": x_axis,
-                        "type": "nominal"
-                        }
-                    ]
+        spec_encoding =  {
+            "x": {
+                "field": "datamations_x",
+                "type": "quantitative",
+                "axis": {
+                "values": [1, 2],
+                "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
+                "labelAngle": -90
+                },
+                "title": x_axis,
+                "scale": {
+                "domain": [0.5, 2.5]
                 }
             },
-            {
-                "mark": {
-                "type": "point",
-                "filled": True,
-                "strokeWidth": 1
-                },
-                "encoding": {
-                    "x": {
-                        "field": "datamations_x",
-                        "type": "quantitative",
-                        "axis": {
-                        "values": [1, 2],
-                        "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
-                        "labelAngle": -90
-                        },
-                        "title": x_axis,
-                        "scale": {
-                        "domain": [0.5, 2.5]
-                        }
-                    },
-                    "y": {
-                        "field": "datamations_y",
-                        "type": "quantitative",
-                        "title": "mean(" + y_axis + ")",
-                        "scale": {
-                        "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
-                        }
-                    },
-                    "tooltip": [
-                        {
-                        "field": "datamations_y_tooltip",
-                        "type": "quantitative",
-                        "title": "mean(" + y_axis + ")"
-                        },
-                        {
-                        "field": "Upper",
-                        "type": "nominal",
-                        "title": "mean(" + y_axis + ") + standard error"
-                        },
-                        {
-                        "field": "Lower",
-                        "type": "nominal",
-                        "title": "mean(" + y_axis + ") - standard error"
-                        },
-                        {
-                        "field": x_axis,
-                        "type": "nominal"
-                        }
-                    ]
+            "y": {
+                "field": "datamations_y",
+                "type": "quantitative",
+                "title": "mean(" + y_axis + ")",
+                "scale": {
+                "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
                 }
-            }
-        ]
+            },
+            "tooltip": [
+                {
+                "field": "datamations_y_tooltip",
+                "type": "quantitative",
+                "title": "mean(" + y_axis + ")"
+                },
+                {
+                "field": "Upper",
+                "type": "nominal",
+                "title": "mean(" + y_axis + ") + standard error"
+                },
+                {
+                "field": "Lower",
+                "type": "nominal",
+                "title": "mean(" + y_axis + ") - standard error"
+                },
+                {
+                "field": x_axis,
+                "type": "nominal"
+                }
+            ]
+        }
 
-        values = []
+        data = []
 
         id = 1
         for i in range(len(self.states[0])):
             if self.states[0][x_axis][i] == groups[1]:
                 continue
-            values.append({
+            data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
@@ -391,7 +269,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         for i in range(len(self.states[0])):
             if self.states[0][x_axis][i] == groups[0]:
                 continue
-            values.append({
+            data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
@@ -403,19 +281,12 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             })
             id = id + 1
 
-        spec = {
-            "height": height,
-            "width": width,
-            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-            "data": {
-                "values": values
-            },
-            "meta": { 
+        meta = { 
                 "axes": False,
                 "description": "Plot mean " + y_axis + " of each group, with errorbar"
-            },
-            "layer": layer
         }
+
+        spec = utils.generate_vega_specs(data, meta, spec_encoding, True)
 
         specs_list.append(spec)
 
@@ -424,120 +295,57 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13)
         ]
 
-        layer = [
-            {
-                "mark": "errorbar",
-                "encoding": {
-                    "x": {
-                        "field": "datamations_x",
-                        "type": "quantitative",
-                        "axis": {
-                        "values": [1, 2],
-                        "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
-                        "labelAngle": -90
-                        },
-                        "title": x_axis,
-                        "scale": {
-                        "domain": [0.5, 2.5]
-                        }
+        spec_encoding = {
+                "x": {
+                    "field": "datamations_x",
+                    "type": "quantitative",
+                    "axis": {
+                    "values": [1, 2],
+                    "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
+                    "labelAngle": -90
                     },
-                    "y": {
-                        "field": "datamations_y_raw",
-                        "type": "quantitative",
-                        "title": "mean(" + y_axis + ")",
-                        "scale": {
-                        "domain": domain
-                        }
-                    },
-                    "tooltip": [
-                        {
-                        "field": "datamations_y_tooltip",
-                        "type": "quantitative",
-                        "title": "mean(" + y_axis + ")"
-                        },
-                        {
-                        "field": "Upper",
-                        "type": "nominal",
-                        "title": "mean(" + y_axis + ") + standard error"
-                        },
-                        {
-                        "field": "Lower",
-                        "type": "nominal",
-                        "title": "mean(" + y_axis + ") - standard error"
-                        },
-                        {
-                        "field": x_axis,
-                        "type": "nominal"
-                        }
-                    ]
-                }
-            },
-            {
-                "mark": {
-                "type": "point",
-                "filled": True,
-                "strokeWidth": 1
+                    "title": x_axis,
+                    "scale": {
+                    "domain": [0.5, 2.5]
+                    }
                 },
-                "encoding": {
-                    "x": {
-                        "field": "datamations_x",
-                        "type": "quantitative",
-                        "axis": {
-                        "values": [1, 2],
-                        "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '" + groups[1] +"'",
-                        "labelAngle": -90
-                        },
-                        "title": x_axis,
-                        "scale": {
-                        "domain": [0.5, 2.5]
-                        }
+                "y": {
+                    "field": "datamations_y",
+                    "type": "quantitative",
+                    "title": "mean(" + y_axis + ")",
+                    "scale": {
+                    "domain": domain
+                    }
+                },
+                "tooltip": [
+                    {
+                    "field": "datamations_y_tooltip",
+                    "type": "quantitative",
+                    "title": "mean(" + y_axis + ")"
                     },
-                    "y": {
-                        "field": "datamations_y",
-                        "type": "quantitative",
-                        "title": "mean(" + y_axis + ")",
-                        "scale": {
-                        "domain": domain
-                        }
+                    {
+                    "field": "Upper",
+                    "type": "nominal",
+                    "title": "mean(" + y_axis + ") + standard error"
                     },
-                    "tooltip": [
-                        {
-                        "field": "datamations_y_tooltip",
-                        "type": "quantitative",
-                        "title": "mean(" + y_axis + ")"
-                        },
-                        {
-                        "field": "Upper",
-                        "type": "nominal",
-                        "title": "mean(" + y_axis + ") + standard error"
-                        },
-                        {
-                        "field": "Lower",
-                        "type": "nominal",
-                        "title": "mean(" + y_axis + ") - standard error"
-                        },
-                        {
-                        "field": x_axis,
-                        "type": "nominal"
-                        }
-                    ]
-                }
-            }
-        ]
-
-        spec = {
-            "height": height,
-            "width": width,
-            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-            "data": {
-                "values": values
-            },
-            "meta": { 
-                "axes": False,
-                "description": "Plot mean " + y_axis + " of each group, with errorbar, zoomed in"
-            },
-            "layer": layer
+                    {
+                    "field": "Lower",
+                    "type": "nominal",
+                    "title": "mean(" + y_axis + ") - standard error"
+                    },
+                    {
+                    "field": x_axis,
+                    "type": "nominal"
+                    }
+                ]
         }
+
+        meta = { 
+            "axes": False,
+            "description": "Plot mean " + y_axis + " of each group, with errorbar, zoomed in"
+        }
+
+        spec = utils.generate_vega_specs(data, meta, spec_encoding, True)
 
         specs_list.append(spec)
 

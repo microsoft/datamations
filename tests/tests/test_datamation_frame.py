@@ -29,7 +29,12 @@ def test_datamation_frame_specs():
                 for j, val in enumerate(spec['data']['values']):
                     assert val == approx(specs[i]['data']['values'][j])
             else:
-                assert spec[key] == specs[i][key] 
+                if  key == 'layer':
+                    for j, encoding in enumerate(spec["layer"]):
+                        for field in encoding:
+                            assert encoding[field] == specs[i][key][j][field]
+                else:                    
+                    assert spec[key] == specs[i][key] 
 
 def test_datamation_frame_datamation():
     df = small_salary().df

@@ -5,14 +5,10 @@
 import time
 import pandas as pd
 from . import datamation_groupby
+from . import utils
 
 import json
 from IPython.core.display import display, Javascript
-
-X_FIELD_CHR = "datamations_x"
-Y_FIELD_CHR = "datamations_y"
-Y_RAW_FIELD_CHR = "datamations_y_raw"
-Y_TOOLTIP_FIELD_CHR = "datamations_y_tooltip"
 
 class Datamation:
     def __init__(self, states, operations, output):
@@ -61,83 +57,63 @@ class DatamationFrame(pd.DataFrame):
         return datamation_groupby.DatamationGroupBy(self, by)
 
     def prep_specs_group_by(self, width=300, height=300):
-        x_encoding = { 'field': X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
-        y_encoding = { 'field': Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
+        x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
+        y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
 
-        spec_encoding = { 'x': x_encoding, 'y': y_encoding }
+        by = ','.join(self._by)
 
-        spec_encoding["color"] = {
-            "field": None,
-            "type": "nominal"
+        spec_encoding = {
+            'x': x_encoding,
+            'y': y_encoding ,
+            "color": {
+                "field": None,
+                "type": "nominal"
+            },
+            "tooltip": [
+                {
+                "field": by,
+                "type": "nominal"
+                }
+            ]
         }
         
-        by = ','.join(self._by)
-        
-        spec_encoding["tooltip"] = [
-            {
-            "field": by,
-            "type": "nominal"
-            }
-        ]
-        
-        specs_list = []
+        data = list(map(lambda key: { by: key, 'n': len(self.states[1].groups[key])}, self.states[1].groups.keys()))
 
-
-        values = list(map(lambda key: { by: key, 'n': len(self.states[1].groups[key])}, self.states[1].groups.keys()))
-
-
-        spec = {
-            "height": height,
-            "width": width,
-            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-            "data": {
-                "values": values
-            },
-            "meta": { 
+        meta = { 
                 'parse': "grid",
                 'description': "Group by " + by,
                 "splitField": by,
                 "axes": False
-            },
-            "mark": {
-                "type": "point",
-                "filled": True,
-                "strokeWidth": 1
-            },
-            "encoding": spec_encoding
         }
-        specs_list.append(spec)
 
+        specs_list = []
+        spec = utils.generate_vega_specs(data, meta, spec_encoding)
+
+        specs_list.append(spec)
         return specs_list
 
     def prep_specs_data(self, width=300, height=300):
-        x_encoding = { 'field': X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
-        y_encoding = { 'field': Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
+        x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
+        y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding }
 
-        return [{
-            "height": height,
-            "width": width,
-            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-            "data": {
-                "values": [
-                    {
-                    "n": len(self.states[0])
-                    }
-                ]
-            },
-            "meta": { 
-                'parse': "grid",
-                'description': "Initial data"
-            },
-            "mark": {
-                "type": "point",
-                "filled": True,
-                "strokeWidth": 1
-            },
-            "encoding": spec_encoding
-        }]
+        data = [
+            {
+                "n": len(self.states[0])
+            }
+        ]
+        
+        meta =  { 
+            'parse': "grid",
+            'description': "Initial data"
+        }
+
+        specs_list = []
+        spec = utils.generate_vega_specs(data, meta, spec_encoding)
+
+        specs_list.append(spec)
+        return specs_list
 
     def specs(self):
         specs = self.prep_specs_data() + self.prep_specs_group_by() 
