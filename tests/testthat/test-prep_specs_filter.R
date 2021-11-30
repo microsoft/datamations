@@ -58,3 +58,35 @@ test_that("transform.filter uses oneOf if number of IDs > 1, and == if number of
 
   expect_equal(specs[[2]]$transform[[1]]$filter, list(field = "gemini_id", oneOf = c(1, 2)))
 })
+
+test_that("filtered specs have an updated x axis, defaulting to dropping x-axis values that no longer exist", {
+  # One X filtered out
+  specs <- "small_salary %>% group_by(Degree) %>% summarise(median = median(Salary)) %>% filter(median > 90)" %>%
+    datamation_sanddance() %>%
+    purrr::pluck("x") %>%
+    purrr::pluck("specs") %>%
+    jsonlite::fromJSON(simplifyDataFrame = FALSE)
+
+  filter_spec_id <- 6
+  filter_frame_specs <- specs[[filter_spec_id]]
+  previous_frame_specs <- specs[[filter_spec_id - 1]]
+
+  # X domain is different
+  expect_equal(previous_frame_specs$encoding$x$axis$values, c(1, 2))
+  expect_equal(filter_frame_specs$encoding$x$axis$values, 1)
+
+  # All X filtered out
+  specs <- "small_salary %>% group_by(Degree) %>% summarise(median = median(Salary)) %>% filter(median > 100)" %>%
+    datamation_sanddance() %>%
+    purrr::pluck("x") %>%
+    purrr::pluck("specs") %>%
+    jsonlite::fromJSON(simplifyDataFrame = FALSE)
+
+  filter_spec_id <- 6
+  filter_frame_specs <- specs[[filter_spec_id]]
+  previous_frame_specs <- specs[[filter_spec_id - 1]]
+
+  # X domain is different
+  expect_equal(previous_frame_specs$encoding$x$axis$values, c(1, 2))
+  expect_equal(filter_frame_specs$encoding$x$axis$values, list())
+})
