@@ -10,6 +10,7 @@ from . import utils
 import json
 from IPython.core.display import display, Javascript
 
+# A class to return the final results
 class Datamation:
     def __init__(self, states, operations, output):
         self.states = states
@@ -19,6 +20,7 @@ class Datamation:
     def __str__(self):
         return self.output.to_json()
 
+# The subclass of pandas DataFrame 
 class DatamationFrame(pd.DataFrame):
     @property
     def _constructor(self):
@@ -50,12 +52,14 @@ class DatamationFrame(pd.DataFrame):
     def operations(self):
         return self._operations
 
+    # Override the 'groupby' function
     def groupby(self, by):
         self._by = [by]
         self._operations.append('groupby')
         df = super(DatamationFrame, self).groupby(by=by)
         return datamation_groupby.DatamationGroupBy(self, by)
 
+    # The second spec in the json to show initial points divided into groups.
     def prep_specs_group_by(self, width=300, height=300):
         x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
         y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
@@ -92,6 +96,7 @@ class DatamationFrame(pd.DataFrame):
         specs_list.append(spec)
         return specs_list
 
+    # The first spec in the json to layout all the points in one frame.
     def prep_specs_data(self, width=300, height=300):
         x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
         y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
@@ -120,7 +125,12 @@ class DatamationFrame(pd.DataFrame):
         return specs + self.states[1].prep_specs_summarize()
 
     def datamation(self):
+        # Generate a unique id using time in milliseconds
         app = 'app' + str(int(time.time() * 1000.0))
+
+        # Replace all the instances of app id
+        # The Vega specs json is passed to the client
+        # The chart gets rendered in the jupyter cell.
         display(Javascript("""
             require.config({ 
                 paths: { 
@@ -183,4 +193,5 @@ class DatamationFrame(pd.DataFrame):
             })(element);
         """ % (app, app, app, app, app, app, app, json.dumps(self.specs()))))
 
+        # returns an object with the final output along with the internal states and operations
         return Datamation(self._states, self._operations, self)
