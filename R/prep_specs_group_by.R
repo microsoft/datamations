@@ -210,7 +210,6 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 }
 
 add_ids_to_count_data <- function(count_data, .data, ...) {
-
   group_vars <- list(...) %>%
     purrr::compact() %>%
     purrr::map(rlang::sym)

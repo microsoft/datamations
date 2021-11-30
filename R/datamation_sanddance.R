@@ -119,23 +119,23 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     purrr::map(rlang::parse_expr)
 
   # Add gemini ID
-   data_with_gemini_id <- get(fittings[[1]]) %>%
+  data_with_gemini_id <- get(fittings[[1]]) %>%
     arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
     # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
     dplyr::mutate(gemini_id = dplyr::row_number())
 
-   # Update fittings to use data_with_gemini_id as data source
-   fittings[[1]] <- rlang::parse_expr("data_with_gemini_id")
+  # Update fittings to use data_with_gemini_id as data source
+  fittings[[1]] <- rlang::parse_expr("data_with_gemini_id")
 
-   # Create a new environment to reevaluate states in
-   datamations_env <- new.env()
-   datamations_env$data_with_gemini_id <- data_with_gemini_id
+  # Create a new environment to reevaluate states in
+  datamations_env <- new.env()
+  datamations_env$data_with_gemini_id <- data_with_gemini_id
 
-   # Regenerate data states
-   data_states <- fittings %>%
-     snake(envir = datamations_env)
+  # Regenerate data states
+  data_states <- fittings %>%
+    snake(envir = datamations_env)
 
-   names(data_states) <- tidy_functions_list
+  names(data_states) <- tidy_functions_list
 
   # Iterate over each step of the pipeline - using a for loop instead of purrr::map so we can intercept the intermediate results :)
 
@@ -170,7 +170,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
       # If the previous step has multiple frames, need to grab the _last_ of those
       previous_step_has_multiple_frames <- purrr::map(previous_frame, names) %>%
         purrr::map(~ "data" %in% .x) %>%
-        purrr::keep(~ .x) %>%
+        purrr::keep(~.x) %>%
         length() > 1
 
       if (previous_step_has_multiple_frames) {

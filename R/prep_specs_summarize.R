@@ -22,7 +22,6 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     summary_variable_chr <- rlang::as_name(summary_variable)
 
-
     # Check whether the response variable is numeric or binary / categorical
     # If it is numeric, the first summary frame should be a jittered distribution
     # If it is binary / categorical, the first summary frame is an info grid (and so much of the same logic needs to be pulled in from prep_specs_group_by)
@@ -378,7 +377,6 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Similarly, need to get all correct settings / encoding for numeric plot if there _was_ no Y variable (e.g. n() case)
 
   if (y_type %in% c("binary", "categorical", "null")) {
-
     if (y_type %in% c("binary", "categorical")) {
       .data <- .data %>%
         dplyr::rename(!!Y_FIELD := {{ summary_variable }})
@@ -480,10 +478,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       dplyr::group_by(!!!group_vars) %>%
       dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
   } else if (y_type == "null") {
-     data_2 <- data_1
+    data_2 <- data_1
 
-     summary_variable <- NULL
-   }
+    summary_variable <- NULL
+  }
 
   # Generate description
   description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)

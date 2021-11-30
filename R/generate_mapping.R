@@ -81,7 +81,6 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
     if (!identical(y_var, NULL)) {
       y_mapping[["y"]] <- rlang::quo_name(y_var)
     }
-
   }
 
   # Group mapping

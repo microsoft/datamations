@@ -48,9 +48,7 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
 
       # Set encoding.x.axis.scale.values = [] to remove x-axis values all together
       spec$encoding$x$axis$values <- character()
-
     } else if (nrow(final_filtered_data) > 0) {
-
       if (mapping$x == 1) {
         original_data_with_filter_flag <- final_filtered_data %>%
           dplyr::mutate(!!X_FIELD := 1)
