@@ -18,8 +18,6 @@ prep_specs_count <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heigh
 
   # Summarize ----
 
-  # TODO: change title
-
   # Fake mapping by adding summary_function and summary_name
 
   mapping$summary_function <- mapping$summary_name <- "n"
@@ -34,6 +32,13 @@ prep_specs_count <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heigh
     dplyr::group_by(!!!group_vars)
 
   res[["summarize"]] <- prep_specs_summarize(.data, mapping, toJSON = toJSON, pretty = pretty, height = height, width = width)
+
+  # Update title of spec
+  if (length(group_vars) == 0) {
+    res[["summarize"]][[1]][["meta"]][["description"]] <- "Plot count"
+  } else {
+    res[["summarize"]][[1]][["meta"]][["description"]] <- "Plot count of each group"
+  }
 
   # Unlist and return
   res <- res %>%

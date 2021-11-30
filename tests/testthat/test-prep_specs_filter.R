@@ -60,7 +60,7 @@ test_that("transform.filter uses oneOf if number of IDs > 1, and == if number of
 })
 
 test_that("filtered specs have an updated x axis, defaulting to dropping x-axis values that no longer exist", {
-  # One X filtered out
+  # One X filtered out -----
   specs <- "small_salary %>% group_by(Degree) %>% summarise(median = median(Salary)) %>% filter(median > 90)" %>%
     datamation_sanddance() %>%
     purrr::pluck("x") %>%
@@ -75,7 +75,7 @@ test_that("filtered specs have an updated x axis, defaulting to dropping x-axis 
   expect_equal(previous_frame_specs$encoding$x$axis$values, c(1, 2))
   expect_equal(filter_frame_specs$encoding$x$axis$values, 1)
 
-  # All X filtered out
+  # All X filtered out ----
   specs <- "small_salary %>% group_by(Degree) %>% summarise(median = median(Salary)) %>% filter(median > 100)" %>%
     datamation_sanddance() %>%
     purrr::pluck("x") %>%
