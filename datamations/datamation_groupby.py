@@ -1,12 +1,13 @@
 # Create a DatamationGroupBy
 #
-# Create a subclass from a pandas DataFrame.
+# Create a subclass from a pandas DataFrameGroupBy.
 #
 import json
 import pandas as pd
 from . import utils
 from . import datamation_frame
 
+# The subclass of DataFrameGroupBy
 class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
     @property
     def _constructor(self):
@@ -36,6 +37,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
     def operations(self):
         return self._operations
 
+    # Override the 'mean' function
     def mean(self):
         self._states.append(self)
         self._operations.append('mean')
@@ -48,6 +50,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         self._error = super(DatamationGroupBy, self).sem()
         return df
         
+    # The specs to show summarized points on the chart
     def prep_specs_summarize(self, width=300, height=300):
         x_axis = self.states[1].dtypes.axes[0].name
         y_axis = self.states[1].dtypes.axes[1].values[1]
@@ -93,6 +96,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         data = []
         
+        # Prepare the data by assigning different x-axis values to the groups
+        # and showing the original values on the y-axis for each point.
         id = 1
         for i in range(len(self.states[0])):
             if self.states[0][x_axis][i] == groups[1]:
@@ -118,6 +123,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             })
             id = id + 1
 
+        # Jitter plot
         meta =  { 
                 "parse": "jitter",
                 "axes": False,
@@ -126,6 +132,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "xAxisLabels": groups
         }
         
+        # Spec encoding for Vega along with the data and metadata.
+        # Generate vega specs for the summarizing steps of the animaiton
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         spec = utils.generate_vega_specs(data, meta, spec_encoding)
         specs_list.append(spec)
@@ -158,6 +166,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         data = []
         
+        # Plot the final summarized value
+        # The y-axis value is the same for all 
         id = 1
         for i in range(len(self.states[0])):
             if self.states[0][x_axis][i] == groups[1]:
@@ -212,6 +222,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         data = []
 
+        # Show errror bars along with sumarized values
         id = 1
         for i in range(len(self.states[0])):
             if self.states[0][x_axis][i] == groups[1]:
@@ -253,6 +264,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         spec = utils.generate_vega_specs(data, meta, spec_encoding, True)
         specs_list.append(spec)
 
+        # Show the summarized values along with error bars, zoomed in
         domain = [
                 round(min(self._output[y_axis][groups[0]]-self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
                 round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13)
