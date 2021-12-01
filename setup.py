@@ -7,6 +7,6 @@ setuptools.setup(
    author='Chinmay Singh',
    author_email='chsingh@microsoft.com',
    packages=['datamations'],
-   package_data={'datamations': ['../data-raw/small_salary.csv', '../sandbox/specs_for_python/raw_spec.json']},
+   package_data={'datamations': ['../data-raw/small_salary.csv']},
    install_requires=['pandas', 'ipython']
 )

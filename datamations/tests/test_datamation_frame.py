@@ -21,7 +21,7 @@ def test_datamation_frame_specs():
     specs = df.groupby('Degree').mean().specs()
 
     script_dir = os.path.dirname( __file__ )
-    specs_file = open(os.path.join(script_dir, '../../sandbox/specs_for_python/raw_spec.json'), 'r')
+    specs_file = open(os.path.join(script_dir, 'specs/raw_spec.json'), 'r')
 
     for i, spec in enumerate(json.load(specs_file)):
         for key in spec:
