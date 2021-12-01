@@ -124,7 +124,7 @@ class DatamationFrame(pd.DataFrame):
         specs = self.prep_specs_data() + self.prep_specs_group_by() 
         return specs + self.states[1].prep_specs_summarize()
 
-    def datamation(self):
+    def datamation_sanddance(self):
         # Generate a unique id using time in milliseconds
         app = 'app' + str(int(time.time() * 1000.0))
 

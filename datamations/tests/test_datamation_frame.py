@@ -41,11 +41,11 @@ def test_datamation_frame_specs():
                 else:                    
                     assert spec[key] == specs[i][key] 
 
-def test_datamation_frame_datamation():
+def test_datamation_frame_datamation_sanddance():
     df = small_salary().df
     df = DatamationFrame(df)
 
-    datamation = df.groupby('Work').mean().datamation()
+    datamation = df.groupby('Work').mean().datamation_sanddance()
 
     assert len(datamation.states) == 2
     assert len(datamation.operations) == 2
