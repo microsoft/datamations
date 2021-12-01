@@ -16,3 +16,4 @@ azure-pipelines.yml
 ^R/README\.md$
 ^LICENSE\.md$
 ^inst/htmlwidgets/test$
+^datamations$
