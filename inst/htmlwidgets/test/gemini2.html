@@ -250,6 +250,42 @@
         animation.play("#app");
       });
 
+
+      gemini.recommendWithPath({
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "data": {
+      "values": [
+        {"Hungry": 10, "Name": "Gemini"},
+        {"Hungry": 60, "Name": "Cordelia"},
+        {"Hungry": 80, "Name": "Gemini"},
+        {"Hungry": 100, "Name": "Cordelia"}
+      ]
+    },
+    "mark": "point",
+    "encoding": {
+      "x": { "field": "Hungry", "type": "quantitative"}
+    }
+  }, {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "data": {
+      "values": [
+        {"Hungry": 10, "Name": "Gemini"},
+        {"Hungry": 60, "Name": "Cordelia"},
+        {"Hungry": 80, "Name": "Gemini"},
+        {"Hungry": 100, "Name": "Cordelia"}
+      ]
+    },
+    "transform": [{"filter": {"field": "Name", "equal": "Gemini"}}],
+    "mark": "point",
+    "encoding": {
+      "x": { "field": "Hungry", "type": "quantitative", "aggregate": "mean"}
+    }
+  }, {
+    "totalDuration": 2000,
+    "stageN": 3
+  }).then(resp => {
+        console.log(resp);
+      })
     </script>
   </body>
 </html>
