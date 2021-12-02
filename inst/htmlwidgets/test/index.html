@@ -172,77 +172,100 @@
     <script src="../js/app.js"></script>
     <script>
         const app1 = App("app", {
-          specs: [{
-  "height": 300,
-  "width": 300,
+          specs: 
+[{
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "meta": {
     "parse": "grid",
-    "axes": false,
-    "description": "Plot is_hit within each group",
-    "splitField": "player",
-    "xAxisLabels": ["Jeter", "Justice"]
+    "description": "Filter Work == \"Academia\" within each group",
+    "splitField": "Work",
+    "axes": true
   },
   "data": {
     "values": [
       {
-        "player": "Jeter",
-        "is_hit": 1,
-        "n": 2,
-        "datamations_y_tooltip": 0
+        "Degree": "Masters",
+        "Work": "Academia",
+        "n": 10,
+        "gemini_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
       },
       {
-        "player": "Jeter",
-        "is_hit": 0,
-        "n": 1,
-        "datamations_y_tooltip": 1
+        "Degree": "Masters",
+        "Work": "Industry",
+        "n": 62,
+        "gemini_ids": [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72]
       },
       {
-        "player": "Justice",
-        "is_hit": 1,
-        "n": 1,
-        "datamations_y_tooltip": 0
+        "Degree": "PhD",
+        "Work": "Academia",
+        "n": 18,
+        "gemini_ids": [73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90]
       },
       {
-        "player": "Justice",
-        "is_hit": 0,
-        "n": 1,
-        "datamations_y_tooltip": 1
+        "Degree": "PhD",
+        "Work": "Industry",
+        "n": 10,
+        "gemini_ids": [91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
       }
     ]
   },
-  "mark": {
-    "type": "point",
-    "filled": true
+  "facet": {
+    "column": {
+      "field": "Degree",
+      "type": "ordinal",
+      "title": "Degree"
+    }
   },
-  "encoding": {
-    "x": {
-      "field": "datamations_x",
-      "type": "quantitative",
-      "axis": null
+  "spec": {
+    "height": 300,
+    "width": 150,
+    "mark": {
+      "type": "point",
+      "filled": true,
+      "strokeWidth": 1
     },
-    "y": {
-      "field": "datamations_y",
-      "type": "quantitative",
-      "axis": null
-    },
-    "fill": {
-      "field": "is_hit",
-      "scale": {
-        "domain": [1, 0],
-        "range": ["#4c78a8", "#ffffff"]
-      }
-    },
-    "stroke": {
-      "field": "is_hit",
-      "scale": {
-        "domain": [1, 0],
-        "range": ["#4c78a8", "#4c78a8"]
+    "encoding": {
+      "x": {
+        "field": "datamations_x",
+        "type": "quantitative",
+        "axis": null
+      },
+      "y": {
+        "field": "datamations_y",
+        "type": "quantitative",
+        "axis": null
+      },
+      "color": {
+        "field": "Work",
+        "type": "nominal",
+        "legend": {
+          "values": ["Academia", "Industry"]
+        }
+      },
+      "tooltip": [
+        {
+          "field": "Degree",
+          "type": "nominal"
+        },
+        {
+          "field": "Work",
+          "type": "nominal"
+        }
+      ]
+    }
+  },
+  "transform": [
+    {
+      "filter": {
+        "field": "gemini_id",
+        "oneOf": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90]
       }
     }
-  }
-}
-]});
+  ]
+}]
+
+
+});
    
    </script>
   </body>
