@@ -130,6 +130,13 @@ prep_specs_filter <- function(.data, mapping, previous_frame, filter_operation, 
       filter_operation = glue::glue_collapse(filter_operation, sep = ", "),
       within_group = ifelse(length(original_data %>% dplyr::group_vars()) > 0, " within each group", "")
     )
+
+    # Explicitly set color domain in case any colors got filtered out
+    if ("spec" %in% names(spec)) {
+      spec[["spec"]][["encoding"]][["color"]][["scale"]][["domain"]] <- spec[["spec"]][["encoding"]][["color"]][["legend"]][["values"]]
+    } else {
+      spec[["encoding"]][["color"]][["scale"]][["domain"]] <- spec[["encoding"]][["color"]][["legend"]][["values"]]
+    }
   }
 
   # IDs to filter
