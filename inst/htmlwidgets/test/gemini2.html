@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Datamations</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
+    <script src="../gemini/gemini.web.js"></script>
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <script src="../js/penguins.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/hack-facet-view.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+      // initial
+      const spec1 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "width": 120,
+        "data": {
+          "values": [
+            {"x": "Set 1", "y": 1},
+            {"x": "Set 1", "y": 3},
+            {"x": "Set 1", "y": 4},
+            {"x": "Set 1", "y": 5},
+            {"x": "Set 1", "y": 6},
+            {"x": "Set 1", "y": 7},
+            {"x": "Set 1", "y": 8},
+            {"x": "Set 1", "y": 9},
+            {"x": "Set 1", "y": 13},
+            {"x": "Set 1", "y": 15},
+            {"x": "Set 2", "y": 1},
+            {"x": "Set 2", "y": 2},
+            {"x": "Set 2", "y": 3},
+            {"x": "Set 2", "y": 5},
+            {"x": "Set 2", "y": 7},
+            {"x": "Set 2", "y": 7.5},
+            {"x": "Set 2", "y": 8},
+            {"x": "Set 2", "y": 8.2},
+            {"x": "Set 2", "y": 10},
+            {"x": "Set 2", "y": 13},
+            {"x": "Set 2", "y": 14},
+            {"x": "Set 2", "y": 16},
+            {"x": "Set 2", "y": 18}
+          ]
+        },
+        "name": "main",
+        "mark": {"type": "circle", "size": 50},
+        "encoding": {
+          "x": {"field": "x", "type": "nominal"},
+          "y": {
+            "field": "y", 
+            "type": "quantitative", 
+            "scale": {"domain": [0, 20]}
+          }
+        }
+      };
+
+      // remove axis
+      const spec2 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "width": 120,
+        "data": {
+          "values": [
+            {"x": "Set 1", "y": 1},
+            {"x": "Set 1", "y": 3},
+            {"x": "Set 1", "y": 4},
+            {"x": "Set 1", "y": 5},
+            {"x": "Set 1", "y": 6},
+            {"x": "Set 1", "y": 7},
+            {"x": "Set 1", "y": 8},
+            {"x": "Set 1", "y": 9},
+            {"x": "Set 1", "y": 13},
+            {"x": "Set 1", "y": 15},
+            {"x": "Set 2", "y": 1},
+            {"x": "Set 2", "y": 2},
+            {"x": "Set 2", "y": 3},
+            {"x": "Set 2", "y": 5},
+            {"x": "Set 2", "y": 7},
+            {"x": "Set 2", "y": 7.5},
+            {"x": "Set 2", "y": 8},
+            {"x": "Set 2", "y": 8.2},
+            {"x": "Set 2", "y": 10},
+            {"x": "Set 2", "y": 13},
+            {"x": "Set 2", "y": 14},
+            {"x": "Set 2", "y": 16},
+            {"x": "Set 2", "y": 18}
+          ]
+        },
+        "name": "main",
+        "mark": {"type": "circle", "size": 50},
+        "encoding": {
+          "x": {"field": "x", "type": "nominal"},
+          "y": {
+            "field": "y", 
+            "type": "quantitative", 
+            "scale": {"domain": [0, 20]},
+            "axis": null
+          }
+        }
+      };
+
+      // stack set 1
+      const spec3 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "width": 120,
+        "data": {
+          "values": [
+            {"x": "Set 1", "y": 1},
+            {"x": "Set 1", "y": 2},
+            {"x": "Set 1", "y": 3},
+            {"x": "Set 1", "y": 4},
+            {"x": "Set 1", "y": 5},
+            {"x": "Set 1", "y": 6},
+            {"x": "Set 1", "y": 7},
+            {"x": "Set 1", "y": 8},
+            {"x": "Set 1", "y": 9},
+            {"x": "Set 1", "y": 10},
+            {"x": "Set 2", "y": 1},
+            {"x": "Set 2", "y": 2},
+            {"x": "Set 2", "y": 3},
+            {"x": "Set 2", "y": 5},
+            {"x": "Set 2", "y": 7},
+            {"x": "Set 2", "y": 7.5},
+            {"x": "Set 2", "y": 8},
+            {"x": "Set 2", "y": 8.2},
+            {"x": "Set 2", "y": 10},
+            {"x": "Set 2", "y": 13},
+            {"x": "Set 2", "y": 14},
+            {"x": "Set 2", "y": 16},
+            {"x": "Set 2", "y": 18}
+          ]
+        },
+        "name": "main",
+        "mark": {"type": "circle", "size": 50},
+        "encoding": {
+          "x": {"field": "x", "type": "nominal"},
+          "y": {
+            "field": "y", 
+            "type": "quantitative", 
+            "scale": {"domain": [0, 20]},
+            "axis": null
+          }
+        }
+      };
+
+      // stack set 2
+      const spec4 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "width": 120,
+        "data": {
+          "values": [
+            {"x": "Set 1", "y": 1},
+            {"x": "Set 1", "y": 2},
+            {"x": "Set 1", "y": 3},
+            {"x": "Set 1", "y": 4},
+            {"x": "Set 1", "y": 5},
+            {"x": "Set 1", "y": 6},
+            {"x": "Set 1", "y": 7},
+            {"x": "Set 1", "y": 8},
+            {"x": "Set 1", "y": 9},
+            {"x": "Set 1", "y": 10},
+            {"x": "Set 2", "y": 1},
+            {"x": "Set 2", "y": 2},
+            {"x": "Set 2", "y": 3},
+            {"x": "Set 2", "y": 4},
+            {"x": "Set 2", "y": 5},
+            {"x": "Set 2", "y": 6},
+            {"x": "Set 2", "y": 7},
+            {"x": "Set 2", "y": 8},
+            {"x": "Set 2", "y": 9},
+            {"x": "Set 2", "y": 10},
+            {"x": "Set 2", "y": 11},
+            {"x": "Set 2", "y": 12},
+            {"x": "Set 2", "y": 13}
+          ]
+        },
+        "mark": {"type": "circle", "size": 50},
+        "name": "main",
+        "encoding": {
+          "x": {"field": "x", "type": "nominal"},
+          "y": {
+            "field": "y", 
+            "type": "quantitative", 
+            "scale": {"domain": [0, 20]},
+            "axis": null
+          }
+        }
+      };
+
+      // put rules (lines) using aggregate count
+      const spec5 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "width": 120,
+        "data": {
+          "values": [
+            {"x": "Set 1", "y": 1},
+            {"x": "Set 1", "y": 2},
+            {"x": "Set 1", "y": 3},
+            {"x": "Set 1", "y": 4},
+            {"x": "Set 1", "y": 5},
+            {"x": "Set 1", "y": 6},
+            {"x": "Set 1", "y": 7},
+            {"x": "Set 1", "y": 8},
+            {"x": "Set 1", "y": 9},
+            {"x": "Set 1", "y": 10},
+            {"x": "Set 2", "y": 1},
+            {"x": "Set 2", "y": 2},
+            {"x": "Set 2", "y": 3},
+            {"x": "Set 2", "y": 4},
+            {"x": "Set 2", "y": 5},
+            {"x": "Set 2", "y": 6},
+            {"x": "Set 2", "y": 7},
+            {"x": "Set 2", "y": 8},
+            {"x": "Set 2", "y": 9},
+            {"x": "Set 2", "y": 10},
+            {"x": "Set 2", "y": 11},
+            {"x": "Set 2", "y": 12},
+            {"x": "Set 2", "y": 13}
+          ]
+        },
+        "layer": [
+          {
+            "name": "main",
+            "mark": {"type": "circle", "size": 50},
+            "encoding": {
+              "x": {"field": "x", "type": "nominal"},
+              "y": {
+                "field": "y",
+                "type": "quantitative",
+                "scale": {"domain": [0, 20]},
+                "axis": null
+              }
+            }
+          },
+          {
+            "transform": [{"filter": "datum.x === 'Set 1'"}],
+            "name": "rule_1",
+            "mark": {
+              "type": "rule",
+              "x": {"expr": "width/4-5"},
+              "x2": {"expr": "width/4+5"}
+            },
+            "encoding": {
+              "y": {
+                "field": "y",
+                "type": "quantitative",
+                "aggregate": "count",
+                "axis": null
+              }
+            }
+          },
+          {
+            "transform": [{"filter": "datum.x === 'Set 2'"}],
+            "name": "rule_2",
+            "mark": {
+              "type": "rule",
+              "x": {"expr": "width/4 + width/2 - 5"},
+              "x2": {"expr": "width/4 + width/2 + 5"}
+            },
+            "encoding": {
+              "y": {
+                "field": "y",
+                "type": "quantitative",
+                "aggregate": "count",
+                "axis": null
+              }
+            }
+          }
+        ]
+      };
+
+      // replace with count bubbles
+      const spec6 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "width": 120,
+        "data": {
+          "values": [
+            {"x": "Set 1", "y": 1},
+            {"x": "Set 1", "y": 2},
+            {"x": "Set 1", "y": 3},
+            {"x": "Set 1", "y": 4},
+            {"x": "Set 1", "y": 5},
+            {"x": "Set 1", "y": 6},
+            {"x": "Set 1", "y": 7},
+            {"x": "Set 1", "y": 8},
+            {"x": "Set 1", "y": 9},
+            {"x": "Set 1", "y": 10},
+            {"x": "Set 2", "y": 1},
+            {"x": "Set 2", "y": 2},
+            {"x": "Set 2", "y": 3},
+            {"x": "Set 2", "y": 4},
+            {"x": "Set 2", "y": 5},
+            {"x": "Set 2", "y": 6},
+            {"x": "Set 2", "y": 7},
+            {"x": "Set 2", "y": 8},
+            {"x": "Set 2", "y": 9},
+            {"x": "Set 2", "y": 10},
+            {"x": "Set 2", "y": 11},
+            {"x": "Set 2", "y": 12},
+            {"x": "Set 2", "y": 13}
+          ]
+        },
+        "name": "main",
+        "mark": {"type": "circle", "size": 50},
+        "encoding": {
+          "x": {"field": "x", "type": "nominal"},
+          "y": {
+            "field": "y",
+            "type": "quantitative",
+            "scale": {"domain": [0, 20]},
+            "aggregate": "count"
+          }
+        }
+      }
+    
+      
+    </script>
+  </body>
+</html>
