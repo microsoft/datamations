@@ -3,6 +3,10 @@ function generateGrid(spec, rows = 10) {
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const groupKeys = [];
 
+  const gap = 2;
+  const distance = 4 + gap;
+  let {width: specWidth, height: specHeight} = spec.spec || spec;
+
   if (spec.facet) {
     if (spec.facet.column) {
       groupKeys.push(spec.facet.column.field);
@@ -88,9 +92,18 @@ function generateGrid(spec, rows = 10) {
         return d[1].flatMap((d) => d[1]);
       }
     });
+
+    specWidth = specWidth / grouped.length;
   }
 
-  const maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
+  let maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
+
+  // if width divided by maxCols is less than 5, 
+  // then take up all vertical space to increase rows and reduce columns 
+  if (specWidth / maxCols < 5) {
+    rows = Math.floor(specHeight / distance);
+    maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
+  }
 
   let splitOptions = [];
 
@@ -190,7 +203,6 @@ function getGridSpec(spec, rows = 10) {
   return new Promise((res) => {
     const grid = generateGrid(spec, rows);
     const obj = {...spec};
-    console.log(grid);
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
     const xDomain = [

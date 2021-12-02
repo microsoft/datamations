@@ -177,101 +177,161 @@
     <script>
       const app1 = App("app", {
         specs: [
-          {
-            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-            "meta": {
-              "parse": "grid",
-              "description": "Filter Work == \"Bachelors\" within each group",
-              "splitField": "Work",
-              "axes": true
-            },
-            "data": {
-              "values": [
-                {
-                  "Degree": "Masters",
-                  "Work": "Academia",
-                  "n": 10,
-                  "gemini_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-                },
-                {
-                  "Degree": "Masters",
-                  "Work": "Industry",
-                  "n": 62,
-                  "gemini_ids": [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72]
-                },
-                {
-                  "Degree": "PhD",
-                  "Work": "Academia",
-                  "n": 18,
-                  "gemini_ids": [73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90]
-                },
-                {
-                  "Degree": "PhD",
-                  "Work": "Industry",
-                  "n": 10,
-                  "gemini_ids": [91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
-                }
-              ]
-            },
-            "facet": {
-              "column": {
-                "field": "Degree",
-                "type": "ordinal",
-                "title": "Degree"
-              }
-            },
-            "spec": {
-              "height": 300,
-              "width": 150,
-              "mark": {
-                "type": "point",
-                "filled": true,
-                "strokeWidth": 1
-              },
-              "encoding": {
-                "x": {
-                  "field": "datamations_x",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "y": {
-                  "field": "datamations_y",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "color": {
-                  "field": "Work",
-                  "type": "nominal",
-                  "legend": {
-                    "values": ["Academia", "Industry"]
-                  },
-                  "scale": {
-                    "domain": ["Academia", "Industry"],
-                    "range": ["rgba(76, 120, 168, 0.7)", "rgba(245, 133, 24, 0.7)"]
-                  }
-                },
-                "tooltip": [
-                  {
-                    "field": "Degree",
-                    "type": "nominal"
-                  },
-                  {
-                    "field": "Work",
-                    "type": "nominal"
-                  }
-                ]
-              }
-            },
-            "transform": [
-              {
-                "filter": {
-                  "field": "gemini_id",
-                  "oneOf": []
-                }
-              }
-            ]
-          }
-        ],
+  {
+    "height": 300,
+    "width": 300,
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "parse": "grid",
+      "description": "Initial data"
+    },
+    "data": {
+      "values": [
+        {
+          "n": 100
+        }
+      ]
+    },
+    "mark": {
+      "type": "point",
+      "filled": true
+    },
+    "encoding": {
+      "x": {
+        "field": "datamations_x",
+        "type": "quantitative",
+        "axis": null
+      },
+      "y": {
+        "field": "datamations_y",
+        "type": "quantitative",
+        "axis": null
+      }
+    }
+  },
+  {
+    "height": 300,
+    "width": 300,
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "parse": "grid",
+      "description": "Group by group",
+      "splitField": "group",
+      "axes": false
+    },
+    "data": {
+      "values": [
+        {
+          "group": "group1",
+          "n": 5
+        },
+        {
+          "group": "group10",
+          "n": 5
+        },
+        {
+          "group": "group11",
+          "n": 5
+        },
+        {
+          "group": "group12",
+          "n": 5
+        },
+        {
+          "group": "group13",
+          "n": 5
+        },
+        {
+          "group": "group14",
+          "n": 5
+        },
+        {
+          "group": "group15",
+          "n": 5
+        },
+        {
+          "group": "group16",
+          "n": 5
+        },
+        {
+          "group": "group17",
+          "n": 5
+        },
+        {
+          "group": "group18",
+          "n": 5
+        },
+        {
+          "group": "group19",
+          "n": 5
+        },
+        {
+          "group": "group2",
+          "n": 5
+        },
+        {
+          "group": "group20",
+          "n": 5
+        },
+        {
+          "group": "group3",
+          "n": 5
+        },
+        {
+          "group": "group4",
+          "n": 5
+        },
+        {
+          "group": "group5",
+          "n": 5
+        },
+        {
+          "group": "group6",
+          "n": 5
+        },
+        {
+          "group": "group7",
+          "n": 5
+        },
+        {
+          "group": "group8",
+          "n": 5
+        },
+        {
+          "group": "group9",
+          "n": 5
+        }
+      ]
+    },
+    "mark": {
+      "type": "point",
+      "filled": true
+    },
+    "encoding": {
+      "x": {
+        "field": "datamations_x",
+        "type": "quantitative",
+        "axis": null
+      },
+      "y": {
+        "field": "datamations_y",
+        "type": "quantitative",
+        "axis": null
+      },
+      "color": {
+        "field": null,
+        "type": "nominal"
+      },
+      "tooltip": [
+        {
+          "field": "group",
+          "type": "nominal"
+        }
+      ]
+    }
+  }
+] 
+  
       });
     </script>
   </body>
