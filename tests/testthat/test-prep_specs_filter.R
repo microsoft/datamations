@@ -90,3 +90,28 @@ test_that("filtered specs have an updated x axis, defaulting to dropping x-axis 
   expect_equal(previous_frame_specs$encoding$x$axis$values, c(1, 2))
   expect_equal(filter_frame_specs$encoding$x$axis$values, list())
 })
+
+test_that("specs from prep_specs_filter have color.scale.domain explicitly set, so color remains the same even if values are filtered out", {
+  specs <- "small_salary %>% group_by(Degree, Work) %>% filter(Work == 'Industry')" %>%
+    datamation_sanddance() %>%
+    purrr::pluck("x") %>%
+    purrr::pluck("specs") %>%
+    jsonlite::fromJSON(simplifyDataFrame = FALSE)
+
+  filter_spec <- specs[[length(specs)]]
+
+  expect_identical(filter_spec$spec$encoding$color$scale$domain, filter_spec$spec$encoding$color$legend$values)
+  expect_identical(filter_spec$spec$encoding$color$scale$domain, c("Academia", "Industry"))
+})
+
+test_that("setting color.domain when there is no color variables doesn't cause an issue, since value being set is NULL", {
+  specs <- "small_salary %>% group_by(Work) %>% filter(Work == 'Industry')" %>%
+    datamation_sanddance() %>%
+    purrr::pluck("x") %>%
+    purrr::pluck("specs") %>%
+    jsonlite::fromJSON(simplifyDataFrame = FALSE)
+
+  filter_spec <- specs[[length(specs)]]
+
+  expect_null(filter_spec$spec$encoding$color$scale$domain)
+})
