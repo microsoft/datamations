@@ -28,6 +28,7 @@
         "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
         "width": 120,
         "data": {
+          "name": "source",
           "values": [
             {"x": "Set 1", "y": 1},
             {"x": "Set 1", "y": 3},
@@ -66,99 +67,12 @@
         }
       };
 
-      // remove axis
+      // stack sets
       const spec2 = {
         "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
         "width": 120,
         "data": {
-          "values": [
-            {"x": "Set 1", "y": 1},
-            {"x": "Set 1", "y": 3},
-            {"x": "Set 1", "y": 4},
-            {"x": "Set 1", "y": 5},
-            {"x": "Set 1", "y": 6},
-            {"x": "Set 1", "y": 7},
-            {"x": "Set 1", "y": 8},
-            {"x": "Set 1", "y": 9},
-            {"x": "Set 1", "y": 13},
-            {"x": "Set 1", "y": 15},
-            {"x": "Set 2", "y": 1},
-            {"x": "Set 2", "y": 2},
-            {"x": "Set 2", "y": 3},
-            {"x": "Set 2", "y": 5},
-            {"x": "Set 2", "y": 7},
-            {"x": "Set 2", "y": 7.5},
-            {"x": "Set 2", "y": 8},
-            {"x": "Set 2", "y": 8.2},
-            {"x": "Set 2", "y": 10},
-            {"x": "Set 2", "y": 13},
-            {"x": "Set 2", "y": 14},
-            {"x": "Set 2", "y": 16},
-            {"x": "Set 2", "y": 18}
-          ]
-        },
-        "name": "main",
-        "mark": {"type": "circle", "size": 50},
-        "encoding": {
-          "x": {"field": "x", "type": "nominal"},
-          "y": {
-            "field": "y", 
-            "type": "quantitative", 
-            "scale": {"domain": [0, 20]},
-            "axis": null
-          }
-        }
-      };
-
-      // stack set 1
-      const spec3 = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-        "width": 120,
-        "data": {
-          "values": [
-            {"x": "Set 1", "y": 1},
-            {"x": "Set 1", "y": 2},
-            {"x": "Set 1", "y": 3},
-            {"x": "Set 1", "y": 4},
-            {"x": "Set 1", "y": 5},
-            {"x": "Set 1", "y": 6},
-            {"x": "Set 1", "y": 7},
-            {"x": "Set 1", "y": 8},
-            {"x": "Set 1", "y": 9},
-            {"x": "Set 1", "y": 10},
-            {"x": "Set 2", "y": 1},
-            {"x": "Set 2", "y": 2},
-            {"x": "Set 2", "y": 3},
-            {"x": "Set 2", "y": 5},
-            {"x": "Set 2", "y": 7},
-            {"x": "Set 2", "y": 7.5},
-            {"x": "Set 2", "y": 8},
-            {"x": "Set 2", "y": 8.2},
-            {"x": "Set 2", "y": 10},
-            {"x": "Set 2", "y": 13},
-            {"x": "Set 2", "y": 14},
-            {"x": "Set 2", "y": 16},
-            {"x": "Set 2", "y": 18}
-          ]
-        },
-        "name": "main",
-        "mark": {"type": "circle", "size": 50},
-        "encoding": {
-          "x": {"field": "x", "type": "nominal"},
-          "y": {
-            "field": "y", 
-            "type": "quantitative", 
-            "scale": {"domain": [0, 20]},
-            "axis": null
-          }
-        }
-      };
-
-      // stack set 2
-      const spec4 = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-        "width": 120,
-        "data": {
+          "name": "source",
           "values": [
             {"x": "Set 1", "y": 1},
             {"x": "Set 1", "y": 2},
@@ -199,10 +113,11 @@
       };
 
       // put rules (lines) using aggregate count
-      const spec5 = {
+      const spec3 = {
         "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
         "width": 120,
         "data": {
+          "name": "source",
           "values": [
             {"x": "Set 1", "y": 1},
             {"x": "Set 1", "y": 2},
@@ -281,10 +196,11 @@
       };
 
       // replace with count bubbles
-      const spec6 = {
+      const spec4 = {
         "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
         "width": 120,
         "data": {
+          "name": "source",
           "values": [
             {"x": "Set 1", "y": 1},
             {"x": "Set 1", "y": 2},
@@ -323,8 +239,17 @@
           }
         }
       }
-    
-      
+
+      const sequence = [
+        spec1, spec2, spec3, spec4
+      ];
+
+      vegaEmbed("#app", sequence[0], {renderer: "svg"})
+      gemini.recommendForSeq(sequence, { stageN: sequence.length - 1, totalDuration: sequence.length * 750 }).then(async ([ resp ]) => {
+        const animation = await gemini.animateSequence(sequence, resp.specs.map(d => d.spec));
+        animation.play("#app");
+      });
+
     </script>
   </body>
 </html>
