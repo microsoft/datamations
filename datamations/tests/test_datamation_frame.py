@@ -4,25 +4,7 @@ import os, json
 from datamations import *
 from pytest import approx
 
-def test_datamation_frame_groupby():
-    df = small_salary().df
-    df = DatamationFrame(df)
-
-    grouped = df.groupby('Work')
-
-    assert 'groupby' in grouped.operations
-    assert df.equals(grouped.states[0])
-    
-
-def test_datamation_frame_specs():
-    df = small_salary().df
-    df = DatamationFrame(df)
-
-    specs = df.groupby('Degree').mean().specs()
-
-    script_dir = os.path.dirname( __file__ )
-    specs_file = open(os.path.join(script_dir, 'specs/raw_spec.json'), 'r')
-
+def compare_specs_with_file(specs, specs_file):
     for i, spec in enumerate(json.load(specs_file)):
         for key in spec:
             if key == 'data':
@@ -40,6 +22,39 @@ def test_datamation_frame_specs():
                                 assert encoding[field] == specs[i][key][j][field]
                 else:                    
                     assert spec[key] == specs[i][key] 
+
+def test_datamation_frame_groupby():
+    df = small_salary().df
+    df = DatamationFrame(df)
+
+    grouped = df.groupby('Work')
+
+    assert 'groupby' in grouped.operations
+    assert df.equals(grouped.states[0])
+    
+
+def test_datamation_frame_specs():
+    df = small_salary().df
+    df = DatamationFrame(df)
+
+    # Group by Degree
+    specs = df.groupby('Degree').mean().specs()
+    script_dir = os.path.dirname( __file__ )
+    specs_file = open(os.path.join(script_dir, 'specs/raw_spec.json'), 'r')
+    compare_specs_with_file(specs, specs_file)
+
+    # Group by Work
+    specs = df.groupby('Work').mean().specs()
+    script_dir = os.path.dirname( __file__ )
+    specs_file = open(os.path.join(script_dir, 'specs/groupby_work.json'), 'r')
+    compare_specs_with_file(specs, specs_file)
+
+    # Group by Degree, Work
+    specs = df.groupby(['Degree', 'Work']).mean().specs()
+    script_dir = os.path.dirname( __file__ )
+    specs_file = open(os.path.join(script_dir, 'specs/groupby_degree_work.json'), 'r')
+    compare_specs_with_file(specs, specs_file)
+
 
 def test_datamation_frame_datamation_sanddance():
     df = small_salary().df

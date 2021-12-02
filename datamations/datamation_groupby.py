@@ -24,8 +24,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         return cls(*args, **kwargs)
 
     def __init__(self, obj, by, keys=None, axis=0, level=None):
-        super(DatamationGroupBy, self).__init__(obj=obj, keys=[by])
-        self._by = [by]
+        self._by = [by] if type(by) == str else by
+        super(DatamationGroupBy, self).__init__(obj=obj, keys=self._by)
         self._states = list(obj.states)
         self._operations = list(obj.operations)
 
@@ -52,10 +52,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         
     # The specs to show summarized points on the chart
     def prep_specs_summarize(self, width=300, height=300):
-        x_axis = self.states[1].dtypes.axes[0].name
-        y_axis = self.states[1].dtypes.axes[1].values[1]
+        x_axis = self.states[1].dtypes.axes[0].values[0]
+        y_axis = self.states[1].dtypes.axes[1].values[1] if len(self._by) == 1 else self.states[1].dtypes.axes[1].values[0]
 
-        groups = list(self.states[1].groups.keys())
+
+        if len(self.states[1].groups.keys()) == 2:
+            groups = list(self.states[1].groups.keys())
+        else:
+            groups = [list(self.states[1].groups.keys())[0][0], list(self.states[1].groups.keys())[1][1]]
 
         specs_list = []
 

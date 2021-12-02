@@ -54,7 +54,7 @@ class DatamationFrame(pd.DataFrame):
 
     # Override the 'groupby' function
     def groupby(self, by):
-        self._by = [by]
+        self._by = [by] if type(by) == str else by
         self._operations.append('groupby')
         df = super(DatamationFrame, self).groupby(by=by)
         return datamation_groupby.DatamationGroupBy(self, by)
