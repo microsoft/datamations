@@ -21,10 +21,10 @@ class utils():
                 "height": height,
                 "width": width,
                 "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+                "meta": meta,
                 "data": {
                     "values": data
                 },
-                "meta": meta,
                 "mark": {
                     "type": "point",
                     "filled": True,

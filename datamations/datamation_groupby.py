@@ -237,8 +237,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": self._output[y_axis][groups[0]],
-                "datamations_y_raw": self.states[0][y_axis][i],
                 "datamations_y_tooltip": self._output[y_axis][groups[0]],
+                "datamations_y_raw": self.states[0][y_axis][i],
                 "Lower": self._output[y_axis][groups[0]] - self._error[y_axis][groups[0]],
                 "Upper": self._output[y_axis][groups[0]] + self._error[y_axis][groups[0]]
             })
@@ -252,8 +252,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 x_axis: self.states[0][x_axis][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": self._output[y_axis][groups[1]],
-                "datamations_y_raw": self.states[0][y_axis][i],
                 "datamations_y_tooltip": self._output[y_axis][groups[1]],
+                "datamations_y_raw": self.states[0][y_axis][i],
                 "Lower": self._output[y_axis][groups[1]] - self._error[y_axis][groups[1]],
                 "Upper": self._output[y_axis][groups[1]] + self._error[y_axis][groups[1]]
             })
