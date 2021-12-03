@@ -52,14 +52,15 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         
     # The specs to show summarized points on the chart
     def prep_specs_summarize(self, width=300, height=300):
-        x_axis = self.states[1].dtypes.axes[0].values[0]
+        x_axis = self.states[1].dtypes.axes[0].name if len(self._by) == 1 else self.states[1].dtypes.axes[0].names[0]
         y_axis = self.states[1].dtypes.axes[1].values[1] if len(self._by) == 1 else self.states[1].dtypes.axes[1].values[0]
 
 
         if len(self.states[1].groups.keys()) == 2:
             groups = list(self.states[1].groups.keys())
         else:
-            groups = [list(self.states[1].groups.keys())[0][0], list(self.states[1].groups.keys())[1][1]]
+            groups = [list(self.states[1].groups.keys())[0][0], list(self.states[1].groups.keys())[1][0]]
+            subgroups = [list(self.states[1].groups.keys())[0][1], list(self.states[1].groups.keys())[1][1]]
 
         specs_list = []
 
@@ -269,10 +270,18 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         specs_list.append(spec)
 
         # Show the summarized values along with error bars, zoomed in
-        domain = [
+        if len(self.states[1].groups.keys()) == 2:
+            domain = [
                 round(min(self._output[y_axis][groups[0]]-self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
                 round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13)
-        ]
+              ]
+        else:
+            domain = [
+                round(min(self._output[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
+                round(min(self._output[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
+                # round(min(self._output[y_axis][groups[0]][subgroups[0]]-self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]][subgroups[0]]),13),
+                # round(max(self._output[y_axis][groups[0]][subgroups[1]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]][subgroups[1]]+self._error[y_axis][groups[1]][subgroups[1]]),13)
+            ]
 
         y_encoding = {
             "field": "datamations_y",
