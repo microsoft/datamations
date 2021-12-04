@@ -1,6 +1,6 @@
-# datamation()
+# datamation_sanddance()
 
-[datamation()](https://github.com/microsoft/datamations/blob/main/datamations/datamation_frame.py#L122) is the main function that a user will call to generate a datamation.
+[datamation_sanddance()](https://github.com/microsoft/datamations/blob/main/datamations/datamation_frame.py#L127) is the main function that a user will call to generate a datamation.
 
 ```{python}
 from datamations import *
