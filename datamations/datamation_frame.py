@@ -64,7 +64,6 @@ class DatamationFrame(pd.DataFrame):
         x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
         y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
 
-        # by = ', '.join(self._by)
         by = self._by[0]
 
         spec_encoding = {
@@ -104,6 +103,8 @@ class DatamationFrame(pd.DataFrame):
                 "axes": False
         }
 
+        specs_list = []
+
         if len(self._by) > 1:
             cols = []
             count = {}
@@ -135,12 +136,63 @@ class DatamationFrame(pd.DataFrame):
                     }
                 ]
             }
+            spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+            specs_list.append(spec)
+            
+            by = ', '.join(self._by)
+            cols = []
+            rows = []
+            count = {}
+            data = []
+            for key in self.states[1].groups.keys():
+                col, row = key
+                if col not in cols:
+                    cols.append(col)
+                if row not in rows:
+                    rows.append(row)
+                if col not in count:
+                    count[col] = 0
+                count[col] = count[col] + len(self.states[1].groups[key])
+                data.append({self._by[0]: col, self._by[1]: row,'n': len(self.states[1].groups[key])})
 
+            facet_dims = {
+                "ncol": len(cols),
+                "nrow": 1
+            }
+            meta = { 
+                    'parse': "grid",
+                    'description': "Group by " + by,
+                    "splitField": self._by[1],
+                    "axes": True
+            }
 
-        specs_list = []
-        spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+            spec_encoding = {
+                'x': x_encoding,
+                'y': y_encoding ,
+                 "color": {
+                    "field": self._by[1],
+                    "type": "nominal",
+                    "legend": {
+                        "values": rows
+                    }
+                },
+                "tooltip": [
+                    {
+                    "field": self._by[0],
+                    "type": "nominal"
+                    },
+                    {
+                    "field": self._by[1],
+                    "type": "nominal"
+                    }
+                ]
+            }
+            spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+            specs_list.append(spec)
+        else:
+            spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+            specs_list.append(spec)
 
-        specs_list.append(spec)
         return specs_list
 
     # The first spec in the json to layout all the points in one frame.
