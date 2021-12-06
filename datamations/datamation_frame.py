@@ -64,7 +64,8 @@ class DatamationFrame(pd.DataFrame):
         x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
         y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
 
-        by = ','.join(self._by)
+        # by = ', '.join(self._by)
+        by = self._by[0]
 
         spec_encoding = {
             'x': x_encoding,
@@ -81,6 +82,19 @@ class DatamationFrame(pd.DataFrame):
             ]
         }
         
+        facet_encoding = {}
+
+        if len(self._by) > 1:
+            facet_encoding["column"] = { "field": self._by[0], "type": "ordinal", "title": self._by[0] }
+
+        if len(self._by) > 2:
+            facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
+
+        facet_dims = {
+            "ncol": 1,
+            "nrow": 1
+        }
+
         data = list(map(lambda key: { by: key, 'n': len(self.states[1].groups[key])}, self.states[1].groups.keys()))
 
         meta = { 
@@ -90,8 +104,41 @@ class DatamationFrame(pd.DataFrame):
                 "axes": False
         }
 
+        if len(self._by) > 1:
+            cols = []
+            count = {}
+            for key in self.states[1].groups.keys():
+                col, row = key
+                if col not in cols:
+                    cols.append(col)
+                if col not in count:
+                    count[col] = 0
+                count[col] = count[col] + len(self.states[1].groups[key])
+                
+            facet_dims = {
+                "ncol": len(cols),
+                "nrow": 1
+            }
+            data = list(map(lambda col: { by: col, 'n': count[col]}, cols))
+            meta = { 
+                    'parse': "grid",
+                    'description': "Group by " + by
+            }
+
+            spec_encoding = {
+                'x': x_encoding,
+                'y': y_encoding ,
+                "tooltip": [
+                    {
+                    "field": by,
+                    "type": "nominal"
+                    }
+                ]
+            }
+
+
         specs_list = []
-        spec = utils.generate_vega_specs(data, meta, spec_encoding)
+        spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
 
         specs_list.append(spec)
         return specs_list
