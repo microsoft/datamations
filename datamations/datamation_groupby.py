@@ -138,70 +138,84 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         if len(self._by) > 2:
             facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
 
-        cols = []
-        count = {}
-        for key in self.states[1].groups.keys():
-            col, row = key
-            if col not in cols:
-                cols.append(col)
-            if col not in count:
-                count[col] = 0
-            count[col] = count[col] + len(self.states[1].groups[key])
-            
         facet_dims = {
-            "ncol": len(cols),
-            "nrow": 1
+                "ncol": 1,
+                "nrow": 1
         }
+
+        if len(self._by) > 1:
+            cols = []
+            count = {}
+            for key in self.states[1].groups.keys():
+                col, row = key
+                if col not in cols:
+                    cols.append(col)
+                if col not in count:
+                    count[col] = 0
+                count[col] = count[col] + len(self.states[1].groups[key])
+                
+            facet_dims = {
+                "ncol": len(cols),
+                "nrow": 1
+            }
 
         data = []
         
         # Prepare the data by assigning different x-axis values to the groups
         # and showing the original values on the y-axis for each point.
-        id = 1
-        for i in range(len(self.states[0])):
-            data.append({
-                "gemini_id": id,
-                x_axis: self.states[0][x_axis][i],
-                self._by[1]: self.states[0][self._by[1]][i],
-                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                "datamations_y": self.states[0][y_axis][i],
-                "datamations_y_tooltip": self.states[0][y_axis][i],
-            })
-            id = id + 1
-
-        for i in range(len(self.states[0])):
-            if self.states[0][x_axis][i] == self._by[1]:
-                continue
-            data.append({
-                "gemini_id": id,
-                x_axis: self.states[0][x_axis][i],
-                self._by[1]: self.states[0][self._by[1]][i],
-                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                "datamations_y": self.states[0][y_axis][i],
-                "datamations_y_tooltip": self.states[0][y_axis][i]
-            })
-            id = id + 1
-
         if len(self._by) > 1:
             i = 1
             data = []
             for group in self.groups:
                 col, row = group
                 for index in self.groups[group]:
-                    data.append({
+                    value = {
                         "gemini_id": i,
                         self._by[0]: self.states[0][self._by[0]][index],
-                        self._by[1]: self.states[0][self._by[1]][index],
                         "datamations_x": 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2,
                         "datamations_y": self.states[0][y_axis][index],
                         "datamations_y_tooltip": self.states[0][y_axis][index]   
-                    })
+                    }
+                    if len(self._by) > 1:
+                        value[self._by[1]] = self.states[0][self._by[1]][index]
+                    data.append(value)
                     i = i+1
-                    
-        facet_dims = {
-            "ncol": len(cols),
-            "nrow": 1
-        }
+                        
+            facet_dims = {
+                "ncol": len(cols),
+                "nrow": 1
+            }
+        else:
+            id = 1
+            for i in range(len(self.states[0])):
+                if self.states[0][x_axis][i] == groups[1]:
+                    continue
+                value = {
+                    "gemini_id": id,
+                    x_axis: self.states[0][x_axis][i],
+                    "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                    "datamations_y": self.states[0][y_axis][i],
+                    "datamations_y_tooltip": self.states[0][y_axis][i],
+                }
+                if len(self._by) > 1:
+                    value[self._by[1]] = self.states[0][self._by[1]][i]
+                data.append(value)
+                id = id + 1
+
+            for i in range(len(self.states[0])):
+                if self.states[0][x_axis][i] == groups[0]:
+                    continue
+                value = {
+                    "gemini_id": id,
+                    x_axis: self.states[0][x_axis][i],
+                    "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                    "datamations_y": self.states[0][y_axis][i],
+                    "datamations_y_tooltip": self.states[0][y_axis][i]
+                }
+                if len(self._by) > 1:
+                    value[self._by[1]] = self.states[0][self._by[1]][i]
+                data.append(value)
+                id = id + 1
 
         # Jitter plot
         meta =  { 
@@ -264,7 +278,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
-                self._by[1]: self.states[0][self._by[1]][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": self._output[y_axis][groups[0]],
                 "datamations_y_tooltip": self._output[y_axis][groups[0]],
@@ -277,7 +290,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
-                self._by[1]: self.states[0][self._by[1]][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": self._output[y_axis][groups[1]],
                 "datamations_y_tooltip": self._output[y_axis][groups[1]]
@@ -286,7 +298,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
-        spec = utils.generate_vega_specs(data, meta, spec_encoding)
+        spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
         specs_list.append(spec)
 
         tooltip = [
@@ -352,7 +364,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
-        spec = utils.generate_vega_specs(data, meta, spec_encoding, True)
+        spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, True)
         specs_list.append(spec)
 
         # Show the summarized values along with error bars, zoomed in
@@ -385,7 +397,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
-        spec = utils.generate_vega_specs(data, meta, spec_encoding, True)
+        spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, True)
         specs_list.append(spec)
                 
         return specs_list
