@@ -415,26 +415,24 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * - spec.layer = splits layers to stack on top on each other
    */
   async function transformSpecs() {
-    // calculate rows: considering spec height for rows calculation
-
     const n = d3.max(vegaLiteSpecs[0].data.values, d => d.n);
     let rows = Math.ceil(Math.sqrt(n));
 
-    const gap = 2;
-    const distance = 6 + gap;
-
-    const {height: firstSpecHeight} = vegaLiteSpecs[0].spec || vegaLiteSpecs[0];
-
-    if (firstSpecHeight / rows > distance) {
-      rows = Math.floor(firstSpecHeight / distance)
-    }
-
-    // end of rows calculation
-
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
-      const vlSpec = vegaLiteSpecs[i];
+      let vlSpec = vegaLiteSpecs[i];
 
       if (Array.isArray(vlSpec)) continue; // just sanity check, making sure that it is not an array
+
+      // if filter has empty `oneOf`, then generate empty spec and avoid any further processing
+      if (vlSpec.transform && vlSpec.transform[0].filter.oneOf.length === 0) {
+        const emptySpec = getEmptySpec(vlSpec);
+
+        metas[i] = emptySpec.meta;
+        rawSpecs[i] = emptySpec;
+        vlSpec = emptySpec;
+        vegaLiteSpecs[i] = emptySpec;
+        continue;
+      }
 
       const meta = vlSpec.meta;
       const parse = meta.parse;
