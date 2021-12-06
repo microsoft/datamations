@@ -59,20 +59,23 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         if len(self.states[1].groups.keys()) == 2:
             groups = list(self.states[1].groups.keys())
         else:
-            groups = [list(self.states[1].groups.keys())[0][0], list(self.states[1].groups.keys())[1][0]]
+            groups = [list(self.states[1].groups.keys())[0][0], list(self.states[1].groups.keys())[2][0]]
             subgroups = [list(self.states[1].groups.keys())[0][1], list(self.states[1].groups.keys())[1][1]]
 
         specs_list = []
+
+        labels = [subgroups[0] if len(self._by) > 1 else groups[0], subgroups[1] if len(self._by) > 1 else groups[1]]
 
         x_encoding = {
             "field": "datamations_x",
             "type": "quantitative",
             "axis": {
             "values": [1, 2],
-            "labelExpr": "round(datum.label) == 1 ? '" + groups[0] + "' : '"  + groups[1] + "'",
+            #"labelExpr": "round(datum.label) == 1 ? '" + subgroups[0] if len(self._by) > 1 else groups[0] + "' : '"  +  subgroups[1] if len(self._by) > 1 else groups[1] + "'",
+            "labelExpr": "round(datum.label) == 1 ? '" + labels[0] + "' : '"  +  labels[1] + "'",
             "labelAngle": -90
             },
-            "title": x_axis,
+            "title": self._by[1] if len(self._by) > 1 else x_axis,
             "scale": {
             "domain": [0.5, 2.5]
             }
@@ -87,6 +90,17 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             }
         }
 
+        color = {
+          "field": "Work",
+          "type": "nominal",
+          "legend": {
+            "values": [
+              "Academia",
+              "Industry"
+            ]
+          }
+        }
+
         tooltip = [
             {
                 "field": "datamations_y_tooltip",
@@ -98,6 +112,46 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "type": "nominal"
             }
         ]
+        
+        if len(self._by) > 1:
+            tooltip = [
+                {
+                    "field": "datamations_y_tooltip",
+                    "type": "quantitative",
+                    "title": "Salary"
+                },
+                {
+                    "field": "Degree",
+                    "type": "nominal"
+                },
+                {
+                    "field": "Work",
+                    "type": "nominal"
+                }
+            ]
+
+        facet_encoding = {}
+
+        if len(self._by) > 1:
+            facet_encoding["column"] = { "field": self._by[0], "type": "ordinal", "title": self._by[0] }
+
+        if len(self._by) > 2:
+            facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
+
+        cols = []
+        count = {}
+        for key in self.states[1].groups.keys():
+            col, row = key
+            if col not in cols:
+                cols.append(col)
+            if col not in count:
+                count[col] = 0
+            count[col] = count[col] + len(self.states[1].groups[key])
+            
+        facet_dims = {
+            "ncol": len(cols),
+            "nrow": 1
+        }
 
         data = []
         
@@ -105,11 +159,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         # and showing the original values on the y-axis for each point.
         id = 1
         for i in range(len(self.states[0])):
-            if self.states[0][x_axis][i] == groups[1]:
-                continue
             data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
+                self._by[1]: self.states[0][self._by[1]][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": self.states[0][y_axis][i],
                 "datamations_y_tooltip": self.states[0][y_axis][i],
@@ -117,16 +170,38 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             id = id + 1
 
         for i in range(len(self.states[0])):
-            if self.states[0][x_axis][i] == groups[0]:
+            if self.states[0][x_axis][i] == self._by[1]:
                 continue
             data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
+                self._by[1]: self.states[0][self._by[1]][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": self.states[0][y_axis][i],
                 "datamations_y_tooltip": self.states[0][y_axis][i]
             })
             id = id + 1
+
+        if len(self._by) > 1:
+            i = 1
+            data = []
+            for group in self.groups:
+                col, row = group
+                for index in self.groups[group]:
+                    data.append({
+                        "gemini_id": i,
+                        self._by[0]: self.states[0][self._by[0]][index],
+                        self._by[1]: self.states[0][self._by[1]][index],
+                        "datamations_x": 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2,
+                        "datamations_y": self.states[0][y_axis][index],
+                        "datamations_y_tooltip": self.states[0][y_axis][index]   
+                    })
+                    i = i+1
+                    
+        facet_dims = {
+            "ncol": len(cols),
+            "nrow": 1
+        }
 
         # Jitter plot
         meta =  { 
@@ -136,18 +211,27 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "splitField": x_axis,
                 "xAxisLabels": groups
         }
+        if len(self._by) > 1:
+            meta =  { 
+                    "parse": "jitter",
+                    "axes": True,
+                    "description": "Plot " + y_axis + " within each group",
+                    "splitField": self._by[1],
+            }
         
         # Spec encoding for Vega along with the data and metadata.
         # Generate vega specs for the summarizing steps of the animaiton
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
-        spec = utils.generate_vega_specs(data, meta, spec_encoding)
+        if len(self._by) > 1:
+            spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
+        spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
         specs_list.append(spec)
 
         meta = { 
                 "axes": False,
                 "description": "Plot mean " + y_axis + " of each group"
         }
-        
+
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
@@ -180,6 +264,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
+                self._by[1]: self.states[0][self._by[1]][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": self._output[y_axis][groups[0]],
                 "datamations_y_tooltip": self._output[y_axis][groups[0]],
@@ -192,6 +277,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             data.append({
                 "gemini_id": id,
                 x_axis: self.states[0][x_axis][i],
+                self._by[1]: self.states[0][self._by[1]][i],
                 "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                 "datamations_y": self._output[y_axis][groups[1]],
                 "datamations_y_tooltip": self._output[y_axis][groups[1]]

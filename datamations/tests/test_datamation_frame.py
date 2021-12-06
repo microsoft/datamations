@@ -20,6 +20,9 @@ def compare_specs_with_file(specs, specs_file):
                                     assert encoding[field][val] == specs[i][key][j][field][val]
                             else:
                                 assert encoding[field] == specs[i][key][j][field]
+                elif key == "spec":
+                    for val in spec[key]:
+                        assert spec[key][val] == specs[i][key][val] 
                 else:                    
                     assert spec[key] == specs[i][key] 
 
