@@ -18,3 +18,4 @@ azure-pipelines.yml
 ^inst/htmlwidgets/test$
 ^datamations$
 ^scratch$
+^setup\.py$
