@@ -371,44 +371,103 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         data = []
 
         # Show errror bars along with sumarized values
-        id = 1
-        for i in range(len(self.states[0])):
-            if self.states[0][x_axis][i] == groups[1]:
-                continue
-            data.append({
-                "gemini_id": id,
-                x_axis: self.states[0][x_axis][i],
-                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                "datamations_y": self._output[y_axis][groups[0]],
-                "datamations_y_tooltip": self._output[y_axis][groups[0]],
-                "datamations_y_raw": self.states[0][y_axis][i],
-                "Lower": self._output[y_axis][groups[0]] - self._error[y_axis][groups[0]],
-                "Upper": self._output[y_axis][groups[0]] + self._error[y_axis][groups[0]]
-            })
-            id = id + 1
+        if len(self._by) > 1:
+            i = 1
+            data = []
+            for group in self.groups:
+                col, row = group
+                for index in self.groups[group]:
+                    value = {
+                        "gemini_id": i,
+                        x_axis: self.states[0][x_axis][index],
+                        "datamations_x": 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2,
+                        "datamations_y": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]],
+                        "datamations_y_tooltip": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]], 
+                        "datamations_y_raw": self.states[0][y_axis][index],
+                        "Lower": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] - self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]],
+                        "Upper": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] + self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                    }
+                    if len(self._by) > 1:
+                        value[self._by[1]] = self.states[0][self._by[1]][index]
+                    data.append(value)
+                    i = i+1
+                        
+            facet_dims = {
+                "ncol": len(cols),
+                "nrow": 1
+            }
 
-        for i in range(len(self.states[0])):
-            if self.states[0][x_axis][i] == groups[0]:
-                continue
-            data.append({
-                "gemini_id": id,
-                x_axis: self.states[0][x_axis][i],
-                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                "datamations_y": self._output[y_axis][groups[1]],
-                "datamations_y_tooltip": self._output[y_axis][groups[1]],
-                "datamations_y_raw": self.states[0][y_axis][i],
-                "Lower": self._output[y_axis][groups[1]] - self._error[y_axis][groups[1]],
-                "Upper": self._output[y_axis][groups[1]] + self._error[y_axis][groups[1]]
-            })
-            id = id + 1
+            tooltip = [
+                {
+                "field": "datamations_y_tooltip",
+                "type": "quantitative",
+                "title": "mean(" + y_axis + ")"
+                },
+                {
+                "field": "Upper",
+                "type": "nominal",
+                "title": "mean(" + y_axis + ") + standard error"
+                },
+                {
+                "field": "Lower",
+                "type": "nominal",
+                "title": "mean(" + y_axis + ") - standard error"
+                },
+                {
+                "field": self._by[0],
+                "type": "nominal"
+                },
+                {
+                "field": self._by[1],
+                "type": "nominal"
+                }
+            ]
+        else:
+            id = 1
+            for i in range(len(self.states[0])):
+                if self.states[0][x_axis][i] == groups[1]:
+                    continue
+                data.append({
+                    "gemini_id": id,
+                    x_axis: self.states[0][x_axis][i],
+                    "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                    "datamations_y": self._output[y_axis][groups[0]],
+                    "datamations_y_tooltip": self._output[y_axis][groups[0]],
+                    "datamations_y_raw": self.states[0][y_axis][i],
+                    "Lower": self._output[y_axis][groups[0]] - self._error[y_axis][groups[0]],
+                    "Upper": self._output[y_axis][groups[0]] + self._error[y_axis][groups[0]]
+                })
+                id = id + 1
+
+            for i in range(len(self.states[0])):
+                if self.states[0][x_axis][i] == groups[0]:
+                    continue
+                data.append({
+                    "gemini_id": id,
+                    x_axis: self.states[0][x_axis][i],
+                    "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                    "datamations_y": self._output[y_axis][groups[1]],
+                    "datamations_y_tooltip": self._output[y_axis][groups[1]],
+                    "datamations_y_raw": self.states[0][y_axis][i],
+                    "Lower": self._output[y_axis][groups[1]] - self._error[y_axis][groups[1]],
+                    "Upper": self._output[y_axis][groups[1]] + self._error[y_axis][groups[1]]
+                })
+                id = id + 1
 
         meta = { 
                 "axes": False,
                 "description": "Plot mean " + y_axis + " of each group, with errorbar"
         }
 
+        if len(self._by) > 1:
+            meta =  { 
+                "axes": True,
+                "description": "Plot mean " + y_axis + " of each group, with errorbar"
+            }
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
+        if len(self._by) > 1:
+            spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
         spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, True)
         specs_list.append(spec)
 

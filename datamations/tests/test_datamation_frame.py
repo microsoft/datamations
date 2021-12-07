@@ -16,13 +16,21 @@ def compare_specs_with_file(specs, specs_file):
                         for field in encoding:
                             if field == 'encoding':
                                 for val in encoding[field]:
-                                    print(val)
                                     assert encoding[field][val] == specs[i][key][j][field][val]
                             else:
                                 assert encoding[field] == specs[i][key][j][field]
                 elif key == "spec":
-                    for val in spec[key]:
-                        assert spec[key][val] == specs[i][key][val] 
+                    for item in spec[key]:
+                        if item == 'layer':
+                            for j, encoding in enumerate(spec[key]["layer"]):
+                                for field in encoding:
+                                    if field == 'encoding':
+                                        for val in encoding[field]:
+                                            assert encoding[field][val] == specs[i][key][item][j][field][val]
+                                    else:
+                                        assert encoding[field] == specs[i][key][item][j][field]
+                        else:
+                            assert spec[key][item] == specs[i][key][item] 
                 else:                    
                     assert spec[key] == specs[i][key] 
 

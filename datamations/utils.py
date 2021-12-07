@@ -51,24 +51,50 @@ class utils():
             errorbar_spec_encoding = copy.deepcopy(spec_encoding)
             errorbar_spec_encoding["y"]["field"] = utils.Y_RAW_FIELD_CHR
 
-            spec = {
-                "height": height,
-                "width": width,
-                "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-                "data": {
-                    "values": data
-                },
-                "meta": meta,
-                "layer": [
-                    {
-                        "mark": "errorbar",
-                        "encoding": errorbar_spec_encoding
+            if facet_encoding:
+                spec = {
+                    "height": height,
+                    "width": width,
+                    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+                    "meta": meta,
+                    "data": {
+                        "values": data
                     },
-                    {
-                        "mark": mark,
-                        "encoding": spec_encoding
+                    "facet": facet_encoding,
+                    "spec": {
+                        "height": height / facet_dims["nrow"] if facet_dims else 1,
+                        "width": width / facet_dims["ncol"] if facet_dims else 1,
+                        "layer": [
+                            {
+                                "mark": "errorbar",
+                                "encoding": errorbar_spec_encoding
+                            },
+                            {
+                                "mark": mark,
+                                "encoding": spec_encoding
+                            }
+                        ]
                     }
-                ]
-            }
+                }
+            else:
+                spec = {
+                    "height": height,
+                    "width": width,
+                    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+                    "data": {
+                        "values": data
+                    },
+                    "meta": meta,
+                    "layer": [
+                        {
+                            "mark": "errorbar",
+                            "encoding": errorbar_spec_encoding
+                        },
+                        {
+                            "mark": mark,
+                            "encoding": spec_encoding
+                        }
+                    ]
+                }
         return spec
         
