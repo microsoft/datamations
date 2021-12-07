@@ -242,7 +242,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         specs_list.append(spec)
 
         meta = { 
-                "axes": False,
+                "axes": True if len(self._by) > 1 else False,
                 "description": "Plot mean " + y_axis + " of each group"
         }
 
@@ -271,33 +271,78 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         
         # Plot the final summarized value
         # The y-axis value is the same for all 
-        id = 1
-        for i in range(len(self.states[0])):
-            if self.states[0][x_axis][i] == groups[1]:
-                continue
-            data.append({
-                "gemini_id": id,
-                x_axis: self.states[0][x_axis][i],
-                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                "datamations_y": self._output[y_axis][groups[0]],
-                "datamations_y_tooltip": self._output[y_axis][groups[0]],
-            })
-            id = id + 1
+        if len(self._by) > 1:
+            i = 1
+            data = []
+            for group in self.groups:
+                col, row = group
+                for index in self.groups[group]:
+                    value = {
+                        "gemini_id": i,
+                        x_axis: self.states[0][x_axis][index],
+                        "datamations_x": 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2,
+                        "datamations_y": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]],
+                        "datamations_y_tooltip": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]  
+                    }
+                    if len(self._by) > 1:
+                        value[self._by[1]] = self.states[0][self._by[1]][index]
+                    data.append(value)
+                    i = i+1
+                        
+            facet_dims = {
+                "ncol": len(cols),
+                "nrow": 1
+            }
+            tooltip = [
+                {
+                    "field": "datamations_y_tooltip",
+                    "type": "quantitative",
+                    "title": "mean(Salary)"
+                },
+                {
+                    "field": self._by[0],
+                    "type": "nominal"
+                },
+                {
+                    "field": self._by[1],
+                    "type": "nominal"
+                }
+            ]
+        else:
+            id = 1
+            for i in range(len(self.states[0])):
+                if self.states[0][x_axis][i] == groups[1]:
+                    continue
+                value = {
+                    "gemini_id": id,
+                    x_axis: self.states[0][x_axis][i],
+                    "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                    "datamations_y": self._output[y_axis][groups[0]],
+                    "datamations_y_tooltip": self._output[y_axis][groups[0]]
+                }
+                if len(self._by) > 1:
+                    value[self._by[1]] = self.states[0][self._by[1]][i]
+                data.append(value)
+                id = id + 1
 
-        for i in range(len(self.states[0])):
-            if self.states[0][x_axis][i] == groups[0]:
-                continue
-            data.append({
-                "gemini_id": id,
-                x_axis: self.states[0][x_axis][i],
-                "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                "datamations_y": self._output[y_axis][groups[1]],
-                "datamations_y_tooltip": self._output[y_axis][groups[1]]
-            })
-            id = id + 1
-
+            for i in range(len(self.states[0])):
+                if self.states[0][x_axis][i] == groups[0]:
+                    continue
+                value = {
+                    "gemini_id": id,
+                    x_axis: self.states[0][x_axis][i],
+                    "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                    "datamations_y": self._output[y_axis][groups[1]],
+                    "datamations_y_tooltip": self._output[y_axis][groups[1]]
+                }
+                if len(self._by) > 1:
+                    value[self._by[1]] = self.states[0][self._by[1]][i]
+                data.append(value)
+                id = id + 1
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
+        if len(self._by) > 1:
+            spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
         spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
         specs_list.append(spec)
 
