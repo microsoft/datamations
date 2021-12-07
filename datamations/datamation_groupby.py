@@ -173,12 +173,11 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     value = {
                         "gemini_id": i,
                         self._by[0]: self.states[0][self._by[0]][index],
+                        self._by[1]: self.states[0][self._by[1]][index],
                         "datamations_x": 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2,
                         "datamations_y": self.states[0][y_axis][index],
                         "datamations_y_tooltip": self.states[0][y_axis][index]   
                     }
-                    if len(self._by) > 1:
-                        value[self._by[1]] = self.states[0][self._by[1]][index]
                     data.append(value)
                     i = i+1
                         
@@ -198,8 +197,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "datamations_y": self.states[0][y_axis][i],
                     "datamations_y_tooltip": self.states[0][y_axis][i],
                 }
-                if len(self._by) > 1:
-                    value[self._by[1]] = self.states[0][self._by[1]][i]
                 data.append(value)
                 id = id + 1
 
@@ -213,8 +210,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "datamations_y": self.states[0][y_axis][i],
                     "datamations_y_tooltip": self.states[0][y_axis][i]
                 }
-                if len(self._by) > 1:
-                    value[self._by[1]] = self.states[0][self._by[1]][i]
                 data.append(value)
                 id = id + 1
 
@@ -281,12 +276,11 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     value = {
                         "gemini_id": i,
                         x_axis: self.states[0][x_axis][index],
+                        self._by[1]: self.states[0][self._by[1]][index],
                         "datamations_x": 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2,
                         "datamations_y": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]],
                         "datamations_y_tooltip": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]  
                     }
-                    if len(self._by) > 1:
-                        value[self._by[1]] = self.states[0][self._by[1]][index]
                     data.append(value)
                     i = i+1
                         
@@ -321,8 +315,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "datamations_y": self._output[y_axis][groups[0]],
                     "datamations_y_tooltip": self._output[y_axis][groups[0]]
                 }
-                if len(self._by) > 1:
-                    value[self._by[1]] = self.states[0][self._by[1]][i]
                 data.append(value)
                 id = id + 1
 
@@ -336,8 +328,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "datamations_y": self._output[y_axis][groups[1]],
                     "datamations_y_tooltip": self._output[y_axis][groups[1]]
                 }
-                if len(self._by) > 1:
-                    value[self._by[1]] = self.states[0][self._by[1]][i]
                 data.append(value)
                 id = id + 1
 
@@ -381,6 +371,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     value = {
                         "gemini_id": i,
                         x_axis: self.states[0][x_axis][index],
+                        self._by[1]: self.states[0][self._by[1]][index],
                         "datamations_x": 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2,
                         "datamations_y": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]],
                         "datamations_y_tooltip": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]], 
@@ -388,8 +379,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "Lower": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] - self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]],
                         "Upper": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] + self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
                     }
-                    if len(self._by) > 1:
-                        value[self._by[1]] = self.states[0][self._by[1]][index]
                     data.append(value)
                     i = i+1
                         

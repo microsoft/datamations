@@ -19,8 +19,6 @@ class utils():
         if not errorbar:
             if facet_encoding:
                 spec = {
-                    "height": height,
-                    "width": width,
                     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
                     "meta": meta,
                     "data": {
@@ -53,8 +51,6 @@ class utils():
 
             if facet_encoding:
                 spec = {
-                    "height": height,
-                    "width": width,
                     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
                     "meta": meta,
                     "data": {
