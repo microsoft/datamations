@@ -217,7 +217,7 @@ function getGridSpec(spec, rows = 10) {
         Math.max(yDomain[1], middle + rows / 2)
       ],
     };
-    console.log(encoding.y.scale.domain);
+
     encoding.x.field = CONF.X_FIELD;
     encoding.y.field = CONF.Y_FIELD;
 

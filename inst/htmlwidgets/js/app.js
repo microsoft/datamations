@@ -28,7 +28,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   let intervalId;
   let timeoutId;
   let initializing = false;
-  console.log("initial specs:", specs);
+
   let frameDuration = frameDur || 2000;
   let frameDelay = frameDel || 1000;
 
@@ -424,7 +424,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   async function transformSpecs() {
     const n = d3.max(vegaLiteSpecs[0].data.values, d => d.n);
     const rows = Math.ceil(Math.sqrt(n));
-    console.log(rows)
+
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
       const vlSpec = vegaLiteSpecs[i];
 
@@ -480,8 +480,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         }
       }
     }
-
-    console.log("final specs:", vegaLiteSpecs)
   }
 
   /**
@@ -614,26 +612,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   function exportGif() {
     const { exportWrap } = getSelectors(id);
 
-    const gif = new GIF({
-      workers: 2,
-      quality: 2,
-      debug: true,
-      repeat: -1,
-      workerScript: './gif.worker.js',
-    });
-
-    gif.on("progress",function(p){
-
-    console.log(p);
-  
-    });
-
-    gif.on('finished', function(blob) {
-      console.log(blob)
-      window.open(URL.createObjectURL(blob));
-    });
-
-    let intervalId;
+    let intervalId, images = [];
 
     const startInterval = () => {
 
@@ -642,14 +621,14 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       intervalId = setInterval(() => {
 
         html2canvas(document.querySelector(exportWrap)).then(canvas => {  
-          document.body.appendChild(canvas);
+          // document.body.appendChild(canvas);
 
-          var image_gif = new Image();
-          image_gif.src = canvas.toDataURL("image/png");
-          image_gif.height = canvas.height;
-          image_gif.width = canvas.width;
+          // var image_gif = new Image();
+          // image_gif.src = canvas.toDataURL();
+          // image_gif.height = canvas.height;
+          // image_gif.width = canvas.width;
 
-          gif.addFrame(image_gif, {delay: 100});
+          images.push(canvas.toDataURL());
         });
   
       }, frameDuration / 10);
@@ -663,7 +642,24 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         intervalId && clearInterval(intervalId);
 
         setTimeout(() => {
-          gif.render();
+
+          gifshot.createGIF({ 
+            images, 
+            gifWidth: window.innerWidth, 
+            gifHeight: 400 
+          },function(obj) {
+            if(!obj.error) {
+              var image = obj.image,
+              animatedImage = document.createElement('img');
+              animatedImage.src = image;
+              document.body.appendChild(animatedImage);
+
+              var a = document.createElement('a');
+              a.href = image;
+              a.download = `exported.gif`;
+              a.click();              
+            }
+          });
         }, 1000);
 
 
