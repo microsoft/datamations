@@ -90,16 +90,17 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             }
         }
 
-        color = {
-          "field": "Work",
-          "type": "nominal",
-          "legend": {
-            "values": [
-              "Academia",
-              "Industry"
-            ]
-          }
-        }
+        if len(self._by) > 1:
+            color = {
+            "field": self._by[1],
+            "type": "nominal",
+                "legend": {
+                    "values": [
+                        subgroups[0],
+                        subgroups[1]
+                    ]
+                }
+            }
 
         tooltip = [
             {
@@ -118,14 +119,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 {
                     "field": "datamations_y_tooltip",
                     "type": "quantitative",
-                    "title": "Salary"
+                    "title": y_axis
                 },
                 {
-                    "field": "Degree",
+                    "field": self._by[0],
                     "type": "nominal"
                 },
                 {
-                    "field": "Work",
+                    "field": self._by[1],
                     "type": "nominal"
                 }
             ]
