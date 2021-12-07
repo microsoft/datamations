@@ -64,7 +64,10 @@ class DatamationFrame(pd.DataFrame):
         x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
         y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
 
-        by = self._by[0]
+        tooltip = [{
+            "field": self._by[0],
+            "type": "nominal"
+        }]
 
         spec_encoding = {
             'x': x_encoding,
@@ -73,12 +76,7 @@ class DatamationFrame(pd.DataFrame):
                 "field": None,
                 "type": "nominal"
             },
-            "tooltip": [
-                {
-                "field": by,
-                "type": "nominal"
-                }
-            ]
+            "tooltip": tooltip
         }
         
         facet_encoding = {}
@@ -94,17 +92,18 @@ class DatamationFrame(pd.DataFrame):
             "nrow": 1
         }
 
-        data = list(map(lambda key: { by: key, 'n': len(self.states[1].groups[key])}, self.states[1].groups.keys()))
+        data = list(map(lambda key: { self._by[0]: key, 'n': len(self.states[1].groups[key])}, self.states[1].groups.keys()))
 
         meta = { 
                 'parse': "grid",
-                'description': "Group by " + by,
-                "splitField": by,
+                'description': "Group by " + self._by[-1],
+                "splitField": self._by[0],
                 "axes": False
         }
 
         specs_list = []
 
+        # The case of groupby multiple 
         if len(self._by) > 1:
             cols = []
             count = {}
@@ -120,26 +119,21 @@ class DatamationFrame(pd.DataFrame):
                 "ncol": len(cols),
                 "nrow": 1
             }
-            data = list(map(lambda col: { by: col, 'n': count[col]}, cols))
+            data = list(map(lambda col: { self._by[0]: col, 'n': count[col]}, cols))
             meta = { 
                     'parse': "grid",
-                    'description': "Group by " + by
+                    'description': "Group by " + self._by[0]
             }
 
             spec_encoding = {
                 'x': x_encoding,
                 'y': y_encoding ,
-                "tooltip": [
-                    {
-                    "field": by,
-                    "type": "nominal"
-                    }
-                ]
+                'tooltip': tooltip
             }
+
             spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
             specs_list.append(spec)
-            
-            by = ', '.join(self._by)
+
             cols = []
             rows = []
             count = {}
@@ -161,10 +155,17 @@ class DatamationFrame(pd.DataFrame):
             }
             meta = { 
                     'parse': "grid",
-                    'description': "Group by " + by,
+                    'description': "Group by " + ', '.join(self._by),
                     "splitField": self._by[1],
                     "axes": True
             }
+
+            tooltip = []
+            for field in self._by:
+                tooltip.append({
+                    "field": field,
+                    "type": "nominal"
+                })
 
             spec_encoding = {
                 'x': x_encoding,
@@ -176,16 +177,7 @@ class DatamationFrame(pd.DataFrame):
                         "values": rows
                     }
                 },
-                "tooltip": [
-                    {
-                    "field": self._by[0],
-                    "type": "nominal"
-                    },
-                    {
-                    "field": self._by[1],
-                    "type": "nominal"
-                    }
-                ]
+                "tooltip": tooltip
             }
             spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
             specs_list.append(spec)

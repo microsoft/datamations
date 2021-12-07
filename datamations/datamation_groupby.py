@@ -71,7 +71,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "type": "quantitative",
             "axis": {
             "values": [1, 2],
-            #"labelExpr": "round(datum.label) == 1 ? '" + subgroups[0] if len(self._by) > 1 else groups[0] + "' : '"  +  subgroups[1] if len(self._by) > 1 else groups[1] + "'",
             "labelExpr": "round(datum.label) == 1 ? '" + labels[0] + "' : '"  +  labels[1] + "'",
             "labelAngle": -90
             },
@@ -107,30 +106,15 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
                 "title": y_axis
-            },
-            {
-                "field": x_axis,
-                "type": "nominal"
             }
         ]
-        
-        if len(self._by) > 1:
-            tooltip = [
-                {
-                    "field": "datamations_y_tooltip",
-                    "type": "quantitative",
-                    "title": y_axis
-                },
-                {
-                    "field": self._by[0],
-                    "type": "nominal"
-                },
-                {
-                    "field": self._by[1],
-                    "type": "nominal"
-                }
-            ]
 
+        for field in self._by:
+            tooltip.append({
+                "field": field,
+                "type": "nominal"
+            })
+        
         facet_encoding = {}
 
         if len(self._by) > 1:
@@ -250,13 +234,15 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
                 "title": "mean(" + y_axis + ")"
-            },
-            {
-                "field": x_axis,
-                "type": "nominal"
             }
         ]
-
+        
+        for field in self._by:
+            tooltip.append({
+                "field": field,
+                "type": "nominal"
+            })
+        
         data = []
         
         # Plot the final summarized value
@@ -282,21 +268,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "ncol": len(cols),
                 "nrow": 1
             }
-            tooltip = [
-                {
-                    "field": "datamations_y_tooltip",
-                    "type": "quantitative",
-                    "title": "mean(Salary)"
-                },
-                {
-                    "field": self._by[0],
-                    "type": "nominal"
-                },
-                {
-                    "field": self._by[1],
-                    "type": "nominal"
-                }
-            ]
         else:
             id = 1
             for i in range(len(self.states[0])):
@@ -346,13 +317,15 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "field": "Lower",
             "type": "nominal",
             "title": "mean(" + y_axis + ") - standard error"
-            },
-            {
-            "field": x_axis,
-            "type": "nominal"
             }
         ]
 
+        for field in self._by:
+            tooltip.append({
+                "field": field,
+                "type": "nominal"
+            })
+        
         data = []
 
         # Show errror bars along with sumarized values
@@ -380,32 +353,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "ncol": len(cols),
                 "nrow": 1
             }
-
-            tooltip = [
-                {
-                "field": "datamations_y_tooltip",
-                "type": "quantitative",
-                "title": "mean(" + y_axis + ")"
-                },
-                {
-                "field": "Upper",
-                "type": "nominal",
-                "title": "mean(" + y_axis + ") + standard error"
-                },
-                {
-                "field": "Lower",
-                "type": "nominal",
-                "title": "mean(" + y_axis + ") - standard error"
-                },
-                {
-                "field": self._by[0],
-                "type": "nominal"
-                },
-                {
-                "field": self._by[1],
-                "type": "nominal"
-                }
-            ]
         else:
             id = 1
             for i in range(len(self.states[0])):
