@@ -416,12 +416,23 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    */
   async function transformSpecs() {
     const n = d3.max(vegaLiteSpecs[0].data.values, d => d.n);
-    const rows = Math.ceil(Math.sqrt(n));
+    let rows = Math.ceil(Math.sqrt(n));
 
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
-      const vlSpec = vegaLiteSpecs[i];
+      let vlSpec = vegaLiteSpecs[i];
 
       if (Array.isArray(vlSpec)) continue; // just sanity check, making sure that it is not an array
+
+      // if filter has empty `oneOf`, then generate empty spec and avoid any further processing
+      if (vlSpec.transform && vlSpec.transform[0].filter.oneOf.length === 0) {
+        const emptySpec = getEmptySpec(vlSpec);
+
+        metas[i] = emptySpec.meta;
+        rawSpecs[i] = emptySpec;
+        vlSpec = emptySpec;
+        vegaLiteSpecs[i] = emptySpec;
+        continue;
+      }
 
       const meta = vlSpec.meta;
       const parse = meta.parse;
