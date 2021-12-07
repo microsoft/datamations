@@ -18,4 +18,4 @@ You can group by multiple variables, as in this example, grouping by
 df.groupby(['Degree', 'Work']).mean().datamation_sanddance()
 ```
 
-<img src="man/figures/README-mean_salary_group_by_degree_work.gif" width="80%" />
+<img src="../man/figures/README-mean_salary_group_by_degree_work.gif" width="80%" />
