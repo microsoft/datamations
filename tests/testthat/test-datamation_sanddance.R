@@ -101,40 +101,31 @@ test_that("datamation_sanddance requires a call to geom_point", {
     ggplot(aes(x = Work, y = mean_salary))" %>% datamation_sanddance(), "requires a call to `geom_point")
 })
 
-# test_that("specs are generated as expected", {
-#   spec <- "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "small_salary %>% group_by(Degree, Work) %>% summarize(mean = mean(Salary))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "small_salary %>% summarize(mean = mean(Salary))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% group_by(species, island, sex) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% group_by(species, island) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% group_by(species) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% group_by(species, sex, island) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% group_by(sex) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-# })
+# Python specs ----
+
+test_that("python specs are identical to R specs", {
+  python_specs <- jsonlite::fromJSON(here::here("datamations", "tests", "specs", "groupby_work.json"), simplifyDataFrame = FALSE)
+
+  r_specs <- "small_salary %>% group_by(Work) %>% summarise(mean = mean(Salary))" %>%
+    datamation_sanddance() %>%
+    purrr::pluck("x") %>%
+    purrr::pluck("specs") %>%
+    jsonlite::fromJSON(simplifyDataFrame = FALSE)
+
+  # Reconcile differences in names
+  r_names <- r_specs %>%
+    map(names)
+
+  python_specs <- map2(python_specs, r_names, ~ .x[.y])
+
+  # Reconcile differences in data value column orders
+  r_values_order <- map(r_specs, function(x) { map(x$data$values, names) })
+
+  python_specs <- map2(python_specs, r_values_order, function(x, y) {
+    x$data$values <- map2(x$data$values, y, ~ .x[.y])
+
+    x
+  })
+
+  expect_equal(python_specs, r_specs)
+})
