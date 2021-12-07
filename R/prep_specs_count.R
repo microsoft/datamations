@@ -33,12 +33,12 @@ prep_specs_count <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heigh
 
   res[["summarize"]] <- prep_specs_summarize(.data, mapping, toJSON = toJSON, pretty = pretty, height = height, width = width)
 
+  # Add meta field for "count" custom animation
+  res[["summarize"]][[1]][["meta"]][["custom_animation"]] <- "count"
+
   # Update title of spec
-  if (length(group_vars) == 0) {
-    res[["summarize"]][[1]][["meta"]][["description"]] <- "Plot count"
-  } else {
-    res[["summarize"]][[1]][["meta"]][["description"]] <- "Plot count of each group"
-  }
+  title <- ifelse(length(group_vars) == 0, "Plot count", "Plot count of each group")
+  res[["summarize"]][[1]][["meta"]][["description"]] <- title
 
   # Unlist and return
   res <- res %>%
