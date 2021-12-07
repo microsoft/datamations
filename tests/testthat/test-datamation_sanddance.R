@@ -104,7 +104,7 @@ test_that("datamation_sanddance requires a call to geom_point", {
 # Python specs ----
 
 test_that("python specs are identical to R specs", {
-  python_specs <- jsonlite::fromJSON(here::here("datamations", "tests", "specs", "groupby_work.json"), simplifyDataFrame = FALSE)
+  python_specs <- jsonlite::fromJSON(testthat::test_path("python_specs/groupby_work.json"), simplifyDataFrame = FALSE)
 
   r_specs <- "small_salary %>% group_by(Work) %>% summarise(mean = mean(Salary))" %>%
     datamation_sanddance() %>%
@@ -116,7 +116,7 @@ test_that("python specs are identical to R specs", {
   r_specs[[4]]$meta$custom_animation <- NULL
 
   # gemini_ids not integrated into python yet
-  r_specs <- map(r_specs, function(x) {
+  r_specs <- purrr::map(r_specs, function(x) {
     x$data$values <- purrr::map(x$data$values, function(x) {
       x$gemini_ids <- NULL
 
@@ -130,15 +130,15 @@ test_that("python specs are identical to R specs", {
   r_names <- r_specs %>%
     purrr::map(names)
 
-  python_specs <- map2(python_specs, r_names, ~ .x[.y])
+  python_specs <- purrr::map2(python_specs, r_names, ~ .x[.y])
 
   # Reconcile differences in data value column orders
-  r_values_order <- map(r_specs, function(x) {
-    map(x$data$values, names)
+  r_values_order <- purrr::map(r_specs, function(x) {
+    purrr::map(x$data$values, names)
   })
 
-  python_specs <- map2(python_specs, r_values_order, function(x, y) {
-    x$data$values <- map2(x$data$values, y, ~ .x[.y])
+  python_specs <- purrr::map2(python_specs, r_values_order, function(x, y) {
+    x$data$values <- purrr::map2(x$data$values, y, ~ .x[.y])
 
     x
   })
