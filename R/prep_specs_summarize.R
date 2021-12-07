@@ -1,7 +1,7 @@
 #' Generate specs of data distribution and summarized data steps of datamations
 #'
 #' @param .data Input data
-#' @param mapping A list that describes mapping for the datamations, including x and y variables, sjummary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.
+#' @param mapping A list that describes mapping for the datamations, including x and y variables, summary variable and operation, variables used in facets and in colors, etc. Generated in \code{datamation_sanddance} using \code{generate_mapping}.
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 #' @noRd
@@ -12,16 +12,23 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   summary_function <- mapping$summary_function %>%
     rlang::parse_expr()
 
-  summary_variable <- mapping$y %>%
-    rlang::parse_expr()
+  # Check if there _is_ a y variable - e.g. if summary_function is n(), there is no variable
 
-  summary_variable_chr <- rlang::as_name(summary_variable)
+  summary_function_on_variable <- !identical(mapping$y, NULL)
 
-  # Check whether the response variable is numeric or binary / categorical
-  # If it is numeric, the first summary frame should be a jittered distribution
-  # If it is binary / categorical, the first summary frame is an info grid (and so much of the same logic needs to be pulled in from prep_specs_group_by)
+  if (summary_function_on_variable) {
+    summary_variable <- mapping$y %>%
+      rlang::parse_expr()
 
-  y_type <- check_type(.data[[summary_variable]])
+    summary_variable_chr <- rlang::as_name(summary_variable)
+
+    # Check whether the response variable is numeric or binary / categorical
+    # If it is numeric, the first summary frame should be a jittered distribution
+    # If it is binary / categorical, the first summary frame is an info grid (and so much of the same logic needs to be pulled in from prep_specs_group_by)
+    y_type <- check_type(.data[[summary_variable]])
+  } else {
+    y_type <- "null"
+  }
 
   # Mapping and encoding for numeric ----
   if (y_type == "numeric") {
@@ -37,14 +44,18 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     ### Prep data ----
 
-    # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
-    .data <- .data %>%
-      arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
-      # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
-      # Not defined in any of the previous steps since the JS takes care of generating it
-      dplyr::mutate(gemini_id = dplyr::row_number()) %>%
-      dplyr::rename(!!Y_FIELD := {{ summary_variable }})
+    # If gemini_id is not already added, e.g. if this function is called on its own for testing purposes
+    if (!"gemini_id" %in% names(.data)) {
+      # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
+      .data <- .data %>%
+        arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
+        # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
+        # Not defined in any of the previous steps since the JS takes care of generating it
+        dplyr::mutate(gemini_id = dplyr::row_number())
+    }
 
+    .data <- .data %>%
+      dplyr::rename(!!Y_FIELD := {{ summary_variable }})
 
     # Add an x variable to use as the center of jittering
     # It can just be 1, except if mapping$x is not 1!
@@ -102,7 +113,16 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     has_facets <- !is.null(mapping$column) | !is.null(mapping$row)
 
     facet_col_encoding <- list(field = mapping$column, type = "ordinal", title = mapping$column)
+
+    if (!is.null(mapping$column)) {
+      facet_col_encoding$sort <- unique(.data[[mapping$column]])
+    }
+
     facet_row_encoding <- list(field = mapping$row, type = "ordinal", title = mapping$row)
+
+    if (!is.null(mapping$row)) {
+      facet_row_encoding$sort <- unique(.data[[mapping$row]])
+    }
 
     facet_encoding <- list(
       column = facet_col_encoding,
@@ -125,10 +145,6 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       purrr::map(rlang::parse_expr)
 
     ### Prep data ----
-
-    # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
-    .data <- .data %>%
-      arrange_by_groups_coalesce_na(group_vars, group_vars_chr)
 
     ### Prep encoding ----
 
@@ -158,7 +174,21 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     has_facets <- !is.null(mapping$column) | !is.null(mapping$row)
 
     facet_col_encoding <- list(field = mapping$column, type = "ordinal", title = mapping$column)
+
+    if (!is.null(mapping$column)) {
+      facet_col_encoding$sort <- unique(.data[[mapping$column]])
+    }
+
     facet_row_encoding <- list(field = mapping$row, type = "ordinal", title = mapping$row)
+
+    if (!is.null(mapping$row)) {
+      facet_row_encoding$sort <- unique(.data[[mapping$row]])
+    }
+
+    facet_encoding <- list(
+      column = facet_col_encoding,
+      row = facet_row_encoding
+    )
 
     facet_encoding <- list(
       column = facet_col_encoding,
@@ -175,178 +205,217 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   # State 1: Scatter plot or icon array (with any grouping) -----
   # Scatter plot if the variable is continuous, icon array if discrete (categorical, binary)
+  # If the summary function is just a function, not on a variable (i.e. n()), then this step is skipped
 
-  # Determine whether plot is scatter or icon array
+  if (y_type %in% c("numeric", "binary", "categorical")) {
 
-  # If it is numeric, prepare to visualize data in a jittered scatterplot
-  if (y_type == "numeric") {
-    data_1 <- .data %>%
-      dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
-      dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
+    # If it is numeric, prepare to visualize data in a jittered scatterplot
+    if (y_type == "numeric") {
+      data_1 <- .data %>%
+        dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
+        dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
 
-    # Generate tooltip
-    spec_encoding$tooltip <- generate_summarize_tooltip(data_1, mapping$y)
-  } else { # Otherwise, another infogrid!
-    data_1 <- .data %>%
-      dplyr::count(!!!group_vars, !!summary_variable)
+      # Generate tooltip
+      spec_encoding$tooltip <- generate_summarize_tooltip(data_1, mapping$y)
+    } else if (y_type %in% c("binary", "categorical")) { # Otherwise, another infogrid!
+      data_1 <- .data %>%
+        dplyr::count(!!!group_vars, !!summary_variable)
 
-    # If the summary variable is a factor, order according to its values to match the legend
+      # If the summary variable is a factor, order according to its values to match the legend
 
-    # If it's TRUE / FALSE, the order in R is FALSE / TRUE or 0 / 1 but change so that it's actually T/F 1/0
+      # If it's TRUE / FALSE, the order in R is FALSE / TRUE or 0 / 1 but change so that it's actually T/F 1/0
 
-    if (is.factor(data_1[[summary_variable_chr]])) {
-      data_1 <- data_1 %>%
-        dplyr::arrange(!!!group_vars, !!summary_variable)
-    } else if (all(data_1[[summary_variable_chr]] %in% c(TRUE, FALSE))) {
-      data_1 <- data_1 %>%
-        dplyr::arrange(!!!group_vars, -!!summary_variable)
+      if (is.factor(data_1[[summary_variable_chr]])) {
+        data_1 <- data_1 %>%
+          dplyr::arrange(!!!group_vars, !!summary_variable)
+      } else if (all(data_1[[summary_variable_chr]] %in% c(TRUE, FALSE))) {
+        data_1 <- data_1 %>%
+          dplyr::arrange(!!!group_vars, -!!summary_variable)
+      }
+
+      # Generate tooltip
+      tooltip_groups <- generate_group_by_tooltip(data_1)
+      tooltip_y <- list(field = summary_variable_chr, type = "nominal")
+
+      spec_encoding$tooltip <- append(list(tooltip_y), tooltip_groups)
     }
 
-    # Generate tooltip
-    tooltip_groups <- generate_group_by_tooltip(data_1)
-    tooltip_y <- list(field = summary_variable_chr, type = "nominal")
+    if (y_type == "numeric") {
 
-    spec_encoding$tooltip <- append(list(tooltip_y), tooltip_groups)
-  }
+      # Generate description
+      description <- generate_summarize_description(summary_variable, group_by = length(group_vars) != 0)
 
-  # Generate description
-  description <- generate_summarize_description(summary_variable, group_by = length(group_vars) != 0)
+      # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
+      meta <- list(parse = "jitter", axes = has_facets, description = description)
+    } else if (y_type %in% c("binary", "categorical")) {
 
-  if (y_type == "numeric") {
-    # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
-    meta <- list(parse = "jitter", axes = has_facets, description = description)
-  } else {
-    # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
-    # Use this if the response variable is categorical
-    meta <- list(parse = "grid", axes = has_facets, description = description)
+      # Generate description
+      description <- generate_summarize_description(summary_variable, group_by = length(group_vars) != 0)
 
-    if (y_type == "binary") {
-      if (!is.null(mapping$color)) {
+      # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
+      # Use this if the response variable is categorical
+      meta <- list(parse = "grid", axes = has_facets, description = description)
 
-        # If there is a variable mapped to color:
-        # color: mapping$color
-        # stroke: mapping$color
-        # fillOpacity: mapping$y, scale: domain: 0, 1
-        # shape: mapping$y, scale: range: circle, legend: symbolFillColor: expr: first value set to grey color, second value is transparent
+      if (y_type == "binary") {
+        if (!is.null(mapping$color)) {
 
-        spec_encoding$stroke <- list(field = mapping$color)
+          # If there is a variable mapped to color:
+          # color: mapping$color
+          # stroke: mapping$color
+          # fillOpacity: mapping$y, scale: domain: 0, 1
+          # shape: mapping$y, scale: range: circle, legend: symbolFillColor: expr: first value set to grey color, second value is transparent
 
-        spec_encoding$fillOpacity <- list(field = summary_variable_chr, type = "nominal", scale = list(range = c(0, 1)))
+          spec_encoding$stroke <- list(field = mapping$color)
 
-        # For the fill, if it's a factor, take the first
-        # If it's TRUE / FALSE, do TRUE first
+          spec_encoding$fillOpacity <- list(field = summary_variable_chr, type = "nominal", scale = list(range = c(0, 1)))
+
+          # For the fill, if it's a factor, take the first
+          # If it's TRUE / FALSE, do TRUE first
+
+          values <- unique(.data[[summary_variable_chr]])
+
+          first_value <- if (identical(sort(values), c(0, 1))) {
+            1
+          } else if (identical(sort(values), c(FALSE, TRUE))) {
+            "true"
+          } else if (is.factor(values)) {
+            levels(values)[[1]]
+          } else {
+            values[[1]]
+          }
+
+          shape_fill_legend_expr <- glue::glue("datum.label == '{first_value}' ? '#888' : 'transparent'",
+            first_value = first_value
+          )
+
+          value_order <- if (identical(sort(values), c(0, 1))) {
+            c(1, 0)
+          } else if (identical(sort(values), c(FALSE, TRUE))) {
+            c(TRUE, FALSE)
+          } else if (is.factor(values)) {
+            levels(values)
+          } else {
+            values
+          }
+
+          spec_encoding$shape <- list(
+            field = summary_variable_chr,
+            scale = list(
+              domain = value_order,
+              range = c("circle", "circle")
+            ),
+            legend = list(symbolFillColor = list(expr = shape_fill_legend_expr))
+          )
+        } else {
+          color <- "#4c78a8"
+          white <- "#ffffff"
+          # If there is NOT a variable mapped to color:
+          # fill: mapping$y, scale: range: grey, white
+          # stroke: mapping$y, scale: range: grey, grey
+
+          values <- unique(.data[[summary_variable_chr]])
+
+          value_order <- if (identical(sort(values), c(0, 1))) {
+            c(1, 0)
+          } else if (identical(sort(values), c(FALSE, TRUE))) {
+            c(TRUE, FALSE)
+          } else if (is.factor(values)) {
+            levels(values)
+          } else {
+            values
+          }
+
+          spec_encoding$fill <- list(field = summary_variable_chr, scale = list(domain = value_order, range = c(color, white)))
+          spec_encoding$stroke <- list(field = summary_variable_chr, scale = list(domain = value_order, range = c(color, color)))
+        }
+      } else if (y_type == "categorical") {
+        # Use shape
+        spec_encoding$shape <- list(field = summary_variable_chr, type = "nominal")
+
+        # Set the legend order to match the order in the data, or factor levels
 
         values <- unique(.data[[summary_variable_chr]])
 
-        first_value <- if (identical(sort(values), c(0, 1))) {
-          1
-        } else if (identical(sort(values), c(FALSE, TRUE))) {
-          "true"
-        } else if (is.factor(values)) {
-          levels(values)[[1]]
-        } else {
-          values[[1]]
-        }
-
-        shape_fill_legend_expr <- glue::glue("datum.label == '{first_value}' ? '#888' : 'transparent'",
-          first_value = first_value
-        )
-
-        value_order <- if (identical(sort(values), c(0, 1))) {
-          c(1, 0)
-        } else if (identical(sort(values), c(FALSE, TRUE))) {
-          c(TRUE, FALSE)
-        } else if (is.factor(values)) {
+        legend_order <- if (is.factor(values)) {
           levels(values)
         } else {
           values
         }
 
-        spec_encoding$shape <- list(
-          field = summary_variable_chr,
-          scale = list(
-            domain = value_order,
-            range = c("circle", "circle")
-          ),
-          legend = list(symbolFillColor = list(expr = shape_fill_legend_expr))
-        )
-      } else {
-        color <- "#4c78a8"
-        white <- "#ffffff"
-        # If there is NOT a variable mapped to color:
-        # fill: mapping$y, scale: range: grey, white
-        # stroke: mapping$y, scale: range: grey, grey
-
-        values <- unique(.data[[summary_variable_chr]])
-
-        value_order <- if (identical(sort(values), c(0, 1))) {
-          c(1, 0)
-        } else if (identical(sort(values), c(FALSE, TRUE))) {
-          c(TRUE, FALSE)
-        } else if (is.factor(values)) {
-          levels(values)
-        } else {
-          values
-        }
-
-        spec_encoding$fill <- list(field = summary_variable_chr, scale = list(domain = value_order, range = c(color, white)))
-        spec_encoding$stroke <- list(field = summary_variable_chr, scale = list(domain = value_order, range = c(color, color)))
+        spec_encoding$shape$scale$domain <- legend_order
       }
-    } else if (y_type == "categorical") {
-      # Use shape
-      spec_encoding$shape <- list(field = summary_variable_chr, type = "nominal")
+    }
 
-      # Set the legend order to match the order in the data, or factor levels
+    # Variables that need to be passed to JS
+    if (!is.null(mapping$x)) {
+      # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
+      meta <- append(meta, list(splitField = mapping$x))
 
-      values <- unique(.data[[summary_variable_chr]])
-
-      legend_order <- if (is.factor(values)) {
-        levels(values)
-      } else {
-        values
+      if (!has_facets) {
+        # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
+        meta <- append(meta, list(xAxisLabels = levels(data_1[[mapping$x]])))
       }
-
-      spec_encoding$shape$scale$domain <- legend_order
     }
+
+    spec <- generate_vega_specs(
+      .data = data_1,
+      mapping = mapping,
+      meta = meta,
+      spec_encoding = spec_encoding, facet_encoding = facet_encoding,
+      height = height, width = width, facet_dims = facet_dims,
+      # Flags for column / row  facets or color
+      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
+    )
+
+    specs_list <- append(specs_list, list(spec))
   }
-
-  # Variables that need to be passed to JS
-  if (!is.null(mapping$x)) {
-    # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
-    meta <- append(meta, list(splitField = mapping$x))
-
-    if (!has_facets) {
-      # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
-      meta <- append(meta, list(xAxisLabels = levels(data_1[[mapping$x]])))
-    }
-  }
-
-  spec <- generate_vega_specs(
-    .data = data_1,
-    mapping = mapping,
-    meta = meta,
-    spec_encoding = spec_encoding, facet_encoding = facet_encoding,
-    height = height, width = width, facet_dims = facet_dims,
-    # Flags for column / row  facets or color
-    column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
-  )
-
-  specs_list <- append(specs_list, list(spec))
 
   # Switch settings for states ----
 
-  # If Y is not numeric, then the first frame was still an infogrid
+  # If Y is binary or categorical, then the first frame was still an infogrid
   # But we need to get all the correct settings / encodings for a numeric plot
+  # Similarly, need to get all correct settings / encoding for numeric plot if there _was_ no Y variable (e.g. n() case)
 
-  if (y_type != "numeric") {
+  if (y_type %in% c("binary", "categorical", "null")) {
+    if (y_type %in% c("binary", "categorical")) {
+      .data <- .data %>%
+        dplyr::rename(!!Y_FIELD := {{ summary_variable }})
+    } else if (y_type == "null") {
+      .data <- .data %>%
+        dplyr::mutate(!!Y_FIELD := eval(parse(text = glue::glue("{rlang::as_string(summary_function)}()"))))
 
-    # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
-    .data <- .data %>%
-      arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
-      # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
-      # Not defined in any of the previous steps since the JS takes care of generating it
-      dplyr::mutate(gemini_id = dplyr::row_number()) %>%
-      dplyr::rename(!!Y_FIELD := {{ summary_variable }})
+      # Extract grouping variables from mapping
+      group_vars_chr <- mapping$groups
+
+      # Convert to symbol
+      group_vars <- group_vars_chr %>%
+        as.list() %>%
+        purrr::map(rlang::parse_expr)
+
+      # Flag for whether the plot will have facets - used to set axes = TRUE (if it does have facets, and the "fake facets" need to be used) or FALSE (if it doesn't, and the real axes can be used)
+      has_facets <- !is.null(mapping$column) | !is.null(mapping$row)
+
+      facet_col_encoding <- list(field = mapping$column, type = "ordinal", title = mapping$column)
+
+      if (!is.null(mapping$column)) {
+        facet_col_encoding$sort <- unique(.data[[mapping$column]])
+      }
+
+      facet_row_encoding <- list(field = mapping$row, type = "ordinal", title = mapping$row)
+
+      if (!is.null(mapping$row)) {
+        facet_row_encoding$sort <- unique(.data[[mapping$row]])
+      }
+
+      facet_encoding <- list(
+        column = facet_col_encoding,
+        row = facet_row_encoding
+      )
+
+      # Calculate number of facets for sizing
+      facet_dims <- .data %>%
+        calculate_facet_dimensions(group_vars, mapping)
+    }
 
     # Add an x variable to use as the center of jittering
     # It can just be 1, except if mapping$x is not 1!
@@ -403,9 +472,16 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
   # State 2: Summary plot (with any grouping) -----
   # There should still be a point for each datapoint, just all overlapping
-  data_2 <- data_1 %>%
-    dplyr::group_by(!!!group_vars) %>%
-    dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
+
+  if (y_type %in% c("numeric", "categorical", "binary")) {
+    data_2 <- data_1 %>%
+      dplyr::group_by(!!!group_vars) %>%
+      dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
+  } else if (y_type == "null") {
+    data_2 <- data_1
+
+    summary_variable <- NULL
+  }
 
   # Generate description
   description <- generate_summarize_description(summary_variable, summary_function, group_by = length(group_vars) != 0)
@@ -547,7 +623,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
       specs_list <- append(specs_list, list(spec))
     }
-  } else {
+  } else if (mapping$summary_function != "mean" & y_type != "null") { # Zoomed in but function is not mean - not in n() case since previous frame is already
     description <- glue::glue("{description}, zoomed in")
 
     # Range is just the range of the actual y

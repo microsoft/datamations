@@ -22,7 +22,7 @@ datamation_tibble <- function(pipeline, envir = rlang::global_env(),
                               xlim = c(NA, NA), ylim = c(NA, NA)) {
 
   # Specify which functions are supported, for parsing functions out and for erroring if any are not in this list
-  supported_tidy_functions <- c("group_by", "summarize")
+  supported_tidy_functions <- c("group_by", "summarize", "filter")
 
   # Convert pipeline into list
   fittings <- pipeline %>%
@@ -42,7 +42,7 @@ datamation_tibble <- function(pipeline, envir = rlang::global_env(),
 
   tidy_functions_list <- tidy_functions_list[-1]
 
-  supported_tidy_functions <- c("group_by", "ungroup", "summarize", "summarise")
+  supported_tidy_functions <- c("group_by", "ungroup", "summarize", "summarise", "filter")
 
   map(tidy_functions_list, ~ if (!(.x %in% supported_tidy_functions)) {
     stop(paste(.x, "not supported by datamation_tibble"), call. = FALSE)

@@ -19,10 +19,6 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   # Prep data ----
 
-  # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
-  .data <- .data %>%
-    arrange_by_groups_coalesce_na(group_vars, group_vars_chr)
-
   # Prep encoding ----
 
   x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = NULL)
@@ -83,7 +79,8 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
   if (do_column) {
     # Add a count (grouped) to each record
     count_data <- .data %>%
-      dplyr::count(dplyr::across(mapping$column))
+      dplyr::count(dplyr::across(mapping$column)) %>%
+      add_ids_to_count_data(.data, mapping$column)
 
     # Generate description
     description <- generate_group_by_description(mapping, "column")
@@ -113,7 +110,8 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
   if (do_row) {
     # Add a count (grouped) to each record
     count_data <- .data %>%
-      dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row))))
+      dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row)))) %>%
+      add_ids_to_count_data(.data, mapping$column, mapping$row)
 
     # Generate description
     description <- generate_group_by_description(mapping, "column", "row")
@@ -151,7 +149,8 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   if (do_x) {
     count_data <- .data %>%
-      dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row, mapping$x))))
+      dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row, mapping$x)))) %>%
+      add_ids_to_count_data(.data, mapping$column, mapping$row, mapping$x)
 
     description <- generate_group_by_description(mapping, "column", "row", "x")
 
@@ -181,7 +180,8 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   if (do_color) {
     count_data <- .data %>%
-      dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row, mapping$x, mapping$color))))
+      dplyr::count(dplyr::across(tidyselect::any_of(c(mapping$column, mapping$row, mapping$x, mapping$color)))) %>%
+      add_ids_to_count_data(.data, mapping$column, mapping$row, mapping$x, mapping$color)
 
     description <- generate_group_by_description(mapping, "column", "row", "x", "color")
 
@@ -207,4 +207,22 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   # Return the specs
   specs_list
+}
+
+add_ids_to_count_data <- function(count_data, .data, ...) {
+  group_vars <- list(...) %>%
+    purrr::compact() %>%
+    purrr::map(rlang::sym)
+
+  group_ids <- .data %>%
+    dplyr::group_by(!!!group_vars) %>%
+    dplyr::group_data() %>%
+    dplyr::rename(gemini_ids = .data$.rows)
+
+  join_names <- count_data %>%
+    dplyr::select(-.data$n) %>%
+    names()
+
+  count_data %>%
+    dplyr::left_join(group_ids, by = join_names)
 }
