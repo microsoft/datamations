@@ -521,6 +521,12 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     y_type = y_type
   )
 
+  # If the summary function is mean or median, add meta.custom_animation
+
+  if (mapping$summary_function %in% c("mean", "median")) {
+    spec[["meta"]][["custom_animation"]] <- mapping$summary_function
+  }
+
   specs_list <- append(specs_list, list(spec))
 
   if (mapping$summary_function == "mean") {
