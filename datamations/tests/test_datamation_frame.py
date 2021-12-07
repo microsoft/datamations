@@ -26,7 +26,18 @@ def compare_specs_with_file(specs, specs_file):
                                 for field in encoding:
                                     if field == 'encoding':
                                         for val in encoding[field]:
-                                            assert encoding[field][val] == specs[i][key][item][j][field][val]
+                                            if val == "y":
+                                                for y_key in encoding[field][val]:
+                                                    if y_key == "scale":
+                                                        for scale_key in encoding[field][val][y_key]:
+                                                            if scale_key == "domain":
+                                                                assert encoding[field][val][y_key][scale_key] == approx(specs[i][key][item][j][field][val][y_key][scale_key])
+                                                            else: 
+                                                                assert encoding[field][val][y_key][scale_key] == specs[i][key][item][j][field][val][y_key][scale_key]
+                                                    else:
+                                                        assert encoding[field][val][y_key] == specs[i][key][item][j][field][val][y_key]
+                                            else:
+                                                assert encoding[field][val] == specs[i][key][item][j][field][val]
                                     else:
                                         assert encoding[field] == specs[i][key][item][j][field]
                         else:

@@ -472,15 +472,19 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         specs_list.append(spec)
 
         # Show the summarized values along with error bars, zoomed in
-        if len(self.states[1].groups.keys()) == 2:
+        if len(self._by) > 1:
             domain = [
-                round(min(self._output[y_axis][groups[0]]-self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
-                round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13)
+                round(min(self._output[y_axis][groups[0]][subgroups[0]] - self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] - self._error[y_axis][groups[0]][subgroups[0]]),13),
+                round(max(self._output[y_axis][groups[1]][subgroups[0]] + self._error[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] + self._error[y_axis][groups[1]][subgroups[1]]),13),
+                #round(min(self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] - self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
+                #round(max(self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] + self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]], self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] + self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]),13)
               ]
         else:
             domain = [
-                round(min(self._output[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
-                round(min(self._output[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
+                round(min(self._output[y_axis][groups[0]]-self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
+                round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13)
+                #round(min(self._output[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
+                #round(min(self._output[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
                 # round(min(self._output[y_axis][groups[0]][subgroups[0]]-self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]][subgroups[0]]),13),
                 # round(max(self._output[y_axis][groups[0]][subgroups[1]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]][subgroups[1]]+self._error[y_axis][groups[1]][subgroups[1]]),13)
             ]
@@ -498,9 +502,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "axes": False,
             "description": "Plot mean " + y_axis + " of each group, with errorbar, zoomed in"
         }
-
-
+        if len(self._by) > 1:
+            meta =  { 
+                "axes": True,
+                "description": "Plot mean " + y_axis + " of each group, with errorbar, zoomed in"
+            }
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
+        if len(self._by) > 1:
+            spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
         spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, True)
         specs_list.append(spec)
                 
