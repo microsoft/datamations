@@ -107,6 +107,7 @@ class DatamationFrame(pd.DataFrame):
         if len(self._by) > 1:
             cols = []
             count = {}
+            start = {}
             for key in self.states[1].groups.keys():
                 col, row = key
                 if col not in cols:
@@ -114,12 +115,17 @@ class DatamationFrame(pd.DataFrame):
                 if col not in count:
                     count[col] = 0
                 count[col] = count[col] + len(self.states[1].groups[key])
-                
+
+            id = 1
+            for col in cols:
+                start[col] = id
+                id  = id + count[col]
+
             facet_dims = {
                 "ncol": len(cols),
                 "nrow": 1
             }
-            data = list(map(lambda col: { self._by[0]: col, 'n': count[col]}, cols))
+            data = list(map(lambda col: { self._by[0]: col, 'n': count[col], 'gemini_ids': list(range(start[col], start[col]+count[col], 1))}, cols))
             meta = { 
                     'parse': "grid",
                     'description': "Group by " + self._by[0]
@@ -138,6 +144,7 @@ class DatamationFrame(pd.DataFrame):
             rows = []
             count = {}
             data = []
+            start = 1
             for key in self.states[1].groups.keys():
                 col, row = key
                 if col not in cols:
@@ -147,7 +154,8 @@ class DatamationFrame(pd.DataFrame):
                 if col not in count:
                     count[col] = 0
                 count[col] = count[col] + len(self.states[1].groups[key])
-                data.append({self._by[0]: col, self._by[1]: row,'n': len(self.states[1].groups[key])})
+                data.append({self._by[0]: col, self._by[1]: row,'n': len(self.states[1].groups[key]), 'gemini_ids': list(range(start, start+len(self.states[1].groups[key]), 1))})
+                start  = start + len(self.states[1].groups[key])
 
             facet_dims = {
                 "ncol": len(cols),
@@ -194,11 +202,13 @@ class DatamationFrame(pd.DataFrame):
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding }
 
-        data = [
-            {
-                "n": len(self.states[0])
-            }
-        ]
+        value = {
+            "n": len(self.states[0]),
+        }
+        if len(self._by) > 1:
+            value["gemini_ids"] = list(range(1, len(self.states[0])+1, 1))
+        
+        data = [value]
         
         meta =  { 
             'parse': "grid",

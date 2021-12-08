@@ -118,7 +118,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         facet_encoding = {}
 
         if len(self._by) > 1:
-            facet_encoding["column"] = { "field": self._by[0], "type": "ordinal", "title": self._by[0] }
+            sort = [list(self.states[1].groups.keys())[0][0], list(self.states[1].groups.keys())[2][0]]
+            facet_encoding["column"] = { "field": self._by[0], "sort": sort, "type": "ordinal", "title": self._by[0] }
 
         if len(self._by) > 2:
             facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
@@ -268,6 +269,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "ncol": len(cols),
                 "nrow": 1
             }
+            meta['custom_animation'] = 'mean'
         else:
             id = 1
             for i in range(len(self.states[0])):
