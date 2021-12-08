@@ -62,25 +62,25 @@ def test_datamation_frame_specs():
     # Group by Degree
     specs = df.groupby('Degree').mean().specs()
     script_dir = os.path.dirname( __file__ )
-    specs_file = open(os.path.join(script_dir, 'specs/raw_spec.json'), 'r')
+    specs_file = open(os.path.join(script_dir, '../../inst/specs/raw_spec.json'), 'r')
     compare_specs_with_file(specs, specs_file)
 
     # Group by Work
     specs = df.groupby('Work').mean().specs()
     script_dir = os.path.dirname( __file__ )
-    specs_file = open(os.path.join(script_dir, 'specs/groupby_work.json'), 'r')
+    specs_file = open(os.path.join(script_dir, '../../inst/specs/groupby_work.json'), 'r')
     compare_specs_with_file(specs, specs_file)
 
     # Group by Degree, Work
     specs = df.groupby(['Degree', 'Work']).mean().specs()
     script_dir = os.path.dirname( __file__ )
-    specs_file = open(os.path.join(script_dir, 'specs/groupby_degree_work.json'), 'r')
+    specs_file = open(os.path.join(script_dir, '../../inst/specs/groupby_degree_work.json'), 'r')
     compare_specs_with_file(specs, specs_file)
 
     # Group by Work, Degree
     specs = df.groupby(['Work', 'Degree']).mean().specs()
     script_dir = os.path.dirname( __file__ )
-    specs_file = open(os.path.join(script_dir, 'specs/groupby_work_degree.json'), 'r')
+    specs_file = open(os.path.join(script_dir, '../../inst/specs/groupby_work_degree.json'), 'r')
     compare_specs_with_file(specs, specs_file)
 
 
