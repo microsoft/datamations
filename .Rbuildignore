@@ -19,3 +19,4 @@ azure-pipelines.yml
 ^datamations$
 ^scratch$
 ^setup\.py$
+^notebooks$
