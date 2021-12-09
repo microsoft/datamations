@@ -174,7 +174,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     if (!spec) return;
 
     if (spec.custom) {
-      spec = spec.sequence[0];
+      spec = spec.sequence[spec.sequence.length - 1];
     }
 
     const meta = metas[index];
