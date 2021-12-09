@@ -51,10 +51,10 @@ test_that("Results are identical when data is contained in first function versus
 
   expect_identical(data_piped, data_arg)
 
-  data_piped <- datamation_sanddance("palmerpenguins::penguins %>% group_by(species, island) %>% summarize(mean = mean(bill_length_mm))")
-  data_arg <- datamation_sanddance("group_by(palmerpenguins::penguins, species, island) %>% summarize(mean = mean(bill_length_mm))")
+  # data_piped <- datamation_sanddance("palmerpenguins::penguins %>% group_by(species, island) %>% summarize(mean = mean(bill_length_mm))")
+  # data_arg <- datamation_sanddance("group_by(palmerpenguins::penguins, species, island) %>% summarize(mean = mean(bill_length_mm))")
 
-  expect_identical(data_piped, data_arg)
+  # expect_identical(data_piped, data_arg)
 })
 
 test_that("Results are identical regardless of whether summary operation is named or not", {
@@ -65,7 +65,7 @@ test_that("Results are identical regardless of whether summary operation is name
 })
 
 test_that("datamation_sanddance returns an htmlwidget", {
-  widget <- datamation_sanddance("palmerpenguins::penguins %>% group_by(species, island) %>% summarize(mean = mean(bill_length_mm))")
+  widget <- datamation_sanddance("penguins %>% group_by(species, island) %>% summarize(mean = mean(bill_length_mm))")
   expect_s3_class(widget, "htmlwidget")
 })
 
@@ -101,40 +101,47 @@ test_that("datamation_sanddance requires a call to geom_point", {
     ggplot(aes(x = Work, y = mean_salary))" %>% datamation_sanddance(), "requires a call to `geom_point")
 })
 
-# test_that("specs are generated as expected", {
-#   spec <- "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "small_salary %>% group_by(Degree, Work) %>% summarize(mean = mean(Salary))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "small_salary %>% summarize(mean = mean(Salary))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% group_by(species, island, sex) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% group_by(species, island) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% group_by(species) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% group_by(species, sex, island) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% group_by(sex) %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-#
-#   spec <- "penguins %>% summarize(mean = mean(bill_length_mm, na.rm = TRUE))" %>%
-#     datamation_sanddance()
-#   expect_snapshot(spec$x$spec)
-# })
+# Python specs ----
+
+test_that("python specs are identical to R specs", {
+  python_specs <- jsonlite::fromJSON(testthat::test_path("python_specs/groupby_work.json"), simplifyDataFrame = FALSE)
+
+  r_specs <- "small_salary %>% group_by(Work) %>% summarise(mean = mean(Salary))" %>%
+    datamation_sanddance() %>%
+    purrr::pluck("x") %>%
+    purrr::pluck("specs") %>%
+    jsonlite::fromJSON(simplifyDataFrame = FALSE)
+
+  # meta.custom_animation not integrated into python yet
+  r_specs[[4]]$meta$custom_animation <- NULL
+
+  # gemini_ids not integrated into python yet
+  r_specs <- purrr::map(r_specs, function(x) {
+    x$data$values <- purrr::map(x$data$values, function(x) {
+      x$gemini_ids <- NULL
+
+      x
+    })
+
+    x
+  })
+
+  # Reconcile differences in names
+  r_names <- r_specs %>%
+    purrr::map(names)
+
+  python_specs <- purrr::map2(python_specs, r_names, ~ .x[.y])
+
+  # Reconcile differences in data value column orders
+  r_values_order <- purrr::map(r_specs, function(x) {
+    purrr::map(x$data$values, names)
+  })
+
+  python_specs <- purrr::map2(python_specs, r_values_order, function(x, y) {
+    x$data$values <- purrr::map2(x$data$values, y, ~ .x[.y])
+
+    x
+  })
+
+  expect_equal(python_specs, r_specs)
+})

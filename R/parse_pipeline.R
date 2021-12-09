@@ -12,7 +12,7 @@
 #'
 #' "group_by(small_salary, Degree) %>% summarize(mean = mean(Salary))" %>%
 #'   datamations:::parse_pipeline()
-parse_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "summarize")) {
+parse_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "summarize", "filter", "count")) {
   pipeline %>%
     split_pipeline(supported_tidy_functions = supported_tidy_functions) %>%
     purrr::map(rlang::parse_expr)
@@ -20,7 +20,7 @@ parse_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "s
 
 #' Split pipeline into components
 #' @noRd
-split_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "summarize")) {
+split_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "summarize", "filter", "count")) {
   pipeline <- pipeline %>%
     stringr::str_split("%>%") %>%
     purrr::pluck(1) %>%
@@ -37,7 +37,7 @@ split_pipeline <- function(pipeline, supported_tidy_functions = c("group_by", "s
 
 #' Parse out data from the first function in a pipeline
 #' @noRd
-parse_data_from_first_function <- function(pipeline, supported_tidy_functions = c("group_by", "summarize")) {
+parse_data_from_first_function <- function(pipeline, supported_tidy_functions = c("group_by", "summarize", "filter", "count")) {
   # If the first element of the pipeline is a supported function, the data is probably embedded in it
   if (any(stringr::str_detect(pipeline[[1]], supported_tidy_functions))) {
     # Extract the data and check that it is a valid data frame

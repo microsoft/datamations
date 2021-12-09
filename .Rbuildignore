@@ -17,3 +17,6 @@ azure-pipelines.yml
 ^LICENSE\.md$
 ^inst/htmlwidgets/test$
 ^datamations$
+^scratch$
+^setup\.py$
+^notebooks$
