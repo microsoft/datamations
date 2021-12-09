@@ -28,7 +28,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   let intervalId;
   let timeoutId;
   let initializing = false;
-  // console.log("initial specs:", specs);
   let frameDuration = frameDur || 2000;
   let frameDelay = frameDel || 1000;
 
@@ -170,9 +169,13 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * @returns a promise of vegaEmbed
    */
   function drawSpec(index, vegaSpec) {
-    const spec = vegaLiteSpecs[index];
+    let spec = vegaLiteSpecs[index];
 
     if (!spec) return;
+
+    if (spec.custom) {
+      spec = spec.sequence[0];
+    }
 
     const meta = metas[index];
 
@@ -324,7 +327,19 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     } =  getSelectors(id);
 
     let { source, target, gemSpec, prevMeta, currMeta } = frames[index];
-    let anim = await gemini.animate(source, target, gemSpec);
+    let anim = null;
+
+    if (source.custom) {
+      anim = await gemini.animate(
+        source.sequence[source.sequence.length - 1], 
+        target, 
+        gemSpec
+      );
+    } else if (target.custom) {
+      anim = await gemini.animateSequence(target.sequence, gemSpec);
+    } else {
+      anim = await gemini.animate(source, target, gemSpec);
+    }
 
     let currHasAxes = currMeta.axes;
     let width = target.width;
@@ -384,8 +399,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           });
         }
       }, frameDelay)
-
-
     });
   }
 
@@ -438,11 +451,20 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       const parse = meta.parse;
 
       // parsing
-      if (parse === "grid") {
+      if (meta.custom_animation) {
+        const fn = CustomAnimations[meta.custom_animation];
+        if (fn) {
+          const sequence = await fn(rawSpecs[i - 1], vlSpec);
+          vegaLiteSpecs[i] = {
+            custom: meta.custom_animation,
+            sequence,
+          } 
+        }
+      } else if (parse === "grid") {
         const gridSpec = await getGridSpec(vlSpec, rows);
 
         const enc = gridSpec.spec ? gridSpec.spec.encoding : gridSpec.encoding;
-        rawSpecs[i].data.values = gridSpec.data.values;
+        // rawSpecs[i].data.values = gridSpec.data.values;
 
         if (rawSpecs[i].meta.axes && rawSpecs[i].meta.splitField) {
           const encoding = rawSpecs[i].spec ? rawSpecs[i].spec.encoding : rawSpecs[i].encoding;
@@ -488,8 +510,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         }
       }
     }
-
-    console.log("final specs:", vegaLiteSpecs)
   }
 
   /**
@@ -497,6 +517,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    */
   function toVegaSpecs() {
     vegaSpecs = vegaLiteSpecs.map((d) => {
+      if (d.custom) {
+        return d;
+      }
+
       const s = Array.isArray(d) ? d.find((d) => d.meta.animated) : d;
       return gemini.vl2vg4gemini(s);
     });
@@ -506,6 +530,39 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * Generates animation frames
    */
   async function makeFrames() {
+    const options = {
+      stageN: 1,
+
+      scales: {
+        x: {
+          domainDimension: "diff",
+        },
+        y: {
+          domainDimension: "diff",
+        },
+      },
+
+      marks: {
+        marks: {
+          change: {
+            scale: ["x", "y"],
+            data: {
+              keys: ["gemini_id"],
+              update: true,
+              enter: true,
+              exit: true,
+            },
+            encode: {
+              update: true,
+              enter: true,
+              exit: true,
+            },
+          },
+        },
+      },
+      totalDuration: frameDuration,
+    };
+
     for (let i = 1; i < vegaSpecs.length; i++) {
       const prev = vegaSpecs[i - 1];
       const curr = vegaSpecs[i];
@@ -514,66 +571,55 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       const currMeta = metas[i];
 
       try {
-        const resp = await gemini.recommend(prev, curr, {
-          stageN: 1,
+        let resp = null;
 
-          scales: {
-            x: {
-              domainDimension: "diff",
-            },
-            y: {
-              domainDimension: "diff",
-            },
-          },
+        if (curr.custom) {
+          resp = await gemini.recommendForSeq(curr.sequence, {
+            ...options,
+            stageN: curr.sequence.length - 1,
+            totalDuration: options.totalDuration * 2
+          });
 
-          marks: {
-            marks: {
-              change: {
-                scale: ["x", "y"],
-                data: {
-                  keys: ["gemini_id"],
-                  update: true,
-                  enter: true,
-                  exit: true,
-                },
-                encode: {
-                  update: true,
-                  enter: true,
-                  exit: true,
-                },
+          const _gemSpec = resp[0].specs.map(d => d.spec);
+
+          frames.push({
+            source: prev,
+            target: curr,
+            gemSpec: _gemSpec,
+            prevMeta,
+            currMeta,
+          });
+        } else {
+          resp = await gemini.recommend(prev, curr, options);
+
+          const _gemSpec = resp[0] ? resp[0].spec : gemSpec;
+
+          const sync = _gemSpec.timeline.concat[0].sync;
+  
+          if (!sync.some(d => d.component === "view")) {
+            sync.push({
+              "component": "view",
+              "change": {
+                "signal": [
+                  "width", "height"
+                ]
               },
-            },
-          },
-          totalDuration: frameDuration,
-        });
-
-        const _gemSpec = resp[0] ? resp[0].spec : gemSpec;
-
-        const sync = _gemSpec.timeline.concat[0].sync;
-
-        if (!sync.some(d => d.component === "view")) {
-          sync.push({
-            "component": "view",
-            "change": {
-              "signal": [
-                "width", "height"
-              ]
-            },
-            "timing": {
-                  "duration": {
-                      "ratio": 1
-                  }
-              }
-          })
+              "timing": {
+                    "duration": {
+                        "ratio": 1
+                    }
+                }
+            })
+          }
+  
+          frames.push({
+            source: prev,
+            target: curr,
+            gemSpec: _gemSpec,
+            prevMeta,
+            currMeta,
+          });
         }
-
-        frames.push({
-          source: prev,
-          target: curr,
-          gemSpec: _gemSpec,
-          prevMeta,
-          currMeta,
-        });
       } catch (error) {
         console.error(error)
       }
