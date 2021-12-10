@@ -54,7 +54,7 @@ class DatamationFrame(pd.DataFrame):
 
     # Override the 'groupby' function
     def groupby(self, by):
-        self._by = [by]
+        self._by = [by] if type(by) == str else by
         self._operations.append('groupby')
         df = super(DatamationFrame, self).groupby(by=by)
         return datamation_groupby.DatamationGroupBy(self, by)
@@ -64,7 +64,10 @@ class DatamationFrame(pd.DataFrame):
         x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
         y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
 
-        by = ','.join(self._by)
+        tooltip = [{
+            "field": self._by[0],
+            "type": "nominal"
+        }]
 
         spec_encoding = {
             'x': x_encoding,
@@ -73,27 +76,141 @@ class DatamationFrame(pd.DataFrame):
                 "field": None,
                 "type": "nominal"
             },
-            "tooltip": [
-                {
-                "field": by,
-                "type": "nominal"
-                }
-            ]
+            "tooltip": tooltip
         }
         
-        data = list(map(lambda key: { by: key, 'n': len(self.states[1].groups[key])}, self.states[1].groups.keys()))
+        facet_encoding = {}
+
+        if len(self._by) > 1:
+            facet_encoding["column"] = { "field": self._by[0], "type": "ordinal", "title": self._by[0] }
+
+        if len(self._by) > 2:
+            facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
+
+        facet_dims = {
+            "ncol": 1,
+            "nrow": 1
+        }
+
+        data = list(map(lambda key: { self._by[0]: key, 'n': len(self.states[1].groups[key])}, self.states[1].groups.keys()))
 
         meta = { 
                 'parse': "grid",
-                'description': "Group by " + by,
-                "splitField": by,
+                'description': "Group by " + self._by[-1],
+                "splitField": self._by[0],
                 "axes": False
         }
 
         specs_list = []
-        spec = utils.generate_vega_specs(data, meta, spec_encoding)
 
-        specs_list.append(spec)
+        # The case of groupby multiple 
+        if len(self._by) > 1:
+            cols = []
+            count = {}
+            start = {}
+            for key in self.states[1].groups.keys():
+                col, row = key
+                if col not in cols:
+                    cols.append(col)
+                if col not in count:
+                    count[col] = 0
+                count[col] = count[col] + len(self.states[1].groups[key])
+
+            id = 1
+            for col in cols:
+                start[col] = id
+                id  = id + count[col]
+
+            facet_dims = {
+                "ncol": len(cols),
+                "nrow": 1
+            }
+            data = list(map(lambda col: { self._by[0]: col, 'n': count[col], 'gemini_ids': list(range(start[col], start[col]+count[col], 1))}, cols))
+            meta = { 
+                    'parse': "grid",
+                    'description': "Group by " + self._by[0]
+            }
+
+            spec_encoding = {
+                'x': x_encoding,
+                'y': y_encoding ,
+                'tooltip': tooltip
+            }
+
+            spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+            specs_list.append(spec)
+
+            cols = []
+            rows = []
+            count = {}
+            data = []
+            start = 1
+            for key in self.states[1].groups.keys():
+                col, row = key
+                if col not in cols:
+                    cols.append(col)
+                if row not in rows:
+                    rows.append(row)
+                if col not in count:
+                    count[col] = 0
+                count[col] = count[col] + len(self.states[1].groups[key])
+                data.append({self._by[0]: col, self._by[1]: row,'n': len(self.states[1].groups[key]), 'gemini_ids': list(range(start, start+len(self.states[1].groups[key]), 1))})
+                start  = start + len(self.states[1].groups[key])
+
+            facet_dims = {
+                "ncol": len(cols),
+                "nrow": 1
+            }
+            meta = { 
+                    'parse': "grid",
+                    'description': "Group by " + ', '.join(self._by),
+                    "splitField": self._by[1],
+                    "axes": True
+            }
+
+            tooltip = []
+            for field in self._by:
+                tooltip.append({
+                    "field": field,
+                    "type": "nominal"
+                })
+
+            spec_encoding = {
+                'x': x_encoding,
+                'y': y_encoding ,
+                 "color": {
+                    "field": self._by[1],
+                    "type": "nominal",
+                    "legend": {
+                        "values": rows
+                    }
+                },
+                "tooltip": tooltip
+            }
+            spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+            specs_list.append(spec)
+        else:            
+            cols = []
+            count = {}
+            start = {}
+            for key in self.states[1].groups.keys():
+                col = key
+                if col not in cols:
+                    cols.append(col)
+                if col not in count:
+                    count[col] = 0
+                count[col] = count[col] + len(self.states[1].groups[key])
+            
+            id = 1
+            for col in cols:
+                start[col] = id
+                id  = id + count[col]
+
+            data = list(map(lambda key: { self._by[0]: key, 'n': len(self.states[1].groups[key]), 'gemini_ids': list(range(start[key], start[key]+count[key], 1))}, self.states[1].groups.keys()))
+
+            spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+            specs_list.append(spec)
+
         return specs_list
 
     # The first spec in the json to layout all the points in one frame.
@@ -103,11 +220,12 @@ class DatamationFrame(pd.DataFrame):
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding }
 
-        data = [
-            {
-                "n": len(self.states[0])
-            }
-        ]
+        value = {
+            "n": len(self.states[0]),
+        }
+        value["gemini_ids"] = list(range(1, len(self.states[0])+1, 1))
+        
+        data = [value]
         
         meta =  { 
             'parse': "grid",

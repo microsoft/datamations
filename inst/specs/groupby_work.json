@@ -3,16 +3,118 @@
     "height": 300,
     "width": 300,
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-    "data": {
-      "values": [
-        {
-          "n": 100
-        }
-      ]
-    },
     "meta": {
       "parse": "grid",
       "description": "Initial data"
+    },
+    "data": {
+      "values": [
+        {
+          "n": 100,
+          "gemini_ids": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100
+          ]
+        }
+      ]
     },
     "mark": {
       "type": "point",
@@ -36,23 +138,127 @@
     "height": 300,
     "width": 300,
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-    "data": {
-      "values": [
-        {
-          "Work": "Academia",
-          "n": 28
-        },
-        {
-          "Work": "Industry",
-          "n": 72
-        }
-      ]
-    },
     "meta": {
       "parse": "grid",
       "description": "Group by Work",
       "splitField": "Work",
       "axes": false
+    },
+    "data": {
+      "values": [
+        {
+          "Work": "Academia",
+          "n": 28,
+          "gemini_ids": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        },
+        {
+          "Work": "Industry",
+          "n": 72,
+          "gemini_ids": [
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100
+          ]
+        }
+      ]
     },
     "mark": {
       "type": "point",
@@ -86,6 +292,16 @@
     "height": 300,
     "width": 300,
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "parse": "jitter",
+      "axes": false,
+      "description": "Plot Salary within each group",
+      "splitField": "Work",
+      "xAxisLabels": [
+        "Academia",
+        "Industry"
+      ]
+    },
     "data": {
       "values": [
         {
@@ -790,16 +1006,6 @@
         }
       ]
     },
-    "meta": {
-      "parse": "jitter",
-      "axes": false,
-      "description": "Plot Salary within each group",
-      "splitField": "Work",
-      "xAxisLabels": [
-        "Academia",
-        "Industry"
-      ]
-    },
     "mark": {
       "type": "point",
       "filled": true,
@@ -853,6 +1059,11 @@
     "height": 300,
     "width": 300,
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "axes": false,
+      "description": "Plot mean Salary of each group",
+      "custom_animation": "mean"
+    },
     "data": {
       "values": [
         {
@@ -1556,10 +1767,6 @@
           "datamations_y_tooltip": 91.48376118136609
         }
       ]
-    },
-    "meta": {
-      "axes": false,
-      "description": "Plot mean Salary of each group"
     },
     "mark": {
       "type": "point",
@@ -1621,8 +1828,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 81.94450138369575,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 81.94450138369575,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1631,8 +1838,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 84.48683335236274,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 84.48683335236274,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1641,8 +1848,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 82.89530056482181,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 82.89530056482181,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1651,8 +1858,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 83.84691398846917,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 83.84691398846917,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1661,8 +1868,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 83.75313821574673,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 83.75313821574673,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1671,8 +1878,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.26832443126477,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.26832443126477,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1681,8 +1888,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.33091764966957,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.33091764966957,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1691,8 +1898,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 83.26561724720523,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 83.26561724720523,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1701,8 +1908,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 82.89954726654105,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 82.89954726654105,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1711,8 +1918,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 84.73846479947679,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 84.73846479947679,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1721,8 +1928,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.00685522030108,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.00685522030108,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1731,8 +1938,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.16300668986514,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.16300668986514,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1741,8 +1948,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.37737160664983,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.37737160664983,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1751,8 +1958,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.0828845105134,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.0828845105134,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1761,8 +1968,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 84.32561727589928,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 84.32561727589928,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1771,8 +1978,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 84.14068312523887,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 84.14068312523887,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1781,8 +1988,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 86.0538539250847,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 86.0538539250847,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1791,8 +1998,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.91064599249512,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.91064599249512,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1801,8 +2008,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 86.04063351545483,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 86.04063351545483,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1811,8 +2018,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.33032013499178,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.33032013499178,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1821,8 +2028,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.49514183099382,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.49514183099382,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1831,8 +2038,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 86.44472820917144,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 86.44472820917144,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1841,8 +2048,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 86.36788870207965,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 86.36788870207965,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1851,8 +2058,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 84.54085364961065,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 84.54085364961065,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1861,8 +2068,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 87.04902912862599,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 87.04902912862599,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1871,8 +2078,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.46124948980287,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.46124948980287,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1881,8 +2088,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 86.68271354306489,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 86.68271354306489,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1891,8 +2098,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 87.43917947425507,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 87.43917947425507,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -1901,8 +2108,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.40521181118676,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.40521181118676,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -1911,8 +2118,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.34894080343656,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.34894080343656,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -1921,8 +2128,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.18779113679192,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.18779113679192,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -1931,8 +2138,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.31389033375308,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.31389033375308,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -1941,8 +2148,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.33657557494008,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.33657557494008,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -1951,8 +2158,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 89.68851578235626,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 89.68851578235626,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -1961,8 +2168,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 89.657391943736,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 89.657391943736,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -1971,8 +2178,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 89.81031844741665,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 89.81031844741665,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -1981,8 +2188,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.14455051301049,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.14455051301049,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -1991,8 +2198,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.2597002927214,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.2597002927214,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2001,8 +2208,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 89.58072764403187,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 89.58072764403187,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2011,8 +2218,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.47756954631768,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.47756954631768,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2021,8 +2228,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.54214000562206,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.54214000562206,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2031,8 +2238,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.95082530193032,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.95082530193032,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2041,8 +2248,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.76082284515724,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.76082284515724,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2051,8 +2258,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.21495885658078,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.21495885658078,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2061,8 +2268,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.48115599853918,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.48115599853918,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2071,8 +2278,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.20350587111898,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.20350587111898,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2081,8 +2288,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.90009946771896,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.90009946771896,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2091,8 +2298,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.34475201112218,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.34475201112218,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2101,8 +2308,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.6169246234931,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.6169246234931,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2111,8 +2318,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.17985331243835,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.17985331243835,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2121,8 +2328,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.24937468231656,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.24937468231656,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2131,8 +2338,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.40493377088568,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.40493377088568,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2141,8 +2348,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.1165353488177,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.1165353488177,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2151,8 +2358,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.10686429939231,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.10686429939231,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2161,8 +2368,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.67042803671212,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.67042803671212,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2171,8 +2378,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.46984667144716,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.46984667144716,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2181,8 +2388,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.05790561670436,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.05790561670436,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2191,8 +2398,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.16026216419414,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.16026216419414,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2201,8 +2408,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.40985550289042,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.40985550289042,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2211,8 +2418,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.94344162987544,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.94344162987544,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2221,8 +2428,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.1740557027515,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.1740557027515,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2231,8 +2438,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.05706270388328,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.05706270388328,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2241,8 +2448,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.24015223653988,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.24015223653988,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2251,8 +2458,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.50113883288576,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.50113883288576,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2261,8 +2468,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.60402934253216,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.60402934253216,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2271,8 +2478,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.40050469245762,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.40050469245762,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2281,8 +2488,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.14769996097311,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.14769996097311,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2291,8 +2498,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.70458788215184,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.70458788215184,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2301,8 +2508,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.61883719847538,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.61883719847538,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2311,8 +2518,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.56335103302264,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.56335103302264,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2321,8 +2528,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.59819543571211,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.59819543571211,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2331,8 +2538,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.17003402672708,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.17003402672708,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2341,8 +2548,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.74728795373812,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.74728795373812,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2351,8 +2558,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.0161147855688,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.0161147855688,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2361,8 +2568,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.28194353799336,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.28194353799336,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2371,8 +2578,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.5201518230606,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.5201518230606,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2381,8 +2588,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.24062326690182,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.24062326690182,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2391,8 +2598,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.7338204937987,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.7338204937987,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2401,8 +2608,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.61614312464371,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.61614312464371,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2411,8 +2618,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.04146937443876,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.04146937443876,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2421,8 +2628,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.29214980686083,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.29214980686083,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2431,8 +2638,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.69815122988076,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.69815122988076,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2441,8 +2648,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.8960476492066,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.8960476492066,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2451,8 +2658,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.41877216659486,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.41877216659486,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2461,8 +2668,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.8766731780488,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.8766731780488,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2471,8 +2678,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.38043254078366,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.38043254078366,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2481,8 +2688,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.17296759225428,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.17296759225428,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2491,8 +2698,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.16009169165044,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.16009169165044,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2501,8 +2708,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.1522822889965,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.1522822889965,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2511,8 +2718,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.19455609074794,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.19455609074794,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2521,8 +2728,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.55971896206027,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.55971896206027,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2531,8 +2738,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.99221259285696,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.99221259285696,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2541,8 +2748,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.46854129247367,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.46854129247367,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2551,8 +2758,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.70305993850344,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.70305993850344,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2561,8 +2768,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.98929925682025,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.98929925682025,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2571,8 +2778,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.99563476326875,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.99563476326875,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2581,8 +2788,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.30848569469526,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.30848569469526,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2591,8 +2798,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.74357159482317,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.74357159482317,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2601,8 +2808,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.83377221622504,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.83377221622504,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -2611,8 +2818,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 94.0215112566948,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 94.0215112566948,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         }
@@ -2752,8 +2959,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 81.94450138369575,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 81.94450138369575,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2762,8 +2969,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 84.48683335236274,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 84.48683335236274,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2772,8 +2979,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 82.89530056482181,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 82.89530056482181,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2782,8 +2989,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 83.84691398846917,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 83.84691398846917,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2792,8 +2999,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 83.75313821574673,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 83.75313821574673,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2802,8 +3009,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.26832443126477,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.26832443126477,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2812,8 +3019,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.33091764966957,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.33091764966957,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2822,8 +3029,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 83.26561724720523,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 83.26561724720523,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2832,8 +3039,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 82.89954726654105,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 82.89954726654105,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2842,8 +3049,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 84.73846479947679,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 84.73846479947679,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2852,8 +3059,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.00685522030108,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.00685522030108,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2862,8 +3069,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.16300668986514,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.16300668986514,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2872,8 +3079,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.37737160664983,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.37737160664983,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2882,8 +3089,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.0828845105134,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.0828845105134,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2892,8 +3099,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 84.32561727589928,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 84.32561727589928,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2902,8 +3109,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 84.14068312523887,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 84.14068312523887,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2912,8 +3119,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 86.0538539250847,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 86.0538539250847,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2922,8 +3129,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.91064599249512,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.91064599249512,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2932,8 +3139,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 86.04063351545483,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 86.04063351545483,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2942,8 +3149,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.33032013499178,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.33032013499178,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2952,8 +3159,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.49514183099382,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.49514183099382,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2962,8 +3169,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 86.44472820917144,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 86.44472820917144,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2972,8 +3179,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 86.36788870207965,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 86.36788870207965,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2982,8 +3189,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 84.54085364961065,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 84.54085364961065,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -2992,8 +3199,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 87.04902912862599,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 87.04902912862599,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -3002,8 +3209,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 85.46124948980287,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 85.46124948980287,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -3012,8 +3219,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 86.68271354306489,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 86.68271354306489,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -3022,8 +3229,8 @@
           "Work": "Academia",
           "datamations_x": 1,
           "datamations_y": 85.01222196154829,
-          "datamations_y_raw": 87.43917947425507,
           "datamations_y_tooltip": 85.01222196154829,
+          "datamations_y_raw": 87.43917947425507,
           "Lower": 84.76371607612279,
           "Upper": 85.2607278469738
         },
@@ -3032,8 +3239,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.40521181118676,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.40521181118676,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3042,8 +3249,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.34894080343656,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.34894080343656,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3052,8 +3259,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.18779113679192,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.18779113679192,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3062,8 +3269,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.31389033375308,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.31389033375308,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3072,8 +3279,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.33657557494008,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.33657557494008,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3082,8 +3289,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 89.68851578235626,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 89.68851578235626,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3092,8 +3299,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 89.657391943736,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 89.657391943736,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3102,8 +3309,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 89.81031844741665,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 89.81031844741665,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3112,8 +3319,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.14455051301049,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.14455051301049,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3122,8 +3329,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.2597002927214,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.2597002927214,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3132,8 +3339,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 89.58072764403187,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 89.58072764403187,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3142,8 +3349,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.47756954631768,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.47756954631768,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3152,8 +3359,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.54214000562206,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.54214000562206,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3162,8 +3369,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.95082530193032,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.95082530193032,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3172,8 +3379,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.76082284515724,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.76082284515724,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3182,8 +3389,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.21495885658078,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.21495885658078,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3192,8 +3399,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.48115599853918,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.48115599853918,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3202,8 +3409,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.20350587111898,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.20350587111898,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3212,8 +3419,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.90009946771896,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.90009946771896,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3222,8 +3429,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.34475201112218,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.34475201112218,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3232,8 +3439,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.6169246234931,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.6169246234931,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3242,8 +3449,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.17985331243835,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.17985331243835,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3252,8 +3459,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.24937468231656,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.24937468231656,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3262,8 +3469,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.40493377088568,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.40493377088568,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3272,8 +3479,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.1165353488177,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.1165353488177,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3282,8 +3489,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.10686429939231,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.10686429939231,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3292,8 +3499,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.67042803671212,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.67042803671212,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3302,8 +3509,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.46984667144716,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.46984667144716,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3312,8 +3519,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.05790561670436,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.05790561670436,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3322,8 +3529,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.16026216419414,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.16026216419414,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3332,8 +3539,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.40985550289042,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.40985550289042,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3342,8 +3549,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.94344162987544,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.94344162987544,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3352,8 +3559,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.1740557027515,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.1740557027515,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3362,8 +3569,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.05706270388328,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.05706270388328,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3372,8 +3579,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.24015223653988,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.24015223653988,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3382,8 +3589,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.50113883288576,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.50113883288576,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3392,8 +3599,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.60402934253216,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.60402934253216,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3402,8 +3609,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.40050469245762,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.40050469245762,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3412,8 +3619,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.14769996097311,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.14769996097311,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3422,8 +3629,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.70458788215184,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.70458788215184,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3432,8 +3639,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.61883719847538,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.61883719847538,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3442,8 +3649,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.56335103302264,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.56335103302264,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3452,8 +3659,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.59819543571211,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.59819543571211,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3462,8 +3669,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.17003402672708,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.17003402672708,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3472,8 +3679,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 90.74728795373812,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 90.74728795373812,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3482,8 +3689,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.0161147855688,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.0161147855688,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3492,8 +3699,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.28194353799336,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.28194353799336,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3502,8 +3709,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.5201518230606,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.5201518230606,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3512,8 +3719,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.24062326690182,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.24062326690182,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3522,8 +3729,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.7338204937987,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.7338204937987,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3532,8 +3739,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.61614312464371,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.61614312464371,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3542,8 +3749,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.04146937443876,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.04146937443876,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3552,8 +3759,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.29214980686083,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.29214980686083,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3562,8 +3769,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.69815122988076,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.69815122988076,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3572,8 +3779,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.8960476492066,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.8960476492066,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3582,8 +3789,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.41877216659486,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.41877216659486,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3592,8 +3799,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.8766731780488,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.8766731780488,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3602,8 +3809,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.38043254078366,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.38043254078366,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3612,8 +3819,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.17296759225428,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.17296759225428,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3622,8 +3829,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.16009169165044,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.16009169165044,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3632,8 +3839,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.1522822889965,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.1522822889965,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3642,8 +3849,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.19455609074794,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.19455609074794,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3652,8 +3859,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.55971896206027,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.55971896206027,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3662,8 +3869,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.99221259285696,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.99221259285696,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3672,8 +3879,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.46854129247367,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.46854129247367,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3682,8 +3889,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.70305993850344,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.70305993850344,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3692,8 +3899,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.98929925682025,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.98929925682025,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3702,8 +3909,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.99563476326875,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.99563476326875,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3712,8 +3919,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 92.30848569469526,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 92.30848569469526,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3722,8 +3929,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 91.74357159482317,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 91.74357159482317,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3732,8 +3939,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 93.83377221622504,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 93.83377221622504,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         },
@@ -3742,8 +3949,8 @@
           "Work": "Industry",
           "datamations_x": 2,
           "datamations_y": 91.48376118136609,
-          "datamations_y_raw": 94.0215112566948,
           "datamations_y_tooltip": 91.48376118136609,
+          "datamations_y_raw": 94.0215112566948,
           "Lower": 91.36652376463958,
           "Upper": 91.6009985980926
         }
