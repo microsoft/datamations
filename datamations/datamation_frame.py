@@ -189,7 +189,25 @@ class DatamationFrame(pd.DataFrame):
             }
             spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
             specs_list.append(spec)
-        else:
+        else:            
+            cols = []
+            count = {}
+            start = {}
+            for key in self.states[1].groups.keys():
+                col = key
+                if col not in cols:
+                    cols.append(col)
+                if col not in count:
+                    count[col] = 0
+                count[col] = count[col] + len(self.states[1].groups[key])
+            
+            id = 1
+            for col in cols:
+                start[col] = id
+                id  = id + count[col]
+
+            data = list(map(lambda key: { self._by[0]: key, 'n': len(self.states[1].groups[key]), 'gemini_ids': list(range(start[key], start[key]+count[key], 1))}, self.states[1].groups.keys()))
+
             spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
             specs_list.append(spec)
 
@@ -205,8 +223,7 @@ class DatamationFrame(pd.DataFrame):
         value = {
             "n": len(self.states[0]),
         }
-        if len(self._by) > 1:
-            value["gemini_ids"] = list(range(1, len(self.states[0])+1, 1))
+        value["gemini_ids"] = list(range(1, len(self.states[0])+1, 1))
         
         data = [value]
         

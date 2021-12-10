@@ -269,7 +269,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "ncol": len(cols),
                 "nrow": 1
             }
-            meta['custom_animation'] = 'mean'
         else:
             id = 1
             for i in range(len(self.states[0])):
@@ -297,7 +296,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 }
                 data.append(value)
                 id = id + 1
-
+        meta['custom_animation'] = 'mean'
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
