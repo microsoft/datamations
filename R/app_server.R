@@ -3,7 +3,6 @@
 #' @param input,output,session Internal parameters for {shiny}.
 #' @noRd
 app_server <- function(input, output, session) {
-
   inputs <- mod_inputs_server("inputs")
   pipeline <- mod_pipeline_server("pipeline", inputs)
 

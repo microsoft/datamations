@@ -90,21 +90,24 @@ test_that("prep_specs_summarize returns a list with four elements - one for the 
 })
 
 test_that("prep_specs_summarize has meta.custom_animation if the summary function is mean or median, but not otherwise", {
-  specs <- "small_salary %>%  group_by(Degree) %>% summarize(mean = mean(Salary))" %>% datamation_sanddance() %>%
+  specs <- "small_salary %>%  group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
+    datamation_sanddance() %>%
     purrr::pluck("x") %>%
     purrr::pluck("specs") %>%
     jsonlite::fromJSON(simplifyDataFrame = FALSE)
 
   expect_equal(specs[[4]][["meta"]][["custom_animation"]], "mean")
 
-  specs <- "small_salary %>%  group_by(Degree) %>% summarize(median = median(Salary))" %>% datamation_sanddance() %>%
+  specs <- "small_salary %>%  group_by(Degree) %>% summarize(median = median(Salary))" %>%
+    datamation_sanddance() %>%
     purrr::pluck("x") %>%
     purrr::pluck("specs") %>%
     jsonlite::fromJSON(simplifyDataFrame = FALSE)
 
   expect_equal(specs[[4]][["meta"]][["custom_animation"]], "median")
 
-  specs <- "small_salary %>%  group_by(Degree) %>% summarize(sd = sd(Salary))" %>% datamation_sanddance() %>%
+  specs <- "small_salary %>%  group_by(Degree) %>% summarize(sd = sd(Salary))" %>%
+    datamation_sanddance() %>%
     purrr::pluck("x") %>%
     purrr::pluck("specs") %>%
     jsonlite::fromJSON(simplifyDataFrame = FALSE)
