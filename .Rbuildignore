@@ -20,3 +20,4 @@ azure-pipelines.yml
 ^scratch$
 ^setup\.py$
 ^notebooks$
+^PythonSettings\.json$

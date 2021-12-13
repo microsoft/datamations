@@ -104,7 +104,10 @@ test_that("datamation_sanddance requires a call to geom_point", {
 # Python specs ----
 
 test_that("python specs are identical to R specs", {
-  python_specs <- jsonlite::fromJSON(testthat::test_path("python_specs/groupby_work.json"), simplifyDataFrame = FALSE)
+
+  # One grouping variable ----
+
+  python_specs <- jsonlite::fromJSON(system.file("specs/groupby_work.json", package = "datamations"), simplifyDataFrame = FALSE)
 
   r_specs <- "small_salary %>% group_by(Work) %>% summarise(mean = mean(Salary))" %>%
     datamation_sanddance() %>%
@@ -112,36 +115,27 @@ test_that("python specs are identical to R specs", {
     purrr::pluck("specs") %>%
     jsonlite::fromJSON(simplifyDataFrame = FALSE)
 
-  # meta.custom_animation not integrated into python yet
-  r_specs[[4]]$meta$custom_animation <- NULL
+  expect_python_identical_to_r(python_specs, r_specs)
 
-  # gemini_ids not integrated into python yet
-  r_specs <- purrr::map(r_specs, function(x) {
-    x$data$values <- purrr::map(x$data$values, function(x) {
-      x$gemini_ids <- NULL
+  # Two grouping variables ----
 
-      x
-    })
+  python_specs <- jsonlite::fromJSON(system.file("specs/groupby_work_degree.json", package = "datamations"), simplifyDataFrame = FALSE)
 
-    x
-  })
+  r_specs <- "small_salary %>% group_by(Work, Degree) %>% summarise(mean = mean(Salary))" %>%
+    datamation_sanddance() %>%
+    purrr::pluck("x") %>%
+    purrr::pluck("specs") %>%
+    jsonlite::fromJSON(simplifyDataFrame = FALSE)
 
-  # Reconcile differences in names
-  r_names <- r_specs %>%
-    purrr::map(names)
+  expect_python_identical_to_r(python_specs, r_specs)
 
-  python_specs <- purrr::map2(python_specs, r_names, ~ .x[.y])
+  python_specs <- jsonlite::fromJSON(system.file("specs/groupby_degree_work.json", package = "datamations"), simplifyDataFrame = FALSE)
 
-  # Reconcile differences in data value column orders
-  r_values_order <- purrr::map(r_specs, function(x) {
-    purrr::map(x$data$values, names)
-  })
+  r_specs <- "small_salary %>% group_by(Degree, Work) %>% summarise(mean = mean(Salary))" %>%
+    datamation_sanddance() %>%
+    purrr::pluck("x") %>%
+    purrr::pluck("specs") %>%
+    jsonlite::fromJSON(simplifyDataFrame = FALSE)
 
-  python_specs <- purrr::map2(python_specs, r_values_order, function(x, y) {
-    x$data$values <- purrr::map2(x$data$values, y, ~ .x[.y])
-
-    x
-  })
-
-  expect_equal(python_specs, r_specs)
+  expect_python_identical_to_r(python_specs, r_specs)
 })
