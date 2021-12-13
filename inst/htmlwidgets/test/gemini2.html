@@ -1059,7 +1059,7 @@
 
       async function playIt() {
         const sequence = await CustomAnimations.count(count_source, count_target);
-
+        console.log(sequence);
         vegaEmbed("#app", sequence[0], {renderer: "svg"});
 
         gemini.recommendForSeq(sequence, { stageN: sequence.length - 1, totalDuration: sequence.length * 2000 }).then(async ([ resp ]) => {

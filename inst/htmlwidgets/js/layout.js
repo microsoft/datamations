@@ -211,7 +211,7 @@ function getGridSpec(spec, rows = 10, stacked = false) {
     const yPadding = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
 
     const yDomain = [
-      d3.min(grid, (d) => d[CONF.Y_FIELD]) - yPadding,
+      stacked ? 0 : d3.min(grid, (d) => d[CONF.Y_FIELD]) - yPadding,
       d3.max(grid, (d) => d[CONF.Y_FIELD]) + yPadding + (stacked ? 10 : 0),
     ];
 

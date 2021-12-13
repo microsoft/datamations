@@ -1,6 +1,6 @@
-function addRules(source, target) {
+function addRules(source, target, shrink = false) {
   const { width, height } = target.spec || target;
-  const values = source.data.values.slice();
+  let values = source.data.values.slice();
   const sourceMeta = source.meta;
 
   const rules = sourceMeta.rules.map((d, i) => {
@@ -22,7 +22,17 @@ function addRules(source, target) {
               },
           }
       }
-  })
+  });
+
+  if (shrink) {
+    values = values.map((d, i) => {
+      const y = target.data.values[i][CONF.Y_FIELD];
+      return {
+        ...d,
+        [CONF.Y_FIELD]: y
+      }
+    });
+  }
 
   return {
     $schema: CONF.SCHEME,
@@ -50,8 +60,9 @@ const CustomAnimations = {
   // 3) replace with count bubbles (aggregate count) (basically target spec)
   count: async (source, target) => {
     const stacks = await getGridSpec(source, 10, true);
-    const rules = await addRules(source, target);
-    return [stacks, rules, target];
+    const rules = await addRules(source, target, false);
+    const pullUp = await addRules(source, target, true);
+    return [stacks, rules, pullUp, target];
   },
   mean: () => {},
   median: () => {},
