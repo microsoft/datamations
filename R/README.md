@@ -82,7 +82,7 @@
 * Get `gemini_id`s of rows that are filtered _in_ based on the operation in `filter()`
 * Update specs to have `transform.filter = {"field": "gemini_id", "oneOf": [1, 2, ...]}}` if there are multiple IDs (or `transform.filter = {datum.gemini_id == 1}` if there is only one)
 
-# shiny app
+# shiny app 
 
 To embed a datamation_sanddance() object in a Shiny app, use [renderDatamationSandDance()](https://github.com/microsoft/datamations/blob/more-docs/R/datamation_sanddance.R#L187) in the server function, and [datamationSandDanceOutput()](https://github.com/microsoft/datamations/blob/more-docs/R/datamation_sanddance.R#L181) in the UI function.
 
@@ -98,3 +98,9 @@ For the actual "datamations" Shiny app:
 * [mod_pipeline.R](https://github.com/microsoft/datamations/blob/main/R/mod_pipeline.R) contains the module for constructing and displaying the tidyverse pipeline, generated from the inputs
 * [mod_datamation_sanddance.R](https://github.com/microsoft/datamations/blob/main/R/mod_datamation_sanddance.R) generates the actual datamation
 * [mod_data_tabs.R](https://github.com/microsoft/datamations/blob/main/R/mod_data_tabs.R) generates the tabs that show the data at each stage
+
+# Continuous Integration and testing
+
+Package testing and [R CMD Check](https://r-pkgs.org/r-cmd-check.html?q=check\(#check-checks) can be run interactively via `devtools::check()`. This runs a series of standardized checks for R packages including documentation, metadata, issues with the R code, dependencies, conventions, as well as any tests created by the [`testthat` framework](https://r-pkgs.org/tests.html), which live in [`tests/testthat`](https://github.com/microsoft/datamations/tree/main/tests/testthat).
+
+These checks and tests are also run in continuous integration via [GitHub Actions](https://github.com/microsoft/datamations/actions/workflows/check-standard.yaml) any time there is a pull request into the `main` branch. The [`check_standard.yml`](https://github.com/microsoft/datamations/blob/main/.github/workflows/check-standard.yaml) file dictates how the checks are run, from installing dependencies to running the checks and tests themselves. Rather than just running the tests on the developer's machine, these tests are run on [Linux, Mac, and Windows](https://github.com/microsoft/datamations/blob/main/.github/workflows/check-standard.yaml#L22), and on the [latest release of R as well as the development version](https://github.com/microsoft/datamations/blob/main/.github/workflows/check-standard.yaml#L26).
