@@ -8,9 +8,9 @@
 [![R-CMD-check](https://github.com/jhofman/datamations/workflows/R-CMD-check/badge.svg)](https://github.com/jhofman/datamations/actions)
 <!-- badges: end -->
 
-datamations is a framework for automatic generation of explanation of
-plots and tables from analysis code. It automatically turns code into
-animations, showing the steps that led to a plot or a table.
+datamations is a framework for the automatic generation of explanation
+of the steps of an analysis pipeline. It automatically turns code into
+animations, showing the state of the data at each step of an analysis.
 
 ## Installation
 
@@ -30,10 +30,8 @@ library(datamations)
 library(dplyr)
 ```
 
-### Plot-based datamations
-
-A plot-based datamation shows a plot of what the data looks like at each
-step of a pipeline, animated by the transitions that lead to each state.
+A datamation shows a plot of what the data looks like at each step of a
+tidyverse pipeline, animated by the transitions that lead to each state.
 The following shows an example taking the built-in `small_salary` data
 set, grouping by `Degree`, and calculating the mean `Salary`.
 
@@ -49,28 +47,79 @@ with `datamation_sanddance()`:
 
 <img src="man/figures/README-mean_salary_group_by_degree.gif" width="80%" />
 
-You can group by multiple variables, as in this example, grouping by
-`Degree` and `Work` before calculating the mean `Salary`:
+## Supported functions and conventions
+
+datamations supports the following `dplyr` functions:
+
+-   `group_by()`
+-   `summarize()`/`summarise()`
+-   `filter()`
+-   `count()`
+
+and constructs one *or more* frames for each step of a pipeline. In the
+example pipeline above:
 
 ``` r
-"small_salary %>%
-  group_by(Degree, Work) %>% 
-  summarize(mean = mean(Salary))" %>%
-  datamation_sanddance()
+small_salary %>% 
+  group_by(Degree) %>%
+  summarize(mean = mean(Salary))
 ```
 
-<img src="man/figures/README-mean_salary_group_by_degree_work.gif" width="80%" />
+there are three steps:
 
-datamations has some defaults in terms of how groups are represented. As
-seen in the above two examples, when there is one grouping variable,
-it’s shown on the x-axis. When there are two grouping variables, the
-first (by what comes first in `group_by()`) is shown in column facets,
-and the second is shown on the x-axis as well as colored. If there are
-three grouping variables, the first is in column facets, the second in
-row facets, and the third on the x-axis and colored.
+1.  The initial data (`small_salary`)
 
-If you would like to change these defaults, or to match an existing plot
-style, datamations can take ggplot2 code as input.
+    An information grid is shown, laying out the number of points in the
+    data set.
+
+2.  The grouped data (grouped by `Degree`)
+
+    The data is separated into groups, retaining the informaton grid
+    structure.
+
+3.  The summarized data (mean of `Salary`)
+
+    The distribution of `Salary` within the groups is shown, then the
+    summary function (mean) is applied. Error bars are added to the mean
+    and the final frame zooms in on the data.
+
+### `group_by()` frames
+
+datamations supports *up to three* grouping variables, showing one frame
+per variable. The placement of the variables is as follows:
+
+-   **One variable**: On the x-axis
+-   **Two variables**: The first variable in column facets, the second
+    on the x-axis
+-   **Three variables**: The first variable in column facets, the second
+    in row facets, the third in on the x-axis
+
+### `summarize()` frames
+
+datamations supports summarizing *one* variable. The `summarize()`
+section of a pipeline will have the following frames:
+
+1.  Distribution of the variable to be summarized
+2.  Summarized variable
+3.  Summarized variable with standard error (only if summary function is
+    mean)
+4.  Zoomed version of summarized variable
+
+### `count()` frames
+
+datamations treats `count()` equivalently to `group_by()` +
+`summarize(n = n())`. It supports up to three “grouping” variables.
+
+### `filter()` frames
+
+datamation supports `filter()` at any point in the pipeline, whether it
+comes after the initial data, while the data is grouped, or after it has
+been summarized.
+
+## Finer control
+
+If you would like to change the default conventions, or to match an
+existing plot style, datamations can take ggplot2 code as input.
 
 For example, to match this plot, which has Work on the x-axis and Degree
 in row facets:
@@ -117,31 +166,7 @@ Some limitations:
 -   Only `geom_point()` is supported, e.g. specifying `geom_bar()` will
     not produce a bar in the datamation.
 
-### Table-based datamations
+Known limitations:
 
-A table-based datamation shows a mock table of what the data looks like
-at each step of pipeline, again animated by the transitions that lead to
-each state. The following shows our same first example: taking the
-built-in `small_salary` data set, grouping by `Degree`, and calculating
-the mean `Salary`, using the same pipeline.
-
-You can generate a table-based datamation with `datamation_tibble()`:
-
-``` r
-datamation_tibble(
-  pipeline = "small_salary %>% group_by(Degree) %>% summarize(mean = mean(Salary))",
-  output = "mean_salary_group_by_degree.gif"
-)
-```
-
-<img src="man/figures/README-mean_salary_group_by_degree-table.gif" width="80%" />
-
-Datamations work on any dataset provided, as in this example taking
-`mtcars` and grouping by `cyl`:
-
-``` r
-mtcars_group_cyl <- "mtcars %>% group_by(cyl)"
-datamation_tibble(mtcars_group_cyl, output = "mtcars_group_cyl.gif")
-```
-
-<img src="man/figures/README-mtcars_group_cyl.gif" width="80%" />
+-   Three grouping variables (incl. in count)
+-   Summary can only summarize one grouping variable
