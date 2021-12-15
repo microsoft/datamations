@@ -1,0 +1,68 @@
+---
+title: "datamations steps and conventions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{datamations steps and conventions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
+```
+
+datamations constructs one _or more_ frames for each step of a pipeline. For example, in the following pipeline:
+
+```{r mean-salary-degree}
+library(datamations)
+library(dplyr)
+
+"small_salary %>% 
+  group_by(Degree) %>%
+  summarize(mean = mean(Salary))" %>%
+  datamation_sanddance()
+```
+
+there are three steps:
+
+1. The initial data (`small_salary`)
+
+    An information grid is shown, laying out the number of points in the data set.
+    
+2. The grouped data (grouped by `Degree`)
+
+    The data is separated into groups, retaining the informaton grid structure.
+
+3. The summarized data (mean of `Salary`)
+
+    The distribution of `Salary` within the groups is shown, then the summary function (mean) is applied. Error bars are added to the mean and the final frame zooms in on the data.
+    
+## `group_by()` frames
+
+datamations supports *up to three* grouping variables, showing one frame
+per variable. The placement of the variables is as follows:
+
+- **One variable**: On the x-axis
+- **Two variables**: The first variable in column facets, the second on the x-axis
+- **Three variables**: The first variable in column facets, the second in row facets, the third in on the x-axis    
+    
+## `summarize()` frames
+
+datamations supports summarizing _one_ variable. The `summarize()` section of a pipeline will have the following frames:
+
+1. Distribution of the variable to be summarized
+2. Summarized variable
+3. Summarized variable with standard error (only if summary function is mean)
+4. Zoomed version of summarized variable
+
+## `count()` frames
+
+datamations treats `count()` equivalently to `group_by()` + `summarize(n = n())`. It supports up to three "grouping" variables.
+
+## `filter()` frames
+
+datamation supports `filter()` at any point in the pipeline, whether it comes after the initial data, while the data is grouped, or after it has been summarized. 
