@@ -28,7 +28,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   let intervalId;
   let timeoutId;
   let initializing = false;
-  console.log("initial specs:", specs);
+  // console.log("initial specs:", specs);
   let frameDuration = frameDur || 2000;
   let frameDelay = frameDel || 1000;
 
@@ -273,7 +273,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
 
     if (!encoding.y.scale) {
-      const extentY = d3.extent(spec.data.values, (d) => d.y);
+      const extentY = d3.extent(spec.data.values, (d) => d[CONF.Y_FIELD]);
       encoding.y.scale = { domain: extentY };
     }
 
@@ -287,6 +287,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
     if (encoding.x && encoding.x.axis) {
       encoding.x.axis.labelAngle = -90;
+      encoding.x.axis.titleOpacity = 0;
     }
 
     return vegaEmbed(axisSelector, spec, { renderer: "svg" }).then(() => {
@@ -415,12 +416,23 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    */
   async function transformSpecs() {
     const n = d3.max(vegaLiteSpecs[0].data.values, d => d.n);
-    const rows = Math.ceil(Math.sqrt(n));
-    console.log(rows)
+    let rows = Math.ceil(Math.sqrt(n));
+
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
-      const vlSpec = vegaLiteSpecs[i];
+      let vlSpec = vegaLiteSpecs[i];
 
       if (Array.isArray(vlSpec)) continue; // just sanity check, making sure that it is not an array
+
+      // if filter has empty `oneOf`, then generate empty spec and avoid any further processing
+      if (vlSpec.transform && vlSpec.transform[0].filter.oneOf.length === 0) {
+        const emptySpec = getEmptySpec(vlSpec);
+
+        metas[i] = emptySpec.meta;
+        rawSpecs[i] = emptySpec;
+        vlSpec = emptySpec;
+        vegaLiteSpecs[i] = emptySpec;
+        continue;
+      }
 
       const meta = vlSpec.meta;
       const parse = meta.parse;
@@ -428,6 +440,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       // parsing
       if (parse === "grid") {
         const gridSpec = await getGridSpec(vlSpec, rows);
+
         const enc = gridSpec.spec ? gridSpec.spec.encoding : gridSpec.encoding;
         rawSpecs[i].data.values = gridSpec.data.values;
 
@@ -436,6 +449,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           encoding.x.axis = enc.x.axis;
           encoding.y.scale = {
             domain: enc.y.scale.domain
+          }
+          encoding.x.scale = {
+            domain: enc.x.scale.domain
           }
         }
 

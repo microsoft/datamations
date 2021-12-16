@@ -3,12 +3,18 @@ function generateGrid(spec, rows = 10) {
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const groupKeys = [];
 
+  const gap = 2;
+  const distance = 4 + gap;
+  let {width: specWidth, height: specHeight} = spec.spec || spec;
+
   if (spec.facet) {
     if (spec.facet.column) {
       groupKeys.push(spec.facet.column.field);
+      spec.facet.column.sort = { "field": CONF.ORDER_FIELD };
     }
     if (spec.facet.row) {
       groupKeys.push(spec.facet.row.field);
+      spec.facet.row.sort = { "field": CONF.ORDER_FIELD };
     }
   }
 
@@ -16,7 +22,8 @@ function generateGrid(spec, rows = 10) {
 
   const metas = [];
 
-  specValues.forEach(d => {
+  specValues.forEach((d, i) => {
+    d[CONF.ORDER_FIELD] = i;
     if (d.meta) {
       metas.push(...Object.keys(d.meta));
     }
@@ -85,9 +92,18 @@ function generateGrid(spec, rows = 10) {
         return d[1].flatMap((d) => d[1]);
       }
     });
+
+    specWidth = specWidth / grouped.length;
   }
 
-  const maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
+  let maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
+
+  // if width divided by maxCols is less than 5, 
+  // then take up all vertical space to increase rows and reduce columns 
+  if (specWidth / maxCols < 5) {
+    rows = Math.floor(specHeight / distance);
+    maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
+  }
 
   let splitOptions = [];
 
@@ -145,7 +161,7 @@ function generateGrid(spec, rows = 10) {
           ...d,
           ...colorFieldObj,
           ...additionals,
-          gemini_id: counter,
+          gemini_id: d.gemini_ids ? d.gemini_ids[i] : counter,
           [CONF.X_FIELD]: x,
           [CONF.Y_FIELD]: y,
         });
@@ -217,7 +233,7 @@ function getGridSpec(spec, rows = 10) {
         Math.max(yDomain[1], middle + rows / 2)
       ],
     };
-    console.log(encoding.y.scale.domain);
+
     encoding.x.field = CONF.X_FIELD;
     encoding.y.field = CONF.Y_FIELD;
 

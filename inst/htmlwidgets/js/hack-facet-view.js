@@ -1,3 +1,62 @@
+function getEmptySpec(spec) {
+  const description = spec.meta.description;
+  const splitField = spec.meta.splitField;
+
+  return {
+    $scheme: CONF.SCHEME,
+    width: 300,
+    height: 300,
+    meta: {
+      description,
+      axes: false,
+    },
+    data: {
+      values: [
+        {
+          [CONF.X_FIELD]: 0,
+          [CONF.Y_FIELD]: 0,
+        },
+      ],
+    },
+    mark: {
+      type: "point",
+      filled: true,
+      strokeWidth: 1,
+      color: "transparent",
+    },
+    encoding: {
+      x: {
+        field: CONF.X_FIELD,
+        type: "quantitative",
+        scale: {
+          domain: [-5, 5],
+        },
+        axis: {
+          grid: false,
+          ticks: false,
+          title: splitField,
+          domain: false,
+          values: [],
+        },
+      },
+      y: {
+        field: CONF.Y_FIELD,
+        type: "quantitative",
+        scale: {
+          domain: [-5, 5],
+        },
+        axis: {
+          grid: false,
+          ticks: false,
+          title: null,
+          domain: false,
+          values: [],
+        },
+      },
+    },
+  };
+}
+
 function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   const encoding = spec.spec.encoding;
   const mark = spec.spec.mark;
@@ -10,17 +69,19 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
       field: CONF.X_FIELD,
       type: "quantitative",
       scale: {},
-      axis: axes.x ? {
-        labelExpr: "",
-        values: [],
-        title: title,
-        grid: false,
-        orient: "top",
-        ticks: false,
-        domain: false,
-        labelPadding: 10
-      } : null,
-    }
+      axis: axes.x
+        ? {
+            labelExpr: "",
+            values: [],
+            title: title,
+            grid: false,
+            orient: "top",
+            ticks: false,
+            domain: false,
+            labelPadding: 10,
+          }
+        : null,
+    };
   }
 
   if (encoding.y) {
@@ -30,18 +91,26 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
       field: spec.spec.mark === "errorbar" ? encoding.y.field : CONF.Y_FIELD,
       type: "quantitative",
       scale: {},
-      axis: axes.y ? {
-        labelExpr: "",
-        values: [],
-        title: title,
-        grid: false,
-        labelAngle: 90,
-        domain: false,
-        ticks: false,
-        labelPadding: 10,
-        orient: "right"
-      } : null,
-    }
+      axis: axes.y
+        ? {
+            labelExpr: "",
+            values: [],
+            title: title,
+            grid: false,
+            labelAngle: 90,
+            domain: false,
+            ticks: false,
+            labelPadding: 10,
+            orient: "right",
+          }
+        : null,
+    };
+  }
+
+  const additionals = {};
+
+  if (spec.transform) {
+    additionals.transform = spec.transform;
   }
 
   return {
@@ -52,7 +121,8 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
     width: width,
     height: height,
     mark: mark,
-    encoding: encoding
+    encoding: encoding,
+    ...additionals,
   };
 }
 
@@ -82,9 +152,10 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   const scaleY = view.scale("y");
   const source = view.data("source");
 
+  let row_header, column_header;
+
   // need y axis
-  if (rowId) {
-    const row_header = view.data("row_header");
+  if (rowId && (row_header = view.data("row_header"))) {
     const yAxisValues = [];
     const yAxisExpr = {};
 
@@ -102,16 +173,17 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
       yAxisExpr[yCoord] = name;
     });
 
-    yDomain[1] = d3.min(row_header, d => d.bounds.y1);
-    yDomain[0] = d3.max(row_header, d => d.bounds.y2);
+    yDomain[1] = d3.min(row_header, (d) => d.bounds.y1);
+    yDomain[0] = d3.max(row_header, (d) => d.bounds.y2);
 
     newSpec.encoding.y.axis.values = yAxisValues;
-    newSpec.encoding.y.axis.labelExpr = `${JSON.stringify(yAxisExpr)}[datum.label]`;
+    newSpec.encoding.y.axis.labelExpr = `${JSON.stringify(
+      yAxisExpr
+    )}[datum.label]`;
   }
 
   // need x axis
-  if (colId) {
-    const column_header = view.data("column_header");
+  if (colId && (column_header = view.data("column_header"))) {
     const xAxisValues = [];
     const xAxisExpr = {};
 
@@ -127,11 +199,13 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
       xAxisExpr[xCoord] = name;
     });
 
-    xDomain[0] = d3.min(column_header, d => d.bounds.x1)
-    xDomain[1] = d3.max(column_header, d => d.bounds.x2);
+    xDomain[0] = d3.min(column_header, (d) => d.bounds.x1);
+    xDomain[1] = d3.max(column_header, (d) => d.bounds.x2);
 
     newSpec.encoding.x.axis.values = xAxisValues;
-    newSpec.encoding.x.axis.labelExpr = `${JSON.stringify(xAxisExpr)}[datum.label]`;
+    newSpec.encoding.x.axis.labelExpr = `${JSON.stringify(
+      xAxisExpr
+    )}[datum.label]`;
   }
 
   source.forEach((d) => {
@@ -146,8 +220,8 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
 
     values.push({
       ...d,
-      [CONF.X_FIELD]: xStart  + scaleX(d[xField]),
-      [CONF.Y_FIELD]: (yStart + scaleY(d[yField])),
+      [CONF.X_FIELD]: xStart + scaleX(d[xField]),
+      [CONF.Y_FIELD]: yStart + scaleY(d[yField]),
     });
   });
 
@@ -165,7 +239,7 @@ function hackFacet(spec) {
 
   spec.data.name = "source";
 
-  return vegaEmbed(div, spec, {renderer: "svg"}).then(resp => {
+  return vegaEmbed(div, spec, { renderer: "svg" }).then((resp) => {
     const newSpec = getHackedSpec({
       ...resp,
       width: spec.spec.width,

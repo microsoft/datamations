@@ -154,7 +154,7 @@ generate_group_by_description <- function(mapping, ...) {
 
 generate_group_by_tooltip <- function(.data) {
   tooltip_vars <- .data %>%
-    dplyr::select(-.data$n) %>%
+    dplyr::select(-.data$n, -.data$gemini_ids) %>%
     names()
 
   purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
@@ -234,7 +234,8 @@ generate_labelsExpr <- function(data) {
   }
 
   data <- data %>%
-    dplyr::mutate(label = dplyr::coalesce(.data$label, "undefined"))
+    dplyr::mutate(label = dplyr::coalesce(.data$label, "undefined")) %>%
+    dplyr::arrange(.data$datamations_x)
 
   n_breaks <- nrow(data)
   breaks <- data[[X_FIELD_CHR]]
@@ -257,7 +258,7 @@ generate_x_domain <- function(data) {
 }
 
 # Generate description for summarize steps
-# Depending on whether there's errorbars, any grousp, etc.
+# Depending on whether there's errorbars, any groups, etc.
 generate_summarize_description <- function(summary_variable, summary_function = NULL, errorbar = FALSE, group_by = TRUE) {
   if (errorbar) {
     return(glue::glue("Plot mean {summary_variable}{group_description}, with errorbar",
@@ -268,6 +269,10 @@ generate_summarize_description <- function(summary_variable, summary_function = 
   if (is.null(summary_function)) {
     glue::glue("Plot {summary_variable}{group_description}",
       group_description = ifelse(group_by, " within each group", "")
+    )
+  } else if (is.null(summary_variable)) {
+    glue::glue("Plot {summary_function}(){group_description}",
+      group_description = ifelse(group_by, " of each group", "")
     )
   } else {
     glue::glue("Plot {summary_function} {summary_variable}{group_description}",
@@ -284,7 +289,7 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
   }
 
   tooltip_vars <- .data %>%
-    dplyr::select(-tidyselect::any_of(c("gemini_id", X_FIELD_CHR, Y_FIELD_CHR, Y_TOOLTIP_FIELD_CHR, "stroke"))) %>%
+    dplyr::select(-tidyselect::any_of(c("gemini_id", X_FIELD_CHR, Y_FIELD_CHR, Y_TOOLTIP_FIELD_CHR, "stroke", "gemini_ids"))) %>%
     names()
 
   tooltip <- purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
