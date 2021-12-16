@@ -24,224 +24,224 @@
     <script src="../js/custom-animations.js"></script>
     <script src="../js/app.js"></script>
     <script>
-      // initial
-      const spec1 = {
-        $schema: "https://vega.github.io/schema/vega-lite/v4.json",
-        width: 120,
-        data: {
-          name: "source",
-          values: [
-            { x: "Set 1", y: 1 },
-            { x: "Set 1", y: 3 },
-            { x: "Set 1", y: 4 },
-            { x: "Set 1", y: 5 },
-            { x: "Set 1", y: 6 },
-            { x: "Set 1", y: 7 },
-            { x: "Set 1", y: 8 },
-            { x: "Set 1", y: 9 },
-            { x: "Set 1", y: 13 },
-            { x: "Set 1", y: 15 },
-            { x: "Set 2", y: 1 },
-            { x: "Set 2", y: 2 },
-            { x: "Set 2", y: 3 },
-            { x: "Set 2", y: 5 },
-            { x: "Set 2", y: 7 },
-            { x: "Set 2", y: 7.5 },
-            { x: "Set 2", y: 8 },
-            { x: "Set 2", y: 8.2 },
-            { x: "Set 2", y: 10 },
-            { x: "Set 2", y: 13 },
-            { x: "Set 2", y: 14 },
-            { x: "Set 2", y: 16 },
-            { x: "Set 2", y: 18 },
-          ],
-        },
-        name: "main",
-        mark: { type: "circle", size: 50 },
-        encoding: {
-          x: { field: "x", type: "nominal" },
-          y: {
-            field: "y",
-            type: "quantitative",
-            scale: { domain: [0, 20] },
-          },
-        },
-      };
+      // // initial
+      // const spec1 = {
+      //   $schema: "https://vega.github.io/schema/vega-lite/v4.json",
+      //   width: 120,
+      //   data: {
+      //     name: "source",
+      //     values: [
+      //       { x: "Set 1", y: 1 },
+      //       { x: "Set 1", y: 3 },
+      //       { x: "Set 1", y: 4 },
+      //       { x: "Set 1", y: 5 },
+      //       { x: "Set 1", y: 6 },
+      //       { x: "Set 1", y: 7 },
+      //       { x: "Set 1", y: 8 },
+      //       { x: "Set 1", y: 9 },
+      //       { x: "Set 1", y: 13 },
+      //       { x: "Set 1", y: 15 },
+      //       { x: "Set 2", y: 1 },
+      //       { x: "Set 2", y: 2 },
+      //       { x: "Set 2", y: 3 },
+      //       { x: "Set 2", y: 5 },
+      //       { x: "Set 2", y: 7 },
+      //       { x: "Set 2", y: 7.5 },
+      //       { x: "Set 2", y: 8 },
+      //       { x: "Set 2", y: 8.2 },
+      //       { x: "Set 2", y: 10 },
+      //       { x: "Set 2", y: 13 },
+      //       { x: "Set 2", y: 14 },
+      //       { x: "Set 2", y: 16 },
+      //       { x: "Set 2", y: 18 },
+      //     ],
+      //   },
+      //   name: "main",
+      //   mark: { type: "circle", size: 50 },
+      //   encoding: {
+      //     x: { field: "x", type: "nominal" },
+      //     y: {
+      //       field: "y",
+      //       type: "quantitative",
+      //       scale: { domain: [0, 20] },
+      //     },
+      //   },
+      // };
 
-      // stack sets
-      const spec2 = {
-        $schema: "https://vega.github.io/schema/vega-lite/v4.json",
-        width: 120,
-        data: {
-          name: "source",
-          values: [
-            { x: "Set 1", y: 1 },
-            { x: "Set 1", y: 2 },
-            { x: "Set 1", y: 3 },
-            { x: "Set 1", y: 4 },
-            { x: "Set 1", y: 5 },
-            { x: "Set 1", y: 6 },
-            { x: "Set 1", y: 7 },
-            { x: "Set 1", y: 8 },
-            { x: "Set 1", y: 9 },
-            { x: "Set 1", y: 10 },
-            { x: "Set 2", y: 1 },
-            { x: "Set 2", y: 2 },
-            { x: "Set 2", y: 3 },
-            { x: "Set 2", y: 4 },
-            { x: "Set 2", y: 5 },
-            { x: "Set 2", y: 6 },
-            { x: "Set 2", y: 7 },
-            { x: "Set 2", y: 8 },
-            { x: "Set 2", y: 9 },
-            { x: "Set 2", y: 10 },
-            { x: "Set 2", y: 11 },
-            { x: "Set 2", y: 12 },
-            { x: "Set 2", y: 13 },
-          ],
-        },
-        mark: { type: "circle", size: 50 },
-        name: "main",
-        encoding: {
-          x: { field: "x", type: "nominal" },
-          y: {
-            field: "y",
-            type: "quantitative",
-            scale: { domain: [0, 20] },
-            axis: null,
-          },
-        },
-      };
+      // // stack sets
+      // const spec2 = {
+      //   $schema: "https://vega.github.io/schema/vega-lite/v4.json",
+      //   width: 120,
+      //   data: {
+      //     name: "source",
+      //     values: [
+      //       { x: "Set 1", y: 1 },
+      //       { x: "Set 1", y: 2 },
+      //       { x: "Set 1", y: 3 },
+      //       { x: "Set 1", y: 4 },
+      //       { x: "Set 1", y: 5 },
+      //       { x: "Set 1", y: 6 },
+      //       { x: "Set 1", y: 7 },
+      //       { x: "Set 1", y: 8 },
+      //       { x: "Set 1", y: 9 },
+      //       { x: "Set 1", y: 10 },
+      //       { x: "Set 2", y: 1 },
+      //       { x: "Set 2", y: 2 },
+      //       { x: "Set 2", y: 3 },
+      //       { x: "Set 2", y: 4 },
+      //       { x: "Set 2", y: 5 },
+      //       { x: "Set 2", y: 6 },
+      //       { x: "Set 2", y: 7 },
+      //       { x: "Set 2", y: 8 },
+      //       { x: "Set 2", y: 9 },
+      //       { x: "Set 2", y: 10 },
+      //       { x: "Set 2", y: 11 },
+      //       { x: "Set 2", y: 12 },
+      //       { x: "Set 2", y: 13 },
+      //     ],
+      //   },
+      //   mark: { type: "circle", size: 50 },
+      //   name: "main",
+      //   encoding: {
+      //     x: { field: "x", type: "nominal" },
+      //     y: {
+      //       field: "y",
+      //       type: "quantitative",
+      //       scale: { domain: [0, 20] },
+      //       axis: null,
+      //     },
+      //   },
+      // };
 
-      // put rules (lines) using aggregate count
-      const spec3 = {
-        $schema: "https://vega.github.io/schema/vega-lite/v4.json",
-        width: 120,
-        data: {
-          name: "source",
-          values: [
-            { x: "Set 1", y: 1 },
-            { x: "Set 1", y: 2 },
-            { x: "Set 1", y: 3 },
-            { x: "Set 1", y: 4 },
-            { x: "Set 1", y: 5 },
-            { x: "Set 1", y: 6 },
-            { x: "Set 1", y: 7 },
-            { x: "Set 1", y: 8 },
-            { x: "Set 1", y: 9 },
-            { x: "Set 1", y: 10 },
-            { x: "Set 2", y: 1 },
-            { x: "Set 2", y: 2 },
-            { x: "Set 2", y: 3 },
-            { x: "Set 2", y: 4 },
-            { x: "Set 2", y: 5 },
-            { x: "Set 2", y: 6 },
-            { x: "Set 2", y: 7 },
-            { x: "Set 2", y: 8 },
-            { x: "Set 2", y: 9 },
-            { x: "Set 2", y: 10 },
-            { x: "Set 2", y: 11 },
-            { x: "Set 2", y: 12 },
-            { x: "Set 2", y: 13 },
-          ],
-        },
-        layer: [
-          {
-            name: "main",
-            mark: { type: "circle", size: 50 },
-            encoding: {
-              x: { field: "x", type: "nominal" },
-              y: {
-                field: "y",
-                type: "quantitative",
-                scale: { domain: [0, 20] },
-                axis: null,
-              },
-            },
-          },
-          {
-            transform: [{ filter: "datum.x === 'Set 1'" }],
-            name: "rule_1",
-            mark: {
-              type: "rule",
-              x: { expr: "width/4-5" },
-              x2: { expr: "width/4+5" },
-            },
-            encoding: {
-              y: {
-                field: "y",
-                type: "quantitative",
-                aggregate: "count",
-                axis: null,
-              },
-            },
-          },
-          {
-            transform: [{ filter: "datum.x === 'Set 2'" }],
-            name: "rule_2",
-            mark: {
-              type: "rule",
-              x: { expr: "width/4 + width/2 - 5" },
-              x2: { expr: "width/4 + width/2 + 5" },
-            },
-            encoding: {
-              y: {
-                field: "y",
-                type: "quantitative",
-                aggregate: "count",
-                axis: null,
-              },
-            },
-          },
-        ],
-      };
+      // // put rules (lines) using aggregate count
+      // const spec3 = {
+      //   $schema: "https://vega.github.io/schema/vega-lite/v4.json",
+      //   width: 120,
+      //   data: {
+      //     name: "source",
+      //     values: [
+      //       { x: "Set 1", y: 1 },
+      //       { x: "Set 1", y: 2 },
+      //       { x: "Set 1", y: 3 },
+      //       { x: "Set 1", y: 4 },
+      //       { x: "Set 1", y: 5 },
+      //       { x: "Set 1", y: 6 },
+      //       { x: "Set 1", y: 7 },
+      //       { x: "Set 1", y: 8 },
+      //       { x: "Set 1", y: 9 },
+      //       { x: "Set 1", y: 10 },
+      //       { x: "Set 2", y: 1 },
+      //       { x: "Set 2", y: 2 },
+      //       { x: "Set 2", y: 3 },
+      //       { x: "Set 2", y: 4 },
+      //       { x: "Set 2", y: 5 },
+      //       { x: "Set 2", y: 6 },
+      //       { x: "Set 2", y: 7 },
+      //       { x: "Set 2", y: 8 },
+      //       { x: "Set 2", y: 9 },
+      //       { x: "Set 2", y: 10 },
+      //       { x: "Set 2", y: 11 },
+      //       { x: "Set 2", y: 12 },
+      //       { x: "Set 2", y: 13 },
+      //     ],
+      //   },
+      //   layer: [
+      //     {
+      //       name: "main",
+      //       mark: { type: "circle", size: 50 },
+      //       encoding: {
+      //         x: { field: "x", type: "nominal" },
+      //         y: {
+      //           field: "y",
+      //           type: "quantitative",
+      //           scale: { domain: [0, 20] },
+      //           axis: null,
+      //         },
+      //       },
+      //     },
+      //     {
+      //       transform: [{ filter: "datum.x === 'Set 1'" }],
+      //       name: "rule_1",
+      //       mark: {
+      //         type: "rule",
+      //         x: { expr: "width/4-5" },
+      //         x2: { expr: "width/4+5" },
+      //       },
+      //       encoding: {
+      //         y: {
+      //           field: "y",
+      //           type: "quantitative",
+      //           aggregate: "count",
+      //           axis: null,
+      //         },
+      //       },
+      //     },
+      //     {
+      //       transform: [{ filter: "datum.x === 'Set 2'" }],
+      //       name: "rule_2",
+      //       mark: {
+      //         type: "rule",
+      //         x: { expr: "width/4 + width/2 - 5" },
+      //         x2: { expr: "width/4 + width/2 + 5" },
+      //       },
+      //       encoding: {
+      //         y: {
+      //           field: "y",
+      //           type: "quantitative",
+      //           aggregate: "count",
+      //           axis: null,
+      //         },
+      //       },
+      //     },
+      //   ],
+      // };
 
-      // replace with count bubbles
-      const spec4 = {
-        $schema: "https://vega.github.io/schema/vega-lite/v4.json",
-        width: 120,
-        data: {
-          name: "source",
-          values: [
-            { x: "Set 1", y: 1 },
-            { x: "Set 1", y: 2 },
-            { x: "Set 1", y: 3 },
-            { x: "Set 1", y: 4 },
-            { x: "Set 1", y: 5 },
-            { x: "Set 1", y: 6 },
-            { x: "Set 1", y: 7 },
-            { x: "Set 1", y: 8 },
-            { x: "Set 1", y: 9 },
-            { x: "Set 1", y: 10 },
-            { x: "Set 2", y: 1 },
-            { x: "Set 2", y: 2 },
-            { x: "Set 2", y: 3 },
-            { x: "Set 2", y: 4 },
-            { x: "Set 2", y: 5 },
-            { x: "Set 2", y: 6 },
-            { x: "Set 2", y: 7 },
-            { x: "Set 2", y: 8 },
-            { x: "Set 2", y: 9 },
-            { x: "Set 2", y: 10 },
-            { x: "Set 2", y: 11 },
-            { x: "Set 2", y: 12 },
-            { x: "Set 2", y: 13 },
-          ],
-        },
-        name: "main",
-        mark: { type: "circle", size: 50 },
-        encoding: {
-          x: { field: "x", type: "nominal" },
-          y: {
-            field: "y",
-            type: "quantitative",
-            scale: { domain: [0, 20] },
-            aggregate: "count",
-          },
-        },
-      };
+      // // replace with count bubbles
+      // const spec4 = {
+      //   $schema: "https://vega.github.io/schema/vega-lite/v4.json",
+      //   width: 120,
+      //   data: {
+      //     name: "source",
+      //     values: [
+      //       { x: "Set 1", y: 1 },
+      //       { x: "Set 1", y: 2 },
+      //       { x: "Set 1", y: 3 },
+      //       { x: "Set 1", y: 4 },
+      //       { x: "Set 1", y: 5 },
+      //       { x: "Set 1", y: 6 },
+      //       { x: "Set 1", y: 7 },
+      //       { x: "Set 1", y: 8 },
+      //       { x: "Set 1", y: 9 },
+      //       { x: "Set 1", y: 10 },
+      //       { x: "Set 2", y: 1 },
+      //       { x: "Set 2", y: 2 },
+      //       { x: "Set 2", y: 3 },
+      //       { x: "Set 2", y: 4 },
+      //       { x: "Set 2", y: 5 },
+      //       { x: "Set 2", y: 6 },
+      //       { x: "Set 2", y: 7 },
+      //       { x: "Set 2", y: 8 },
+      //       { x: "Set 2", y: 9 },
+      //       { x: "Set 2", y: 10 },
+      //       { x: "Set 2", y: 11 },
+      //       { x: "Set 2", y: 12 },
+      //       { x: "Set 2", y: 13 },
+      //     ],
+      //   },
+      //   name: "main",
+      //   mark: { type: "circle", size: 50 },
+      //   encoding: {
+      //     x: { field: "x", type: "nominal" },
+      //     y: {
+      //       field: "y",
+      //       type: "quantitative",
+      //       scale: { domain: [0, 20] },
+      //       aggregate: "count",
+      //     },
+      //   },
+      // };
 
-      const sequence = [spec1, spec2, spec3, spec4];
+      // const sequence = [spec1, spec2, spec3, spec4];
 
       //   vegaEmbed("#app", sequence[0], {renderer: "svg"})
       //   gemini.recommendForSeq(sequence, { stageN: sequence.length - 1, totalDuration: sequence.length * 750 }).then(async ([ resp ]) => {
@@ -1038,28 +1038,16 @@
           y: {
             field: "datamations_y",
             type: "quantitative",
-            title: [],
             scale: {
               domain: [28, 72],
             },
           },
-          tooltip: [
-            {
-              field: "datamations_y_tooltip",
-              type: "quantitative",
-              title: [],
-            },
-            {
-              field: "Degree",
-              type: "nominal",
-            },
-          ],
         },
       };
 
       async function playIt() {
         const sequence = await CustomAnimations.count(count_source, count_target);
-        console.log(sequence);
+
         vegaEmbed("#app", sequence[0], {renderer: "svg"});
 
         gemini.recommendForSeq(sequence, { stageN: sequence.length - 1, totalDuration: sequence.length * 2000 }).then(async ([ resp ]) => {

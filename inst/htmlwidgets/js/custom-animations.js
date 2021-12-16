@@ -18,7 +18,7 @@ function addRules(source, target, shrink = false) {
                   field: CONF.Y_FIELD,
                   type: "quantitative",
                   aggregate: "count",
-                  axis: null,
+                  // axis: null,
               },
           }
       }
@@ -60,6 +60,7 @@ const CustomAnimations = {
   // 3) replace with count bubbles (aggregate count) (basically target spec)
   count: async (source, target) => {
     const stacks = await getGridSpec(source, 10, true);
+    delete stacks.encoding.y.axis;
     const rules = await addRules(source, target, false);
     const pullUp = await addRules(source, target, true);
     return [stacks, rules, pullUp, target];
