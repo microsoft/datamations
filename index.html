@@ -42,6 +42,24 @@
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/Examples.html">Examples</a>
+    </li>
+    <li>
+      <a href="articles/details.html">datamations steps and conventions</a>
+    </li>
+    <li>
+      <a href="articles/finer_control.html">Controlling appearance with ggplot2</a>
+    </li>
+  </ul>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
 </div>
@@ -60,7 +78,8 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>datamations is a framework for automatic generation of explanation of plots and tables from analysis code. It automatically turns code into animations, showing the steps that led to a plot or a table.</p>
+<p>datamations is a framework for the automatic generation of explanation of the steps of an analysis pipeline. It automatically turns code into animations, showing the state of the data at each step of an analysis.</p>
+<p>For more information, please visit the <a href="https://microsoft.github.io/datamations/" class="external-link">package website</a>, which includes <a href="https://microsoft.github.io/datamations/articles/Examples.html" class="external-link">additional examples</a>, <a href="https://microsoft.github.io/datamations/articles/details.html" class="external-link">defaults and conventions</a>, and more.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -73,77 +92,26 @@
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <p>To get started, load datamations and dplyr:</p>
+<p>A datamation shows a plot of what the data looks like at each step of a tidyverse pipeline, animated by the transitions that lead to each state. The following shows an example taking the built-in <code>small_salary</code> data set, grouping by <code>Degree</code>, and calculating the mean <code>Salary</code>.</p>
+<p>First, define the code for the pipeline, then generate the datamation with <code><a href="reference/datamation_sanddance.html">datamation_sanddance()</a></code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datamations</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></code></pre></div>
-<div class="section level3">
-<h3 id="plot-based-datamations">Plot-based datamations<a class="anchor" aria-label="anchor" href="#plot-based-datamations"></a>
-</h3>
-<p>A plot-based datamation shows a plot of what the data looks like at each step of a pipeline, animated by the transitions that lead to each state. The following shows an example taking the built-in <code>small_salary</code> data set, grouping by <code>Degree</code>, and calculating the mean <code>Salary</code>.</p>
-<p>First, define the code for the pipeline, then generate the datamation with <code><a href="reference/datamation_sanddance.html">datamation_sanddance()</a></code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="st">"small_salary %&gt;% 
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
+
+<span class="st">"small_salary %&gt;% 
   group_by(Degree) %&gt;%
   summarize(mean = mean(Salary))"</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-mean_salary_group_by_degree.gif" width="80%"></p>
-<p>You can group by multiple variables, as in this example, grouping by <code>Degree</code> and <code>Work</code> before calculating the mean <code>Salary</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="st">"small_salary %&gt;%
-  group_by(Degree, Work) %&gt;% 
-  summarize(mean = mean(Salary))"</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-mean_salary_group_by_degree_work.gif" width="80%"></p>
-<p>datamations has some defaults in terms of how groups are represented. As seen in the above two examples, when there is one grouping variable, it’s shown on the x-axis. When there are two grouping variables, the first (by what comes first in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>) is shown in column facets, and the second is shown on the x-axis as well as colored. If there are three grouping variables, the first is in column facets, the second in row facets, and the third on the x-axis and colored.</p>
-<p>If you would like to change these defaults, or to match an existing plot style, datamations can take ggplot2 code as input.</p>
-<p>For example, to match this plot, which has Work on the x-axis and Degree in row facets:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
-
-<span class="va">small_salary</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Work</span>, <span class="va">Degree</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>mean_salary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Salary</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Work</span>, y <span class="op">=</span> <span class="va">mean_salary</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span>rows <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">Degree</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-ggplot2-existing-plot-1.png" width="80%"></p>
-<p>Simply define the code and pass to <code><a href="reference/datamation_sanddance.html">datamation_sanddance()</a></code>, which will produce an animation with desired plot layout.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="st">"small_salary %&gt;%
-  group_by(Work, Degree) %&gt;%
-  summarize(mean_salary = mean(Salary)) %&gt;%
-  ggplot(aes(x = Work, y = mean_salary)) + 
-  geom_point() + 
-  facet_grid(rows = vars(Degree))"</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-mean_salary_group_by_degree_work_ggplot.gif" width="80%"></p>
-<p>When ggplot2 code is provided, the order of animation is not determined by the order in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>, but by the plot layout. Variables are first animated by what’s in the column facets, then the row facets, by the x-axis, and finally by color.</p>
-<p>Some limitations:</p>
+<p>datamations supports the following <code>dplyr</code> functions:</p>
 <ul>
 <li>
-<code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap()</a></code> is not supported - please use <code><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid()</a></code>
-</li>
-<li>datamations expects different variables in the column and row facets than in the x-axis. datamations generated that do not match this layout may look different than the final plot!</li>
-<li>Only <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code> is supported, e.g. specifying <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar()</a></code> will not produce a bar in the datamation.</li>
+<code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> (up to three grouping variables)</li>
+<li>
+<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>/<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise()</a></code> (limited to summarizing one variable)</li>
+<li><code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code></li>
+<li><code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code></li>
 </ul>
-</div>
-<div class="section level3">
-<h3 id="table-based-datamations">Table-based datamations<a class="anchor" aria-label="anchor" href="#table-based-datamations"></a>
-</h3>
-<p>A table-based datamation shows a mock table of what the data looks like at each step of pipeline, again animated by the transitions that lead to each state. The following shows our same first example: taking the built-in <code>small_salary</code> data set, grouping by <code>Degree</code>, and calculating the mean <code>Salary</code>, using the same pipeline.</p>
-<p>You can generate a table-based datamation with <code><a href="reference/datamation_tibble.html">datamation_tibble()</a></code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/datamation_tibble.html">datamation_tibble</a></span><span class="op">(</span>
-  pipeline <span class="op">=</span> <span class="st">"small_salary %&gt;% group_by(Degree) %&gt;% summarize(mean = mean(Salary))"</span>,
-  output <span class="op">=</span> <span class="st">"mean_salary_group_by_degree.gif"</span>
-<span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-mean_salary_group_by_degree-table.gif" width="80%"></p>
-<p>Datamations work on any dataset provided, as in this example taking <code>mtcars</code> and grouping by <code>cyl</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mtcars_group_cyl</span> <span class="op">&lt;-</span> <span class="st">"mtcars %&gt;% group_by(cyl)"</span>
-<span class="fu"><a href="reference/datamation_tibble.html">datamation_tibble</a></span><span class="op">(</span><span class="va">mtcars_group_cyl</span>, output <span class="op">=</span> <span class="st">"mtcars_group_cyl.gif"</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-mtcars_group_cyl.gif" width="80%"></p>
-</div>
 </div>
 </div>
   </div>
@@ -179,7 +147,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/jhofman/datamations/actions" class="external-link"><img src="https://github.com/jhofman/datamations/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/microsoft/datamations/actions" class="external-link"><img src="https://github.com/microsoft/datamations/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
