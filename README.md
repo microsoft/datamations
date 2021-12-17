@@ -12,8 +12,13 @@ datamations is a framework for the automatic generation of explanation
 of the steps of an analysis pipeline. It automatically turns code into
 animations, showing the state of the data at each step of an analysis.
 
-For more examples, defaults and conventions, and finer control, please
-visit the [package website]() and [vignettes]().
+For more information, please visit the [package
+website](https://microsoft.github.io/datamations/), which includes
+[additional
+examples](https://microsoft.github.io/datamations/articles/Examples.html),
+[defaults and
+conventions](https://microsoft.github.io/datamations/articles/details.html),
+and more.
 
 ## Installation
 
