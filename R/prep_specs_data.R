@@ -21,7 +21,8 @@ prep_specs_data <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height
   # Add a count (total) to each record
 
   data_1 <- .data %>%
-    dplyr::count()
+    dplyr::count() %>%
+    add_ids_to_count_data(.data)
 
   # Generate description
 
