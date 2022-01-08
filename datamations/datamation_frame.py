@@ -109,7 +109,10 @@ class DatamationFrame(pd.DataFrame):
             count = {}
             start = {}
             for key in self.states[1].groups.keys():
-                col, row = key
+                if len(self._by) > 2:
+                    col, row, third = key
+                else:
+                    col, row = key
                 if col not in cols:
                     cols.append(col)
                 if col not in count:
@@ -146,7 +149,10 @@ class DatamationFrame(pd.DataFrame):
             data = []
             start = 1
             for key in self.states[1].groups.keys():
-                col, row = key
+                if len(self._by) > 2:
+                    col, row, third = key
+                else:
+                    col, row = key
                 if col not in cols:
                     cols.append(col)
                 if row not in rows:

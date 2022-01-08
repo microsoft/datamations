@@ -133,7 +133,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             cols = []
             count = {}
             for key in self.states[1].groups.keys():
-                col, row = key
+                if len(self._by) > 2:
+                    col, row, third = key
+                else:
+                    col, row = key
                 if col not in cols:
                     cols.append(col)
                 if col not in count:
@@ -153,7 +156,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             i = 1
             data = []
             for group in self.groups:
-                col, row = group
+                if len(self._by) > 2:
+                    col, row, third = group
+                else:
+                    col, row = group
                 for index in self.groups[group]:
                     value = {
                         "gemini_id": i,
@@ -252,7 +258,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             i = 1
             data = []
             for group in self.groups:
-                col, row = group
+                if len(self._by) > 2:
+                    col, row, third = group
+                else:
+                    col, row = group
                 for index in self.groups[group]:
                     value = {
                         "gemini_id": i,
@@ -334,7 +343,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             i = 1
             data = []
             for group in self.groups:
-                col, row = group
+                if len(self._by) > 2:
+                    col, row, third = group
+                else:
+                    col, row = group
                 for index in self.groups[group]:
                     value = {
                         "gemini_id": i,
@@ -398,7 +410,12 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         specs_list.append(spec)
 
         # Show the summarized values along with error bars, zoomed in
-        if len(self._by) > 1:
+        if len(self._by) > 2:
+            domain = [
+                round(min(self._output[y_axis][groups[0]][subgroups[0]][0] - self._error[y_axis][groups[0]][subgroups[0]][0], self._output[y_axis][groups[1]][subgroups[1]][1] - self._error[y_axis][groups[0]][subgroups[0]][0]),13),
+                round(max(self._output[y_axis][groups[1]][subgroups[0]][0] + self._error[y_axis][groups[1]][subgroups[0]][0], self._output[y_axis][groups[1]][subgroups[1]][1] + self._error[y_axis][groups[1]][subgroups[1]][0]),13),
+              ]
+        elif len(self._by) > 1:
             domain = [
                 round(min(self._output[y_axis][groups[0]][subgroups[0]] - self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] - self._error[y_axis][groups[0]][subgroups[0]]),13),
                 round(max(self._output[y_axis][groups[1]][subgroups[0]] + self._error[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] + self._error[y_axis][groups[1]][subgroups[1]]),13),
