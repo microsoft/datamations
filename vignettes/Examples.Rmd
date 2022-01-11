@@ -1,0 +1,106 @@
+---
+title: "Examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
+```
+
+```{r setup}
+library(datamations)
+library(dplyr)
+```
+
+# group_by()
+
+## One grouping variable
+
+```{r}
+"small_salary %>%
+  group_by(Work)" %>%
+  datamation_sanddance()
+```
+
+## Two grouping variables
+
+```{r}
+"small_salary %>%
+  group_by(Work, Degree)" %>%
+  datamation_sanddance()
+```
+
+## Three grouping variables
+
+```{r}
+library(palmerpenguins)
+
+"penguins %>%
+  group_by(sex, island, species)" %>%
+  datamation_sanddance()
+```
+
+# summarise()
+
+## mean of a variable
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  summarise(mean_salary = mean(Salary))" %>%
+  datamation_sanddance()
+```
+
+## Other summary functions
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  summarise(median_salary = median(Salary))" %>%
+  datamation_sanddance()
+```
+
+# filter()
+
+## Filtering initial data
+
+```{r}
+"small_salary %>%
+  filter(Salary > 90)" %>%
+  datamation_sanddance()
+```
+
+## Filtering within groups
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  filter(Salary == mean(Salary))" %>%
+  datamation_sanddance()
+```
+
+## Filtering after summarize
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  summarise(median_salary = median(Salary)) %>%
+  filter(median_salary > 90)"  %>%
+  datamation_sanddance()
+```
+
+# count()
+
+```{r}
+"small_salary %>%
+  count(Work)" %>%
+  datamation_sanddance()
+```
