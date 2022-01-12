@@ -3,6 +3,7 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   # Check if there is any grouping or summarizing in the pipeline
   pipeline_has_group_by <- any(names(data_states) == "group_by")
   pipeline_has_summarize <- any(names(data_states) == "summarize")
+  pipeline_has_count <- any(names(data_states) == "count")
 
   # Extract grouping variables and count of them
   # If there is mapping, use column -> row -> x -> color
@@ -18,7 +19,13 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
       group_vars()
 
     n_group_vars <- length(.group_vars)
-  } else if (!pipeline_has_group_by) {
+  } else if (pipeline_has_count) {
+    .group_vars <- data_states[["count"]] %>%
+      dplyr::select(-.data$n) %>%
+      names()
+
+    n_group_vars <- length(.group_vars)
+  } else if (!pipeline_has_group_by & !pipeline_has_count) {
     n_group_vars <- 0
   }
 
@@ -52,7 +59,8 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   if (!pipeline_has_summarize) {
     y_mapping <- list(
       y = NULL,
-      summary_function = NULL
+      summary_function = NULL,
+      summary_name = NULL
     )
   } else {
     summarize_operation <- tidy_functions_arg[["summarize"]][[2]] %>%
@@ -61,13 +69,18 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
       as.list()
 
     y_mapping <- list(
-      y = summarize_operation %>%
-        purrr::pluck(2) %>%
-        rlang::quo_name(),
       summary_function = summarize_operation %>%
         purrr::pluck(1) %>%
-        rlang::quo_name()
+        rlang::quo_name(),
+      summary_name = names(tidy_functions_arg[["summarize"]][2])
     )
+
+    y_var <- summarize_operation %>%
+      purrr::pluck(2)
+
+    if (!identical(y_var, NULL)) {
+      y_mapping[["y"]] <- rlang::quo_name(y_var)
+    }
   }
 
   # Group mapping
@@ -75,7 +88,7 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
     group_mapping <- plot_mapping[c("row", "column")]
     group_mapping <- append(group_mapping, list(groups = .group_vars))
   } else {
-    if (!pipeline_has_group_by) {
+    if (!pipeline_has_group_by & !pipeline_has_count) {
       group_mapping <- NULL
     } else {
 

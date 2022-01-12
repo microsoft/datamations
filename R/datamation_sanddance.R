@@ -36,7 +36,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   }
 
   # Specify which functions are supported, for parsing functions out and for erroring if any are not in this list
-  supported_tidy_functions <- c("group_by", "summarize")
+  supported_tidy_functions <- c("group_by", "summarize", "filter", "count")
 
   # Convert pipeline into list
   full_fittings <- pipeline %>%
@@ -86,7 +86,8 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   # Extract arguments
   tidy_function_args <- fittings %>%
     purrr::map(as.list) %>%
-    purrr::map(as.character)
+    purrr::map_depth(.depth = 2, deparse) %>%
+    purrr::map(unlist)
 
   # If there's a ggplot specification, get the mapping (x and facets) from the final plot
   if (contains_ggplot) {
@@ -101,14 +102,46 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     plot_mapping <- NULL
   }
 
-  # Construct mapping - x, y, facets, etc
   names(data_states) <- tidy_functions_list
   names(tidy_function_args) <- tidy_functions_list
 
+  # Construct mapping - x, y, facets, etc
   mapping <- generate_mapping(data_states, tidy_function_args, plot_mapping)
 
-  # Iterate over each step of the pipeline
-  res <- purrr::map(1:length(fittings), function(i) {
+  # Add gemini_id to initial data, and regenerate data states in a new environment
+
+  # Extract grouping variables from mapping
+  group_vars_chr <- mapping$groups
+
+  # Convert to symbol
+  group_vars <- group_vars_chr %>%
+    as.list() %>%
+    purrr::map(rlang::parse_expr)
+
+  # Add gemini ID
+  data_with_gemini_id <- get(fittings[[1]]) %>%
+    arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
+    # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
+    dplyr::mutate(gemini_id = dplyr::row_number())
+
+  # Update fittings to use data_with_gemini_id as data source
+  fittings[[1]] <- rlang::parse_expr("data_with_gemini_id")
+
+  # Create a new environment to reevaluate states in
+  datamations_env <- new.env()
+  datamations_env$data_with_gemini_id <- data_with_gemini_id
+
+  # Regenerate data states
+  data_states <- fittings %>%
+    snake(envir = datamations_env)
+
+  names(data_states) <- tidy_functions_list
+
+  # Iterate over each step of the pipeline - using a for loop instead of purrr::map so we can intercept the intermediate results :)
+
+  res <- list()
+
+  for (i in 1:length(fittings)) {
 
     # Starts with data in the previous stage, unless it is the first stage (the data itself)
     if (i == 1) {
@@ -123,12 +156,33 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
     call_verb <- switch(verb,
       data = prep_specs_data,
       group_by = prep_specs_group_by,
-      summarize = prep_specs_summarize
+      summarize = prep_specs_summarize,
+      filter = prep_specs_filter,
+      count = prep_specs_count
     )
 
     # Call that function with the data and mapping
-    do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
-  })
+    if (verb != "filter") {
+      res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
+    } else if (verb == "filter") {
+      previous_frame <- res[[i - 1]]
+
+      # If the previous step has multiple frames, need to grab the _last_ of those
+      previous_step_has_multiple_frames <- purrr::map(previous_frame, names) %>%
+        purrr::map(~ "data" %in% .x) %>%
+        purrr::keep(~.x) %>%
+        length() > 1
+
+      if (previous_step_has_multiple_frames) {
+        previous_frame <- previous_frame[[length(previous_frame)]]
+      }
+      # If it's filter, need to pass the previous specs as well as the filter operation
+      res[[i]] <- do.call(call_verb, list(data, mapping,
+        previous_frame = previous_frame, filter_operation = tidy_function_args[[i]][-1], # -1 instead of [[2]] because you can list multiple, separating by comma
+        toJSON = FALSE, pretty = pretty, height = height, width = width
+      ))
+    }
+  }
 
   # Unlist into a single list
   res <- unlist(res, recursive = FALSE)
@@ -198,6 +252,8 @@ renderDatamationSandDance <- function(expr, env = parent.frame(), quoted = FALSE
 
 datamationSandDance_html <- function(...) {
   id <- c(...)[["id"]]
+  id <- stringr::str_remove(id, "-")
+  app_name <- glue::glue("app{id}")
 
   shiny::tags$div(
     ...,
@@ -207,11 +263,11 @@ datamationSandDance_html <- function(...) {
         class = "control-bar",
         shiny::tags$div(
           class = "button-wrapper",
-          shiny::tags$button(onclick = htmlwidgets::JS(paste0("window.app.play('", id, "')")), "Replay")
+          shiny::tags$button(onclick = htmlwidgets::JS(paste0("window.", app_name, ".play('", id, "')")), "Replay")
         ),
         shiny::tags$div(
           class = "slider-wrapper",
-          shiny::tags$input(class = "slider", type = "range", min = "0", value = "0", onchange = htmlwidgets::JS(paste0("window.app.onSlide('", id, "')")))
+          shiny::tags$input(class = "slider", type = "range", min = "0", value = "0", onchange = htmlwidgets::JS(paste0("window.", app_name, ".onSlide('", id, "')")))
         )
       ),
       shiny::tags$div(class = "description")

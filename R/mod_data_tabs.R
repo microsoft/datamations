@@ -31,7 +31,7 @@ mod_data_tabs_server <- function(id, inputs, pipeline, slider_state, tab_change)
       # Generate the data, and render DTs for them
       pipeline_group_by <- !is.null(inputs$group_by())
 
-      supported_tidy_functions <- c("group_by", "summarize")
+      supported_tidy_functions <- c("group_by", "summarize", "filter", "count")
 
       fittings <- pipeline() %>%
         parse_pipeline(supported_tidy_functions)

@@ -30,15 +30,11 @@ expect_data_values <- function(single_spec, df) {
     dplyr::mutate_if(is.factor, as.character) %>%
     dplyr::mutate_if(is.character, dplyr::coalesce, "NA")
 
-  if (Y_FIELD_CHR %in% names(df)) {
-    df <- df %>%
-      dplyr::filter(!is.na(!!Y_FIELD))
-  }
-
   spec_data <- single_spec %>%
     jsonlite::fromJSON() %>%
     purrr::pluck("data") %>%
-    purrr::pluck("values")
+    purrr::pluck("values") %>%
+    dplyr::select(-tidyselect::any_of("gemini_ids"))
 
   expect_equal(spec_data, df, ignore_attr = TRUE)
 }
@@ -170,4 +166,38 @@ expect_no_grouping <- function(specs) {
     unlist()
 
   expect_true(all(no_color_encoding))
+}
+
+expect_python_identical_to_r <- function(python_specs, r_specs) {
+
+  # Reconcile differences in names - reorder all elements alphabetically
+  r_specs <- r_specs %>%
+    purrr::map(reorder_list_alphabetically)
+
+  python_specs <- python_specs %>%
+    purrr::map(reorder_list_alphabetically)
+
+  # Reconcile differences in data value column orders
+  r_values_order <- purrr::map(r_specs, function(x) {
+    purrr::map(x$data$values, names)
+  })
+
+  python_specs <- purrr::map2(python_specs, r_values_order, function(x, y) {
+    x$data$values <- purrr::map2(x$data$values, y, ~ .x[.y])
+
+    x
+  })
+
+  expect_equal(python_specs, r_specs)
+}
+
+reorder_list_alphabetically <- function(x) {
+  if (is.list(x)) {
+    if (!is.null(names(x))) {
+      x <- x[sort(names(x))]
+    }
+    purrr::map(x, reorder_list_alphabetically)
+  } else {
+    x
+  }
 }

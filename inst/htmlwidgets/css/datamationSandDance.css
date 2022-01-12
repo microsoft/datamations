@@ -32,6 +32,10 @@
   display: none;
 }
 
+.vega-vis-wrapper .vega-for-axis .role-legend {
+  display: none;
+}
+
 .control-bar {
   width: 100%;
   display: flex;

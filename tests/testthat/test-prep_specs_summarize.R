@@ -17,7 +17,6 @@ test_that("prep_specs_summarize returns a list with four elements - one for the 
   expect_data_values(specs[[2]], palmerpenguins::penguins %>%
     dplyr::arrange(species) %>%
     dplyr::mutate(!!X_FIELD := 1, gemini_id = dplyr::row_number()) %>%
-    dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::group_by(species) %>%
     dplyr::mutate(
       !!Y_FIELD := mean(bill_length_mm, na.rm = TRUE),
@@ -46,7 +45,6 @@ test_that("prep_specs_summarize returns a list with four elements - one for the 
       gemini_id = dplyr::row_number(),
       !!X_FIELD := 1,
     ) %>%
-    dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::select(gemini_id, species, island, sex, !!X_FIELD, !!Y_FIELD := bill_length_mm, !!Y_TOOLTIP_FIELD := bill_length_mm)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
   expect_data_values(specs[[2]], palmerpenguins::penguins %>%
     dplyr::arrange(species, island, sex) %>%
@@ -54,7 +52,6 @@ test_that("prep_specs_summarize returns a list with four elements - one for the 
       gemini_id = dplyr::row_number(),
       !!X_FIELD := 1
     ) %>%
-    dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::group_by(species, island, sex) %>%
     dplyr::mutate(
       !!Y_FIELD := mean(bill_length_mm, na.rm = TRUE),
@@ -83,7 +80,6 @@ test_that("prep_specs_summarize returns a list with four elements - one for the 
     dplyr::select(gemini_id, !!X_FIELD, !!Y_FIELD := bill_length_mm, !!Y_TOOLTIP_FIELD := bill_length_mm)) # One data value for each row in the input data frame, containing grouping variables - x value depending on the grouping - x = 1 if n_groups != 3
   expect_data_values(specs[[2]], palmerpenguins::penguins %>%
     dplyr::mutate(!!X_FIELD := 1, gemini_id = dplyr::row_number()) %>%
-    dplyr::filter(!is.na(bill_length_mm)) %>%
     dplyr::mutate(
       !!Y_FIELD := mean(bill_length_mm, na.rm = TRUE),
       !!Y_TOOLTIP_FIELD := !!Y_FIELD
@@ -91,4 +87,30 @@ test_that("prep_specs_summarize returns a list with four elements - one for the 
     dplyr::select(gemini_id, !!X_FIELD, !!Y_FIELD, !!Y_TOOLTIP_FIELD))
   expect_mark_encoding_top_level(specs[1:2]) # mark and encoding are at the top level
   expect_no_grouping(specs) # There is no grouping
+})
+
+test_that("prep_specs_summarize has meta.custom_animation if the summary function is mean or median, but not otherwise", {
+  specs <- "small_salary %>%  group_by(Degree) %>% summarize(mean = mean(Salary))" %>%
+    datamation_sanddance() %>%
+    purrr::pluck("x") %>%
+    purrr::pluck("specs") %>%
+    jsonlite::fromJSON(simplifyDataFrame = FALSE)
+
+  expect_equal(specs[[4]][["meta"]][["custom_animation"]], "mean")
+
+  specs <- "small_salary %>%  group_by(Degree) %>% summarize(median = median(Salary))" %>%
+    datamation_sanddance() %>%
+    purrr::pluck("x") %>%
+    purrr::pluck("specs") %>%
+    jsonlite::fromJSON(simplifyDataFrame = FALSE)
+
+  expect_equal(specs[[4]][["meta"]][["custom_animation"]], "median")
+
+  specs <- "small_salary %>%  group_by(Degree) %>% summarize(sd = sd(Salary))" %>%
+    datamation_sanddance() %>%
+    purrr::pluck("x") %>%
+    purrr::pluck("specs") %>%
+    jsonlite::fromJSON(simplifyDataFrame = FALSE)
+
+  expect_null(specs[[4]][["meta"]][["custom_animation"]])
 })
