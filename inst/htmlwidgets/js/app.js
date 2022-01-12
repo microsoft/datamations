@@ -177,7 +177,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
     const meta = metas[index];
 
-    const { axisSelector, visSelector, descr, slider, otherLayers, controls } =
+    const { axisSelector, visSelector, descr, slider, otherLayers, controls, exportWrap } =
       getSelectors(id);
 
     d3.select(slider).property("value", index);
@@ -202,6 +202,12 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       .style("top", transformY + "px");
 
     d3.select(controls).style("width", spec.width + transformX + 10 + "px");
+
+    // setTimeout(() => {
+    //   const w = d3.select(visSelector).node().getBoundingClientRect().width;
+    //   d3.select(exportWrap).style("width", w + "px");
+    // },10)
+
     d3.select(descr).style("width", spec.width + transformX + 10 + "px");
 
     // draw vis
@@ -643,41 +649,49 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       }, frameDuration / 10);
     };
 
-    const callback = (index) => {
-      const done = index >= frames.length;
+    return new Promise((res) => {
+      const callback = (index) => {
+        const done = index >= frames.length;
 
-      if (done) {
-        intervalId && clearInterval(intervalId);
+        const spec = vegaLiteSpecs[index];
+  
+        if (done) {
+          intervalId && clearInterval(intervalId);
+  
+          setTimeout(() => {
+            gifshot.createGIF(
+              {
+                images,
+                gifWidth: 500,
+                gifHeight: 500,
+              },
+              function (obj) {
+                if (!obj.error) {
+                  var image = obj.image;
 
-        setTimeout(() => {
-          gifshot.createGIF(
-            {
-              images,
-              gifWidth: window.innerWidth,
-              gifHeight: 400,
-            },
-            function (obj) {
-              if (!obj.error) {
-                var image = obj.image,
-                  animatedImage = document.createElement("img");
-                animatedImage.src = image;
-                document.body.appendChild(animatedImage);
+                  // var animatedImage = document.createElement("img");
+                  // animatedImage.src = image;
 
-                var a = document.createElement("a");
-                a.href = image;
-                a.download = `exported.gif`;
-                a.click();
+                  // document.body.appendChild(animatedImage);
+
+                  res(image);
+                  // var a = document.createElement("a");
+                  // a.href = image;
+                  // a.download = `exported.gif`;
+                  // a.click();
+                }
               }
-            }
-          );
-        }, 1000);
-      } else {
-        intervalId && clearInterval(intervalId);
-        setTimeout(startInterval, frameDelay);
-      }
-    };
+            );
+          }, 1000);
+        } else {
+          intervalId && clearInterval(intervalId);
+          setTimeout(startInterval, frameDelay);
+        }
+      };
 
-    play(callback);
+      play(callback);
+    })
+
   }
 
   init();

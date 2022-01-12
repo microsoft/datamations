@@ -140,7 +140,8 @@
       } */
 
       .export-wrapper {
-        height: 400px;
+        height: 500px;
+        width: 500px;
       }
     </style>
   </head>
@@ -151,7 +152,7 @@
         <div class="controls-wrapper">
           <div class="control-bar">
             <div class="button-wrapper">
-              <button onclick="app1.play()">Replay</button>
+              <button onclick="app.play()">Replay</button>
             </div>
             <div class="slider-wrapper">
               <input
@@ -159,7 +160,7 @@
                 type="range"
                 min="0"
                 value="0"
-                onchange="app1.onSlide()"
+                onchange="app.onSlide()"
               />
             </div>
           </div>
@@ -173,8 +174,8 @@
             <div class="vega-vis"></div>
           </div>
         </div>
-        <button onclick="app1.exportPNG()">Export frames</button>
-        <button onclick="app1.exportGif()">GIF</button>
+        <!-- <button onclick="app.exportPNG()">Export frames</button>
+        <button onclick="app.exportGif()" id="gif">GIF</button> -->
       </div>
     </div>
 
@@ -186,7 +187,7 @@
     <script src="../js/hack-facet-view.js"></script>
     <script src="../js/app.js"></script>
     <script>
-        const app1 = App("app", {
+        const app = App("app", {
           specs: [
             {
               "height": 300,
@@ -387,6 +388,7 @@
           
           ] 
         });
+        window.app = app;
     </script>
   </body>
 </html>
