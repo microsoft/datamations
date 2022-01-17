@@ -454,7 +454,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       if (meta.custom_animation) {
         const fn = CustomAnimations[meta.custom_animation];
         if (fn) {
-          const sequence = await fn(rawSpecs[i - 1], vlSpec);
+          const sequence = await fn(rawSpecs[i - 1], vlSpec, vegaLiteSpecs[i - 1]);
           vegaLiteSpecs[i] = {
             custom: meta.custom_animation,
             sequence,

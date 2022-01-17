@@ -253,9 +253,11 @@ function getGridSpec(spec, rows = 10, stacked = false) {
         expr[middle] = d;
       });
 
-      spec.meta.rules = labels.map(m => {
+      spec.meta.rules = obj.meta.rules = labels.map(m => {
         return {
           filter: `datum['${spec.meta.splitField}'] === '${m}'`,
+          groupKey: spec.meta.splitField,
+          groupValue: m,
         }
       });
 
