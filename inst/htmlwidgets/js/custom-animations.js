@@ -214,7 +214,7 @@ const getMeanStep = (source, target) => {
         let sorted = data
           .slice()
           .sort((a, b) => {
-            return b[CONF.Y_FIELD] - a[CONF.Y_FIELD];
+            return a[CONF.Y_FIELD] - b[CONF.Y_FIELD];
           })
           .map((d, i) => {
             return {
@@ -411,14 +411,17 @@ const CustomAnimations = {
   median: (rawSource, target, calculatedSource) => {
     const initial = getMedianStep(calculatedSource, target);
     const groups = initial.meta.all_groups;
-    const minRankDiff = d3.min(groups, (d) => d.rankDiff);
+    // const minRankDiff = d3.min(groups, (d) => d.rankDiff);
 
-    const stepNums = d3
-      .range(1, minRankDiff, minRankDiff / 4)
-      .map((d) => Math.floor(d));
-    const steps = [...stepNums, null].map((d) =>
-      getMedianStep(calculatedSource, target, d)
-    );
+    // const stepNums = d3
+    //   .range(1, minRankDiff, minRankDiff / 3)
+    //   .map((d) => Math.floor(d));
+
+    const last = getMedianStep(calculatedSource, target, null)
+
+    // const steps = [null].map((d) =>
+    //   getMedianStep(calculatedSource, target, d)
+    // );
 
     // this is for test, it should be passed from R or Python side..
     target.data.values.forEach((d) => {
@@ -430,6 +433,6 @@ const CustomAnimations = {
     target.encoding.y.scale.domain = domain;
     /// end of test ////
 
-    return [calculatedSource, initial, ...steps, target];
+    return [calculatedSource, initial, last, target];
   },
 };
