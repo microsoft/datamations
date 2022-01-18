@@ -58,7 +58,8 @@ const getMedianStep = (source, target, step = 0) => {
   const { width, height } = target.spec || target;
   const isLast = step === null;
 
-  const values = d3.rollups(
+  const values = d3
+    .rollups(
       source.data.values.slice(),
       (data) => {
         const groupValue = data[0][CONF.X_FIELD];
@@ -83,7 +84,8 @@ const getMedianStep = (source, target, step = 0) => {
         sorted = sorted.map((d) => {
           const rank_delta_abs = Math.abs(d.rank - median_rank);
           const y_delta = d[CONF.Y_FIELD] - y_median;
-          const bisection = diff !== null && rank_delta_abs <= diff ? 0 : y_delta > 0 ? 1 : -1;
+          const bisection =
+            diff !== null && rank_delta_abs <= diff ? 0 : y_delta > 0 ? 1 : -1;
           let newField = null;
 
           if (bisection === -1) {
@@ -99,7 +101,7 @@ const getMedianStep = (source, target, step = 0) => {
             bisection,
             [CONF.X_FIELD + "_pos"]: newField,
             y_median: y_median,
-          }
+          };
         });
 
         const filter = `datum['${CONF.X_FIELD}'] === ${groupValue} && datum.bisection === 0`;
@@ -183,13 +185,127 @@ const getMedianStep = (source, target, step = 0) => {
           ...source.encoding,
           x: {
             ...source.encoding.x,
-            "field": CONF.X_FIELD + "_pos"
+            field: CONF.X_FIELD + "_pos",
           },
           color: {
             field: "bisection",
             legend: null,
             type: "nominal",
             scale: { domain: [-1, 0, 1], range: ["orange", "#aaa", "green"] },
+          },
+        },
+      },
+      ...rules,
+    ],
+    resolve: { axis: { y: "independent" } },
+  };
+};
+
+const getMeanStep = (source, target) => {
+  const all_groups = [];
+  const { width, height } = target.spec || target;
+
+  const values = d3
+    .rollups(
+      source.data.values.slice(),
+      (data) => {
+        const groupValue = data[0][CONF.X_FIELD];
+
+        let sorted = data
+          .slice()
+          .sort((a, b) => {
+            return b[CONF.Y_FIELD] - a[CONF.Y_FIELD];
+          })
+          .map((d, i) => {
+            return {
+              ...d,
+              rank: i + 1,
+            };
+          });
+
+        const y_mean = d3.mean(sorted, (d) => d[CONF.Y_FIELD]);
+        const mean_rank = d3.mean(sorted, (d) => d.rank);
+        const max_rank = d3.max(sorted, (d) => d.rank);
+        const dividor = max_rank * 1.4;
+
+        sorted = sorted.map((d) => {
+          const rankRatio_from_mean = (d.rank - mean_rank) / dividor;
+
+          const rankRatio_from_mean_start = (d.rank - 0.5 - mean_rank) / dividor;
+          const rankRatio_from_mean_end = (d.rank + 0.5 - mean_rank) / dividor;
+
+          return {
+            ...d,
+            [CONF.X_FIELD + "_pos"]: d[CONF.X_FIELD] + rankRatio_from_mean,
+            [CONF.X_FIELD + "_pos_start"]:
+              d[CONF.X_FIELD] + rankRatio_from_mean_start,
+            [CONF.X_FIELD + "_pos_end"]:
+              d[CONF.X_FIELD] + rankRatio_from_mean_end,
+            y_mean,
+          };
+        });
+
+        const filter = `datum['${CONF.X_FIELD}'] === ${groupValue}`;
+
+        all_groups.push({
+          filter,
+          groupValue,
+          groupKey: CONF.X_FIELD,
+          mean: y_mean,
+        });
+
+        return sorted;
+      },
+      (d) => d[CONF.X_FIELD]
+    )
+    .flatMap((d) => d[1]);
+
+  const rules = [];
+
+  all_groups.forEach((d, i) => {
+    const n = all_groups.length;
+
+    const rule = {
+      transform: [{ filter: d.filter }],
+      name: `rule_${d.groupValue}`,
+      mark: {
+        type: "rule",
+        x: { expr: `${i + 1} * (width / ${n + 1}) - (width / ${n + 1}) * 0.35` },
+        x2: { expr: `${i + 1} * (width / ${n + 1}) + (width / ${n + 1}) * 0.35` },
+      },
+      encoding: {
+        y: {
+          field: CONF.Y_FIELD,
+          type: "quantitative",
+          aggregate: "mean",
+          axis: null,
+        },
+      },
+    };
+
+    rules.push(rule);
+  });
+
+  return {
+    $schema: CONF.SCHEME,
+    width,
+    height,
+    meta: {
+      all_groups,
+    },
+    data: {
+      name: "source",
+      values,
+    },
+    layer: [
+      {
+        name: "main",
+        mark: source.mark,
+        encoding: {
+          ...source.encoding,
+          x: {
+            ...source.encoding.x,
+            field: CONF.X_FIELD + "_pos",
           },
         },
       },
@@ -211,14 +327,98 @@ const CustomAnimations = {
     const pullUp = addRules(rawSource, target, true);
     return [stacks, rules, pullUp, target];
   },
-  mean: () => {},
-  median: async (rawSource, target, calculatedSource) => {
+  mean: (rawSource, target, calculatedSource) => {
+    const step_1 = getMeanStep(calculatedSource, target);
+    const barWidth = 2;
+    const groups = step_1.meta.all_groups;
+    const step_2 = {
+      ...step_1,
+      layer: [
+        {
+          name: "main",
+          mark: { type: "tick", orient: "horizontal", width: barWidth },
+          encoding: {
+            y: {
+              ...calculatedSource.encoding.y,
+            },
+            x: {
+              ...calculatedSource.encoding.x,
+              field: CONF.X_FIELD + "_pos_start",
+            },
+            x2: {
+              field: CONF.X_FIELD + "_pos_end",
+            },
+            color: { value: "#aaa" },
+          },
+        },
+        ...step_1.layer.slice(1),
+      ],
+    };
+    const step_3 = {
+      ...step_2,
+      layer: [
+        {
+          ...step_2.layer[0],
+          mark: {
+            type: "bar",
+            width: barWidth,
+          },
+          encoding: {
+            ...step_2.layer[0].encoding,
+            y2: {
+              field: "y_mean",
+            },
+          },
+        },
+        ...step_2.layer.slice(1),
+      ],
+    };
+    const step_4 = {
+      ...step_2,
+      layer: [
+        {
+          ...step_2.layer[0],
+          mark: {
+            type: "bar",
+            width: barWidth,
+          },
+          encoding: {
+            ...step_2.layer[0].encoding,
+            y: {
+              ...step_2.layer[0].encoding.y,
+              field: "y_mean",
+            },
+            y2: {
+              field: "y_mean",
+            },
+          },
+        },
+        ...step_2.layer.slice(1),
+      ],
+    };
+    // this is for test, it should be passed from R or Python side..
+    target.data.values.forEach((d) => {
+      const group = groups.find((x) => x.groupValue === d[x.groupKey]);
+      d[CONF.Y_FIELD] = group.mean;
+    });
+
+    const domain = d3.extent(groups, (d) => d.mean);
+    target.encoding.y.scale.domain = domain;
+    /// end of test ////
+
+    return [calculatedSource, step_1, step_2, step_3, step_4, target];
+  },
+  median: (rawSource, target, calculatedSource) => {
     const initial = getMedianStep(calculatedSource, target);
     const groups = initial.meta.all_groups;
-    const minRankDiff = d3.min(groups, d => d.rankDiff);
+    const minRankDiff = d3.min(groups, (d) => d.rankDiff);
 
-    const stepNums = d3.range(1, minRankDiff, minRankDiff / 4).map(d => Math.floor(d));
-    const steps = [...stepNums, null].map(d => getMedianStep(calculatedSource, target, d))
+    const stepNums = d3
+      .range(1, minRankDiff, minRankDiff / 4)
+      .map((d) => Math.floor(d));
+    const steps = [...stepNums, null].map((d) =>
+      getMedianStep(calculatedSource, target, d)
+    );
 
     // this is for test, it should be passed from R or Python side..
     target.data.values.forEach((d) => {
@@ -226,15 +426,10 @@ const CustomAnimations = {
       d[CONF.Y_FIELD] = group.median;
     });
 
-    const domain = d3.extent(groups, d => d.median);
+    const domain = d3.extent(groups, (d) => d.median);
     target.encoding.y.scale.domain = domain;
-    /// end of test //// 
+    /// end of test ////
 
-    return [
-      calculatedSource,
-      initial,
-      ...steps,
-      target,
-    ];
+    return [calculatedSource, initial, ...steps, target];
   },
 };
