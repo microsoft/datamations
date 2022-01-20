@@ -452,9 +452,18 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
       // parsing
       if (meta.custom_animation) {
-        const fn = CustomAnimations[meta.custom_animation];
+        let funName = meta.custom_animation;
+        let p = null;
+
+        if (meta.custom_animation.includes("quantile")) {
+          p = +meta.custom_animation.replace("quantile(", "").replace(")", "");
+          funName = "median";
+        }
+
+        const fn = CustomAnimations[funName];
+
         if (fn) {
-          const sequence = await fn(rawSpecs[i - 1], vlSpec, vegaLiteSpecs[i - 1]);
+          const sequence = await fn(rawSpecs[i - 1], vlSpec, vegaLiteSpecs[i - 1], p);
           vegaLiteSpecs[i] = {
             custom: meta.custom_animation,
             sequence,

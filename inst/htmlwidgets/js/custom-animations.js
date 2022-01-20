@@ -53,7 +53,7 @@ function addRules(source, target, shrink = false) {
   };
 }
 
-const getMedianStep = (source, target, step = 0) => {
+const getMedianStep = (source, target, step = 0, p = 0.5) => {
   const all_groups = [];
   const { width, height } = target.spec || target;
   const isLast = step === null;
@@ -76,8 +76,8 @@ const getMedianStep = (source, target, step = 0) => {
             };
           });
 
-        const y_median = d3.median(sorted, (d) => d[CONF.Y_FIELD]);
-        const median_rank = d3.median(sorted, (d) => d.rank);
+        const y_median = d3.quantile(sorted, p, (d) => d[CONF.Y_FIELD]);
+        const median_rank = d3.quantile(sorted, p, (d) => d.rank);
         const max_rank = d3.max(sorted, (d) => d.rank);
         const diff = isLast ? null : max_rank - median_rank - step;
 
@@ -555,8 +555,9 @@ const CustomAnimations = {
 
     return [calculatedSource, intermediate, step_1, step_2, step_3, step_4, target];
   },
-  median: (rawSource, target, calculatedSource) => {
-    const initial = getMedianStep(calculatedSource, target);
+  median: (rawSource, target, calculatedSource, p) => {
+    const initial = getMedianStep(calculatedSource, target, 1, p ?? 0.5);
+
     const groups = initial.meta.all_groups;
     // const minRankDiff = d3.min(groups, (d) => d.rankDiff);
 
@@ -564,7 +565,7 @@ const CustomAnimations = {
     //   .range(1, minRankDiff, minRankDiff / 3)
     //   .map((d) => Math.floor(d));
 
-    const last_with_points = getMedianStep(calculatedSource, target, null)
+    const last_with_points = getMedianStep(calculatedSource, target, null, p ?? 0.5)
     
     // const steps = [null].map((d) =>
     //   getMedianStep(calculatedSource, target, d)
