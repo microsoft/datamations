@@ -329,6 +329,7 @@ const CustomAnimations = {
   },
   mean: (rawSource, target, calculatedSource) => {
     const step_1 = getMeanStep(calculatedSource, target);
+
     const barWidth = 2;
     const groups = step_1.meta.all_groups;
     const step_2 = {
@@ -406,7 +407,21 @@ const CustomAnimations = {
     target.encoding.y.scale.domain = domain;
     /// end of test ////
 
-    return [calculatedSource, step_1, step_2, step_3, step_4, target];
+    const intermediate = {
+      ...calculatedSource,
+      data: {
+        values: step_1.data.values,
+      },
+      encoding: {
+        ...calculatedSource.encoding,
+        x: {
+          ...calculatedSource.encoding.x,
+          field: CONF.X_FIELD + "_pos",
+        },
+      }
+    };
+
+    return [calculatedSource, intermediate, step_1, step_2, step_3, step_4, target];
   },
   median: (rawSource, target, calculatedSource) => {
     const initial = getMedianStep(calculatedSource, target);
