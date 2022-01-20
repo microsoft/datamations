@@ -417,8 +417,8 @@ const CustomAnimations = {
     //   .range(1, minRankDiff, minRankDiff / 3)
     //   .map((d) => Math.floor(d));
 
-    const last = getMedianStep(calculatedSource, target, null)
-
+    const last_with_points = getMedianStep(calculatedSource, target, null)
+    
     // const steps = [null].map((d) =>
     //   getMedianStep(calculatedSource, target, d)
     // );
@@ -433,6 +433,22 @@ const CustomAnimations = {
     target.encoding.y.scale.domain = domain;
     /// end of test ////
 
-    return [calculatedSource, initial, last, target];
+    const yDomain = last_with_points.layer[0].encoding.y.scale.domain;
+
+    const last = {
+      ...target, 
+      encoding: {
+        ...target.encoding,
+        y: {
+          ...target.encoding.y,
+          scale: {
+            domain: yDomain,
+          }
+        }
+      },
+      resolve: { axis: { y: "independent" } },
+    }
+
+    return [calculatedSource, initial, last_with_points, last, target];
   },
 };
