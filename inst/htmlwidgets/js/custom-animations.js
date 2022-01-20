@@ -315,6 +315,72 @@ const getMeanStep = (source, target) => {
   };
 };
 
+const getMinMaxStep = (source, target, minOrMax = "min") => {
+  const { width, height } = target.spec || target;
+  const aggrFn = minOrMax === "min" ? d3.min : d3.max;
+
+  const all_groups = d3.groups(
+      source.data.values.slice(),
+      (d) => d[CONF.X_FIELD])
+    .map(([key, data]) => {
+      const groupValue = key;
+      const filter = `datum['${CONF.X_FIELD}'] === ${groupValue}`;
+      const aggr = aggrFn(data, d => d[CONF.Y_FIELD])
+
+      return {
+        filter,
+        groupValue,
+        groupKey: CONF.X_FIELD,
+        aggr,
+      }
+    });
+
+  const rules = all_groups.map((group, i) => {
+    const n = all_groups.length;
+    return {
+      transform: [{ filter: group.filter }],
+      name: `rule_${group.groupValue}`,
+      mark: {
+        type: "rule",
+        x: { expr: `${i + 1} * (width / ${n + 1}) - 5` },
+        x2: { expr: `${i + 1} * (width / ${n + 1}) + 5` },
+      },
+      encoding: {
+        y: {
+          field: CONF.Y_FIELD,
+          type: "quantitative",
+          aggregate: minOrMax,
+          axis: null,
+        },
+      },
+    }
+  });
+
+  return {
+    $schema: CONF.SCHEME,
+    width,
+    height,
+    meta: {
+      all_groups,
+    },
+    data: {
+      name: "source",
+      values: source.data.values,
+    },
+    layer: [
+      {
+        name: "main",
+        mark: source.mark,
+        encoding: {
+          ...source.encoding,
+        },
+      },
+      ...rules,
+    ],
+    resolve: { axis: { y: "independent" } },
+  }
+};
+
 const CustomAnimations = {
   // steps:
   // 1) stack sets
@@ -326,6 +392,72 @@ const CustomAnimations = {
     const rules = addRules(rawSource, target, false);
     const pullUp = addRules(rawSource, target, true);
     return [stacks, rules, pullUp, target];
+  },
+  min: (rawSource, target, source) => {
+    const step_1 = getMinMaxStep(source, target, "min");
+    const groups = step_1.meta.all_groups;
+    const step_2 = {
+      ...step_1,
+      layer: [
+        {
+          ...step_1.layer[0],
+          encoding: {
+            ...step_1.layer[0].encoding,
+            y: {
+              ...step_1.layer[0].encoding.y,
+              aggregate: "min",
+            }
+          }
+        },
+        ...step_1.layer.slice(1),
+      ]
+    }
+
+    // this is for test, it should be passed from R or Python side..
+    // but can also keep this. it will work!!!
+    target.data.values.forEach((d) => {
+      const group = groups.find((x) => x.groupValue === d[x.groupKey]);
+      d[CONF.Y_FIELD] = group.aggr;
+    });
+
+    const domain = d3.extent(groups, (d) => d.aggr);
+    target.encoding.y.scale.domain = domain;
+    /// end of test ////
+
+    return [source, step_1, step_2, target];
+  },
+  max: (rawSource, target, source) => {
+    const step_1 = getMinMaxStep(source, target, "max");
+    const groups = step_1.meta.all_groups;
+    const step_2 = {
+      ...step_1,
+      layer: [
+        {
+          ...step_1.layer[0],
+          encoding: {
+            ...step_1.layer[0].encoding,
+            y: {
+              ...step_1.layer[0].encoding.y,
+              aggregate: "max",
+            }
+          }
+        },
+        ...step_1.layer.slice(1),
+      ]
+    }
+
+    // this is for test, it should be passed from R or Python side..
+    // but can also keep this. it will work!!!
+    target.data.values.forEach((d) => {
+      const group = groups.find((x) => x.groupValue === d[x.groupKey]);
+      d[CONF.Y_FIELD] = group.aggr;
+    });
+
+    const domain = d3.extent(groups, (d) => d.aggr);
+    target.encoding.y.scale.domain = domain;
+    /// end of test ////
+
+    return [source, step_1, step_2, target];
   },
   mean: (rawSource, target, calculatedSource) => {
     const step_1 = getMeanStep(calculatedSource, target);
