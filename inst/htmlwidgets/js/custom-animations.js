@@ -321,13 +321,17 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
   const { width, height } = target.spec || target;
   const aggrFn = minOrMax === "min" ? d3.min : d3.max;
 
+  const minMaxPoints = {};
+
   const all_groups = d3.groups(
       source.data.values.slice(),
       (d) => d[CONF.X_FIELD])
     .map(([key, data]) => {
       const groupValue = key;
       const filter = `datum['${CONF.X_FIELD}'] === ${groupValue}`;
-      const aggr = aggrFn(data, d => d[CONF.Y_FIELD])
+      const aggr = aggrFn(data, d => d[CONF.Y_FIELD]);
+
+      minMaxPoints[groupValue] = data.find(d => d[CONF.Y_FIELD] === aggr);
 
       return {
         filter,
@@ -358,6 +362,18 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
     }
   });
 
+  console.log(minMaxPoints);
+
+  const values = source.data.values.map(d => {
+    const g = minMaxPoints[d[CONF.X_FIELD]];
+    const isAggr = g && g.gemini_id === d.gemini_id;
+
+    return {
+      ...d,
+      isAggr,
+    }
+  })
+
   return {
     $schema: CONF.SCHEME,
     width,
@@ -367,7 +383,7 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
     },
     data: {
       name: "source",
-      values: source.data.values,
+      values: values,
     },
     layer: [
       {
@@ -398,8 +414,12 @@ const CustomAnimations = {
   min: (rawSource, target, source) => {
     const step_1 = getMinMaxStep(source, target, "min");
     const groups = step_1.meta.all_groups;
+
     const step_2 = {
       ...step_1,
+      transform: [
+        { filter: "datum.isAggr === true" }
+      ],
       layer: [
         {
           ...step_1.layer[0],
@@ -407,13 +427,13 @@ const CustomAnimations = {
             ...step_1.layer[0].encoding,
             y: {
               ...step_1.layer[0].encoding.y,
-              aggregate: "min",
+              // aggregate: "min",
             }
           }
         },
         ...step_1.layer.slice(1),
       ]
-    }
+    };
 
     // this is for test, it should be passed from R or Python side..
     // but can also keep this. it will work!!!
@@ -431,8 +451,12 @@ const CustomAnimations = {
   max: (rawSource, target, source) => {
     const step_1 = getMinMaxStep(source, target, "max");
     const groups = step_1.meta.all_groups;
+
     const step_2 = {
       ...step_1,
+      transform: [
+        { filter: "datum.isAggr === true" }
+      ],
       layer: [
         {
           ...step_1.layer[0],
@@ -440,7 +464,7 @@ const CustomAnimations = {
             ...step_1.layer[0].encoding,
             y: {
               ...step_1.layer[0].encoding.y,
-              aggregate: "max",
+              // aggregate: "max",
             }
           }
         },
