@@ -77,15 +77,17 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
           });
 
         const y_median = d3.quantile(sorted, p, (d) => d[CONF.Y_FIELD]);
-        const median_rank = d3.quantile(sorted, p, (d) => d.rank);
+        const median_rank = d3.quantile(sorted, 0.5, (d) => d.rank);
+
         const max_rank = d3.max(sorted, (d) => d.rank);
         const diff = isLast ? null : max_rank - median_rank - step;
-
+        
         sorted = sorted.map((d) => {
           const rank_delta_abs = Math.abs(d.rank - median_rank);
           const y_delta = d[CONF.Y_FIELD] - y_median;
-          const bisection =
-            diff !== null && rank_delta_abs <= diff ? 0 : y_delta > 0 ? 1 : -1;
+
+          const bisection = (diff !== null && rank_delta_abs <= diff) ? 0 : y_delta > 0 ? 1 : -1;
+
           let newField = null;
 
           if (bisection === -1) {
@@ -556,8 +558,7 @@ const CustomAnimations = {
     return [calculatedSource, intermediate, step_1, step_2, step_3, step_4, target];
   },
   median: (rawSource, target, calculatedSource, p) => {
-    const initial = getMedianStep(calculatedSource, target, 1, p ?? 0.5);
-
+    const initial = getMedianStep(calculatedSource, target, 0, p ?? 0.5);
     const groups = initial.meta.all_groups;
     // const minRankDiff = d3.min(groups, (d) => d.rankDiff);
 
