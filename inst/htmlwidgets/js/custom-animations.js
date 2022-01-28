@@ -322,7 +322,7 @@ const getMeanStep = (source, target) => {
 const getMinMaxStep = (source, target, minOrMax = "min") => {
   const { width, height } = target.spec || target;
   const aggrFn = minOrMax === "min" ? d3.min : d3.max;
-
+  const domain = source.encoding.y.scale.domain;
   const minMaxPoints = {};
 
   const all_groups = d3.groups(
@@ -359,6 +359,7 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
           type: "quantitative",
           aggregate: minOrMax,
           axis: null,
+          scale: { domain }
         },
       },
     }
