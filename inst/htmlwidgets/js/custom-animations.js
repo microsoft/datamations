@@ -427,7 +427,7 @@ const CustomAnimations = {
             ...step_1.layer[0].encoding,
             y: {
               ...step_1.layer[0].encoding.y,
-              // aggregate: "min",
+              aggregate: "min",
             }
           }
         },
@@ -464,7 +464,7 @@ const CustomAnimations = {
             ...step_1.layer[0].encoding,
             y: {
               ...step_1.layer[0].encoding.y,
-              // aggregate: "max",
+              aggregate: "max",
             }
           }
         },

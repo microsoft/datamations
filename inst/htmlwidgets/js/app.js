@@ -145,7 +145,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     const tick = () => {
       animateFrame(frameIndex);
       frameIndex++;
-      if(typeof HTMLWidgets !== "undefined" && HTMLWidgets.shinyMode){
+      if (typeof HTMLWidgets !== "undefined" && HTMLWidgets.shinyMode) {
         var prevIndex = frameIndex - 1;
         Shiny.onInputChange("slider_state", prevIndex);
       }
@@ -179,16 +179,14 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
     const meta = metas[index];
 
-    const {
-      axisSelector,
-      visSelector,
-      descr, slider,
-      otherLayers, controls
-    } = getSelectors(id);
+    const { axisSelector, visSelector, descr, slider, otherLayers, controls } =
+      getSelectors(id);
 
     d3.select(slider).property("value", index);
     d3.select(descr).html(meta.description || "frame " + index);
-    d3.select(axisSelector).style("opacity", meta.axes ? 1 : 0).html("");
+    d3.select(axisSelector)
+      .style("opacity", meta.axes ? 1 : 0)
+      .html("");
     d3.select(visSelector).classed("with-axes", meta.axes);
     d3.select(otherLayers).classed("with-axes", meta.axes);
 
@@ -197,15 +195,15 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       drawAxis(index);
     }
 
-    const transformX = (meta.transformX || 0);
-    const transformY = (meta.transformY || 0);
+    const transformX = meta.transformX || 0;
+    const transformY = meta.transformY || 0;
 
     // shift vis
     d3.select(visSelector)
-      .style("left",  transformX + "px")
-      .style("top",  transformY + "px");
+      .style("left", transformX + "px")
+      .style("top", transformY + "px");
 
-    d3.select(controls).style("width", (spec.width + transformX + 10) + "px");
+    d3.select(controls).style("width", spec.width + transformX + 10 + "px");
 
     // draw vis
     return drawChart(spec, vegaSpec);
@@ -226,7 +224,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     if (Array.isArray(spec)) {
       return new Promise((res) => {
         spec.forEach((s, i) => {
-          let target, embedSpec = s;
+          let target,
+            embedSpec = s;
 
           if (s.meta.animated) {
             target = visSelector;
@@ -248,11 +247,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         });
       });
     } else {
-      return vegaEmbed(
-        visSelector,
-        vegaSpec || spec,
-        { renderer: "svg" }
-      );
+      return vegaEmbed(visSelector, vegaSpec || spec, { renderer: "svg" });
     }
   }
 
@@ -304,7 +299,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         d3.select(axisSelector + " svg > g").attr("transform", fn);
         d3.select(otherLayers + " svg > g").attr("transform", fn);
       }
-      const width = d3.select(axisSelector).node().getBoundingClientRect().width;
+      const width = d3
+        .select(axisSelector)
+        .node()
+        .getBoundingClientRect().width;
       d3.select(controls).style("width", width + "px");
     });
   }
@@ -317,22 +315,16 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   async function animateFrame(index) {
     if (!frames[index]) return;
 
-    const {
-      axisSelector,
-      visSelector,
-      otherLayers,
-      descr,
-      slider,
-      controls
-    } =  getSelectors(id);
+    const { axisSelector, visSelector, otherLayers, descr, slider, controls } =
+      getSelectors(id);
 
     let { source, target, gemSpec, prevMeta, currMeta } = frames[index];
     let anim = null;
 
     if (source.custom) {
       anim = await gemini.animate(
-        source.sequence[source.sequence.length - 1], 
-        target, 
+        source.sequence[source.sequence.length - 1],
+        target,
         gemSpec
       );
     } else if (target.custom) {
@@ -356,8 +348,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           d3.select(slider).property("value", index + 1);
         });
 
-        const transformX = (currMeta.transformX || 0);
-        const transformY = (currMeta.transformY || 0);
+        const transformX = currMeta.transformX || 0;
+        const transformY = currMeta.transformY || 0;
 
         d3.select(visSelector)
           .transition()
@@ -368,14 +360,20 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         // show/hide axis vega chart
         if (currHasAxes) {
           drawAxis(index + 1);
-          d3.select(axisSelector).transition().duration(1000).style("opacity", 1);
+          d3.select(axisSelector)
+            .transition()
+            .duration(1000)
+            .style("opacity", 1);
           d3.select(visSelector).classed("with-axes", true);
           d3.select(otherLayers).classed("with-axes", true);
         } else {
-          d3.select(axisSelector).transition().duration(1000).style("opacity", 0);
+          d3.select(axisSelector)
+            .transition()
+            .duration(1000)
+            .style("opacity", 0);
           d3.select(visSelector).classed("with-axes", false);
           d3.select(otherLayers).classed("with-axes", false);
-          d3.select(controls).style("width", (width + transformX + 10) + "px");
+          d3.select(controls).style("width", width + transformX + 10 + "px");
         }
 
         const nextSpec = vegaLiteSpecs[index + 1];
@@ -398,7 +396,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
             document.querySelector(otherLayers).appendChild(div);
           });
         }
-      }, frameDelay)
+      }, frameDelay);
     });
   }
 
@@ -413,12 +411,12 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         return d3.json(url);
       })
     )
-    .then(res => {
-      return res;
-    })
-    .catch((e) => {
-      console.error(e.message);
-    });
+      .then((res) => {
+        return res;
+      })
+      .catch((e) => {
+        console.error(e.message);
+      });
   }
 
   /**
@@ -428,7 +426,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * - spec.layer = splits layers to stack on top on each other
    */
   async function transformSpecs() {
-    const n = d3.max(vegaLiteSpecs[0].data.values, d => d.n);
+    const n = d3.max(vegaLiteSpecs[0].data.values, (d) => d.n);
     let rows = Math.ceil(Math.sqrt(n));
 
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
@@ -463,11 +461,16 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         const fn = CustomAnimations[funName];
 
         if (fn) {
-          const sequence = await fn(rawSpecs[i - 1], vlSpec, vegaLiteSpecs[i - 1], p);
+          const sequence = await fn(
+            rawSpecs[i - 1],
+            vlSpec,
+            vegaLiteSpecs[i - 1],
+            p
+          );
           vegaLiteSpecs[i] = {
             custom: meta.custom_animation,
             sequence,
-          } 
+          };
         }
       } else if (parse === "grid") {
         const gridSpec = await getGridSpec(vlSpec, rows);
@@ -476,14 +479,16 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         // rawSpecs[i].data.values = gridSpec.data.values;
 
         if (rawSpecs[i].meta.axes && rawSpecs[i].meta.splitField) {
-          const encoding = rawSpecs[i].spec ? rawSpecs[i].spec.encoding : rawSpecs[i].encoding;
+          const encoding = rawSpecs[i].spec
+            ? rawSpecs[i].spec.encoding
+            : rawSpecs[i].encoding;
           encoding.x.axis = enc.x.axis;
           encoding.y.scale = {
-            domain: enc.y.scale.domain
-          }
+            domain: enc.y.scale.domain,
+          };
           encoding.x.scale = {
-            domain: enc.x.scale.domain
-          }
+            domain: enc.x.scale.domain,
+          };
         }
 
         vegaLiteSpecs[i] = gridSpec;
@@ -520,7 +525,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       }
     }
 
-    console.log("final", vegaLiteSpecs)
+    console.log("final", vegaLiteSpecs);
   }
 
   /**
@@ -588,10 +593,26 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           resp = await gemini.recommendForSeq(curr.sequence, {
             ...options,
             stageN: curr.sequence.length - 1,
-            totalDuration: options.totalDuration * 2
+            totalDuration: options.totalDuration * 2,
           });
 
-          const _gemSpec = resp[0].specs.map(d => d.spec);
+          const _gemSpec = resp[0].specs.map((d) => d.spec);
+
+          // make sure to add gemini_id to data change. 
+          // gemini recommend does not add it by itself.
+          _gemSpec.forEach((d) => {
+            if (d.timeline.concat.length) {
+              const first = d.timeline.concat[0].sync[0];
+              if (first && first.change && first.change.data) {
+                first.change.data = {
+                  keys: ["gemini_id"],
+                  update: true,
+                  enter: true,
+                  exit: true,
+                };
+              }
+            }
+          });
 
           frames.push({
             source: prev,
@@ -606,23 +627,21 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           const _gemSpec = resp[0] ? resp[0].spec : gemSpec;
 
           const sync = _gemSpec.timeline.concat[0].sync;
-  
-          if (!sync.some(d => d.component === "view")) {
+
+          if (!sync.some((d) => d.component === "view")) {
             sync.push({
-              "component": "view",
-              "change": {
-                "signal": [
-                  "width", "height"
-                ]
+              component: "view",
+              change: {
+                signal: ["width", "height"],
               },
-              "timing": {
-                    "duration": {
-                        "ratio": 1
-                    }
-                }
-            })
+              timing: {
+                duration: {
+                  ratio: 1,
+                },
+              },
+            });
           }
-  
+
           frames.push({
             source: prev,
             target: curr,
@@ -632,7 +651,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           });
         }
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     }
   }
@@ -653,5 +672,5 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     onSlide,
     play,
     animateFrame,
-  }
+  };
 }
