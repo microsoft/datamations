@@ -298,7 +298,8 @@ function getJitterSpec(spec) {
   const yExtent = d3.extent(nodes, d => d[CONF.Y_FIELD]);
   const xScale = d3.scaleBand()
     .domain(d3.range(1, innerGroupCount + 1))
-    .range([0, facetSize]);
+    .range([0, facetSize])
+    .paddingOuter(0.5);
 
   const arr = nodes.slice().filter(d => d[CONF.Y_FIELD] !== undefined).map((d, i) => {
     d.oldX = d[CONF.X_FIELD];

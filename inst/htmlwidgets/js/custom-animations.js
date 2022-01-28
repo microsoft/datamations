@@ -206,6 +206,7 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
 const getMeanStep = (source, target) => {
   const all_groups = [];
   const { width, height } = target.spec || target;
+  const domain = source.encoding.y.scale.domain;
 
   const values = d3
     .rollups(
@@ -281,6 +282,7 @@ const getMeanStep = (source, target) => {
           type: "quantitative",
           aggregate: "mean",
           axis: null,
+          scale: { domain }
         },
       },
     };
@@ -362,8 +364,6 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
     }
   });
 
-  console.log(minMaxPoints);
-
   const values = source.data.values.map(d => {
     const g = minMaxPoints[d[CONF.X_FIELD]];
     const isAggr = g && g.gemini_id === d.gemini_id;
@@ -412,7 +412,7 @@ const CustomAnimations = {
     return [stacks, rules, pullUp, target];
   },
   min: (rawSource, target, source) => {
-    const step_1 = getMinMaxStep(source, target, "min");
+    const step_1 = getMinMaxStep(rawSource, target, "min");
     const groups = step_1.meta.all_groups;
 
     const step_2 = {
@@ -446,10 +446,10 @@ const CustomAnimations = {
     target.encoding.y.scale.domain = domain;
     /// end of test ////
 
-    return [source, step_1, step_2, target];
+    return [rawSource, step_1, step_2, target];
   },
   max: (rawSource, target, source) => {
-    const step_1 = getMinMaxStep(source, target, "max");
+    const step_1 = getMinMaxStep(rawSource, target, "max");
     const groups = step_1.meta.all_groups;
 
     const step_2 = {
@@ -483,10 +483,10 @@ const CustomAnimations = {
     target.encoding.y.scale.domain = domain;
     /// end of test ////
 
-    return [source, step_1, step_2, target];
+    return [rawSource, step_1, step_2, target];
   },
   mean: (rawSource, target, calculatedSource) => {
-    const step_1 = getMeanStep(calculatedSource, target);
+    const step_1 = getMeanStep(rawSource, target);
 
     const barWidth = 2;
     const groups = step_1.meta.all_groups;
@@ -498,10 +498,10 @@ const CustomAnimations = {
           mark: { type: "tick", orient: "horizontal", width: barWidth },
           encoding: {
             y: {
-              ...calculatedSource.encoding.y,
+              ...rawSource.encoding.y,
             },
             x: {
-              ...calculatedSource.encoding.x,
+              ...rawSource.encoding.x,
               field: CONF.X_FIELD + "_pos_start",
             },
             x2: {
@@ -555,6 +555,7 @@ const CustomAnimations = {
         ...step_2.layer.slice(1),
       ],
     };
+
     // this is for test, it should be passed from R or Python side..
     target.data.values.forEach((d) => {
       const group = groups.find((x) => x.groupValue === d[x.groupKey]);
@@ -566,35 +567,25 @@ const CustomAnimations = {
     /// end of test ////
 
     const intermediate = {
-      ...calculatedSource,
+      ...rawSource,
       data: {
         values: step_1.data.values,
       },
       encoding: {
-        ...calculatedSource.encoding,
+        ...rawSource.encoding,
         x: {
-          ...calculatedSource.encoding.x,
+          ...rawSource.encoding.x,
           field: CONF.X_FIELD + "_pos",
         },
       }
     };
 
-    return [calculatedSource, intermediate, step_1, step_2, step_3, step_4, target];
+    return [rawSource, intermediate, step_1, step_2, step_3, step_4, target];
   },
   median: (rawSource, target, calculatedSource, p) => {
-    const initial = getMedianStep(calculatedSource, target, 0, p ?? 0.5);
+    const initial = getMedianStep(rawSource, target, 0, p ?? 0.5);
     const groups = initial.meta.all_groups;
-    // const minRankDiff = d3.min(groups, (d) => d.rankDiff);
-
-    // const stepNums = d3
-    //   .range(1, minRankDiff, minRankDiff / 3)
-    //   .map((d) => Math.floor(d));
-
-    const last_with_points = getMedianStep(calculatedSource, target, null, p ?? 0.5)
-    
-    // const steps = [null].map((d) =>
-    //   getMedianStep(calculatedSource, target, d)
-    // );
+    const last_with_points = getMedianStep(rawSource, target, null, p ?? 0.5)
 
     // this is for test, it should be passed from R or Python side..
     target.data.values.forEach((d) => {
@@ -622,6 +613,6 @@ const CustomAnimations = {
       resolve: { axis: { y: "independent" } },
     }
 
-    return [calculatedSource, initial, last_with_points, last, target];
+    return [rawSource, initial, last_with_points, last, target];
   },
 };
