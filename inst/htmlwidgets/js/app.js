@@ -217,7 +217,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * @returns a promise of vegaEmbed
    */
   function drawChart(spec, vegaSpec) {
-    const { visSelector, otherLayers } = getSelectors(id);
+    const { axisSelector, visSelector, otherLayers } = getSelectors(id);
     const layers = document.querySelector(otherLayers);
     layers.innerHTML = "";
 
@@ -243,6 +243,19 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
             if (i === spec.length - 1) {
               res();
             }
+
+            // ensure facet translations match in axisSelector and otherLayers 
+            setTimeout(() => {
+              const axisCells = d3.select(axisSelector).selectAll(".mark-group.cell>g").nodes();
+              const otherLayersCells = d3.select(otherLayers).selectAll(".mark-group.cell>g").nodes();
+
+              if (axisCells.length === otherLayersCells.length) {
+                for (let i = 0; i < axisCells.length; i++) {
+                  const transform = axisCells[i].getAttribute("transform");
+                  otherLayersCells[i].setAttribute("transform", transform);
+                }
+              }
+            }, 100);
           });
         });
       });
