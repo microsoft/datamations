@@ -476,7 +476,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         const gridSpec = await getGridSpec(vlSpec, rows);
 
         const enc = gridSpec.spec ? gridSpec.spec.encoding : gridSpec.encoding;
-        // rawSpecs[i].data.values = gridSpec.data.values;
+        rawSpecs[i].data.values = gridSpec.data.values;
 
         if (rawSpecs[i].meta.axes && rawSpecs[i].meta.splitField) {
           const encoding = rawSpecs[i].spec
