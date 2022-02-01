@@ -19,6 +19,7 @@
  * @returns exposed functions
  */
 function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
+  let rawSpecsDontChange;
   let rawSpecs; // holds raw vega-lite specs, not transformed
   let vegaLiteSpecs;
   let vegaSpecs; // vega specs
@@ -74,6 +75,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     vegaLiteSpecs = [];
     vegaSpecs = [];
     rawSpecs = [];
+    rawSpecsDontChange = [];
     frames = [];
     metas = [];
     frameIndex = 0;
@@ -111,6 +113,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     // save raw specs to use for facet axes drawing
     vegaLiteSpecs.forEach((d) => {
       rawSpecs.push(JSON.parse(JSON.stringify(d)));
+      rawSpecsDontChange.push(JSON.parse(JSON.stringify(d)));
 
       if (d.meta) {
         metas.push(d.meta);
@@ -243,11 +246,30 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
             if (i === spec.length - 1) {
               res();
             }
+
+          // ensure facet translations match in axisSelector and otherLayers 
+          setTimeout(() => {
+            adjustAxisAndErrorbars();
+          }, 100);
+
           });
         });
       });
     } else {
       return vegaEmbed(visSelector, vegaSpec || spec, { renderer: "svg" });
+    }
+  }
+
+  function adjustAxisAndErrorbars() {
+    const { axisSelector, otherLayers } = getSelectors(id);
+    const axisCells = d3.select(axisSelector).selectAll(".mark-group.cell>g").nodes();
+    const otherLayersCells = d3.select(otherLayers).selectAll(".mark-group.cell>g").nodes();
+
+    if (axisCells.length === otherLayersCells.length) {
+      for (let i = 0; i < axisCells.length; i++) {
+        const transform = axisCells[i].getAttribute("transform");
+        otherLayersCells[i].setAttribute("transform", transform);
+      }
     }
   }
 
@@ -392,7 +414,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           statics.forEach((s) => {
             const div = document.createElement("div");
             div.classList.add("vega-hidden-layer");
-            vegaEmbed(div, s, { renderer: "svg" });
+            vegaEmbed(div, s, { renderer: "svg" }).then(() => {
+              adjustAxisAndErrorbars();
+            });
             document.querySelector(otherLayers).appendChild(div);
           });
         }
@@ -462,7 +486,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
         if (fn) {
           const sequence = await fn(
-            rawSpecs[i - 1],
+            {
+              ...rawSpecs[i - 1],
+              data: rawSpecsDontChange[i - 1].data,
+            },
             vlSpec,
             vegaLiteSpecs[i - 1],
             p
@@ -476,7 +503,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         const gridSpec = await getGridSpec(vlSpec, rows);
 
         const enc = gridSpec.spec ? gridSpec.spec.encoding : gridSpec.encoding;
-        // rawSpecs[i].data.values = gridSpec.data.values;
+        rawSpecs[i].data.values = gridSpec.data.values;
 
         if (rawSpecs[i].meta.axes && rawSpecs[i].meta.splitField) {
           const encoding = rawSpecs[i].spec
