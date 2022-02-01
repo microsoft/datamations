@@ -88,24 +88,24 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datamations</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></code></pre></div>
-<div class="section level1">
-<h1 id="group_by">group_by()<a class="anchor" aria-label="anchor" href="#group_by"></a>
-</h1>
 <div class="section level2">
-<h2 id="one-grouping-variable">One grouping variable<a class="anchor" aria-label="anchor" href="#one-grouping-variable"></a>
+<h2 id="group_by">group_by()<a class="anchor" aria-label="anchor" href="#group_by"></a>
 </h2>
+<div class="section level3">
+<h3 id="one-grouping-variable">One grouping variable<a class="anchor" aria-label="anchor" href="#one-grouping-variable"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Work)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-1859905ddc4688d01fd5" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-8feb14dd31cb4a51417c" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button onclick="window.apphtmlwidget1859905ddc4688d01fd5.play('htmlwidget1859905ddc4688d01fd5')">Replay</button>
+<button onclick="window.apphtmlwidget8feb14dd31cb4a51417c.play('htmlwidget8feb14dd31cb4a51417c')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget1859905ddc4688d01fd5.onSlide('htmlwidget1859905ddc4688d01fd5')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget8feb14dd31cb4a51417c.onSlide('htmlwidget8feb14dd31cb4a51417c')">
 </div>
 </div>
 <div class="description"></div>
@@ -116,11 +116,11 @@
 <div class="vega-vis"></div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-1859905ddc4688d01fd5">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-8feb14dd31cb4a51417c">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Initial data"
@@ -154,7 +154,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by Work",
@@ -205,21 +205,21 @@
   }
 ]},"evals":[],"jsHooks":[]}</script>
 </div>
-<div class="section level2">
-<h2 id="two-grouping-variables">Two grouping variables<a class="anchor" aria-label="anchor" href="#two-grouping-variables"></a>
-</h2>
+<div class="section level3">
+<h3 id="two-grouping-variables">Two grouping variables<a class="anchor" aria-label="anchor" href="#two-grouping-variables"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Work, Degree)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-3211608575d3ffbfa320" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-f71f48e6bdea6e71fc84" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button onclick="window.apphtmlwidget3211608575d3ffbfa320.play('htmlwidget3211608575d3ffbfa320')">Replay</button>
+<button onclick="window.apphtmlwidgetf71f48e6bdea6e71fc84.play('htmlwidgetf71f48e6bdea6e71fc84')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget3211608575d3ffbfa320.onSlide('htmlwidget3211608575d3ffbfa320')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetf71f48e6bdea6e71fc84.onSlide('htmlwidgetf71f48e6bdea6e71fc84')">
 </div>
 </div>
 <div class="description"></div>
@@ -230,11 +230,11 @@
 <div class="vega-vis"></div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-3211608575d3ffbfa320">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-f71f48e6bdea6e71fc84">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Initial data"
@@ -266,7 +266,7 @@
     }
   },
   {
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by Work"
@@ -321,7 +321,7 @@
     }
   },
   {
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by Work, Degree",
@@ -404,23 +404,23 @@
   }
 ]},"evals":[],"jsHooks":[]}</script>
 </div>
-<div class="section level2">
-<h2 id="three-grouping-variables">Three grouping variables<a class="anchor" aria-label="anchor" href="#three-grouping-variables"></a>
-</h2>
+<div class="section level3">
+<h3 id="three-grouping-variables">Three grouping variables<a class="anchor" aria-label="anchor" href="#three-grouping-variables"></a>
+</h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a></span><span class="op">)</span>
 
 <span class="st">"penguins %&gt;%
   group_by(sex, island, species)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-0b0f637d2310ae535313" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-58088f4ea6893a8b8144" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button onclick="window.apphtmlwidget0b0f637d2310ae535313.play('htmlwidget0b0f637d2310ae535313')">Replay</button>
+<button onclick="window.apphtmlwidget58088f4ea6893a8b8144.play('htmlwidget58088f4ea6893a8b8144')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget0b0f637d2310ae535313.onSlide('htmlwidget0b0f637d2310ae535313')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget58088f4ea6893a8b8144.onSlide('htmlwidget58088f4ea6893a8b8144')">
 </div>
 </div>
 <div class="description"></div>
@@ -431,11 +431,11 @@
 <div class="vega-vis"></div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-0b0f637d2310ae535313">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-58088f4ea6893a8b8144">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Initial data"
@@ -467,7 +467,7 @@
     }
   },
   {
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by sex"
@@ -527,7 +527,7 @@
     }
   },
   {
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by sex, island"
@@ -635,7 +635,7 @@
     }
   },
   {
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by sex, island, species",
@@ -795,25 +795,25 @@
 ]},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
-<div class="section level1">
-<h1 id="summarise">summarise()<a class="anchor" aria-label="anchor" href="#summarise"></a>
-</h1>
 <div class="section level2">
-<h2 id="mean-of-a-variable">mean of a variable<a class="anchor" aria-label="anchor" href="#mean-of-a-variable"></a>
+<h2 id="summarise">summarise()<a class="anchor" aria-label="anchor" href="#summarise"></a>
 </h2>
+<div class="section level3">
+<h3 id="mean-of-a-variable">mean of a variable<a class="anchor" aria-label="anchor" href="#mean-of-a-variable"></a>
+</h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Work) %&gt;%
   summarise(mean_salary = mean(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-301fa51354e426d0922c" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-034585dff57d6f0c6170" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button onclick="window.apphtmlwidget301fa51354e426d0922c.play('htmlwidget301fa51354e426d0922c')">Replay</button>
+<button onclick="window.apphtmlwidget034585dff57d6f0c6170.play('htmlwidget034585dff57d6f0c6170')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget301fa51354e426d0922c.onSlide('htmlwidget301fa51354e426d0922c')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget034585dff57d6f0c6170.onSlide('htmlwidget034585dff57d6f0c6170')">
 </div>
 </div>
 <div class="description"></div>
@@ -824,11 +824,11 @@
 <div class="vega-vis"></div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-301fa51354e426d0922c">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-034585dff57d6f0c6170">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Initial data"
@@ -862,7 +862,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by Work",
@@ -914,7 +914,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "jitter",
       "axes": false,
@@ -1669,7 +1669,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "axes": false,
       "description": "Plot mean Salary of each group",
@@ -2422,7 +2422,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "axes": false,
       "description": "Plot mean Salary of each group, with errorbar"
@@ -3535,7 +3535,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "axes": false,
       "description": "Plot mean Salary of each group, with errorbar, zoomed in"
@@ -4647,22 +4647,22 @@
   }
 ]},"evals":[],"jsHooks":[]}</script>
 </div>
-<div class="section level2">
-<h2 id="other-summary-functions">Other summary functions<a class="anchor" aria-label="anchor" href="#other-summary-functions"></a>
-</h2>
+<div class="section level3">
+<h3 id="other-summary-functions">Other summary functions<a class="anchor" aria-label="anchor" href="#other-summary-functions"></a>
+</h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Work) %&gt;%
   summarise(median_salary = median(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-529ae992cd1d23c8b7cd" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-b576e58e632fd84c662f" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button onclick="window.apphtmlwidget529ae992cd1d23c8b7cd.play('htmlwidget529ae992cd1d23c8b7cd')">Replay</button>
+<button onclick="window.apphtmlwidgetb576e58e632fd84c662f.play('htmlwidgetb576e58e632fd84c662f')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget529ae992cd1d23c8b7cd.onSlide('htmlwidget529ae992cd1d23c8b7cd')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetb576e58e632fd84c662f.onSlide('htmlwidgetb576e58e632fd84c662f')">
 </div>
 </div>
 <div class="description"></div>
@@ -4673,11 +4673,11 @@
 <div class="vega-vis"></div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-529ae992cd1d23c8b7cd">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-b576e58e632fd84c662f">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Initial data"
@@ -4711,7 +4711,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by Work",
@@ -4763,7 +4763,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "jitter",
       "axes": false,
@@ -5518,7 +5518,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "axes": false,
       "description": "Plot median Salary of each group",
@@ -6271,7 +6271,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "axes": false,
       "description": "Plot median Salary of each group, zoomed in"
@@ -7023,24 +7023,24 @@
 ]},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
-<div class="section level1">
-<h1 id="filter">filter()<a class="anchor" aria-label="anchor" href="#filter"></a>
-</h1>
 <div class="section level2">
-<h2 id="filtering-initial-data">Filtering initial data<a class="anchor" aria-label="anchor" href="#filtering-initial-data"></a>
+<h2 id="filter">filter()<a class="anchor" aria-label="anchor" href="#filter"></a>
 </h2>
+<div class="section level3">
+<h3 id="filtering-initial-data">Filtering initial data<a class="anchor" aria-label="anchor" href="#filtering-initial-data"></a>
+</h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   filter(Salary &gt; 90)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-95ae27f9d211bc97a964" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-f94dad978c47097c57cd" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button onclick="window.apphtmlwidget95ae27f9d211bc97a964.play('htmlwidget95ae27f9d211bc97a964')">Replay</button>
+<button onclick="window.apphtmlwidgetf94dad978c47097c57cd.play('htmlwidgetf94dad978c47097c57cd')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget95ae27f9d211bc97a964.onSlide('htmlwidget95ae27f9d211bc97a964')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetf94dad978c47097c57cd.onSlide('htmlwidgetf94dad978c47097c57cd')">
 </div>
 </div>
 <div class="description"></div>
@@ -7051,11 +7051,11 @@
 <div class="vega-vis"></div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-95ae27f9d211bc97a964">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-f94dad978c47097c57cd">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Initial data"
@@ -7089,7 +7089,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Filter Salary > 90"
@@ -7130,22 +7130,22 @@
   }
 ]},"evals":[],"jsHooks":[]}</script>
 </div>
-<div class="section level2">
-<h2 id="filtering-within-groups">Filtering within groups<a class="anchor" aria-label="anchor" href="#filtering-within-groups"></a>
-</h2>
+<div class="section level3">
+<h3 id="filtering-within-groups">Filtering within groups<a class="anchor" aria-label="anchor" href="#filtering-within-groups"></a>
+</h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Work) %&gt;%
   filter(Salary == mean(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-a039aa2e99dc4b13d0aa" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-44a5bc7fd2d25ffefafd" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button onclick="window.apphtmlwidgeta039aa2e99dc4b13d0aa.play('htmlwidgeta039aa2e99dc4b13d0aa')">Replay</button>
+<button onclick="window.apphtmlwidget44a5bc7fd2d25ffefafd.play('htmlwidget44a5bc7fd2d25ffefafd')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgeta039aa2e99dc4b13d0aa.onSlide('htmlwidgeta039aa2e99dc4b13d0aa')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget44a5bc7fd2d25ffefafd.onSlide('htmlwidget44a5bc7fd2d25ffefafd')">
 </div>
 </div>
 <div class="description"></div>
@@ -7156,11 +7156,11 @@
 <div class="vega-vis"></div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-a039aa2e99dc4b13d0aa">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-44a5bc7fd2d25ffefafd">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Initial data"
@@ -7194,7 +7194,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by Work",
@@ -7246,7 +7246,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Filter Salary == mean(Salary) within each group",
@@ -7305,23 +7305,23 @@
   }
 ]},"evals":[],"jsHooks":[]}</script>
 </div>
-<div class="section level2">
-<h2 id="filtering-after-summarize">Filtering after summarize<a class="anchor" aria-label="anchor" href="#filtering-after-summarize"></a>
-</h2>
+<div class="section level3">
+<h3 id="filtering-after-summarize">Filtering after summarize<a class="anchor" aria-label="anchor" href="#filtering-after-summarize"></a>
+</h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Work) %&gt;%
   summarise(median_salary = median(Salary)) %&gt;%
   filter(median_salary &gt; 90)"</span>  <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-4909b8ddef23670251a4" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-a4f5fc9aaa48857ce321" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button onclick="window.apphtmlwidget4909b8ddef23670251a4.play('htmlwidget4909b8ddef23670251a4')">Replay</button>
+<button onclick="window.apphtmlwidgeta4f5fc9aaa48857ce321.play('htmlwidgeta4f5fc9aaa48857ce321')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget4909b8ddef23670251a4.onSlide('htmlwidget4909b8ddef23670251a4')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgeta4f5fc9aaa48857ce321.onSlide('htmlwidgeta4f5fc9aaa48857ce321')">
 </div>
 </div>
 <div class="description"></div>
@@ -7332,11 +7332,11 @@
 <div class="vega-vis"></div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-4909b8ddef23670251a4">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-a4f5fc9aaa48857ce321">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Initial data"
@@ -7370,7 +7370,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by Work",
@@ -7422,7 +7422,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "jitter",
       "axes": false,
@@ -8177,7 +8177,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "axes": false,
       "description": "Plot median Salary of each group",
@@ -8930,7 +8930,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "axes": false,
       "description": "Plot median Salary of each group, zoomed in"
@@ -9682,7 +9682,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "axes": false,
       "description": "Filter median_salary > 90"
@@ -10442,21 +10442,21 @@
 ]},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
-<div class="section level1">
-<h1 id="count">count()<a class="anchor" aria-label="anchor" href="#count"></a>
-</h1>
+<div class="section level2">
+<h2 id="count">count()<a class="anchor" aria-label="anchor" href="#count"></a>
+</h2>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   count(Work)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-137fea1f7522a4da2272" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-6511cdfca2c5acebc7f3" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button onclick="window.apphtmlwidget137fea1f7522a4da2272.play('htmlwidget137fea1f7522a4da2272')">Replay</button>
+<button onclick="window.apphtmlwidget6511cdfca2c5acebc7f3.play('htmlwidget6511cdfca2c5acebc7f3')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget137fea1f7522a4da2272.onSlide('htmlwidget137fea1f7522a4da2272')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget6511cdfca2c5acebc7f3.onSlide('htmlwidget6511cdfca2c5acebc7f3')">
 </div>
 </div>
 <div class="description"></div>
@@ -10467,11 +10467,11 @@
 <div class="vega-vis"></div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-137fea1f7522a4da2272">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-6511cdfca2c5acebc7f3">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Initial data"
@@ -10505,7 +10505,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by Work",
@@ -10557,7 +10557,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "axes": false,
       "description": "Plot count of each group",
@@ -11328,7 +11328,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
