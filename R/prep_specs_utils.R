@@ -153,9 +153,9 @@ generate_group_by_description <- function(mapping, ...) {
 }
 
 generate_group_by_tooltip <- function(.data) {
-  tooltip_vars <- .data %>%
-    dplyr::select(-.data$n, -.data$gemini_ids) %>%
-    names()
+    tooltip_vars <- .data %>%
+      dplyr::select(-one_of("n", "gemini_ids")) %>%
+      names()
 
   purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
 }
