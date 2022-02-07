@@ -308,6 +308,8 @@ function getJitterSpec(spec) {
     let x = xScale(d[CONF.X_FIELD]) + xScale.bandwidth() / 2;
     let y = d[CONF.Y_FIELD];
 
+    d.scaledX = Math.round(xScale(d[CONF.X_FIELD]));
+
     return {
       ...d,
       x: x,

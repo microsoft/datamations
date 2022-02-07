@@ -482,15 +482,40 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           funName = "median";
         }
 
+        let source = {
+          ...rawSpecs[i - 1],
+          data: rawSpecsDontChange[i - 1].data,
+        };
+        let target = vlSpec;
+
+        // fake facets
+        if (rawSpecsDontChange[i - 1].facet) {
+
+          source = {
+            ...vegaLiteSpecs[i - 1],
+            data: {
+              values: vegaLiteSpecs[i - 1].data.values.map(d => {
+                return {
+                  ...d,
+                  [CONF.X_FIELD]: d[CONF.X_FIELD+"_num"],
+                }
+              })
+            }
+          }
+        }
+
+        if (vegaLiteSpecs[i].facet) {
+          const newSpecTarget = await hackFacet(vegaLiteSpecs[i]);
+          vegaLiteSpecs[i] = newSpecTarget;
+          target = newSpecTarget;
+        }
+
         const fn = CustomAnimations[funName];
 
         if (fn) {
           const sequence = await fn(
-            {
-              ...rawSpecs[i - 1],
-              data: rawSpecsDontChange[i - 1].data,
-            },
-            vlSpec,
+            source,
+            target,
             vegaLiteSpecs[i - 1],
             p
           );

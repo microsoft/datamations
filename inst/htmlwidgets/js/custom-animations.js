@@ -208,6 +208,8 @@ const getMeanStep = (source, target) => {
   const { width, height } = target.spec || target;
   const domain = source.encoding.y.scale.domain;
 
+  console.log(d3.group( source.data.values.slice(), d => d[CONF.X_FIELD]))
+
   const values = d3
     .rollups(
       source.data.values.slice(),
@@ -491,6 +493,7 @@ const CustomAnimations = {
 
     const barWidth = 2;
     const groups = step_1.meta.all_groups;
+
     const step_2 = {
       ...step_1,
       layer: [
@@ -560,7 +563,9 @@ const CustomAnimations = {
     // this is for test, it should be passed from R or Python side..
     target.data.values.forEach((d) => {
       const group = groups.find((x) => x.groupValue === d[x.groupKey]);
-      d[CONF.Y_FIELD] = group.mean;
+      if (group) {
+        d[CONF.Y_FIELD] = group.mean;
+      }
     });
 
     const domain = d3.extent(groups, (d) => d.mean);
