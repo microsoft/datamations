@@ -102,19 +102,18 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", scale = list(domain = y_range))
     }
 
-    color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
-
-    # Need to manually set order of colour legend, otherwise it's not in the same order as the grids/points!
     if (!is.null(mapping$color)) {
+      color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
       color_encoding <- append(color_encoding, list(legend = list(values = levels(.data[[mapping$color]]))))
     }
 
     spec_encoding <- list(
       x = x_encoding,
-      y = y_encoding,
-      color = color_encoding
+      y = y_encoding
     )
 
+    if(exists("color_encoding")) { spec_encoding$color <- color_encoding }
+    
     # Flag for whether the plot will have facets - used to set axes = TRUE (if it does have facets, and the "fake facets" need to be used) or FALSE (if it doesn't, and the real axes can be used)
     has_facets <- !is.null(mapping$column) | !is.null(mapping$row)
 
@@ -163,18 +162,18 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       rlang::quo_name(mapping$color)
     }
 
-    color_encoding <- list(field = color_name, type = "nominal")
-
-    # Need to manually set order of colour legend, otherwise it's not in the same order as the grids/points!
     if (!is.null(mapping$color)) {
+      color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
       color_encoding <- append(color_encoding, list(legend = list(values = levels(.data[[mapping$color]]))))
     }
 
     spec_encoding <- list(
       x = x_encoding,
-      y = y_encoding,
-      color = color_encoding
+      y = y_encoding
     )
+
+    if(exists("color_encoding")) { spec_encoding$color <- color_encoding }
+
 
     # Flag for whether the plot will have facets - used to set axes = TRUE (if it does have facets, and the "fake facets" need to be used) or FALSE (if it doesn't, and the real axes can be used)
     has_facets <- !is.null(mapping$column) | !is.null(mapping$row)
@@ -465,17 +464,17 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative")
     }
 
-    color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
-
     if (!is.null(mapping$color)) {
+      color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
       color_encoding <- append(color_encoding, list(legend = list(values = levels(.data[[mapping$color]]))))
     }
 
     spec_encoding <- list(
       x = x_encoding,
-      y = y_encoding,
-      color = color_encoding
+      y = y_encoding
     )
+
+    if(exists("color_encoding")) { spec_encoding$color <- color_encoding }
 
     data_1 <- .data %>%
       dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
