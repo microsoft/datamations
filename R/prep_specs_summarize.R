@@ -67,7 +67,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
       x_labels <- generate_labelsExpr(NULL)
       x_domain <- generate_x_domain(NULL)
-      x_title <- ""
+      x_title <- NULL
     } else {
       x_var <- rlang::parse_expr(mapping$x)
 
@@ -94,7 +94,13 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
 
     y_range <- range(.data[[Y_FIELD_CHR]], na.rm = TRUE)
-    y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y, scale = list(domain = y_range))
+
+    if(!is.null(mapping$y)) {
+      y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y, scale = list(domain = y_range))
+    }
+    else {
+      y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", scale = list(domain = y_range))
+    }
 
     color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
 
@@ -427,7 +433,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
       x_labels <- generate_labelsExpr(NULL)
       x_domain <- generate_x_domain(NULL)
-      x_title <- ""
+      x_title <- NULL
     } else {
       x_var <- rlang::parse_expr(mapping$x)
 
@@ -451,7 +457,13 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
 
-    y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y)
+    if(!is.null(mapping$y)) {
+      y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y)
+    }
+
+    else {
+      y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative")
+    }
 
     color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
 
@@ -489,7 +501,9 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Tooltip
   spec_encoding$tooltip <- generate_summarize_tooltip(data_2, mapping$y, mapping$summary_function)
 
-  spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
+  if(!is.null(mapping$y)) {
+    spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
+  }
 
   # Remove any stroke/fillOpacity/shape
 
@@ -521,9 +535,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     y_type = y_type
   )
 
-  # If the summary function is mean or median, add meta.custom_animation
+  # If the summary function is mean or median, min, max, or quantile, add meta.custom_animation
+  ## -- TODO, Add specific meta specs for quantile that pass the probs value
 
-  if (mapping$summary_function %in% c("mean", "median")) {
+  if (mapping$summary_function %in% c("mean", "median", "min", "max", "quantile")) {
     spec[["meta"]][["custom_animation"]] <- mapping$summary_function
   }
 
