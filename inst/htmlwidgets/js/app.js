@@ -209,11 +209,11 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     d3.select(controls).style("width", spec.width + transformX + 10 + "px");
 
     // draw vis
-    return drawChart(spec, vegaSpec);
+    return drawChart(spec, (vegaSpec && vegaSpec.custom) ? null : vegaSpec);
   }
 
   /**
-   * Draws a chart
+   * Draws a chart, either spec or vegaSpec (which is passed from animate function)
    * Supports single view as well as multiple view chart
    * @param {Object} spec vega-lite spec
    * @param {Object} vegaSpec source vega spec of current frame
