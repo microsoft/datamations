@@ -208,62 +208,112 @@ const getMeanStep = (source, target) => {
   const { width, height } = target.spec || target;
   const domain = source.encoding.y.scale.domain;
 
-  console.log(d3.group( source.data.values.slice(), d => d[CONF.X_FIELD]))
+  const hasFacet = source.meta.hasFacet;
+  const meta = source.meta;
 
-  const values = d3
-    .rollups(
+  const values = [];
+
+  const reduce = (data) => {
+    const groupValue = data[0][CONF.X_FIELD];
+
+    let sorted = data
+      .slice()
+      .sort((a, b) => {
+        const sortFn = hasFacet ? "descending" : "ascending";
+        return d3[sortFn](a[CONF.Y_FIELD], b[CONF.Y_FIELD]);
+      })
+      .map((d, i) => {
+        return {
+          ...d,
+          rank: i + 1,
+        };
+      });
+
+    const y_mean = d3.mean(sorted, (d) => {
+      return hasFacet ? d.oldY : d[CONF.Y_FIELD];
+    });
+    const y_mean_pos = hasFacet ? data[0].scaleY(y_mean) : y_mean;
+    const mean_rank = d3.mean(sorted, (d) => d.rank);
+    const max_rank = d3.max(sorted, (d) => d.rank);
+    const dividor = max_rank * 1.4;
+    const multiplier = hasFacet ? 25 : 1;
+
+    sorted = sorted.map((d) => {
+      const rankRatio_from_mean = (d.rank - mean_rank) / dividor;
+
+      const rankRatio_from_mean_start = (d.rank - 0.5 - mean_rank) / dividor;
+      const rankRatio_from_mean_end = (d.rank + 0.5 - mean_rank) / dividor;
+
+      return {
+        ...d,
+        [CONF.X_FIELD + "_pos"]: d[CONF.X_FIELD] + rankRatio_from_mean * multiplier,
+        [CONF.X_FIELD + "_pos_start"]:
+          d[CONF.X_FIELD] + rankRatio_from_mean_start * multiplier,
+        [CONF.X_FIELD + "_pos_end"]:
+          d[CONF.X_FIELD] + rankRatio_from_mean_end * multiplier,
+        y_mean,
+        y_mean_pos,
+      };
+    });
+
+    let filter = `datum['${CONF.X_FIELD}'] === ${groupValue}`;
+    let groupId = groupValue;
+
+    if (hasFacet) {
+      filter += ' && ';
+      groupId += "_";
+
+      if (meta.columnFacet) {
+        filter += `datum['${meta.columnFacet.field}'] === '${data[0][meta.columnFacet.field]}'`;
+        groupId += data[0][meta.columnFacet.field];
+      }
+
+      if (meta.columnFacet && meta.rowFacet) {
+        filter += ' && ';
+        groupId += "_";
+      }
+
+      if (meta.rowFacet) {
+        filter += `datum['${meta.rowFacet.field}'] === '${data[0][meta.rowFacet.field]}'`
+        groupId += data[0][meta.rowFacet.field];
+      }
+    }
+
+    all_groups.push({
+      filter,
+      groupValue,
+      groupKey: CONF.X_FIELD,
+      groupId: groupId,
+      mean: y_mean,
+      mean_pos: y_mean_pos,
+      rule_start: d3.min(sorted, d => d[CONF.X_FIELD + "_pos_start"]),
+      rule_end: d3.max(sorted, d => d[CONF.X_FIELD + "_pos_end"]),
+    });
+
+    values.push(...sorted);
+
+    return sorted;
+  };
+
+  const groupKeys = [CONF.X_FIELD];
+
+  if (hasFacet) {
+    if (meta.columnFacet) {
+      groupKeys.push(meta.columnFacet.field);
+    }
+
+    if (meta.rowFacet) {
+      groupKeys.push(meta.rowFacet.field);
+    }
+  }
+
+  d3.rollups(
       source.data.values.slice(),
-      (data) => {
-        const groupValue = data[0][CONF.X_FIELD];
-
-        let sorted = data
-          .slice()
-          .sort((a, b) => {
-            return a[CONF.Y_FIELD] - b[CONF.Y_FIELD];
-          })
-          .map((d, i) => {
-            return {
-              ...d,
-              rank: i + 1,
-            };
-          });
-
-        const y_mean = d3.mean(sorted, (d) => d[CONF.Y_FIELD]);
-        const mean_rank = d3.mean(sorted, (d) => d.rank);
-        const max_rank = d3.max(sorted, (d) => d.rank);
-        const dividor = max_rank * 1.4;
-
-        sorted = sorted.map((d) => {
-          const rankRatio_from_mean = (d.rank - mean_rank) / dividor;
-
-          const rankRatio_from_mean_start = (d.rank - 0.5 - mean_rank) / dividor;
-          const rankRatio_from_mean_end = (d.rank + 0.5 - mean_rank) / dividor;
-
-          return {
-            ...d,
-            [CONF.X_FIELD + "_pos"]: d[CONF.X_FIELD] + rankRatio_from_mean,
-            [CONF.X_FIELD + "_pos_start"]:
-              d[CONF.X_FIELD] + rankRatio_from_mean_start,
-            [CONF.X_FIELD + "_pos_end"]:
-              d[CONF.X_FIELD] + rankRatio_from_mean_end,
-            y_mean,
-          };
-        });
-
-        const filter = `datum['${CONF.X_FIELD}'] === ${groupValue}`;
-
-        all_groups.push({
-          filter,
-          groupValue,
-          groupKey: CONF.X_FIELD,
-          mean: y_mean,
-        });
-
-        return sorted;
-      },
-      (d) => d[CONF.X_FIELD]
-    )
-    .flatMap((d) => d[1]);
+      reduce,
+      ...groupKeys.map((key) => {
+        return (d) => d[key];
+      })
+    );
 
   const rules = [];
 
@@ -272,20 +322,20 @@ const getMeanStep = (source, target) => {
 
     const rule = {
       transform: [{ filter: d.filter }],
-      name: `rule_${d.groupValue}`,
+      name: `rule_${d.groupId}`,
       mark: {
         type: "rule",
-        x: { expr: `${i + 1} * (width / ${n + 1}) - (width / ${n + 1}) * 0.35` },
-        x2: { expr: `${i + 1} * (width / ${n + 1}) + (width / ${n + 1}) * 0.35` },
+        x: hasFacet ? d.rule_start : { expr: `${i + 1} * (width / ${n + 1}) - (width / ${n + 1}) * 0.35` },
+        x2: hasFacet ? d.rule_end : { expr: `${i + 1} * (width / ${n + 1}) + (width / ${n + 1}) * 0.35` },
       },
       encoding: {
         y: {
-          field: CONF.Y_FIELD,
+          field: hasFacet ? "y_mean_pos" : CONF.Y_FIELD,
           type: "quantitative",
           aggregate: "mean",
           axis: null,
           scale: { domain }
-        },
+        }
       },
     };
 
@@ -529,7 +579,7 @@ const CustomAnimations = {
           encoding: {
             ...step_2.layer[0].encoding,
             y2: {
-              field: "y_mean",
+              field: "y_mean_pos",
             },
           },
         },
@@ -549,10 +599,10 @@ const CustomAnimations = {
             ...step_2.layer[0].encoding,
             y: {
               ...step_2.layer[0].encoding.y,
-              field: "y_mean",
+              field: "y_mean_pos",
             },
             y2: {
-              field: "y_mean",
+              field: "y_mean_pos",
             },
           },
         },
@@ -561,15 +611,17 @@ const CustomAnimations = {
     };
 
     // this is for test, it should be passed from R or Python side..
-    target.data.values.forEach((d) => {
-      const group = groups.find((x) => x.groupValue === d[x.groupKey]);
-      if (group) {
-        d[CONF.Y_FIELD] = group.mean;
-      }
-    });
+    if (!rawSource.meta.hasFacet) {
+      target.data.values.forEach((d) => {
+        const group = groups.find((x) => x.groupValue === d[x.groupKey]);
+        if (group) {
+          d[CONF.Y_FIELD] = group.mean;
+        }
+      });
 
-    const domain = d3.extent(groups, (d) => d.mean);
-    target.encoding.y.scale.domain = domain;
+      const domain = d3.extent(groups, (d) => d.mean);
+      target.encoding.y.scale.domain = domain;
+    }
     /// end of test ////
 
     const intermediate = {
@@ -585,7 +637,7 @@ const CustomAnimations = {
         },
       }
     };
-
+    window.steps = [rawSource, intermediate, step_1, step_2, step_3, step_4, target];
     return [rawSource, intermediate, step_1, step_2, step_3, step_4, target];
   },
   median: (rawSource, target, calculatedSource, p) => {

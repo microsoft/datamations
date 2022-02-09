@@ -222,7 +222,9 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
       ...d,
       [CONF.X_FIELD]: xStart + scaleX(d[xField]),
       [CONF.Y_FIELD]: yStart + scaleY(d[yField]),
-      [CONF.X_FIELD+"_num"]: xStart + scaleX(d.scaledX),
+      [CONF.X_FIELD + "_num"]: xStart + scaleX(d.scaledX),
+      scaleX: (val) => yStart + scaleX(val),
+      scaleY: (val) => yStart + scaleY(val),
     });
   });
 

@@ -343,6 +343,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     let { source, target, gemSpec, prevMeta, currMeta } = frames[index];
     let anim = null;
 
+    console.log(source)
+
     if (source.custom) {
       anim = await gemini.animate(
         source.sequence[source.sequence.length - 1],
@@ -493,6 +495,12 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
           source = {
             ...vegaLiteSpecs[i - 1],
+            meta: {
+              ...vegaLiteSpecs[i - 1].meta,
+              hasFacet: true,
+              columnFacet: rawSpecsDontChange[i - 1].facet.column,
+              rowFacet: rawSpecsDontChange[i - 1].facet.row
+            },
             data: {
               values: vegaLiteSpecs[i - 1].data.values.map(d => {
                 return {
