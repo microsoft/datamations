@@ -183,7 +183,7 @@
       d3.json(
         `${base}/custom-animations-${animationType}-facet.json`
       ).then(specs => {
-        app1 = App("app", { specs: specs.slice(0, specs.length - 2) });
+        app1 = App("app", { specs: specs.slice(0), frameDur: 3000 });
       });
     </script>
   </body>

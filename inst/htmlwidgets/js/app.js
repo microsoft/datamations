@@ -343,8 +343,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     let { source, target, gemSpec, prevMeta, currMeta } = frames[index];
     let anim = null;
 
-    console.log(source)
-
     if (source.custom) {
       anim = await gemini.animate(
         source.sequence[source.sequence.length - 1],
@@ -640,7 +638,13 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     };
 
     for (let i = 1; i < vegaSpecs.length; i++) {
-      const prev = vegaSpecs[i - 1];
+      let prev = vegaSpecs[i - 1];
+
+      if (prev.custom) {
+        const seq = prev.sequence;
+        prev = seq[seq.length - 1];
+      }
+
       const curr = vegaSpecs[i];
 
       const prevMeta = metas[i - 1];
@@ -653,7 +657,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           resp = await gemini.recommendForSeq(curr.sequence, {
             ...options,
             stageN: curr.sequence.length - 1,
-            totalDuration: options.totalDuration * 2,
+            totalDuration: options.totalDuration,
           });
 
           const _gemSpec = resp[0].specs.map((d) => d.spec);
@@ -681,7 +685,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
             prevMeta,
             currMeta,
           });
-        } else {
+        } else {        
           resp = await gemini.recommend(prev, curr, options);
 
           const _gemSpec = resp[0] ? resp[0].spec : gemSpec;
@@ -732,5 +736,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     onSlide,
     play,
     animateFrame,
+    getFrames: () => frames,
   };
 }

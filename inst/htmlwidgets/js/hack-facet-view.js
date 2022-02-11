@@ -214,6 +214,10 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
 
     const xStart = colMap.get(col) || 0;
     const yStart = rowMap.get(row) || 0;
+    
+    if (spec.meta.custom_animation) {
+      console.log(yStart);
+    }
 
     const xField = spec.meta.parse === "jitter" ? "x" : CONF.X_FIELD;
     const yField = spec.meta.parse === "jitter" ? "y" : CONF.Y_FIELD;

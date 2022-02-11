@@ -57,72 +57,124 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
   const all_groups = [];
   const { width, height } = target.spec || target;
   const isLast = step === null;
+  const hasFacet = source.meta.hasFacet;
+  const meta = source.meta;
+  const values = [];
 
-  const values = d3
+  const reduce = (data) => {
+    const groupValue = data[0][CONF.X_FIELD];
+
+    let sorted = data
+      .slice()
+      .sort((a, b) => {
+        const sortFn = hasFacet ? "descending" : "ascending";
+        return d3[sortFn](a[CONF.Y_FIELD], b[CONF.Y_FIELD]);
+      })
+      .map((d, i) => {
+        return {
+          ...d,
+          rank: i + 1,
+        };
+      });
+
+    const y_median = d3.quantile(sorted, p, (d) => {
+      return hasFacet ? d.oldY : d[CONF.Y_FIELD];
+    });
+    const y_median_pos = hasFacet ? data[0].scaleY(y_median) : y_median;
+    const median_rank = d3.quantile(sorted, 0.5, (d) => d.rank);
+    const max_rank = d3.max(sorted, (d) => d.rank);
+    const diff = isLast ? null : max_rank - median_rank - step;
+    const dx = hasFacet ? 5 : 0.1;
+
+    sorted = sorted.map((d) => {
+      const rank_delta_abs = Math.abs(d.rank - median_rank);
+      const y_delta = (hasFacet ? d.oldY : d[CONF.Y_FIELD]) - y_median;
+      const bisection = (diff !== null && rank_delta_abs <= diff) ? 0 : y_delta > 0 ? 1 : -1;
+
+      let newField = null;
+
+      if (bisection === -1) {
+        newField = d[CONF.X_FIELD] - dx;
+      } else if (bisection === 1) {
+        newField = d[CONF.X_FIELD] + dx;
+      } else {
+        newField = d[CONF.X_FIELD];
+      }
+
+      return {
+        ...d,
+        bisection,
+        [CONF.X_FIELD + "_pos"]: newField,
+        y_median,
+        y_median_pos,
+      };
+    });
+
+    let filter = `datum['${CONF.X_FIELD}'] === ${groupValue} && datum.bisection === 0`;
+    let groupFilter = `datum['${CONF.X_FIELD}'] === ${groupValue}`;
+
+    let groupId = groupValue;
+
+    if (hasFacet) {
+      filter += ' && ';
+      groupFilter += ' && ';
+      groupId += "_";
+
+      if (meta.columnFacet) {
+        filter += `datum['${meta.columnFacet.field}'] === '${data[0][meta.columnFacet.field]}'`;
+        groupFilter += `datum['${meta.columnFacet.field}'] === '${data[0][meta.columnFacet.field]}'`;
+        groupId += data[0][meta.columnFacet.field];
+      }
+
+      if (meta.columnFacet && meta.rowFacet) {
+        filter += ' && ';
+        groupFilter += ' && ';
+        groupId += "_";
+      }
+
+      if (meta.rowFacet) {
+        filter += `datum['${meta.rowFacet.field}'] === '${data[0][meta.rowFacet.field]}'`;
+        groupFilter += `datum['${meta.rowFacet.field}'] === '${data[0][meta.rowFacet.field]}'`
+        groupId += data[0][meta.rowFacet.field];
+      }
+    }
+
+    all_groups.push({
+      filter,
+      groupFilter,
+      groupValue,
+      groupKey: CONF.X_FIELD,
+      median: y_median,
+      groupId,
+      median_pos: y_median_pos,
+      rankDiff: Math.abs(max_rank - median_rank),
+      rule_start: d3.min(sorted, d => d[CONF.X_FIELD + "_pos"]),
+      rule_end: d3.max(sorted, d => d[CONF.X_FIELD + "_pos"]),
+    });
+
+    values.push(...sorted);
+  }
+
+  const groupKeys = [CONF.X_FIELD];
+
+  if (hasFacet) {
+    if (meta.columnFacet) {
+      groupKeys.push(meta.columnFacet.field);
+    }
+
+    if (meta.rowFacet) {
+      groupKeys.push(meta.rowFacet.field);
+    }
+  }
+  
+  d3
     .rollups(
       source.data.values.slice(),
-      (data) => {
-        const groupValue = data[0][CONF.X_FIELD];
-
-        let sorted = data
-          .slice()
-          .sort((a, b) => {
-            return b[CONF.Y_FIELD] - a[CONF.Y_FIELD];
-          })
-          .map((d, i) => {
-            return {
-              ...d,
-              rank: i + 1,
-            };
-          });
-
-        const y_median = d3.quantile(sorted, p, (d) => d[CONF.Y_FIELD]);
-        const median_rank = d3.quantile(sorted, 0.5, (d) => d.rank);
-
-        const max_rank = d3.max(sorted, (d) => d.rank);
-        const diff = isLast ? null : max_rank - median_rank - step;
-        
-        sorted = sorted.map((d) => {
-          const rank_delta_abs = Math.abs(d.rank - median_rank);
-          const y_delta = d[CONF.Y_FIELD] - y_median;
-
-          const bisection = (diff !== null && rank_delta_abs <= diff) ? 0 : y_delta > 0 ? 1 : -1;
-
-          let newField = null;
-
-          if (bisection === -1) {
-            newField = d[CONF.X_FIELD] - 0.1;
-          } else if (bisection === 1) {
-            newField = d[CONF.X_FIELD] + 0.1;
-          } else {
-            newField = d[CONF.X_FIELD];
-          }
-
-          return {
-            ...d,
-            bisection,
-            [CONF.X_FIELD + "_pos"]: newField,
-            y_median: y_median,
-          };
-        });
-
-        const filter = `datum['${CONF.X_FIELD}'] === ${groupValue} && datum.bisection === 0`;
-        const groupFilter = `datum['${CONF.X_FIELD}'] === ${groupValue}`;
-
-        all_groups.push({
-          filter,
-          groupFilter,
-          groupValue,
-          groupKey: CONF.X_FIELD,
-          median: y_median,
-          rankDiff: Math.abs(max_rank - median_rank),
-        });
-
-        return sorted;
-      },
-      (d) => d[CONF.X_FIELD]
-    )
-    .flatMap((d) => d[1]);
+      reduce,
+      ...groupKeys.map((key) => {
+        return (d) => d[key];
+      })
+    );
 
   const rules = [];
 
@@ -131,15 +183,15 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
 
     const top_rule = {
       transform: isLast ? [{ filter: d.groupFilter }] : [{ filter: d.filter }],
-      name: `top_rule_${d.groupValue}`,
+      name: `top_rule_${d.groupId}`,
       mark: {
         type: "rule",
-        x: { expr: `${i + 1} * (width / ${n + 1}) - 5` },
-        x2: { expr: `${i + 1} * (width / ${n + 1}) + 5` },
+        x: hasFacet ? d.rule_start : { expr: `${i + 1} * (width / ${n + 1}) - 5` },
+        x2: hasFacet ? d.rule_end : { expr: `${i + 1} * (width / ${n + 1}) + 5` },
       },
       encoding: {
         y: {
-          field: isLast ? "y_median" : CONF.Y_FIELD,
+          field: isLast ? "y_median" : hasFacet ? "y_median_pos" : CONF.Y_FIELD,
           type: "quantitative",
           aggregate: "max",
           axis: null,
@@ -149,15 +201,15 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
 
     const bottom_rule = {
       transform: isLast ? [{ filter: d.groupFilter }] : [{ filter: d.filter }],
-      name: `bottom_rule_${d.groupValue}`,
+      name: `bottom_rule_${d.groupId}`,
       mark: {
         type: "rule",
-        x: { expr: `${i + 1} * (width / ${n + 1}) - 5` },
-        x2: { expr: `${i + 1} * (width / ${n + 1}) + 5` },
+        x:  hasFacet ? d.rule_start : { expr: `${i + 1} * (width / ${n + 1}) - 5` },
+        x2: hasFacet ? d.rule_end : { expr: `${i + 1} * (width / ${n + 1}) + 5` },
       },
       encoding: {
         y: {
-          field: isLast ? "y_median" : CONF.Y_FIELD,
+          field: isLast ? "y_median" : hasFacet ? "y_median_pos" : CONF.Y_FIELD,
           type: "quantitative",
           aggregate: "min",
           axis: null,
@@ -526,14 +578,13 @@ const CustomAnimations = {
     }
 
     // this is for test, it should be passed from R or Python side..
-    // but can also keep this. it will work!!!
-    target.data.values.forEach((d) => {
-      const group = groups.find((x) => x.groupValue === d[x.groupKey]);
-      d[CONF.Y_FIELD] = group.aggr;
-    });
+    // target.data.values.forEach((d) => {
+    //   const group = groups.find((x) => x.groupValue === d[x.groupKey]);
+    //   d[CONF.Y_FIELD] = group.aggr;
+    // });
 
-    const domain = d3.extent(groups, (d) => d.aggr);
-    target.encoding.y.scale.domain = domain;
+    // const domain = d3.extent(groups, (d) => d.aggr);
+    // target.encoding.y.scale.domain = domain;
     /// end of test ////
 
     return [rawSource, step_1, step_2, target];
@@ -542,7 +593,7 @@ const CustomAnimations = {
     const step_1 = getMeanStep(rawSource, target);
 
     const barWidth = 2;
-    const groups = step_1.meta.all_groups;
+    // const groups = step_1.meta.all_groups;
 
     const step_2 = {
       ...step_1,
@@ -611,17 +662,20 @@ const CustomAnimations = {
     };
 
     // this is for test, it should be passed from R or Python side..
-    if (!rawSource.meta.hasFacet) {
-      target.data.values.forEach((d) => {
-        const group = groups.find((x) => x.groupValue === d[x.groupKey]);
-        if (group) {
-          d[CONF.Y_FIELD] = group.mean;
-        }
-      });
 
-      const domain = d3.extent(groups, (d) => d.mean);
-      target.encoding.y.scale.domain = domain;
-    }
+    // mention this part....
+
+    // if (!rawSource.meta.hasFacet) {
+    //   target.data.values.forEach((d) => {
+    //     const group = groups.find((x) => x.groupValue === d[x.groupKey]);
+    //     if (group) {
+    //       d[CONF.Y_FIELD] = group.mean;
+    //     }
+    //   });
+
+    //   const domain = d3.extent(groups, (d) => d.mean);
+    //   target.encoding.y.scale.domain = domain;
+    // }
     /// end of test ////
 
     const intermediate = {
@@ -637,22 +691,25 @@ const CustomAnimations = {
         },
       }
     };
-    window.steps = [rawSource, intermediate, step_1, step_2, step_3, step_4, target];
-    return [rawSource, intermediate, step_1, step_2, step_3, step_4, target];
+
+    return [rawSource, intermediate, step_1, step_2, step_3, step_4];
   },
   median: (rawSource, target, calculatedSource, p) => {
     const initial = getMedianStep(rawSource, target, 0, p ?? 0.5);
-    const groups = initial.meta.all_groups;
+
+    // const groups = initial.meta.all_groups;
     const last_with_points = getMedianStep(rawSource, target, null, p ?? 0.5)
 
-    // this is for test, it should be passed from R or Python side..
-    target.data.values.forEach((d) => {
-      const group = groups.find((x) => x.groupValue === d[x.groupKey]);
-      d[CONF.Y_FIELD] = group.median;
-    });
+    console.log(last_with_points);
 
-    const domain = d3.extent(groups, (d) => d.median);
-    target.encoding.y.scale.domain = domain;
+    // this is for test, it should be passed from R or Python side..
+    // target.data.values.forEach((d) => {
+    //   const group = groups.find((x) => x.groupValue === d[x.groupKey]);
+    //   d[CONF.Y_FIELD] = group.median;
+    // });
+
+    // const domain = d3.extent(groups, (d) => d.median);
+    // target.encoding.y.scale.domain = domain;
     /// end of test ////
 
     const yDomain = last_with_points.layer[0].encoding.y.scale.domain;

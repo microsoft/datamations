@@ -67,7 +67,7 @@
     },
     "spec": {
       "height": 300,
-      "width": 150,
+      "width": 100,
       "mark": {
         "type": "point",
         "filled": true,
@@ -146,8 +146,8 @@
       }
     },
     "spec": {
-      "height": 150,
-      "width": 150,
+      "height": 100,
+      "width": 100,
       "mark": {
         "type": "point",
         "filled": true,
@@ -293,8 +293,8 @@
       }
     },
     "spec": {
-      "height": 150,
-      "width": 150,
+      "height": 100,
+      "width": 100,
       "mark": {
         "type": "point",
         "filled": true,
@@ -3452,8 +3452,8 @@
       }
     },
     "spec": {
-      "height": 150,
-      "width": 150,
+      "height": 100,
+      "width": 100,
       "mark": {
         "type": "point",
         "filled": true,
@@ -3476,7 +3476,7 @@
         "y": {
           "field": "datamations_y",
           "type": "quantitative",
-          "title": "mean(bill_length_mm + something)",
+          "title": "bill_length_mm",
           "scale": {
             "domain": [32.1, 59.6]
           }
@@ -3515,7 +3515,7 @@
     "meta": {
       "axes": true,
       "description": "Plot bill_length_mm of each group",
-      "custom_animation": "mean"
+      "custom_animation": "median"
     },
     "data": {
       "values": [
@@ -6630,8 +6630,8 @@
       }
     },
     "spec": {
-      "height": 150,
-      "width": 150,
+      "height": 100,
+      "width": 100,
       "mark": {
         "type": "point",
         "filled": true,
@@ -6654,7 +6654,7 @@
         "y": {
           "field": "datamations_y",
           "type": "quantitative",
-          "title": "mean(bill_length_mm + something)",
+          "title": "bill_length_mm",
           "scale": {
             "domain": [32.1, 59.6]
           }
@@ -10837,8 +10837,8 @@
       }
     },
     "spec": {
-      "height": 150,
-      "width": 150,
+      "height": 100,
+      "width": 100,
       "layer": [
         {
           "mark": "errorbar",
@@ -10859,7 +10859,7 @@
             "y": {
               "field": "datamations_y_raw",
               "type": "quantitative",
-              "title": "mean(bill_length_mm + something)",
+              "title": "bill_length_mm",
               "scale": {
                 "domain": [32.1, 59.6]
               }
@@ -10925,7 +10925,7 @@
             "y": {
               "field": "datamations_y",
               "type": "quantitative",
-              "title": "mean(bill_length_mm + something)",
+              "title": "bill_length_mm",
               "scale": {
                 "domain": [32.1, 59.6]
               }
@@ -15120,8 +15120,8 @@
       }
     },
     "spec": {
-      "height": 150,
-      "width": 150,
+      "height": 100,
+      "width": 100,
       "layer": [
         {
           "mark": "errorbar",
@@ -15142,7 +15142,7 @@
             "y": {
               "field": "datamations_y_raw",
               "type": "quantitative",
-              "title": "mean(bill_length_mm + something)",
+              "title": "bill_length_mm",
               "scale": {
                 "domain": [36.481220238402, 51.3624372072661]
               }
@@ -15208,7 +15208,7 @@
             "y": {
               "field": "datamations_y",
               "type": "quantitative",
-              "title": "mean(bill_length_mm + something)",
+              "title": "bill_length_mm",
               "scale": {
                 "domain": [36.481220238402, 51.3624372072661]
               }
