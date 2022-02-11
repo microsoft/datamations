@@ -558,13 +558,13 @@ const CustomAnimations = {
     };
 
     // this is for test, it should be passed from R or Python side..
-    target.data.values.forEach((d) => {
-      const group = groups.find((x) => x.groupValue === d[x.groupKey]);
-      d[CONF.Y_FIELD] = group.mean;
-    });
+    // target.data.values.forEach((d) => {
+    //   const group = groups.find((x) => x.groupValue === d[x.groupKey]);
+    //   d[CONF.Y_FIELD] = group.mean;
+    // });
 
-    const domain = d3.extent(groups, (d) => d.mean);
-    target.encoding.y.scale.domain = domain;
+    // const domain = d3.extent(groups, (d) => d.mean);
+    // target.encoding.y.scale.domain = domain;
     /// end of test ////
 
     const intermediate = {
@@ -589,6 +589,10 @@ const CustomAnimations = {
     const last_with_points = getMedianStep(rawSource, target, null, p ?? 0.5)
 
     // this is for test, it should be passed from R or Python side..
+    // TODO: test without that. Gemini cant recommend without this code.
+
+    // 
+
     target.data.values.forEach((d) => {
       const group = groups.find((x) => x.groupValue === d[x.groupKey]);
       d[CONF.Y_FIELD] = group.median;
@@ -596,6 +600,7 @@ const CustomAnimations = {
 
     const domain = d3.extent(groups, (d) => d.median);
     target.encoding.y.scale.domain = domain;
+
     /// end of test ////
 
     const yDomain = last_with_points.layer[0].encoding.y.scale.domain;

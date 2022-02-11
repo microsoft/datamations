@@ -477,8 +477,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         let funName = meta.custom_animation;
         let p = null;
 
-        if (meta.custom_animation.includes("quantile")) {
-          p = +meta.custom_animation.replace("quantile(", "").replace(")", "");
+        if (Array.isArray(meta.custom_animation) && meta.custom_animation[0] === "quantile") {
+          p = meta.custom_animation[1];
           funName = "median";
         }
 
@@ -617,10 +617,11 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         let resp = null;
 
         if (curr.custom) {
+          console.log(curr.sequence)
           resp = await gemini.recommendForSeq(curr.sequence, {
             ...options,
             stageN: curr.sequence.length - 1,
-            totalDuration: options.totalDuration * 2,
+            totalDuration: options.totalDuration,
           });
 
           const _gemSpec = resp[0].specs.map((d) => d.spec);

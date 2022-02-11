@@ -842,8 +842,8 @@
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "axes": false,
-      "description": "Plot min Salary of each group",
-      "custom_animation": "min"
+      "description": "Plot mean Salary of each group",
+      "custom_animation": "mean"
     },
     "data": {
       "values": [
