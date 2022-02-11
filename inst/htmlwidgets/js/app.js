@@ -476,9 +476,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       if (meta.custom_animation) {
         let funName = meta.custom_animation;
         let p = null;
-
-        if (meta.custom_animation.includes("quantile")) {
-          p = +meta.custom_animation.replace("quantile(", "").replace(")", "");
+        
+        if (Array.isArray(meta.custom_animation) && meta.custom_animation[0] === "quantile") {
+          p = meta.custom_animation[1];
           funName = "median";
         }
 

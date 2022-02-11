@@ -176,12 +176,12 @@
     <script src="../js/custom-animations.js"></script>
     <script src="../js/app.js"></script>
     <script>
-      const animationType = "mean";
+      const animationType = "quantile";
       const base = "../../../sandbox/custom_animations";
       let app1 = null;
 
       d3.json(
-        `${base}/custom-animations-${animationType}-facet.json`
+        `${base}/custom-animations-${animationType}-R.json`
       ).then(specs => {
         app1 = App("app", { specs: specs.slice(0), frameDur: 3000 });
       });
