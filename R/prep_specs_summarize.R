@@ -492,7 +492,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     # Build in specific handling for functions with necessary parameters
     # Can genericize this down the line
-    if(!is.null(summary_parameters) && summary_function=="quantile") {
+    if(!is.null(mapping$summary_parameters) && summary_function=="quantile") {
       data_2 <- data_1 %>%
         dplyr::group_by(!!!group_vars) %>%
         dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, !!summary_parameters, na.rm = TRUE))
