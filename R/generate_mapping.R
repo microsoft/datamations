@@ -68,12 +68,26 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
       purrr::pluck(1) %>%
       as.list()
 
-    y_mapping <- list(
-      summary_function = summarize_operation %>%
-        purrr::pluck(1) %>%
-        rlang::quo_name(),
-      summary_name = names(tidy_functions_arg[["summarize"]][2])
-    )
+    # Optionally, pass a summary_parameters mapping that gets used in the generation of data_2
+    # This is generic for potential applications with optional parameters
+    if(length(summarize_operation)>2) {
+      y_mapping <- list(
+        summary_function = summarize_operation %>%
+          purrr::pluck(1) %>%
+          rlang::quo_name(),
+        summary_name = names(tidy_functions_arg[["summarize"]][2]),
+        summary_parameters = summarize_operation[[3:length(summarize_operation)]]
+      )
+    }
+
+    else {
+      y_mapping <- list(
+        summary_function = summarize_operation %>%
+          purrr::pluck(1) %>%
+          rlang::quo_name(),
+        summary_name = names(tidy_functions_arg[["summarize"]][2])
+      )
+    }
 
     y_var <- summarize_operation %>%
       purrr::pluck(2)

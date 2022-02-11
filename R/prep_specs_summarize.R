@@ -12,6 +12,10 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   summary_function <- mapping$summary_function %>%
     rlang::parse_expr()
 
+  if(!is.null(mapping$summary_parameters)) {
+    summary_parameters <- mapping$summary_parameters
+  }
+
   # Check if there _is_ a y variable - e.g. if summary_function is n(), there is no variable
 
   summary_function_on_variable <- !identical(mapping$y, NULL)
@@ -113,7 +117,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     )
 
     if(exists("color_encoding")) { spec_encoding$color <- color_encoding }
-    
+
     # Flag for whether the plot will have facets - used to set axes = TRUE (if it does have facets, and the "fake facets" need to be used) or FALSE (if it doesn't, and the real axes can be used)
     has_facets <- !is.null(mapping$column) | !is.null(mapping$row)
 
@@ -485,9 +489,20 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # There should still be a point for each datapoint, just all overlapping
 
   if (y_type %in% c("numeric", "categorical", "binary")) {
-    data_2 <- data_1 %>%
-      dplyr::group_by(!!!group_vars) %>%
-      dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
+
+    # Build in specific handling for functions with necessary parameters
+    # Can genericize this down the line
+    if(!is.null(summary_parameters) && summary_function=="quantile") {
+      data_2 <- data_1 %>%
+        dplyr::group_by(!!!group_vars) %>%
+        dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, !!summary_parameters, na.rm = TRUE))
+    }
+    else {
+      data_2 <- data_1 %>%
+        dplyr::group_by(!!!group_vars) %>%
+        dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
+    }
+
   } else if (y_type == "null") {
     data_2 <- data_1
 
@@ -537,7 +552,11 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # If the summary function is mean or median, min, max, or quantile, add meta.custom_animation
   ## -- TODO, Add specific meta specs for quantile that pass the probs value
 
-  if (mapping$summary_function %in% c("mean", "median", "min", "max", "quantile")) {
+  if (mapping$summary_function %in% c("quantile")) {
+    spec[["meta"]][["custom_animation"]] <- list(mapping$summary_function, mapping$summary_parameters)
+  }
+
+  if (mapping$summary_function %in% c("mean", "median", "min", "max")) {
     spec[["meta"]][["custom_animation"]] <- mapping$summary_function
   }
 
