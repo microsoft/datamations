@@ -1041,7 +1041,10 @@
       "axes": false,
       "description": "Plot 10% quantile of each group",
       "splitField": "Degree",
-      "custom_animation": "quantile(0.1)"
+      "custom_animation": [
+        "quantile",
+        0.1
+      ]
     },
     "data": {
       "values": [

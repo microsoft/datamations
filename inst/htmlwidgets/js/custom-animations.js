@@ -148,8 +148,8 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
       groupId,
       median_pos: y_median_pos,
       rankDiff: Math.abs(max_rank - median_rank),
-      rule_start: d3.min(sorted, d => d[CONF.X_FIELD + "_pos"]),
-      rule_end: d3.max(sorted, d => d[CONF.X_FIELD + "_pos"]),
+      rule_start: d3.min(sorted, d => d[CONF.X_FIELD + "_pos"]) + 1,
+      rule_end: d3.max(sorted, d => d[CONF.X_FIELD + "_pos"]) - 1,
     });
 
     values.push(...sorted);
@@ -168,7 +168,7 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
   }
   
   d3
-    .rollups(
+    .rollup(
       source.data.values.slice(),
       reduce,
       ...groupKeys.map((key) => {
@@ -178,8 +178,15 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
 
   const rules = [];
 
+  let ruleField = isLast ? "y_median" : CONF.Y_FIELD;
+
+  if (hasFacet) {
+    ruleField = isLast ? "y_median_pos" : CONF.Y_FIELD;
+  }
+
   all_groups.forEach((d, i) => {
     const n = all_groups.length;
+    
 
     const top_rule = {
       transform: isLast ? [{ filter: d.groupFilter }] : [{ filter: d.filter }],
@@ -191,7 +198,7 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
       },
       encoding: {
         y: {
-          field: isLast ? "y_median" : hasFacet ? "y_median_pos" : CONF.Y_FIELD,
+          field: ruleField,
           type: "quantitative",
           aggregate: "max",
           axis: null,
@@ -209,7 +216,7 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
       },
       encoding: {
         y: {
-          field: isLast ? "y_median" : hasFacet ? "y_median_pos" : CONF.Y_FIELD,
+          field: ruleField,
           type: "quantitative",
           aggregate: "min",
           axis: null,
@@ -429,37 +436,100 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
   const domain = source.encoding.y.scale.domain;
   const minMaxPoints = {};
 
-  const all_groups = d3.groups(
-      source.data.values.slice(),
-      (d) => d[CONF.X_FIELD])
-    .map(([key, data]) => {
-      const groupValue = key;
-      const filter = `datum['${CONF.X_FIELD}'] === ${groupValue}`;
-      const aggr = aggrFn(data, d => d[CONF.Y_FIELD]);
+  const groupKeys = [CONF.X_FIELD];
+  const hasFacet = source.meta.hasFacet;
+  const meta = source.meta;
 
-      minMaxPoints[groupValue] = data.find(d => d[CONF.Y_FIELD] === aggr);
+  const values = [];
 
-      return {
+  if (hasFacet) {
+    if (meta.columnFacet) {
+      groupKeys.push(meta.columnFacet.field);
+    }
+
+    if (meta.rowFacet) {
+      groupKeys.push(meta.rowFacet.field);
+    }
+  }
+
+  const all_groups = [];
+  
+  d3.rollup(
+    source.data.values.slice(),
+    data => {
+      const groupValue = data[0][CONF.X_FIELD];
+      let filter = `datum['${CONF.X_FIELD}'] === ${groupValue}`;
+      let groupId = groupValue;
+  
+      if (hasFacet) {
+        filter += ' && ';
+        groupId += "_";
+  
+        if (meta.columnFacet) {
+          filter += `datum['${meta.columnFacet.field}'] === '${data[0][meta.columnFacet.field]}'`;
+          groupId += data[0][meta.columnFacet.field];
+        }
+  
+        if (meta.columnFacet && meta.rowFacet) {
+          filter += ' && ';
+          groupId += "_";
+        }
+  
+        if (meta.rowFacet) {
+          filter += `datum['${meta.rowFacet.field}'] === '${data[0][meta.rowFacet.field]}'`
+          groupId += data[0][meta.rowFacet.field];
+        }
+      }
+
+      const aggr = aggrFn(data, d => {
+        return hasFacet ? d.oldY : d[CONF.Y_FIELD];
+      });
+      const aggr_pos = hasFacet ? data[0].scaleY(aggr) : aggr;
+
+      all_groups.push({
         filter,
         groupValue,
         groupKey: CONF.X_FIELD,
         aggr,
-      }
-    });
+        aggr_pos,
+        groupId,
+        rule_start: d3.min(data, d => d[CONF.X_FIELD] - 2),
+        rule_end: d3.max(data, d => d[CONF.X_FIELD] + 2),
+      });
+
+      const g = data.find(d => {
+        const v = hasFacet ? d.oldY : d[CONF.Y_FIELD];
+        return v === aggr;
+      });
+
+      values.push(...data.map(d => {
+        const isAggr = g && g.gemini_id === d.gemini_id;
+
+        return {
+          ...d,
+          isAggr,
+          aggr_pos
+        }
+      }))
+    },
+    ...groupKeys.map((key) => {
+      return (d) => d[key];
+    })
+  );
 
   const rules = all_groups.map((group, i) => {
     const n = all_groups.length;
     return {
       transform: [{ filter: group.filter }],
-      name: `rule_${group.groupValue}`,
+      name: `rule_${group.groupId}`,
       mark: {
         type: "rule",
-        x: { expr: `${i + 1} * (width / ${n + 1}) - 5` },
-        x2: { expr: `${i + 1} * (width / ${n + 1}) + 5` },
+        x: hasFacet ? group.rule_start : { expr: `${i + 1} * (width / ${n + 1}) - 5` },
+        x2: hasFacet ? group.rule_end : { expr: `${i + 1} * (width / ${n + 1}) + 5` },
       },
       encoding: {
         y: {
-          field: CONF.Y_FIELD,
+          field: hasFacet ? "aggr_pos" : CONF.Y_FIELD,
           type: "quantitative",
           aggregate: minOrMax,
           axis: null,
@@ -468,16 +538,6 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
       },
     }
   });
-
-  const values = source.data.values.map(d => {
-    const g = minMaxPoints[d[CONF.X_FIELD]];
-    const isAggr = g && g.gemini_id === d.gemini_id;
-
-    return {
-      ...d,
-      isAggr,
-    }
-  })
 
   return {
     $schema: CONF.SCHEME,
@@ -518,7 +578,7 @@ const CustomAnimations = {
   },
   min: (rawSource, target, source) => {
     const step_1 = getMinMaxStep(rawSource, target, "min");
-    const groups = step_1.meta.all_groups;
+    // const groups = step_1.meta.all_groups;
 
     const step_2 = {
       ...step_1,
@@ -542,20 +602,20 @@ const CustomAnimations = {
 
     // this is for test, it should be passed from R or Python side..
     // but can also keep this. it will work!!!
-    target.data.values.forEach((d) => {
-      const group = groups.find((x) => x.groupValue === d[x.groupKey]);
-      d[CONF.Y_FIELD] = group.aggr;
-    });
+    // target.data.values.forEach((d) => {
+    //   const group = groups.find((x) => x.groupValue === d[x.groupKey]);
+    //   d[CONF.Y_FIELD] = group.aggr;
+    // });
 
-    const domain = d3.extent(groups, (d) => d.aggr);
-    target.encoding.y.scale.domain = domain;
+    // const domain = d3.extent(groups, (d) => d.aggr);
+    // target.encoding.y.scale.domain = domain;
     /// end of test ////
 
     return [rawSource, step_1, step_2, target];
   },
   max: (rawSource, target, source) => {
     const step_1 = getMinMaxStep(rawSource, target, "max");
-    const groups = step_1.meta.all_groups;
+    // const groups = step_1.meta.all_groups;
 
     const step_2 = {
       ...step_1,
@@ -692,15 +752,13 @@ const CustomAnimations = {
       }
     };
 
-    return [rawSource, intermediate, step_1, step_2, step_3, step_4];
+    return [rawSource, intermediate, step_1, step_2, step_3, step_4, target];
   },
   median: (rawSource, target, calculatedSource, p) => {
     const initial = getMedianStep(rawSource, target, 0, p ?? 0.5);
 
     // const groups = initial.meta.all_groups;
     const last_with_points = getMedianStep(rawSource, target, null, p ?? 0.5)
-
-    console.log(last_with_points);
 
     // this is for test, it should be passed from R or Python side..
     // target.data.values.forEach((d) => {
@@ -726,7 +784,23 @@ const CustomAnimations = {
         }
       },
       resolve: { axis: { y: "independent" } },
-    }
+    };
+
+    const source = {
+      $schema: rawSource.$schema,
+      data: rawSource.data,
+      width: rawSource.width,
+      height: rawSource.height,
+      meta: rawSource.meta,
+      layer: [
+        {
+          name: 'main',
+          mark: rawSource.mark,
+          encoding: rawSource.encoding,
+        }
+      ],
+      resolve: { axis: { y: "independent" } },
+    };
 
     return [rawSource, initial, last_with_points, last, target];
   },

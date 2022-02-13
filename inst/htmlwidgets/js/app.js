@@ -143,8 +143,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   /**
    * Plays animation
    */
-  function play() {
-    frameIndex = 0;
+  function play(startIndex) {
+    frameIndex = startIndex || 0;
     const tick = () => {
       animateFrame(frameIndex);
       frameIndex++;
@@ -162,7 +162,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         clearInterval(intervalId);
         frameIndex = 0;
       }
-    }, frameDuration + frameDelay);
+    }, frameDuration + frameDelay + 500);
   }
 
   /**
@@ -209,7 +209,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     d3.select(controls).style("width", spec.width + transformX + 10 + "px");
 
     // draw vis
-    return drawChart(spec, (vegaSpec && vegaSpec.custom) ? null : vegaSpec);
+    return drawChart(spec, vegaSpec && vegaSpec.custom ? null : vegaSpec);
   }
 
   /**
@@ -247,11 +247,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
               res();
             }
 
-          // ensure facet translations match in axisSelector and otherLayers 
-          setTimeout(() => {
-            adjustAxisAndErrorbars();
-          }, 100);
-
+            // ensure facet translations match in axisSelector and otherLayers
+            setTimeout(() => {
+              adjustAxisAndErrorbars();
+            }, 100);
           });
         });
       });
@@ -262,8 +261,14 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
   function adjustAxisAndErrorbars() {
     const { axisSelector, otherLayers } = getSelectors(id);
-    const axisCells = d3.select(axisSelector).selectAll(".mark-group.cell>g").nodes();
-    const otherLayersCells = d3.select(otherLayers).selectAll(".mark-group.cell>g").nodes();
+    const axisCells = d3
+      .select(axisSelector)
+      .selectAll(".mark-group.cell>g")
+      .nodes();
+    const otherLayersCells = d3
+      .select(otherLayers)
+      .selectAll(".mark-group.cell>g")
+      .nodes();
 
     if (axisCells.length === otherLayersCells.length) {
       for (let i = 0; i < axisCells.length; i++) {
@@ -334,8 +339,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * @param {Number} index specification index in vegaLiteSpecs
    * @returns a promise of gemini.animate
    */
+  let animating = false;
   async function animateFrame(index) {
     if (!frames[index]) return;
+    if (animating) return;
 
     const { axisSelector, visSelector, otherLayers, descr, slider, controls } =
       getSelectors(id);
@@ -365,8 +372,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     drawSpec(index, source).then(() => {
       timeoutId = setTimeout(() => {
         d3.select(descr).html(currMeta.description);
-
+        animating = true;
         anim.play(visSelector).then(() => {
+          animating = false;
           d3.select(slider).property("value", index + 1);
         });
 
@@ -476,8 +484,11 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       if (meta.custom_animation) {
         let funName = meta.custom_animation;
         let p = null;
-        
-        if (Array.isArray(meta.custom_animation) && meta.custom_animation[0] === "quantile") {
+
+        if (
+          Array.isArray(meta.custom_animation) &&
+          meta.custom_animation[0] === "quantile"
+        ) {
           p = meta.custom_animation[1];
           funName = "median";
         }
@@ -490,24 +501,23 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
         // fake facets
         if (rawSpecsDontChange[i - 1].facet) {
-
           source = {
             ...vegaLiteSpecs[i - 1],
             meta: {
               ...vegaLiteSpecs[i - 1].meta,
               hasFacet: true,
               columnFacet: rawSpecsDontChange[i - 1].facet.column,
-              rowFacet: rawSpecsDontChange[i - 1].facet.row
+              rowFacet: rawSpecsDontChange[i - 1].facet.row,
             },
             data: {
-              values: vegaLiteSpecs[i - 1].data.values.map(d => {
+              values: vegaLiteSpecs[i - 1].data.values.map((d) => {
                 return {
                   ...d,
-                  [CONF.X_FIELD]: d[CONF.X_FIELD+"_num"],
-                }
-              })
-            }
-          }
+                  [CONF.X_FIELD]: d[CONF.X_FIELD + "_num"],
+                };
+              }),
+            },
+          };
         }
 
         if (vegaLiteSpecs[i].facet) {
@@ -519,12 +529,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         const fn = CustomAnimations[funName];
 
         if (fn) {
-          const sequence = await fn(
-            source,
-            target,
-            vegaLiteSpecs[i - 1],
-            p
-          );
+          const sequence = await fn(source, target, vegaLiteSpecs[i - 1], p);
           vegaLiteSpecs[i] = {
             custom: meta.custom_animation,
             sequence,
@@ -638,13 +643,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     };
 
     for (let i = 1; i < vegaSpecs.length; i++) {
-      let prev = vegaSpecs[i - 1];
-
-      if (prev.custom) {
-        const seq = prev.sequence;
-        prev = seq[seq.length - 1];
-      }
-
+      const prev = vegaSpecs[i - 1];
       const curr = vegaSpecs[i];
 
       const prevMeta = metas[i - 1];
@@ -657,12 +656,12 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           resp = await gemini.recommendForSeq(curr.sequence, {
             ...options,
             stageN: curr.sequence.length - 1,
-            totalDuration: options.totalDuration,
+            totalDuration: frameDuration,
           });
 
           const _gemSpec = resp[0].specs.map((d) => d.spec);
 
-          // make sure to add gemini_id to data change. 
+          // make sure to add gemini_id to data change.
           // gemini recommend does not add it by itself.
           _gemSpec.forEach((d) => {
             if (d.timeline.concat.length) {
@@ -685,9 +684,13 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
             prevMeta,
             currMeta,
           });
-        } else {        
-          resp = await gemini.recommend(prev, curr, options);
-
+        } else {
+          resp = await gemini.recommend(
+            prev.custom ? prev.sequence[prev.sequence.length - 1] : prev,
+            curr,
+            options
+          );
+          if (prev.custom) console.log(resp);
           const _gemSpec = resp[0] ? resp[0].spec : gemSpec;
 
           const sync = _gemSpec.timeline.concat[0].sync;
