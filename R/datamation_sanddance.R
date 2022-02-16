@@ -36,7 +36,7 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   }
 
   # Specify which functions are supported, for parsing functions out and for erroring if any are not in this list
-  supported_tidy_functions <- c("group_by", "summarize", "filter", "count")
+  supported_tidy_functions <- c("group_by", "summarize", "filter", "count", "tally")
 
   # Convert pipeline into list
   full_fittings <- pipeline %>%
@@ -158,7 +158,8 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
       group_by = prep_specs_group_by,
       summarize = prep_specs_summarize,
       filter = prep_specs_filter,
-      count = prep_specs_count
+      count = prep_specs_count,
+      tally = prep_specs_tally
     )
 
     # Call that function with the data and mapping
