@@ -10,6 +10,7 @@ reference:
   - title: Data
     contents:
     - small_salary
+    - jeter_justice
   - title: Shiny app
     contents:
     - run_app
