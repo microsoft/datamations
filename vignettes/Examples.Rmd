@@ -130,7 +130,8 @@ In this datamation, Jeter has a higher batting average than Justice overall.
             se = sqrt(batting_average * (1 - batting_average) / n()) )' %>%
   datamation_sanddance()
 ```
-
+<br>
+<br>
 In this datamation, the visual shows that Justice has a higher batting average than Jeter within each year.
 
 ```{r}
