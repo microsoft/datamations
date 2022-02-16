@@ -155,6 +155,16 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     ### Prep data ----
 
+    # If gemini_id is not already added, e.g. if this function is called on its own for testing purposes
+    if (!"gemini_id" %in% names(.data)) {
+      # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
+      .data <- .data %>%
+        arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
+        # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
+        # Not defined in any of the previous steps since the JS takes care of generating it
+        dplyr::mutate(gemini_id = dplyr::row_number())
+    }
+
     ### Prep encoding ----
 
     x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = NULL)
@@ -228,7 +238,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       spec_encoding$tooltip <- generate_summarize_tooltip(data_1, mapping$y)
     } else if (y_type %in% c("binary", "categorical")) { # Otherwise, another infogrid!
       data_1 <- .data %>%
-        dplyr::count(!!!group_vars, !!summary_variable)
+        dplyr::count(!!!group_vars, !!summary_variable) %>%
+        add_ids_to_count_data(.data, mapping$column, mapping$x, mapping$y)
 
       # If the summary variable is a factor, order according to its values to match the legend
 
