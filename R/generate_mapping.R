@@ -2,6 +2,7 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
 
   # Check if there is any grouping or summarizing in the pipeline
   pipeline_has_group_by <- any(names(data_states) == "group_by")
+  pipeline_has_mutate <- any(names(data_states) == "mutate")
   pipeline_has_summarize <- any(names(data_states) == "summarize")
   pipeline_has_count <- any(names(data_states) == "count")
 
@@ -50,6 +51,48 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
     } else {
       x_mapping <- list(x = 1)
     }
+  }
+
+  # Mutation mapping
+  # If we have mutations, we need mappings for it
+  # Somewhat mimicking the summarize mappings generated below
+  # We want:
+  # - a mutation name that is the name of the variable output by the mutation
+  # - a mutation function that is the primary function of the mutated variable
+  # - a mutation expression/set of params that is the full expression of how the variable is derived
+
+  if(!pipeline_has_mutate) {
+    mutations_mappings <- list(
+      mutation_name = NULL,
+      mutation_function = NULL
+    )
+  } else {
+    mutate_operation <- tidy_functions_arg[["mutate"]][[2]] %>%
+      rlang::parse_exprs() %>%
+      purrr::pluck(1) %>%
+      as.list()
+
+    # Optionally, pass a summary_parameters mapping that gets used in the generation of data_2
+    # This is generic for potential applications with optional parameters
+    if(length(mutate_operation)>2) {
+      mutations_mappings <- list(
+        mutation_function = mutate_operation %>%
+            purrr::pluck(1) %>%
+            rlang::quo_name(),
+        mutation_name = names(tidy_functions_arg[["mutate"]][2]),
+        mutation_parameters = mutate_operation[[3:length(mutate_operation)]]
+      )
+    }
+
+    else {
+      mutations_mappings <- list(
+        mutation_function = mutate_operation %>%
+          purrr::pluck(1) %>%
+          rlang::quo_name(),
+        mutation_name = names(tidy_functions_arg[["mutate"]][2])
+      )
+    }
+
   }
 
   # Y mapping
@@ -122,7 +165,8 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
 
   # Combine all
   mapping <- append(x_mapping, y_mapping) %>%
-    append(group_mapping)
+    append(group_mapping) %>%
+    append(mutations_mappings)
 
   # Remove "empty" entries
   purrr::compact(mapping)
