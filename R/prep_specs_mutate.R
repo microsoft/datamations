@@ -12,27 +12,27 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
   mutation_function <- mapping$mutation_function %>%
     rlang::parse_expr()
 
-  if(!is.null(mapping$mutation_parameters)) {
-    mutation_parameters <- mapping$mutation_parameters
+  if(!is.null(mapping$mutation_expression)) {
+    mutation_expression <- mapping$mutation_expression
   }
-  
+
   # TODO -- Here we need a sensible set of specs for the mutation
   # Should resemble first half of a summarize: listed set of values with associated gemini ids
 
   # Check if there _is_ a y variable - e.g. if summary_function is n(), there is no variable
 
-  summary_function_on_variable <- !identical(mapping$y, NULL)
+  mutation_function_on_variable <- !identical(mapping$y, NULL)
 
-  if (summary_function_on_variable) {
-    summary_variable <- mapping$y %>%
+  if (mutation_function_on_variable) {
+    mutation_variable <- mapping$mutation_name %>%
       rlang::parse_expr()
 
-    summary_variable_chr <- rlang::as_name(summary_variable)
+    mutation_variable_chr <- rlang::as_name(mutation_variable)
 
     # Check whether the response variable is numeric or binary / categorical
     # If it is numeric, the first summary frame should be a jittered distribution
     # If it is binary / categorical, the first summary frame is an info grid (and so much of the same logic needs to be pulled in from prep_specs_group_by)
-    y_type <- check_type(.data[[summary_variable]])
+    y_type <- check_type(.data[[mutation_variable]])
   } else {
     y_type <- "null"
   }

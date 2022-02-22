@@ -64,7 +64,7 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
   if(!pipeline_has_mutate) {
     mutations_mappings <- list(
       mutation_name = NULL,
-      mutation_function = NULL
+      mutation_expression = NULL
     )
   } else {
     mutate_operation <- tidy_functions_arg[["mutate"]][[2]] %>%
@@ -74,13 +74,20 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
 
     # Optionally, pass a summary_parameters mapping that gets used in the generation of data_2
     # This is generic for potential applications with optional parameters
-    if(length(mutate_operation)>2) {
+
+    mutations = tidy_functions_arg[["mutate"]][-1]
+    number_of_mutations = length(mutations)
+
+    # For now leaving handling here the same for single mutation and multiple mutations steps
+    # We can figure out if we want to handle differently later
+
+    if(number_of_mutations>1) {
       mutations_mappings <- list(
         mutation_function = mutate_operation %>%
             purrr::pluck(1) %>%
             rlang::quo_name(),
-        mutation_name = names(tidy_functions_arg[["mutate"]][2]),
-        mutation_parameters = mutate_operation[[3:length(mutate_operation)]]
+        mutation_name = names(mutations),
+        mutation_expression = unname(mutations)
       )
     }
 
@@ -89,7 +96,8 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
         mutation_function = mutate_operation %>%
           purrr::pluck(1) %>%
           rlang::quo_name(),
-        mutation_name = names(tidy_functions_arg[["mutate"]][2])
+        mutation_name = names(mutations),
+        mutation_expression = unname(mutations)
       )
     }
 
