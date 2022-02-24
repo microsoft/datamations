@@ -296,3 +296,40 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
 
   append(list(y_tooltip), tooltip)
 }
+
+  split_strings <- function(string, max_characters, min_final) {
+
+    if(nchar(string) < max_characters) return (string)
+
+    number_of_chops = trunc(nchar(string) / max_characters)
+    split_starts <- seq(1, nchar(string), by = max_characters)
+    last_split <- split_starts[length(split_starts)]
+
+    # TODO UPDATE CUTOFF HANDLING HERE
+    #if ((nchar(string) - last)<min_final) split_starts <- setdiff(split_starts, last_split)
+
+    string_vec <- sapply(split_starts, function(ii) {
+      substr(string, ii, ii+max_characters-1)
+    })
+
+    return(string_vec)
+
+  }
+
+  split_string_sensibly <- function(string, max_characters, min_final) {
+
+    if(stringr::str_detect(string, '_')) {
+      split_string <- stringr::str_split(string, "_")[[1]]
+    }
+
+    if(any(nchar(split_string)>max_characters)) {
+      strings_cutoff <- lapply(split_string, split_strings, max_characters, min_final)
+      strings_flattened <- unlist(strings_cutoff)
+
+      return(strings_flattened)
+
+    } else {
+      return(split_string)
+    }
+
+  }
