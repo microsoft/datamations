@@ -319,17 +319,37 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
   split_string_sensibly <- function(string, max_characters, min_final) {
 
     if(stringr::str_detect(string, '_')) {
-      split_string <- stringr::str_split(string, "_")[[1]]
+      split_string <- strsplit(string, "(?<=[_])", perl = TRUE)[[1]]
     }
 
     if(any(nchar(split_string)>max_characters)) {
       strings_cutoff <- lapply(split_string, split_strings, max_characters, min_final)
       strings_flattened <- unlist(strings_cutoff)
 
-      return(strings_flattened)
+      prelim_string <- strings_flattened
 
     } else {
-      return(split_string)
+      prelim_string <- split_string
     }
+
+    final_string <- list()
+
+    # post adjustments
+    # Look at biterms and check character count, combine if less than threshold
+    for (i in seq(1, length(prelim_string), 2)) {
+      # if we are not at the final string
+      if(!is.na(prelim_string[i+1])) {
+        # if the character count of the biterm is less than the max
+        if(nchar(prelim_string[i]) + nchar(prelim_string[i+1]) < max_characters) {
+        final_string[i] <- paste0(prelim_string[i], prelim_string[i+1])
+        } else {
+          final_string[i] <- prelim_string[i]
+          final_string[i+1] <- prelim_string[i+1]
+        }
+      } else {
+        final_string[i] <- prelim_string[i]
+      }
+    }
+    return(unlist(final_string))
 
   }
