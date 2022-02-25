@@ -89,7 +89,8 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
     sorted = sorted.map((d) => {
       const rank_delta_abs = Math.abs(d.rank - median_rank);
       const y_delta = (hasFacet ? d.oldY : d[CONF.Y_FIELD]) - y_median;
-      const bisection = (diff !== null && rank_delta_abs <= diff) ? 0 : y_delta > 0 ? 1 : -1;
+      const bisection =
+        diff !== null && rank_delta_abs <= diff ? 0 : y_delta > 0 ? 1 : -1;
 
       let newField = null;
 
@@ -116,25 +117,33 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
     let groupId = groupValue;
 
     if (hasFacet) {
-      filter += ' && ';
-      groupFilter += ' && ';
+      filter += " && ";
+      groupFilter += " && ";
       groupId += "_";
 
       if (meta.columnFacet) {
-        filter += `datum['${meta.columnFacet.field}'] === '${data[0][meta.columnFacet.field]}'`;
-        groupFilter += `datum['${meta.columnFacet.field}'] === '${data[0][meta.columnFacet.field]}'`;
+        filter += `datum['${meta.columnFacet.field}'] === '${
+          data[0][meta.columnFacet.field]
+        }'`;
+        groupFilter += `datum['${meta.columnFacet.field}'] === '${
+          data[0][meta.columnFacet.field]
+        }'`;
         groupId += data[0][meta.columnFacet.field];
       }
 
       if (meta.columnFacet && meta.rowFacet) {
-        filter += ' && ';
-        groupFilter += ' && ';
+        filter += " && ";
+        groupFilter += " && ";
         groupId += "_";
       }
 
       if (meta.rowFacet) {
-        filter += `datum['${meta.rowFacet.field}'] === '${data[0][meta.rowFacet.field]}'`;
-        groupFilter += `datum['${meta.rowFacet.field}'] === '${data[0][meta.rowFacet.field]}'`
+        filter += `datum['${meta.rowFacet.field}'] === '${
+          data[0][meta.rowFacet.field]
+        }'`;
+        groupFilter += `datum['${meta.rowFacet.field}'] === '${
+          data[0][meta.rowFacet.field]
+        }'`;
         groupId += data[0][meta.rowFacet.field];
       }
     }
@@ -148,12 +157,12 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
       groupId,
       median_pos: y_median_pos,
       rankDiff: Math.abs(max_rank - median_rank),
-      rule_start: d3.min(sorted, d => d[CONF.X_FIELD + "_pos"]) + 1,
-      rule_end: d3.max(sorted, d => d[CONF.X_FIELD + "_pos"]) - 1,
+      rule_start: d3.min(sorted, (d) => d[CONF.X_FIELD + "_pos"]) + 1,
+      rule_end: d3.max(sorted, (d) => d[CONF.X_FIELD + "_pos"]) - 1,
     });
 
     values.push(...sorted);
-  }
+  };
 
   const groupKeys = [CONF.X_FIELD];
 
@@ -166,15 +175,14 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
       groupKeys.push(meta.rowFacet.field);
     }
   }
-  
-  d3
-    .rollup(
-      source.data.values.slice(),
-      reduce,
-      ...groupKeys.map((key) => {
-        return (d) => d[key];
-      })
-    );
+
+  d3.rollup(
+    source.data.values.slice(),
+    reduce,
+    ...groupKeys.map((key) => {
+      return (d) => d[key];
+    })
+  );
 
   const rules = [];
 
@@ -186,15 +194,18 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
 
   all_groups.forEach((d, i) => {
     const n = all_groups.length;
-    
 
     const top_rule = {
       transform: isLast ? [{ filter: d.groupFilter }] : [{ filter: d.filter }],
       name: `top_rule_${d.groupId}`,
       mark: {
         type: "rule",
-        x: hasFacet ? d.rule_start : { expr: `${i + 1} * (width / ${n + 1}) - 5` },
-        x2: hasFacet ? d.rule_end : { expr: `${i + 1} * (width / ${n + 1}) + 5` },
+        x: hasFacet
+          ? d.rule_start
+          : { expr: `${i + 1} * (width / ${n + 1}) - 5` },
+        x2: hasFacet
+          ? d.rule_end
+          : { expr: `${i + 1} * (width / ${n + 1}) + 5` },
       },
       encoding: {
         y: {
@@ -211,8 +222,12 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
       name: `bottom_rule_${d.groupId}`,
       mark: {
         type: "rule",
-        x:  hasFacet ? d.rule_start : { expr: `${i + 1} * (width / ${n + 1}) - 5` },
-        x2: hasFacet ? d.rule_end : { expr: `${i + 1} * (width / ${n + 1}) + 5` },
+        x: hasFacet
+          ? d.rule_start
+          : { expr: `${i + 1} * (width / ${n + 1}) - 5` },
+        x2: hasFacet
+          ? d.rule_end
+          : { expr: `${i + 1} * (width / ${n + 1}) + 5` },
       },
       encoding: {
         y: {
@@ -305,7 +320,8 @@ const getMeanStep = (source, target) => {
 
       return {
         ...d,
-        [CONF.X_FIELD + "_pos"]: d[CONF.X_FIELD] + rankRatio_from_mean * multiplier,
+        [CONF.X_FIELD + "_pos"]:
+          d[CONF.X_FIELD] + rankRatio_from_mean * multiplier,
         [CONF.X_FIELD + "_pos_start"]:
           d[CONF.X_FIELD] + rankRatio_from_mean_start * multiplier,
         [CONF.X_FIELD + "_pos_end"]:
@@ -319,21 +335,25 @@ const getMeanStep = (source, target) => {
     let groupId = groupValue;
 
     if (hasFacet) {
-      filter += ' && ';
+      filter += " && ";
       groupId += "_";
 
       if (meta.columnFacet) {
-        filter += `datum['${meta.columnFacet.field}'] === '${data[0][meta.columnFacet.field]}'`;
+        filter += `datum['${meta.columnFacet.field}'] === '${
+          data[0][meta.columnFacet.field]
+        }'`;
         groupId += data[0][meta.columnFacet.field];
       }
 
       if (meta.columnFacet && meta.rowFacet) {
-        filter += ' && ';
+        filter += " && ";
         groupId += "_";
       }
 
       if (meta.rowFacet) {
-        filter += `datum['${meta.rowFacet.field}'] === '${data[0][meta.rowFacet.field]}'`
+        filter += `datum['${meta.rowFacet.field}'] === '${
+          data[0][meta.rowFacet.field]
+        }'`;
         groupId += data[0][meta.rowFacet.field];
       }
     }
@@ -345,8 +365,8 @@ const getMeanStep = (source, target) => {
       groupId: groupId,
       mean: y_mean,
       mean_pos: y_mean_pos,
-      rule_start: d3.min(sorted, d => d[CONF.X_FIELD + "_pos_start"]),
-      rule_end: d3.max(sorted, d => d[CONF.X_FIELD + "_pos_end"]),
+      rule_start: d3.min(sorted, (d) => d[CONF.X_FIELD + "_pos_start"]),
+      rule_end: d3.max(sorted, (d) => d[CONF.X_FIELD + "_pos_end"]),
     });
 
     values.push(...sorted);
@@ -367,12 +387,12 @@ const getMeanStep = (source, target) => {
   }
 
   d3.rollups(
-      source.data.values.slice(),
-      reduce,
-      ...groupKeys.map((key) => {
-        return (d) => d[key];
-      })
-    );
+    source.data.values.slice(),
+    reduce,
+    ...groupKeys.map((key) => {
+      return (d) => d[key];
+    })
+  );
 
   const rules = [];
 
@@ -384,8 +404,16 @@ const getMeanStep = (source, target) => {
       name: `rule_${d.groupId}`,
       mark: {
         type: "rule",
-        x: hasFacet ? d.rule_start : { expr: `${i + 1} * (width / ${n + 1}) - (width / ${n + 1}) * 0.35` },
-        x2: hasFacet ? d.rule_end : { expr: `${i + 1} * (width / ${n + 1}) + (width / ${n + 1}) * 0.35` },
+        x: hasFacet
+          ? d.rule_start
+          : {
+              expr: `${i + 1} * (width / ${n + 1}) - (width / ${n + 1}) * 0.35`,
+            },
+        x2: hasFacet
+          ? d.rule_end
+          : {
+              expr: `${i + 1} * (width / ${n + 1}) + (width / ${n + 1}) * 0.35`,
+            },
       },
       encoding: {
         y: {
@@ -393,8 +421,8 @@ const getMeanStep = (source, target) => {
           type: "quantitative",
           aggregate: "mean",
           axis: null,
-          scale: { domain }
-        }
+          scale: { domain },
+        },
       },
     };
 
@@ -453,35 +481,39 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
   }
 
   const all_groups = [];
-  
+
   d3.rollup(
     source.data.values.slice(),
-    data => {
+    (data) => {
       const groupValue = data[0][CONF.X_FIELD];
       let filter = `datum['${CONF.X_FIELD}'] === ${groupValue}`;
       let groupId = groupValue;
-  
+
       if (hasFacet) {
-        filter += ' && ';
+        filter += " && ";
         groupId += "_";
-  
+
         if (meta.columnFacet) {
-          filter += `datum['${meta.columnFacet.field}'] === '${data[0][meta.columnFacet.field]}'`;
+          filter += `datum['${meta.columnFacet.field}'] === '${
+            data[0][meta.columnFacet.field]
+          }'`;
           groupId += data[0][meta.columnFacet.field];
         }
-  
+
         if (meta.columnFacet && meta.rowFacet) {
-          filter += ' && ';
+          filter += " && ";
           groupId += "_";
         }
-  
+
         if (meta.rowFacet) {
-          filter += `datum['${meta.rowFacet.field}'] === '${data[0][meta.rowFacet.field]}'`
+          filter += `datum['${meta.rowFacet.field}'] === '${
+            data[0][meta.rowFacet.field]
+          }'`;
           groupId += data[0][meta.rowFacet.field];
         }
       }
 
-      const aggr = aggrFn(data, d => {
+      const aggr = aggrFn(data, (d) => {
         return hasFacet ? d.oldY : d[CONF.Y_FIELD];
       });
       const aggr_pos = hasFacet ? data[0].scaleY(aggr) : aggr;
@@ -493,24 +525,26 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
         aggr,
         aggr_pos,
         groupId,
-        rule_start: d3.min(data, d => d[CONF.X_FIELD] - 2),
-        rule_end: d3.max(data, d => d[CONF.X_FIELD] + 2),
+        rule_start: d3.min(data, (d) => d[CONF.X_FIELD] - 2),
+        rule_end: d3.max(data, (d) => d[CONF.X_FIELD] + 2),
       });
 
-      const g = data.find(d => {
+      const g = data.find((d) => {
         const v = hasFacet ? d.oldY : d[CONF.Y_FIELD];
         return v === aggr;
       });
 
-      values.push(...data.map(d => {
-        const isAggr = g && g.gemini_id === d.gemini_id;
+      values.push(
+        ...data.map((d) => {
+          const isAggr = g && g.gemini_id === d.gemini_id;
 
-        return {
-          ...d,
-          isAggr,
-          aggr_pos
-        }
-      }))
+          return {
+            ...d,
+            isAggr,
+            aggr_pos,
+          };
+        })
+      );
     },
     ...groupKeys.map((key) => {
       return (d) => d[key];
@@ -524,8 +558,12 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
       name: `rule_${group.groupId}`,
       mark: {
         type: "rule",
-        x: hasFacet ? group.rule_start : { expr: `${i + 1} * (width / ${n + 1}) - 5` },
-        x2: hasFacet ? group.rule_end : { expr: `${i + 1} * (width / ${n + 1}) + 5` },
+        x: hasFacet
+          ? group.rule_start
+          : { expr: `${i + 1} * (width / ${n + 1}) - 5` },
+        x2: hasFacet
+          ? group.rule_end
+          : { expr: `${i + 1} * (width / ${n + 1}) + 5` },
       },
       encoding: {
         y: {
@@ -533,10 +571,10 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
           type: "quantitative",
           aggregate: minOrMax,
           axis: null,
-          scale: { domain }
+          scale: { domain },
         },
       },
-    }
+    };
   });
 
   return {
@@ -561,7 +599,7 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
       ...rules,
     ],
     resolve: { axis: { y: "independent" } },
-  }
+  };
 };
 
 const CustomAnimations = {
@@ -582,9 +620,7 @@ const CustomAnimations = {
 
     const step_2 = {
       ...step_1,
-      transform: [
-        { filter: "datum.isAggr === true" }
-      ],
+      transform: [{ filter: "datum.isAggr === true" }],
       layer: [
         {
           ...step_1.layer[0],
@@ -593,11 +629,11 @@ const CustomAnimations = {
             y: {
               ...step_1.layer[0].encoding.y,
               aggregate: "min",
-            }
-          }
+            },
+          },
         },
         ...step_1.layer.slice(1),
-      ]
+      ],
     };
 
     // this is for test, it should be passed from R or Python side..
@@ -619,9 +655,7 @@ const CustomAnimations = {
 
     const step_2 = {
       ...step_1,
-      transform: [
-        { filter: "datum.isAggr === true" }
-      ],
+      transform: [{ filter: "datum.isAggr === true" }],
       layer: [
         {
           ...step_1.layer[0],
@@ -630,12 +664,12 @@ const CustomAnimations = {
             y: {
               ...step_1.layer[0].encoding.y,
               aggregate: "max",
-            }
-          }
+            },
+          },
         },
         ...step_1.layer.slice(1),
-      ]
-    }
+      ],
+    };
 
     // this is for test, it should be passed from R or Python side..
     // target.data.values.forEach((d) => {
@@ -749,39 +783,27 @@ const CustomAnimations = {
           ...rawSource.encoding.x,
           field: CONF.X_FIELD + "_pos",
         },
-      }
+      },
     };
 
     return [rawSource, intermediate, step_1, step_2, step_3, step_4, target];
   },
   median: (rawSource, target, calculatedSource, p) => {
     const initial = getMedianStep(rawSource, target, 0, p ?? 0.5);
-
-    // const groups = initial.meta.all_groups;
-    const last_with_points = getMedianStep(rawSource, target, null, p ?? 0.5)
-
-    // this is for test, it should be passed from R or Python side..
-    // target.data.values.forEach((d) => {
-    //   const group = groups.find((x) => x.groupValue === d[x.groupKey]);
-    //   d[CONF.Y_FIELD] = group.median;
-    // });
-
-    // const domain = d3.extent(groups, (d) => d.median);
-    // target.encoding.y.scale.domain = domain;
-    /// end of test ////
+    const last_with_points = getMedianStep(rawSource, target, null, p ?? 0.5);
 
     const yDomain = last_with_points.layer[0].encoding.y.scale.domain;
 
     const last = {
-      ...target, 
+      ...target,
       encoding: {
         ...target.encoding,
         y: {
           ...target.encoding.y,
           scale: {
             domain: yDomain,
-          }
-        }
+          },
+        },
       },
       resolve: { axis: { y: "independent" } },
     };
@@ -794,14 +816,37 @@ const CustomAnimations = {
       meta: rawSource.meta,
       layer: [
         {
-          name: 'main',
+          name: "main",
           mark: rawSource.mark,
           encoding: rawSource.encoding,
+        },
+        ...initial.layer.slice(1),
+      ],
+      resolve: { axis: { y: "independent" } },
+    };
+
+    const targetLayered = {
+      $schema: target.$schema,
+      data: target.data,
+      width: target.width,
+      height: target.height,
+      meta: target.meta,
+      layer: [
+        {
+          name: "main",
+          mark: target.mark,
+          encoding: target.encoding,
         }
       ],
       resolve: { axis: { y: "independent" } },
     };
 
-    return [rawSource, initial, last_with_points, last, target];
+    return [
+      source,
+      initial,
+      last_with_points,
+      last,
+      targetLayered
+    ];
   },
 };

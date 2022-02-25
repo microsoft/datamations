@@ -690,7 +690,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
             curr,
             options
           );
-          if (prev.custom) console.log(resp);
+
           const _gemSpec = resp[0] ? resp[0].spec : gemSpec;
 
           const sync = _gemSpec.timeline.concat[0].sync;
