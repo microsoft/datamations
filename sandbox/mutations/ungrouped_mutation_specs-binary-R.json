@@ -1,0 +1,2808 @@
+[
+  {
+    "height": 300,
+    "width": 300,
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "parse": "grid",
+      "description": "Initial data"
+    },
+    "data": {
+      "values": [
+        {
+          "n": 100,
+          "gemini_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
+        }
+      ]
+    },
+    "mark": {
+      "type": "point",
+      "filled": true,
+      "strokeWidth": 1
+    },
+    "encoding": {
+      "x": {
+        "field": "datamations_x",
+        "type": "quantitative",
+        "axis": null
+      },
+      "y": {
+        "field": "datamations_y",
+        "type": "quantitative",
+        "axis": null
+      }
+    }
+  },
+  {
+    "height": 300,
+    "width": 300,
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "parse": "grid",
+      "axes": false,
+      "description": "Create new variable salaryHigh",
+      "splitField": 1,
+      "xAxisLabels": ["Masters", "PhD"]
+    },
+    "data": {
+      "values": [
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 81.9445013836958,
+          "gemini_id": 1,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 82.8953005648218,
+          "gemini_id": 2,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 83.2656172472052,
+          "gemini_id": 3,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 82.899547266541,
+          "gemini_id": 4,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.1877911367919,
+          "gemini_id": 5,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.3138903337531,
+          "gemini_id": 6,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.3365755749401,
+          "gemini_id": 7,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 89.6885157823563,
+          "gemini_id": 8,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 89.657391943736,
+          "gemini_id": 9,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 89.8103184474166,
+          "gemini_id": 10,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.1445505130105,
+          "gemini_id": 11,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.2597002927214,
+          "gemini_id": 12,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 89.5807276440319,
+          "gemini_id": 13,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.4775695463177,
+          "gemini_id": 14,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.5421400056221,
+          "gemini_id": 15,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.9508253019303,
+          "gemini_id": 16,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 84.3256172758993,
+          "gemini_id": 17,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.7608228451572,
+          "gemini_id": 18,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.2149588565808,
+          "gemini_id": 19,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.4811559985392,
+          "gemini_id": 20,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.203505871119,
+          "gemini_id": 21,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 84.1406831252389,
+          "gemini_id": 22,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.900099467719,
+          "gemini_id": 23,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.3447520111222,
+          "gemini_id": 24,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.6169246234931,
+          "gemini_id": 25,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.1798533124384,
+          "gemini_id": 26,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.2493746823166,
+          "gemini_id": 27,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.4049337708857,
+          "gemini_id": 28,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.1165353488177,
+          "gemini_id": 29,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.1068642993923,
+          "gemini_id": 30,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.6704280367121,
+          "gemini_id": 31,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.4698466714472,
+          "gemini_id": 32,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.0579056167044,
+          "gemini_id": 33,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.9434416298755,
+          "gemini_id": 34,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.1740557027515,
+          "gemini_id": 35,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.2401522365399,
+          "gemini_id": 36,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.5011388328858,
+          "gemini_id": 37,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 85.3303201349918,
+          "gemini_id": 38,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.6040293425322,
+          "gemini_id": 39,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 85.4951418309938,
+          "gemini_id": 40,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.4005046924576,
+          "gemini_id": 41,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.1476999609731,
+          "gemini_id": 42,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.7045878821518,
+          "gemini_id": 43,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.6188371984754,
+          "gemini_id": 44,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.5633510330226,
+          "gemini_id": 45,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.5981954357121,
+          "gemini_id": 46,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.1700340267271,
+          "gemini_id": 47,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 90.7472879537381,
+          "gemini_id": 48,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.0161147855688,
+          "gemini_id": 49,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.2819435379934,
+          "gemini_id": 50,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.5201518230606,
+          "gemini_id": 51,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.2406232669018,
+          "gemini_id": 52,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 84.5408536496107,
+          "gemini_id": 53,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.6161431246437,
+          "gemini_id": 54,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.0414693744387,
+          "gemini_id": 55,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.2921498068608,
+          "gemini_id": 56,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.6981512298808,
+          "gemini_id": 57,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.8960476492066,
+          "gemini_id": 58,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.4187721665949,
+          "gemini_id": 59,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.8766731780488,
+          "gemini_id": 60,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.3804325407837,
+          "gemini_id": 61,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.1729675922543,
+          "gemini_id": 62,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.1522822889965,
+          "gemini_id": 63,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Academia",
+          "Salary": 85.4612494898029,
+          "gemini_id": 64,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.1945560907479,
+          "gemini_id": 65,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.5597189620603,
+          "gemini_id": 66,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.992212592857,
+          "gemini_id": 67,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.4685412924737,
+          "gemini_id": 68,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.9892992568202,
+          "gemini_id": 69,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.9956347632688,
+          "gemini_id": 70,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 92.3084856946953,
+          "gemini_id": 71,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "Masters",
+          "Work": "Industry",
+          "Salary": 91.7435715948232,
+          "gemini_id": 72,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 84.4868333523627,
+          "gemini_id": 73,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 83.8469139884692,
+          "gemini_id": 74,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 83.7531382157467,
+          "gemini_id": 75,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 85.2683244312648,
+          "gemini_id": 76,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 91.4052118111867,
+          "gemini_id": 77,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 85.3309176496696,
+          "gemini_id": 78,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 92.3489408034366,
+          "gemini_id": 79,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 84.7384647994768,
+          "gemini_id": 80,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 85.0068552203011,
+          "gemini_id": 81,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 85.1630066898651,
+          "gemini_id": 82,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 85.3773716066498,
+          "gemini_id": 83,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 85.0828845105134,
+          "gemini_id": 84,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 86.0538539250847,
+          "gemini_id": 85,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 93.1602621641941,
+          "gemini_id": 86,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 85.9106459924951,
+          "gemini_id": 87,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 93.4098555028904,
+          "gemini_id": 88,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 86.0406335154548,
+          "gemini_id": 89,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 93.0570627038833,
+          "gemini_id": 90,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 86.4447282091714,
+          "gemini_id": 91,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 92.7338204937987,
+          "gemini_id": 92,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 86.3678887020797,
+          "gemini_id": 93,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 87.049029128626,
+          "gemini_id": 94,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 93.1600916916505,
+          "gemini_id": 95,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 86.6827135430649,
+          "gemini_id": 96,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 93.7030599385034,
+          "gemini_id": 97,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Academia",
+          "Salary": 87.4391794742551,
+          "gemini_id": 98,
+          "salaryHigh": false
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 93.833772216225,
+          "gemini_id": 99,
+          "salaryHigh": true
+        },
+        {
+          "Degree": "PhD",
+          "Work": "Industry",
+          "Salary": 94.0215112566948,
+          "gemini_id": 100,
+          "salaryHigh": true
+        }
+      ]
+    },
+    "mark": {
+      "type": "point",
+      "filled": true,
+      "strokeWidth": 1
+    },
+    "encoding": {
+      "x": {
+        "field": "datamations_x",
+        "type": "quantitative",
+        "axis": null
+      },
+      "y": {
+        "field": "datamations_y",
+        "type": "quantitative",
+        "axis": null
+      },
+      "tooltip": [
+        {
+          "field": "salaryHigh",
+          "type": "nominal"
+        },
+        {
+          "field": "Degree",
+          "type": "nominal"
+        },
+        {
+          "field": "Work",
+          "type": "nominal"
+        },
+        {
+          "field": "Salary",
+          "type": "nominal"
+        },
+        {
+          "field": "gemini_id",
+          "type": "nominal"
+        },
+        {
+          "field": "salaryHigh",
+          "type": "nominal"
+        }
+      ],
+      "fill": {
+        "field": "salaryHigh",
+        "scale": {
+          "domain": [true, false],
+          "range": ["#4c78a8", "#ffffff"]
+        }
+      },
+      "stroke": {
+        "field": "salaryHigh",
+        "scale": {
+          "domain": [true, false],
+          "range": ["#4c78a8", "#4c78a8"]
+        }
+      }
+    }
+  },
+  {
+    "height": 300,
+    "width": 300,
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "parse": "grid",
+      "description": "Group by Degree",
+      "splitField": "Degree",
+      "axes": false
+    },
+    "data": {
+      "values": [
+        {
+          "Degree": "Masters",
+          "n": 72,
+          "gemini_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72]
+        },
+        {
+          "Degree": "PhD",
+          "n": 28,
+          "gemini_ids": [73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
+        }
+      ]
+    },
+    "mark": {
+      "type": "point",
+      "filled": true,
+      "strokeWidth": 1
+    },
+    "encoding": {
+      "x": {
+        "field": "datamations_x",
+        "type": "quantitative",
+        "axis": null
+      },
+      "y": {
+        "field": "datamations_y",
+        "type": "quantitative",
+        "axis": null
+      },
+      "tooltip": [
+        {
+          "field": "Degree",
+          "type": "nominal"
+        }
+      ]
+    }
+  },
+  {
+    "height": 300,
+    "width": 300,
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "parse": "grid",
+      "axes": false,
+      "description": "Plot salaryHigh within each group",
+      "splitField": "Degree",
+      "xAxisLabels": ["Masters", "PhD"]
+    },
+    "data": {
+      "values": [
+        {
+          "Degree": "Masters",
+          "salaryHigh": true,
+          "n": 62,
+          "gemini_ids": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 65, 66, 67, 68, 69, 70, 71, 72]
+        },
+        {
+          "Degree": "Masters",
+          "salaryHigh": false,
+          "n": 10,
+          "gemini_ids": [1, 2, 3, 4, 17, 22, 38, 40, 53, 64]
+        },
+        {
+          "Degree": "PhD",
+          "salaryHigh": true,
+          "n": 10,
+          "gemini_ids": [77, 79, 86, 88, 90, 92, 95, 97, 99, 100]
+        },
+        {
+          "Degree": "PhD",
+          "salaryHigh": false,
+          "n": 18,
+          "gemini_ids": [73, 74, 75, 76, 78, 80, 81, 82, 83, 84, 85, 87, 89, 91, 93, 94, 96, 98]
+        }
+      ]
+    },
+    "mark": {
+      "type": "point",
+      "filled": true,
+      "strokeWidth": 1
+    },
+    "encoding": {
+      "x": {
+        "field": "datamations_x",
+        "type": "quantitative",
+        "axis": null
+      },
+      "y": {
+        "field": "datamations_y",
+        "type": "quantitative",
+        "axis": null
+      },
+      "tooltip": [
+        {
+          "field": "salaryHigh",
+          "type": "nominal"
+        },
+        {
+          "field": "Degree",
+          "type": "nominal"
+        },
+        {
+          "field": "salaryHigh",
+          "type": "nominal"
+        }
+      ],
+      "fill": {
+        "field": "salaryHigh",
+        "scale": {
+          "domain": [true, false],
+          "range": ["#4c78a8", "#ffffff"]
+        }
+      },
+      "stroke": {
+        "field": "salaryHigh",
+        "scale": {
+          "domain": [true, false],
+          "range": ["#4c78a8", "#4c78a8"]
+        }
+      }
+    }
+  },
+  {
+    "height": 300,
+    "width": 300,
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "axes": false,
+      "description": "Plot mean salaryHigh of each group",
+      "custom_animation": "mean"
+    },
+    "data": {
+      "values": [
+        {
+          "gemini_id": 1,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 2,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 3,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 4,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 5,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 6,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 7,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 8,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 9,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 10,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 11,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 12,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 13,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 14,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 15,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 16,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 17,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 18,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 19,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 20,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 21,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 22,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 23,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 24,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 25,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 26,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 27,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 28,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 29,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 30,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 31,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 32,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 33,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 34,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 35,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 36,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 37,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 38,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 39,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 40,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 41,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 42,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 43,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 44,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 45,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 46,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 47,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 48,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 49,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 50,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 51,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 52,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 53,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 54,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 55,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 56,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 57,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 58,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 59,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 60,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 61,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 62,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 63,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 64,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 65,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 66,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 67,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 68,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 69,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 70,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 71,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 72,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111
+        },
+        {
+          "gemini_id": 73,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 74,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 75,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 76,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 77,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 78,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 79,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 80,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 81,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 82,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 83,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 84,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 85,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 86,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 87,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 88,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 89,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 90,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 91,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 92,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 93,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 94,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 95,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 96,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 97,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 98,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 99,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        },
+        {
+          "gemini_id": 100,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857
+        }
+      ]
+    },
+    "mark": {
+      "type": "point",
+      "filled": true,
+      "strokeWidth": 1
+    },
+    "encoding": {
+      "x": {
+        "field": "datamations_x",
+        "type": "quantitative",
+        "axis": {
+          "values": [1, 2],
+          "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+          "labelAngle": -90
+        },
+        "title": "Degree",
+        "scale": {
+          "domain": [0, 3]
+        }
+      },
+      "y": {
+        "field": "datamations_y",
+        "type": "quantitative",
+        "title": "mean(salaryHigh)",
+        "scale": {
+          "domain": [0.357142857142857, 0.861111111111111]
+        }
+      },
+      "tooltip": [
+        {
+          "field": "datamations_y_tooltip",
+          "type": "quantitative",
+          "title": "mean(salaryHigh)"
+        },
+        {
+          "field": "Degree",
+          "type": "nominal"
+        }
+      ]
+    }
+  },
+  {
+    "height": 300,
+    "width": 300,
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "meta": {
+      "axes": false,
+      "description": "Plot mean salaryHigh of each group, with errorbar"
+    },
+    "data": {
+      "values": [
+        {
+          "gemini_id": 1,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": false,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 2,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": false,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 3,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": false,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 4,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": false,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 5,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 6,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 7,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 8,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 9,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 10,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 11,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 12,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 13,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 14,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 15,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 16,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 17,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": false,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 18,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 19,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 20,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 21,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 22,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": false,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 23,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 24,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 25,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 26,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 27,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 28,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 29,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 30,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 31,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 32,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 33,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 34,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 35,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 36,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 37,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 38,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": false,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 39,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 40,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": false,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 41,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 42,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 43,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 44,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 45,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 46,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 47,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 48,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 49,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 50,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 51,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 52,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 53,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": false,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 54,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 55,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 56,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 57,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 58,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 59,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 60,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 61,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 62,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 63,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 64,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": false,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 65,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 66,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 67,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 68,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 69,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 70,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 71,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 72,
+          "Degree": "Masters",
+          "datamations_x": 1,
+          "datamations_y": 0.861111111111111,
+          "datamations_y_tooltip": 0.861111111111111,
+          "datamations_y_raw": true,
+          "Lower": 0.820068576418755,
+          "Upper": 0.902153645803467
+        },
+        {
+          "gemini_id": 73,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 74,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 75,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 76,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 77,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": true,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 78,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 79,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": true,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 80,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 81,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 82,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 83,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 84,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 85,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 86,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": true,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 87,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 88,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": true,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 89,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 90,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": true,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 91,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 92,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": true,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 93,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 94,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 95,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": true,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 96,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 97,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": true,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 98,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": false,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 99,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": true,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        },
+        {
+          "gemini_id": 100,
+          "Degree": "PhD",
+          "datamations_x": 2,
+          "datamations_y": 0.357142857142857,
+          "datamations_y_tooltip": 0.357142857142857,
+          "datamations_y_raw": true,
+          "Lower": 0.264928967947442,
+          "Upper": 0.449356746338272
+        }
+      ]
+    },
+    "layer": [
+      {
+        "mark": "errorbar",
+        "encoding": {
+          "x": {
+            "field": "datamations_x",
+            "type": "quantitative",
+            "axis": {
+              "values": [1, 2],
+              "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+              "labelAngle": -90
+            },
+            "title": "Degree",
+            "scale": {
+              "domain": [0, 3]
+            }
+          },
+          "y": {
+            "field": "datamations_y_raw",
+            "type": "quantitative",
+            "title": "mean(salaryHigh)",
+            "scale": {
+              "domain": [0.264928967947442, 0.902153645803467]
+            }
+          },
+          "tooltip": [
+            {
+              "field": "datamations_y_tooltip",
+              "type": "quantitative",
+              "title": "mean(salaryHigh)"
+            },
+            {
+              "field": "Upper",
+              "type": "nominal",
+              "title": "mean(salaryHigh) + standard error"
+            },
+            {
+              "field": "Lower",
+              "type": "nominal",
+              "title": "mean(salaryHigh) - standard error"
+            },
+            {
+              "field": "Degree",
+              "type": "nominal"
+            }
+          ]
+        }
+      },
+      {
+        "mark": {
+          "type": "point",
+          "filled": true,
+          "strokeWidth": 1
+        },
+        "encoding": {
+          "x": {
+            "field": "datamations_x",
+            "type": "quantitative",
+            "axis": {
+              "values": [1, 2],
+              "labelExpr": "round(datum.label) == 1 ? 'Masters' : 'PhD'",
+              "labelAngle": -90
+            },
+            "title": "Degree",
+            "scale": {
+              "domain": [0, 3]
+            }
+          },
+          "y": {
+            "field": "datamations_y",
+            "type": "quantitative",
+            "title": "mean(salaryHigh)",
+            "scale": {
+              "domain": [0.264928967947442, 0.902153645803467]
+            }
+          },
+          "tooltip": [
+            {
+              "field": "datamations_y_tooltip",
+              "type": "quantitative",
+              "title": "mean(salaryHigh)"
+            },
+            {
+              "field": "Upper",
+              "type": "nominal",
+              "title": "mean(salaryHigh) + standard error"
+            },
+            {
+              "field": "Lower",
+              "type": "nominal",
+              "title": "mean(salaryHigh) - standard error"
+            },
+            {
+              "field": "Degree",
+              "type": "nominal"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

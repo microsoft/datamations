@@ -7,10 +7,8 @@
 #' @noRd
 prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, grouping_on_mutation) {
 
-  # Get mutation function and variable
-
-  mutation_function <- mapping$mutation_function %>%
-    rlang::parse_expr()
+  # Get mutation expression
+  # Mutation function name not needed here (and sometimes hard to parse, as often mathematical expression)
 
   if(!is.null(mapping$mutation_expression)) {
     mutation_expression <- mapping$mutation_expression
@@ -43,6 +41,8 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
 
   # If the grouping doesn't happen until after the mutation, set the group mapping NULL
   if(!grouping_on_mutation) {mapping$groups <- NULL}
+  # For the x mapping, we want this as 1 so it doesn't facet
+  if(!grouping_on_mutation) {mapping$x <- 1}
 
   # Mapping and encoding for numeric ----
   if (y_type == "numeric") {
@@ -248,25 +248,23 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
       # Generate tooltip
       spec_encoding$tooltip <- generate_mutation_tooltip(data_1, mapping$mutation_name)
     } else if (y_type %in% c("binary", "categorical")) { # Otherwise, another infogrid!
-      data_1 <- .data %>%
-        dplyr::count(!!!group_vars, !!summary_variable) %>%
-        add_ids_to_count_data(.data, mapping$column, mapping$x, mapping$y)
+      # Mutation already created, no necessary updates to this data
+      data_1 <- .data
 
-      # If the summary variable is a factor, order according to its values to match the legend
-
+      # If the mutation variable is a factor, order according to its values to match the legend
       # If it's TRUE / FALSE, the order in R is FALSE / TRUE or 0 / 1 but change so that it's actually T/F 1/0
 
-      if (is.factor(data_1[[summary_variable_chr]])) {
+      if (is.factor(data_1[[mutation_variable_chr]])) {
         data_1 <- data_1 %>%
-          dplyr::arrange(!!!group_vars, !!summary_variable)
-      } else if (all(data_1[[summary_variable_chr]] %in% c(TRUE, FALSE))) {
+          dplyr::arrange(!!!group_vars, !!mutation_variable)
+      } else if (all(data_1[[mutation_variable_chr]] %in% c(TRUE, FALSE))) {
         data_1 <- data_1 %>%
-          dplyr::arrange(!!!group_vars, -!!summary_variable)
+          dplyr::arrange(!!!group_vars, -!!mutation_variable)
       }
 
       # Generate tooltip
       tooltip_groups <- generate_group_by_tooltip(data_1)
-      tooltip_y <- list(field = summary_variable_chr, type = "nominal")
+      tooltip_y <- list(field = mutation_variable_chr, type = "nominal")
 
       spec_encoding$tooltip <- append(list(tooltip_y), tooltip_groups)
     }
@@ -298,12 +296,12 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
 
           spec_encoding$stroke <- list(field = mapping$color)
 
-          spec_encoding$fillOpacity <- list(field = summary_variable_chr, type = "nominal", scale = list(range = c(0, 1)))
+          spec_encoding$fillOpacity <- list(field = mutation_variable_chr, type = "nominal", scale = list(range = c(0, 1)))
 
           # For the fill, if it's a factor, take the first
           # If it's TRUE / FALSE, do TRUE first
 
-          values <- unique(.data[[summary_variable_chr]])
+          values <- unique(.data[[mutation_variable_chr]])
 
           first_value <- if (identical(sort(values), c(0, 1))) {
             1
@@ -330,7 +328,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
           }
 
           spec_encoding$shape <- list(
-            field = summary_variable_chr,
+            field = mutation_variable_chr,
             scale = list(
               domain = value_order,
               range = c("circle", "circle")
@@ -344,7 +342,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
           # fill: mapping$y, scale: range: grey, white
           # stroke: mapping$y, scale: range: grey, grey
 
-          values <- unique(.data[[summary_variable_chr]])
+          values <- unique(.data[[mutation_variable_chr]])
 
           value_order <- if (identical(sort(values), c(0, 1))) {
             c(1, 0)
@@ -356,16 +354,16 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
             values
           }
 
-          spec_encoding$fill <- list(field = summary_variable_chr, scale = list(domain = value_order, range = c(color, white)))
-          spec_encoding$stroke <- list(field = summary_variable_chr, scale = list(domain = value_order, range = c(color, color)))
+          spec_encoding$fill <- list(field = mutation_variable_chr, scale = list(domain = value_order, range = c(color, white)))
+          spec_encoding$stroke <- list(field = mutation_variable_chr, scale = list(domain = value_order, range = c(color, color)))
         }
       } else if (y_type == "categorical") {
         # Use shape
-        spec_encoding$shape <- list(field = summary_variable_chr, type = "nominal")
+        spec_encoding$shape <- list(field = mutation_variable_chr, type = "nominal")
 
         # Set the legend order to match the order in the data, or factor levels
 
-        values <- unique(.data[[summary_variable_chr]])
+        values <- unique(.data[[mutation_variable_chr]])
 
         legend_order <- if (is.factor(values)) {
           levels(values)
