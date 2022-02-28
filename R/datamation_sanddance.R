@@ -165,7 +165,18 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
 
     # Call that function with the data and mapping
     if (verb != "filter") {
-      res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
+
+      if(verb == "mutate") {
+        # Checks if the group_by occurs before this fitting
+        if (!length(which(stringr::str_detect(names(tidy_function_args), "group_by")))==0 &&
+            which(stringr::str_detect(names(tidy_function_args), "group_by")) < i) {
+          grouping_on_mutation <- TRUE
+        } else grouping_on_mutation <- FALSE
+
+        res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width, grouping_on_mutation))
+      }
+      else res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
+
     } else if (verb == "filter") {
       previous_frame <- res[[i - 1]]
 

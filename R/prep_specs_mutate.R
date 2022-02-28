@@ -5,7 +5,7 @@
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 #' @noRd
-prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
+prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, grouping_on_mutation) {
 
   # Get mutation function and variable
 
@@ -40,6 +40,9 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
   } else {
     y_type <- "null"
   }
+
+  # If the grouping doesn't happen until after the mutation, set the group mapping NULL
+  if(!grouping_on_mutation) {mapping$groups <- NULL}
 
   # Mapping and encoding for numeric ----
   if (y_type == "numeric") {
