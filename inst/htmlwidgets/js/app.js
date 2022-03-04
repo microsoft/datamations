@@ -145,24 +145,32 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    */
   function play(startIndex) {
     frameIndex = startIndex || 0;
+
     const tick = () => {
-      animateFrame(frameIndex);
-      frameIndex++;
+      animateFrame(frameIndex).then(() => {
+        frameIndex++; // next frame
+
+        if (frames[frameIndex]) {
+          tick();
+        }
+      });
+
       if (typeof HTMLWidgets !== "undefined" && HTMLWidgets.shinyMode) {
         var prevIndex = frameIndex - 1;
         Shiny.onInputChange("slider_state", prevIndex);
       }
     };
+
     tick();
 
-    if (intervalId) clearInterval(intervalId);
-    intervalId = setInterval(() => {
-      tick();
-      if (frameIndex >= frames.length) {
-        clearInterval(intervalId);
-        frameIndex = 0;
-      }
-    }, frameDuration + frameDelay + 500);
+    // if (intervalId) clearInterval(intervalId);
+    // intervalId = setInterval(() => {
+    //   tick();
+    //   if (frameIndex >= frames.length) {
+    //     clearInterval(intervalId);
+    //     frameIndex = 0;
+    //   }
+    // }, frameDuration + frameDelay + 500);
   }
 
   /**
@@ -339,10 +347,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * @param {Number} index specification index in vegaLiteSpecs
    * @returns a promise of gemini.animate
    */
-  let animating = false;
   async function animateFrame(index) {
     if (!frames[index]) return;
-    if (animating) return;
+
+    console.log("animating frame", index);
 
     const { axisSelector, visSelector, otherLayers, descr, slider, controls } =
       getSelectors(id);
@@ -369,66 +377,67 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       clearTimeout(timeoutId);
     }
 
-    drawSpec(index, source).then(() => {
-      timeoutId = setTimeout(() => {
-        d3.select(descr).html(currMeta.description);
-        animating = true;
-        anim.play(visSelector).then(() => {
-          animating = false;
-          d3.select(slider).property("value", index + 1);
-        });
-
-        const transformX = currMeta.transformX || 0;
-        const transformY = currMeta.transformY || 0;
-
-        d3.select(visSelector)
-          .transition()
-          .duration(750)
-          .style("left", transformX + "px")
-          .style("top", transformY + "px");
-
-        // show/hide axis vega chart
-        if (currHasAxes) {
-          drawAxis(index + 1);
-          d3.select(axisSelector)
-            .transition()
-            .duration(1000)
-            .style("opacity", 1);
-          d3.select(visSelector).classed("with-axes", true);
-          d3.select(otherLayers).classed("with-axes", true);
-        } else {
-          d3.select(axisSelector)
-            .transition()
-            .duration(1000)
-            .style("opacity", 0);
-          d3.select(visSelector).classed("with-axes", false);
-          d3.select(otherLayers).classed("with-axes", false);
-          d3.select(controls).style("width", width + transformX + 10 + "px");
-        }
-
-        const nextSpec = vegaLiteSpecs[index + 1];
-
-        if (nextSpec && Array.isArray(nextSpec)) {
-          const statics = nextSpec.filter((d) => !d.meta.animated);
-
-          d3.select(otherLayers)
-            .html("")
-            .style("opacity", 0)
-            .transition()
-            // .delay(frameDuration / 3)
-            .duration(frameDuration / 2)
-            .style("opacity", 1);
-
-          statics.forEach((s) => {
-            const div = document.createElement("div");
-            div.classList.add("vega-hidden-layer");
-            vegaEmbed(div, s, { renderer: "svg" }).then(() => {
-              adjustAxisAndErrorbars();
-            });
-            document.querySelector(otherLayers).appendChild(div);
+    return new Promise((res) => {
+      drawSpec(index, source).then(() => {
+        timeoutId = setTimeout(() => {
+          d3.select(descr).html(currMeta.description);
+          anim.play(visSelector).then(() => {
+            d3.select(slider).property("value", index + 1);
+            res();
           });
-        }
-      }, frameDelay);
+
+          const transformX = currMeta.transformX || 0;
+          const transformY = currMeta.transformY || 0;
+
+          d3.select(visSelector)
+            .transition()
+            .duration(750)
+            .style("left", transformX + "px")
+            .style("top", transformY + "px");
+
+          // show/hide axis vega chart
+          if (currHasAxes) {
+            drawAxis(index + 1);
+            d3.select(axisSelector)
+              .transition()
+              .duration(1000)
+              .style("opacity", 1);
+            d3.select(visSelector).classed("with-axes", true);
+            d3.select(otherLayers).classed("with-axes", true);
+          } else {
+            d3.select(axisSelector)
+              .transition()
+              .duration(1000)
+              .style("opacity", 0);
+            d3.select(visSelector).classed("with-axes", false);
+            d3.select(otherLayers).classed("with-axes", false);
+            d3.select(controls).style("width", width + transformX + 10 + "px");
+          }
+
+          const nextSpec = vegaLiteSpecs[index + 1];
+
+          if (nextSpec && Array.isArray(nextSpec)) {
+            const statics = nextSpec.filter((d) => !d.meta.animated);
+
+            d3.select(otherLayers)
+              .html("")
+              .style("opacity", 0)
+              .transition()
+              // .delay(frameDuration / 3)
+              .duration(frameDuration / 2)
+              .style("opacity", 1);
+
+            statics.forEach((s) => {
+              const div = document.createElement("div");
+              div.classList.add("vega-hidden-layer");
+              vegaEmbed(div, s, { renderer: "svg" }).then(() => {
+                adjustAxisAndErrorbars();
+              });
+              document.querySelector(otherLayers).appendChild(div);
+            });
+          }
+        }, frameDelay);
+      });
     });
   }
 
@@ -653,11 +662,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         let resp = null;
 
         if (curr.custom) {
-          console.log(curr.sequence)
           resp = await gemini.recommendForSeq(curr.sequence, {
             ...options,
             stageN: curr.sequence.length - 1,
-            totalDuration: frameDuration,
+            totalDuration: frameDuration * 2,
           });
 
           const _gemSpec = resp[0].specs.map((d) => d.spec);

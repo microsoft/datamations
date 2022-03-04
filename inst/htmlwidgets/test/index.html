@@ -176,14 +176,14 @@
     <script src="../js/custom-animations.js"></script>
     <script src="../js/app.js"></script>
     <script>
-      const animationType = "min";
+      const animationType = "median";
       const base = "../../../sandbox/custom_animations/";
       let app1 = null;
 
       d3.json(
-        `${base}/custom-animations-${animationType}-R.json`
+        `${base}/custom-animations-${animationType}-faceted-R.json`
       ).then(specs => {
-        app1 = App("app", { specs, frameDur: 4000 });
+        app1 = App("app", { specs, frameDur: 3000 });
       });
     </script>
   </body>

@@ -218,11 +218,13 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     const xField = spec.meta.parse === "jitter" ? "x" : CONF.X_FIELD;
     const yField = spec.meta.parse === "jitter" ? "y" : CONF.Y_FIELD;
 
+    const xCoord = xStart + scaleX(d[xField]);
+
     values.push({
       ...d,
-      [CONF.X_FIELD]: xStart + scaleX(d[xField]),
+      [CONF.X_FIELD]: xCoord,
       [CONF.Y_FIELD]: yStart + scaleY(d[yField]),
-      [CONF.X_FIELD + "_num"]: xStart + scaleX(d.scaledX),
+      [CONF.X_FIELD + "_num"]: d.scaledX ? xStart + scaleX(d.scaledX) : xCoord,
       scaleX: (val) => yStart + scaleX(val),
       scaleY: (val) => yStart + scaleY(val),
     });
