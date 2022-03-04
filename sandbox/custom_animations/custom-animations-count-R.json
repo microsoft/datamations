@@ -73,10 +73,6 @@
         "type": "quantitative",
         "axis": null
       },
-      "color": {
-        "field": null,
-        "type": "nominal"
-      },
       "tooltip": [
         {
           "field": "Degree",
@@ -124,10 +120,6 @@
         "field": "datamations_y",
         "type": "quantitative",
         "axis": null
-      },
-      "color": {
-        "field": null,
-        "type": "nominal"
       },
       "tooltip": [
         {
@@ -866,13 +858,12 @@
         },
         "title": "Degree",
         "scale": {
-          "domain": [0.5, 2.5]
+          "domain": [0, 3]
         }
       },
       "y": {
         "field": "datamations_y",
         "type": "quantitative",
-        "title": [],
         "scale": {
           "domain": [28, 72]
         }
@@ -880,8 +871,7 @@
       "tooltip": [
         {
           "field": "datamations_y_tooltip",
-          "type": "quantitative",
-          "title": []
+          "type": "quantitative"
         },
         {
           "field": "Degree",

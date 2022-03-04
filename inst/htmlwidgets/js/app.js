@@ -653,6 +653,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         let resp = null;
 
         if (curr.custom) {
+          console.log(curr.sequence)
           resp = await gemini.recommendForSeq(curr.sequence, {
             ...options,
             stageN: curr.sequence.length - 1,

@@ -364,7 +364,7 @@
     "meta": {
       "parse": "jitter",
       "axes": true,
-      "description": "Plot really_extra_long_label_name within each group",
+      "description": "Plot bill_length_mm within each group",
       "splitField": "species"
     },
     "data": {
@@ -3502,7 +3502,7 @@
         "y": {
           "field": "datamations_y",
           "type": "quantitative",
-          "title": "really_extra_long_label_name",
+          "title": "bill_length_mm",
           "scale": {
             "domain": [32.1, 59.6]
           }
@@ -3518,7 +3518,7 @@
           {
             "field": "datamations_y_tooltip",
             "type": "quantitative",
-            "title": "really_extra_long_label_name"
+            "title": "bill_length_mm"
           },
           {
             "field": "sex",
@@ -3540,7 +3540,7 @@
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "axes": true,
-      "description": "Plot median really_extra_long_label_name of each group",
+      "description": "Plot median bill_length_mm of each group",
       "custom_animation": "median"
     },
     "data": {
@@ -6682,7 +6682,7 @@
         "y": {
           "field": "datamations_y",
           "type": "quantitative",
-          "title": "median(really_extra_long_label_name)",
+          "title": "median(bill_length_mm)",
           "scale": {
             "domain": [32.1, 59.6]
           }
@@ -6698,7 +6698,7 @@
           {
             "field": "datamations_y_tooltip",
             "type": "quantitative",
-            "title": "median(really_extra_long_label_name)"
+            "title": "median(bill_length_mm)"
           },
           {
             "field": "sex",
@@ -6720,7 +6720,7 @@
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "axes": true,
-      "description": "Plot median really_extra_long_label_name of each group, zoomed in"
+      "description": "Plot median bill_length_mm of each group, zoomed in"
     },
     "data": {
       "values": [
@@ -9861,7 +9861,7 @@
         "y": {
           "field": "datamations_y",
           "type": "quantitative",
-          "title": "median(really_extra_long_label_name)",
+          "title": "median(bill_length_mm)",
           "scale": {
             "domain": [36.8, 50.95]
           }
@@ -9877,7 +9877,7 @@
           {
             "field": "datamations_y_tooltip",
             "type": "quantitative",
-            "title": "median(really_extra_long_label_name)"
+            "title": "median(bill_length_mm)"
           },
           {
             "field": "sex",

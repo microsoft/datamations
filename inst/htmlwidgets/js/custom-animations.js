@@ -785,7 +785,7 @@ const CustomAnimations = {
         },
       },
     };
-
+    console.log(calculatedSource)
     return [rawSource, intermediate, step_1, step_2, step_3, step_4, target];
   },
   median: (rawSource, target, calculatedSource, p) => {

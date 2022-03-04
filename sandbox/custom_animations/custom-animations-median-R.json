@@ -73,10 +73,6 @@
         "type": "quantitative",
         "axis": null
       },
-      "color": {
-        "field": null,
-        "type": "nominal"
-      },
       "tooltip": [
         {
           "field": "Degree",
