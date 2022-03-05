@@ -22,12 +22,10 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
   # Should resemble first half of a summarize: listed set of values with associated gemini ids
 
   mutation_function_on_variable <- !identical(mapping$mutation_function, NULL)
+  mutation_basis_on_variable <- !identical(mapping$mutation_variables, NULL)
 
   if (mutation_function_on_variable) {
     mutation_variable <- mapping$mutation_name %>%
-      rlang::parse_expr()
-
-    mutation_basis <- rlang::as_name(mutation_variables[1]) %>%
       rlang::parse_expr()
 
     mutation_variable_chr <- rlang::as_name(mutation_variable)
@@ -38,12 +36,15 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
         !!mutation_variable := !!rlang::parse_expr(mutation_expression)
       )
 
-    if(!is.null(mutation_variables)) {
-      .data <- .data %>%
-        dplyr::mutate(
-          mutation_basis := !!mutation_basis
-        )
-    }
+    if(mutation_basis_on_variable) {
+      mutation_basis <- rlang::as_name(mutation_variables[1]) %>%
+        rlang::parse_expr()
+
+      mutation_basis_chr <- rlang::as_name(mutation_basis)
+
+      basis_type <- check_type(.data[[mutation_variable]])
+
+    } else {basis_type <- 'null'}
 
     # Check whether the response variable is numeric or binary / categorical
     # If it is numeric, the first summary frame should be a jittered distribution
@@ -84,8 +85,8 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
         dplyr::mutate(gemini_id = dplyr::row_number())
     }
 
-    .data <- .data %>%
-      dplyr::rename(!!Y_FIELD := {{ mutation_variable }},
+    data_1 <- .data %>%
+      dplyr::rename(!!Y_FIELD := {{ mutation_basis }},
 
       )
 
@@ -94,7 +95,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     # Generate the labels for these too - label by colour grouping variable or not at all
 
     if (mapping$x == 1) {
-      .data <- .data %>%
+      data_1 <- data_1 %>%
         dplyr::mutate(!!X_FIELD := 1)
 
       x_labels <- generate_labelsExpr(NULL)
@@ -103,17 +104,17 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     } else {
       x_var <- rlang::parse_expr(mapping$x)
 
-      .data <- .data %>%
+      data_1 <- data_1 %>%
         dplyr::mutate(
           !!X_FIELD := as.numeric({{ x_var }})
         )
 
-      x_labels <- .data %>%
+      x_labels <- data_1 %>%
         dplyr::ungroup() %>%
         dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
         generate_labelsExpr()
 
-      x_domain <- .data %>%
+      x_domain <- data_1 %>%
         dplyr::ungroup() %>%
         dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
         generate_x_domain()
@@ -125,9 +126,9 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
 
     x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
 
-    y_range <- range(.data[[Y_FIELD_CHR]], na.rm = TRUE)
+    y_range <- range(data_1[[Y_FIELD_CHR]], na.rm = TRUE)
 
-    if(!is.null(mapping$mutation_name)) {
+    if(!is.null(mapping$mutation_variables)) {
       y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$mutation_name, scale = list(domain = y_range))
     }
     else {
@@ -136,7 +137,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
 
     if (!is.null(mapping$color)) {
       color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
-      color_encoding <- append(color_encoding, list(legend = list(values = levels(.data[[mapping$color]]))))
+      color_encoding <- append(color_encoding, list(legend = list(values = levels(data_1[[mapping$color]]))))
     }
 
     spec_encoding <- list(
@@ -152,13 +153,13 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     facet_col_encoding <- list(field = mapping$column, type = "ordinal", title = mapping$column)
 
     if (!is.null(mapping$column)) {
-      facet_col_encoding$sort <- unique(.data[[mapping$column]])
+      facet_col_encoding$sort <- unique(data_1[[mapping$column]])
     }
 
     facet_row_encoding <- list(field = mapping$row, type = "ordinal", title = mapping$row)
 
     if (!is.null(mapping$row)) {
-      facet_row_encoding$sort <- unique(.data[[mapping$row]])
+      facet_row_encoding$sort <- unique(data_1[[mapping$row]])
     }
 
     facet_encoding <- list(
@@ -167,7 +168,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     )
 
     # Calculate number of facets for sizing
-    facet_dims <- .data %>%
+    facet_dims <- data_1 %>%
       calculate_facet_dimensions(group_vars, mapping)
   } else if (y_type %in% c("binary", "categorical")) {
     # Mapping and encoding for binary / categorical ----
@@ -184,9 +185,9 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     ### Prep data ----
 
     # If gemini_id is not already added, e.g. if this function is called on its own for testing purposes
-    if (!"gemini_id" %in% names(.data)) {
+    if (!"gemini_id" %in% names(data_1)) {
       # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
-      .data <- .data %>%
+      data_1 <- data_1 %>%
         arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
         # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
         # Not defined in any of the previous steps since the JS takes care of generating it
@@ -250,23 +251,188 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
   # Generate the data and specs for each state
   specs_list <- list()
 
-  # State 1: Scatter plot or icon array (with any grouping) -----
+  # State 1: Scatter plot or icon array (with any grouping) for original variable -----
   # Scatter plot if the variable is continuous, icon array if discrete (categorical, binary)
-  # If the summary function is just a function, not on a variable (i.e. n()), then this step is skipped
 
   if (y_type %in% c("numeric", "binary", "categorical")) {
 
     # If it is numeric, prepare to visualize data in a jittered scatterplot
     if (y_type == "numeric") {
-      data_1 <- .data %>%
-        dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
+      data_1 <- data_1 %>%
+        dplyr::select(gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
         dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
 
       # Generate tooltip
       spec_encoding$tooltip <- generate_mutation_tooltip(data_1, mapping$mutation_name)
     } else if (y_type %in% c("binary", "categorical")) { # Otherwise, another infogrid!
       # Mutation already created, no necessary updates to this data
-      data_1 <- .data
+      data_1 <- data_1
+
+      # If the mutation variable is a factor, order according to its values to match the legend
+      # If it's TRUE / FALSE, the order in R is FALSE / TRUE or 0 / 1 but change so that it's actually T/F 1/0
+
+      if (is.factor(data_1[[mutation_basis_chr]])) {
+        data_1 <- data_1 %>%
+          dplyr::arrange(!!!group_vars, !!mutation_basis)
+      } else if (all(data_1[[mutation_basis_chr]] %in% c(TRUE, FALSE))) {
+        data_1 <- data_1 %>%
+          dplyr::arrange(!!!group_vars, -!!mutation_basis)
+      }
+
+      # Generate tooltip
+      tooltip_groups <- generate_group_by_tooltip(data_1)
+      tooltip_y <- list(field = mutation_basis_chr, type = "nominal")
+
+      spec_encoding$tooltip <- append(list(tooltip_y), tooltip_groups)
+    }
+
+    if (y_type == "numeric") {
+
+      # Generate description
+      description <- generate_mutation_description(mutation_basis, group_by = length(group_vars) != 0)
+
+      # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
+      meta <- list(parse = "jitter", axes = has_facets, description = description)
+    } else if (y_type %in% c("binary", "categorical")) {
+
+      # Generate description
+      description <- generate_mutation_description(mutation_basis, group_by = length(group_vars) != 0)
+
+      # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
+      # Use this if the response variable is categorical
+      meta <- list(parse = "grid", axes = has_facets, description = description)
+
+      if (y_type == "binary") {
+        if (!is.null(mapping$color)) {
+
+          # If there is a variable mapped to color:
+          # color: mapping$color
+          # stroke: mapping$color
+          # fillOpacity: mapping$y, scale: domain: 0, 1
+          # shape: mapping$y, scale: range: circle, legend: symbolFillColor: expr: first value set to grey color, second value is transparent
+
+          spec_encoding$stroke <- list(field = mapping$color)
+
+          spec_encoding$fillOpacity <- list(field = mutation_variable_chr, type = "nominal", scale = list(range = c(0, 1)))
+
+          # For the fill, if it's a factor, take the first
+          # If it's TRUE / FALSE, do TRUE first
+
+          values <- unique(.data[[mutation_variable_chr]])
+
+          first_value <- if (identical(sort(values), c(0, 1))) {
+            1
+          } else if (identical(sort(values), c(FALSE, TRUE))) {
+            "true"
+          } else if (is.factor(values)) {
+            levels(values)[[1]]
+          } else {
+            values[[1]]
+          }
+
+          shape_fill_legend_expr <- glue::glue("datum.label == '{first_value}' ? '#888' : 'transparent'",
+            first_value = first_value
+          )
+
+          value_order <- if (identical(sort(values), c(0, 1))) {
+            c(1, 0)
+          } else if (identical(sort(values), c(FALSE, TRUE))) {
+            c(TRUE, FALSE)
+          } else if (is.factor(values)) {
+            levels(values)
+          } else {
+            values
+          }
+
+          spec_encoding$shape <- list(
+            field = mutation_variable_chr,
+            scale = list(
+              domain = value_order,
+              range = c("circle", "circle")
+            ),
+            legend = list(symbolFillColor = list(expr = shape_fill_legend_expr))
+          )
+        } else {
+          color <- "#4c78a8"
+          white <- "#ffffff"
+          # If there is NOT a variable mapped to color:
+          # fill: mapping$y, scale: range: grey, white
+          # stroke: mapping$y, scale: range: grey, grey
+
+          values <- unique(.data[[mutation_variable_chr]])
+
+          value_order <- if (identical(sort(values), c(0, 1))) {
+            c(1, 0)
+          } else if (identical(sort(values), c(FALSE, TRUE))) {
+            c(TRUE, FALSE)
+          } else if (is.factor(values)) {
+            levels(values)
+          } else {
+            values
+          }
+
+          spec_encoding$fill <- list(field = mutation_variable_chr, scale = list(domain = value_order, range = c(color, white)))
+          spec_encoding$stroke <- list(field = mutation_variable_chr, scale = list(domain = value_order, range = c(color, color)))
+        }
+      } else if (y_type == "categorical") {
+        # Use shape
+        spec_encoding$shape <- list(field = mutation_variable_chr, type = "nominal")
+
+        # Set the legend order to match the order in the data, or factor levels
+
+        values <- unique(.data[[mutation_variable_chr]])
+
+        legend_order <- if (is.factor(values)) {
+          levels(values)
+        } else {
+          values
+        }
+
+        spec_encoding$shape$scale$domain <- legend_order
+      }
+    }
+
+    # Variables that need to be passed to JS
+    if (!is.null(mapping$x)) {
+      # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
+      meta <- append(meta, list(splitField = mapping$x))
+
+      if (!has_facets) {
+        # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
+        meta <- append(meta, list(xAxisLabels = levels(data_1[[mapping$x]])))
+      }
+    }
+
+    spec <- generate_vega_specs(
+      .data = data_1,
+      mapping = mapping,
+      meta = meta,
+      spec_encoding = spec_encoding, facet_encoding = facet_encoding,
+      height = height, width = width, facet_dims = facet_dims,
+      # Flags for column / row  facets or color
+      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
+    )
+
+    specs_list <- append(specs_list, list(spec))
+
+  }
+
+  # State 2: Scatter plot or icon array (with any grouping) for new variable-----
+  # Scatter plot if the variable is continuous, icon array if discrete (categorical, binary)
+
+  if (y_type %in% c("numeric", "binary", "categorical")) {
+
+    # If it is numeric, prepare to visualize data in a jittered scatterplot
+    if (y_type == "numeric") {
+      data_1 <- data_1 %>%
+        dplyr::select(gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
+        dplyr::mutate(!!Y_TOOLTIP_FIELD := !!Y_FIELD)
+
+      # Generate tooltip
+      spec_encoding$tooltip <- generate_mutation_tooltip(data_1, mapping$mutation_name)
+    } else if (y_type %in% c("binary", "categorical")) { # Otherwise, another infogrid!
+      # Mutation already created, no necessary updates to this data
+      data_1 <- data_1
 
       # If the mutation variable is a factor, order according to its values to match the legend
       # If it's TRUE / FALSE, the order in R is FALSE / TRUE or 0 / 1 but change so that it's actually T/F 1/0
@@ -414,16 +580,6 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     )
 
     specs_list <- append(specs_list, list(spec))
-
-    spec <- generate_vega_specs(
-      .data = data_1,
-      mapping = mapping,
-      meta = meta,
-      spec_encoding = spec_encoding, facet_encoding = facet_encoding,
-      height = height, width = width, facet_dims = facet_dims,
-      # Flags for column / row  facets or color
-      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
-    )
 
   }
 
