@@ -5,7 +5,7 @@
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 #' @noRd
-prep_specs_tally <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
+prep_specs_tally <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, ...) {
 
   # Treat tally as summarize(n = n()) with optional group mappings
   # Call prep_specs_group_by and prep_specs_summarize

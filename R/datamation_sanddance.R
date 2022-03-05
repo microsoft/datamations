@@ -163,19 +163,21 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
       mutate = prep_specs_mutate
     )
 
+    # Checks if the group_by occurs before this fitting
+    if (!length(which(stringr::str_detect(names(tidy_function_args), "group_by")))==0 &&
+        which(stringr::str_detect(names(tidy_function_args), "group_by")) < i) {
+      grouping_before <- TRUE
+    } else grouping_before <- FALSE
+
+    if (!length(which(stringr::str_detect(names(tidy_function_args), "mutate")))==0 &&
+        which(stringr::str_detect(names(tidy_function_args), "mutate")) == (i-1)) {
+      mutation_before <- TRUE
+    } else mutation_before <- FALSE
+
     # Call that function with the data and mapping
     if (verb != "filter") {
 
-      if(verb == "mutate") {
-        # Checks if the group_by occurs before this fitting
-        if (!length(which(stringr::str_detect(names(tidy_function_args), "group_by")))==0 &&
-            which(stringr::str_detect(names(tidy_function_args), "group_by")) < i) {
-          grouping_on_mutation <- TRUE
-        } else grouping_on_mutation <- FALSE
-
-        res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width, grouping_on_mutation))
-      }
-      else res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
+      res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width, grouping_before = grouping_before, mutation_before = mutation_before))
 
     } else if (verb == "filter") {
       previous_frame <- res[[i - 1]]

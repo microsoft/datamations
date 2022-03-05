@@ -5,7 +5,7 @@
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 #' @noRd
-prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
+prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, mutation_before, ...) {
 
   # Get summary function and variable
 
@@ -377,17 +377,22 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       }
     }
 
-    spec <- generate_vega_specs(
-      .data = data_1,
-      mapping = mapping,
-      meta = meta,
-      spec_encoding = spec_encoding, facet_encoding = facet_encoding,
-      height = height, width = width, facet_dims = facet_dims,
-      # Flags for column / row  facets or color
-      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
-    )
+    # Skip this step if we have a mutation directly before
+    if(!mutation_before) {
 
-    specs_list <- append(specs_list, list(spec))
+      spec <- generate_vega_specs(
+        .data = data_1,
+        mapping = mapping,
+        meta = meta,
+        spec_encoding = spec_encoding, facet_encoding = facet_encoding,
+        height = height, width = width, facet_dims = facet_dims,
+        # Flags for column / row  facets or color
+        column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
+      )
+      specs_list <- append(specs_list, list(spec))
+
+    }
+
   }
 
   # Switch settings for states ----

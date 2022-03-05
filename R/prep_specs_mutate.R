@@ -5,13 +5,17 @@
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 #' @noRd
-prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, grouping_on_mutation) {
+prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, grouping_before, ...) {
 
   # Get mutation expression
   # Mutation function name not needed here (and sometimes hard to parse, as often mathematical expression)
 
   if(!is.null(mapping$mutation_expression)) {
     mutation_expression <- mapping$mutation_expression
+  }
+
+    if(!is.null(mapping$mutation_variables)) {
+    mutation_variables <- mapping$mutation_variables
   }
 
   # TODO -- Here we need a sensible set of specs for the mutation
@@ -23,26 +27,37 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     mutation_variable <- mapping$mutation_name %>%
       rlang::parse_expr()
 
+    mutation_basis <- rlang::as_name(mutation_variables[1]) %>%
+      rlang::parse_expr()
+
     mutation_variable_chr <- rlang::as_name(mutation_variable)
 
     # Prep data with initial mutation
     .data <- .data %>%
-      dplyr::mutate(!!mutation_variable := !!rlang::parse_expr(mutation_expression))
+      dplyr::mutate(
+        !!mutation_variable := !!rlang::parse_expr(mutation_expression)
+      )
+
+    if(!is.null(mutation_variables)) {
+      .data <- .data %>%
+        dplyr::mutate(
+          mutation_basis := !!mutation_basis
+        )
+    }
 
     # Check whether the response variable is numeric or binary / categorical
     # If it is numeric, the first summary frame should be a jittered distribution
     # If it is binary / categorical, the first summary frame is an info grid (and so much of the same logic needs to be pulled in from prep_specs_group_by)
 
-    # TODO - Cant check this yet since not in data, need new way to handle
     y_type <- check_type(.data[[mutation_variable]])
   } else {
     y_type <- "null"
   }
 
   # If the grouping doesn't happen until after the mutation, set the group mapping NULL
-  if(!grouping_on_mutation) {mapping$groups <- NULL}
+  if(!grouping_before) {mapping$groups <- NULL}
   # For the x mapping, we want this as 1 so it doesn't facet
-  if(!grouping_on_mutation) {mapping$x <- 1}
+  if(!grouping_before) {mapping$x <- 1}
 
   # Mapping and encoding for numeric ----
   if (y_type == "numeric") {
@@ -70,7 +85,9 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     }
 
     .data <- .data %>%
-      dplyr::rename(!!Y_FIELD := {{ mutation_variable }})
+      dplyr::rename(!!Y_FIELD := {{ mutation_variable }},
+
+      )
 
     # Add an x variable to use as the center of jittering
     # It can just be 1, except if mapping$x is not 1!
@@ -397,6 +414,17 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     )
 
     specs_list <- append(specs_list, list(spec))
+
+    spec <- generate_vega_specs(
+      .data = data_1,
+      mapping = mapping,
+      meta = meta,
+      spec_encoding = spec_encoding, facet_encoding = facet_encoding,
+      height = height, width = width, facet_dims = facet_dims,
+      # Flags for column / row  facets or color
+      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
+    )
+
   }
 
   # Return the specs

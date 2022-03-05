@@ -5,7 +5,7 @@
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 #' @noRd
-prep_specs_count <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
+prep_specs_count <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, ...) {
 
   # Treat count as group_by + summarize(n = n()) steps
   # Call prep_specs_group_by and prep_specs_summarize
