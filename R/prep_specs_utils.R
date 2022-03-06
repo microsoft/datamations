@@ -303,6 +303,25 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
 
 # Generate description for summarize steps
 # Depending on whether there's errorbars, any groups, etc.
+generate_generic_description <- function(variable, function_obj = NULL, group_by = TRUE) {
+
+  if (is.null(function_obj)) {
+    glue::glue("Plot variable {variable}{group_description}",
+      group_description = ifelse(group_by, " within each group", "")
+    )
+  } else if (is.null(variable)) {
+    glue::glue("Plot {variable}(){group_description}",
+      group_description = ifelse(group_by, " of each group", "")
+    )
+  } else {
+    glue::glue("Plot {variable} of the function {function_obj}{group_description}",
+      group_description = ifelse(group_by, " of each group", "")
+    )
+  }
+}
+
+# Generate description for summarize steps
+# Depending on whether there's errorbars, any groups, etc.
 generate_mutation_description <- function(mutation_variable, mutation_function = NULL, group_by = TRUE) {
 
   if (is.null(mutation_function)) {
@@ -314,7 +333,7 @@ generate_mutation_description <- function(mutation_variable, mutation_function =
       group_description = ifelse(group_by, " of each group", "")
     )
   } else {
-    glue::glue("Create new variable {mutation_variable} of the function {summary_function}{group_description}",
+    glue::glue("Create new variable {mutation_variable} of the function {mutation_function}{group_description}",
       group_description = ifelse(group_by, " of each group", "")
     )
   }
