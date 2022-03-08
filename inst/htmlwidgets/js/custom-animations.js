@@ -636,17 +636,6 @@ const CustomAnimations = {
       ],
     };
 
-    // this is for test, it should be passed from R or Python side..
-    // but can also keep this. it will work!!!
-    // target.data.values.forEach((d) => {
-    //   const group = groups.find((x) => x.groupValue === d[x.groupKey]);
-    //   d[CONF.Y_FIELD] = group.aggr;
-    // });
-
-    // const domain = d3.extent(groups, (d) => d.aggr);
-    // target.encoding.y.scale.domain = domain;
-    /// end of test ////
-
     return [rawSource, step_1, step_2, target];
   },
   max: (rawSource, target, source) => {
@@ -670,16 +659,6 @@ const CustomAnimations = {
         ...step_1.layer.slice(1),
       ],
     };
-
-    // this is for test, it should be passed from R or Python side..
-    // target.data.values.forEach((d) => {
-    //   const group = groups.find((x) => x.groupValue === d[x.groupKey]);
-    //   d[CONF.Y_FIELD] = group.aggr;
-    // });
-
-    // const domain = d3.extent(groups, (d) => d.aggr);
-    // target.encoding.y.scale.domain = domain;
-    /// end of test ////
 
     return [rawSource, step_1, step_2, target];
   },
@@ -754,23 +733,6 @@ const CustomAnimations = {
         ...step_2.layer.slice(1),
       ],
     };
-
-    // this is for test, it should be passed from R or Python side..
-
-    // mention this part....
-
-    // if (!rawSource.meta.hasFacet) {
-    //   target.data.values.forEach((d) => {
-    //     const group = groups.find((x) => x.groupValue === d[x.groupKey]);
-    //     if (group) {
-    //       d[CONF.Y_FIELD] = group.mean;
-    //     }
-    //   });
-
-    //   const domain = d3.extent(groups, (d) => d.mean);
-    //   target.encoding.y.scale.domain = domain;
-    // }
-    /// end of test ////
 
     const intermediate = {
       ...rawSource,
