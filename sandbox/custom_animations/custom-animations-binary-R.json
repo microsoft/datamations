@@ -320,7 +320,7 @@
     "meta": {
       "axes": true,
       "description": "Plot mean is_hit of each group",
-      "custom_animation": "mean"
+      "splitField": "year"
     },
     "data": {
       "values": [

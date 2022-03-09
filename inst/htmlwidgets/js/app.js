@@ -466,9 +466,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * - meta.jitter = jitters data using d3.forceCollide
    * - spec.layer = splits layers to stack on top on each other
    */
-  async function transformSpecs() {
-    const n = d3.max(vegaLiteSpecs[0].data.values, (d) => d.n);
-    let rows = Math.ceil(Math.sqrt(n));
+  async function transformSpecs() { 
+    const rows = getRows(vegaLiteSpecs);
 
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
       let vlSpec = vegaLiteSpecs[i];
