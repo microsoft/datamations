@@ -26,8 +26,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   let frames;
   let metas;
   let frameIndex = 0;
-  let intervalId;
   let timeoutId;
+  let playing = false;
   let initializing = false;
   let frameDuration = frameDur || 2000;
   let frameDelay = frameDel || 1000;
@@ -79,14 +79,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     frames = [];
     metas = [];
     frameIndex = 0;
-
-    if (intervalId) {
-      clearInterval(intervalId);
-      intervalId = null;
-    }
+    playing = false;
 
     if (timeoutId) {
-      clearInterval(timeoutId);
+      clearTimeout(timeoutId);
       timeoutId = null;
     }
   };
@@ -144,14 +140,17 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * Plays animation
    */
   function play(startIndex) {
+    playing = true;
     frameIndex = startIndex || 0;
 
     const tick = () => {
       animateFrame(frameIndex).then(() => {
-        frameIndex++; // next frame
+        if (playing) {
+          frameIndex++; // next frame
 
-        if (frames[frameIndex]) {
-          tick();
+          if (frames[frameIndex]) {
+            tick();
+          }
         }
       });
 
@@ -162,15 +161,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     };
 
     tick();
-
-    // if (intervalId) clearInterval(intervalId);
-    // intervalId = setInterval(() => {
-    //   tick();
-    //   if (frameIndex >= frames.length) {
-    //     clearInterval(intervalId);
-    //     frameIndex = 0;
-    //   }
-    // }, frameDuration + frameDelay + 500);
   }
 
   /**
@@ -735,10 +725,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * Slider on change callback
    */
   function onSlide() {
+    playing = false;
     const { slider } = getSelectors(id);
     const index = document.querySelector(slider).value;
     drawSpec(index);
-    if (intervalId) clearInterval(intervalId);
   }
 
   init();
