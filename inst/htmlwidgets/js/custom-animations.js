@@ -263,12 +263,13 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
             ...source.encoding.x,
             field: CONF.X_FIELD + "_pos",
           },
-          color: {
-            field: "bisection",
-            legend: null,
-            type: "nominal",
-            scale: { domain: [-1, 0, 1], range: ["orange", "#aaa", "green"] },
-          },
+          color: source.encoding.color
+          // color: {
+          //   field: "bisection",
+          //   legend: null,
+          //   type: "nominal",
+          //   scale: { domain: [-1, 0, 1], range: ["orange", "#aaa", "green"] },
+          // },
         },
       },
       ...rules,
@@ -662,11 +663,10 @@ const CustomAnimations = {
 
     return [rawSource, step_1, step_2, target];
   },
-  mean: (rawSource, target, calculatedSource) => {
+  mean: (rawSource, target) => {
     const step_1 = getMeanStep(rawSource, target);
 
     const barWidth = 2;
-    // const groups = step_1.meta.all_groups;
 
     const step_2 = {
       ...step_1,
@@ -685,7 +685,7 @@ const CustomAnimations = {
             x2: {
               field: CONF.X_FIELD + "_pos_end",
             },
-            color: { value: "#aaa" },
+            color: rawSource.encoding.color
           },
         },
         ...step_1.layer.slice(1),
@@ -747,7 +747,7 @@ const CustomAnimations = {
         },
       },
     };
-
+    console.log(step_2)
     return [rawSource, intermediate, step_1, step_2, step_3, step_4, target];
   },
   median: (rawSource, target, calculatedSource, p) => {
