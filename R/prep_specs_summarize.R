@@ -563,12 +563,16 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # If the summary function is mean or median, min, max, or quantile, add meta.custom_animation
   ## -- TODO, Add specific meta specs for quantile that pass the probs value
 
-  if (mapping$summary_function %in% c("quantile")) {
-    spec[["meta"]][["custom_animation"]] <- list(mapping$summary_function, mapping$summary_parameters)
-  }
+  if (y_type %in% c("numeric", "categorical")) {
 
-  if (mapping$summary_function %in% c("mean", "median", "min", "max")) {
-    spec[["meta"]][["custom_animation"]] <- mapping$summary_function
+    if (mapping$summary_function %in% c("quantile")) {
+      spec[["meta"]][["custom_animation"]] <- list(mapping$summary_function, mapping$summary_parameters)
+    }
+
+    if (mapping$summary_function %in% c("mean", "median", "min", "max")) {
+      spec[["meta"]][["custom_animation"]] <- mapping$summary_function
+    }
+
   }
 
   specs_list <- append(specs_list, list(spec))
