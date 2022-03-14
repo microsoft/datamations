@@ -181,8 +181,10 @@
       let app1 = null;
 
       d3.json(
-        `${base}/custom-animations-${animationType}-R.json`
+        // `${base}/custom-animations-${animationType}-R.json`
+        'https://raw.githubusercontent.com/microsoft/datamations/scales-transform/sandbox/mutations/mutate-scale-R.json'
       ).then(specs => {
+        window.rawSpecs = JSON.parse(JSON.stringify(specs));
         app1 = App("app", { specs, frameDur: 3000 });
       });
     </script>

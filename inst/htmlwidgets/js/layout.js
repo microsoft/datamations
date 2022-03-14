@@ -330,8 +330,12 @@ function getJitterSpec(spec) {
       })
     }
 
-    encoding.y.scale = {
-      domain: yExtent
+    if (encoding.y.scale) {
+      encoding.y.scale.domain = yExtent
+    } else {
+      encoding.y.scale = {
+        domain: yExtent
+      }
     }
 
     encoding.x.scale = {
