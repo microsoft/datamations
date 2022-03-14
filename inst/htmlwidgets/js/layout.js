@@ -3,8 +3,6 @@ function generateGrid(spec, rows = 10, stacked = false) {
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const groupKeys = [];
 
-  const gap = 2;
-  const distance = 4 + gap;
   let {width: specWidth, height: specHeight} = spec.spec || spec;
 
   if (spec.facet) {
@@ -29,15 +27,10 @@ function generateGrid(spec, rows = 10, stacked = false) {
     }
   });
 
-  const ingoreFields = [
-    'tooltip', 'x', 'y', 
-    'datamations_x', 'datamations_y'
-  ];
-
   let secondarySplit = Object.keys(encoding).filter(d => {
     const field = encoding[d].field;
     return field !== splitField &&
-           ingoreFields.indexOf(d) === -1 &&
+           IGNORE_FIELDS.indexOf(d) === -1 &&
            groupKeys.indexOf(field) === -1 &&
            metas.indexOf(field) === -1;
   })[0];
@@ -100,14 +93,6 @@ function generateGrid(spec, rows = 10, stacked = false) {
   }
 
   let maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
-
-  // if width divided by maxCols is less than 5, 
-  // then take up all vertical space to increase rows and reduce columns 
-  if (specWidth / maxCols < 5) {
-    rows = Math.floor(specHeight / distance);
-    maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
-  }
-
   let splitOptions = [];
 
   if (splitField) {
@@ -307,6 +292,8 @@ function getJitterSpec(spec) {
 
     let x = xScale(d[CONF.X_FIELD]) + xScale.bandwidth() / 2;
     let y = d[CONF.Y_FIELD];
+
+    d.scaledX = Math.round(x);
 
     return {
       ...d,

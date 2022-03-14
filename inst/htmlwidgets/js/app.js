@@ -26,8 +26,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   let frames;
   let metas;
   let frameIndex = 0;
-  let intervalId;
   let timeoutId;
+  let playing = false;
   let initializing = false;
   let frameDuration = frameDur || 2000;
   let frameDelay = frameDel || 1000;
@@ -79,14 +79,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     frames = [];
     metas = [];
     frameIndex = 0;
-
-    if (intervalId) {
-      clearInterval(intervalId);
-      intervalId = null;
-    }
+    playing = false;
 
     if (timeoutId) {
-      clearInterval(timeoutId);
+      clearTimeout(timeoutId);
       timeoutId = null;
     }
   };
@@ -143,26 +139,28 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   /**
    * Plays animation
    */
-  function play() {
-    frameIndex = 0;
+  function play(startIndex) {
+    playing = true;
+    frameIndex = startIndex || 0;
+
     const tick = () => {
-      animateFrame(frameIndex);
-      frameIndex++;
+      animateFrame(frameIndex).then(() => {
+        if (playing) {
+          frameIndex++; // next frame
+
+          if (frames[frameIndex]) {
+            tick();
+          }
+        }
+      });
+
       if (typeof HTMLWidgets !== "undefined" && HTMLWidgets.shinyMode) {
         var prevIndex = frameIndex - 1;
         Shiny.onInputChange("slider_state", prevIndex);
       }
     };
-    tick();
 
-    if (intervalId) clearInterval(intervalId);
-    intervalId = setInterval(() => {
-      tick();
-      if (frameIndex >= frames.length) {
-        clearInterval(intervalId);
-        frameIndex = 0;
-      }
-    }, frameDuration + frameDelay);
+    tick();
   }
 
   /**
@@ -177,7 +175,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     if (!spec) return;
 
     if (spec.custom) {
-      spec = spec.sequence[spec.sequence.length - 1];
+      spec = gemini.vl2vg4gemini(spec.sequence[spec.sequence.length - 1]);
     }
 
     const meta = metas[index];
@@ -209,7 +207,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     d3.select(controls).style("width", spec.width + transformX + 10 + "px");
 
     // draw vis
-    return drawChart(spec, (vegaSpec && vegaSpec.custom) ? null : vegaSpec);
+    return drawChart(spec, vegaSpec && vegaSpec.custom ? null : vegaSpec);
   }
 
   /**
@@ -247,11 +245,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
               res();
             }
 
-          // ensure facet translations match in axisSelector and otherLayers 
-          setTimeout(() => {
-            adjustAxisAndErrorbars();
-          }, 100);
-
+            // ensure facet translations match in axisSelector and otherLayers
+            setTimeout(() => {
+              adjustAxisAndErrorbars();
+            }, 100);
           });
         });
       });
@@ -262,8 +259,14 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
   function adjustAxisAndErrorbars() {
     const { axisSelector, otherLayers } = getSelectors(id);
-    const axisCells = d3.select(axisSelector).selectAll(".mark-group.cell>g").nodes();
-    const otherLayersCells = d3.select(otherLayers).selectAll(".mark-group.cell>g").nodes();
+    const axisCells = d3
+      .select(axisSelector)
+      .selectAll(".mark-group.cell>g")
+      .nodes();
+    const otherLayersCells = d3
+      .select(otherLayers)
+      .selectAll(".mark-group.cell>g")
+      .nodes();
 
     if (axisCells.length === otherLayersCells.length) {
       for (let i = 0; i < axisCells.length; i++) {
@@ -337,6 +340,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   async function animateFrame(index) {
     if (!frames[index]) return;
 
+    console.log("animating frame", index);
+
     const { axisSelector, visSelector, otherLayers, descr, slider, controls } =
       getSelectors(id);
 
@@ -344,8 +349,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     let anim = null;
 
     if (source.custom) {
+      const _source_spec = gemini.vl2vg4gemini(source.sequence[source.sequence.length - 1])
       anim = await gemini.animate(
-        source.sequence[source.sequence.length - 1],
+        _source_spec,
         target,
         gemSpec
       );
@@ -362,65 +368,67 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       clearTimeout(timeoutId);
     }
 
-    drawSpec(index, source).then(() => {
-      timeoutId = setTimeout(() => {
-        d3.select(descr).html(currMeta.description);
-
-        anim.play(visSelector).then(() => {
-          d3.select(slider).property("value", index + 1);
-        });
-
-        const transformX = currMeta.transformX || 0;
-        const transformY = currMeta.transformY || 0;
-
-        d3.select(visSelector)
-          .transition()
-          .duration(750)
-          .style("left", transformX + "px")
-          .style("top", transformY + "px");
-
-        // show/hide axis vega chart
-        if (currHasAxes) {
-          drawAxis(index + 1);
-          d3.select(axisSelector)
-            .transition()
-            .duration(1000)
-            .style("opacity", 1);
-          d3.select(visSelector).classed("with-axes", true);
-          d3.select(otherLayers).classed("with-axes", true);
-        } else {
-          d3.select(axisSelector)
-            .transition()
-            .duration(1000)
-            .style("opacity", 0);
-          d3.select(visSelector).classed("with-axes", false);
-          d3.select(otherLayers).classed("with-axes", false);
-          d3.select(controls).style("width", width + transformX + 10 + "px");
-        }
-
-        const nextSpec = vegaLiteSpecs[index + 1];
-
-        if (nextSpec && Array.isArray(nextSpec)) {
-          const statics = nextSpec.filter((d) => !d.meta.animated);
-
-          d3.select(otherLayers)
-            .html("")
-            .style("opacity", 0)
-            .transition()
-            // .delay(frameDuration / 3)
-            .duration(frameDuration / 2)
-            .style("opacity", 1);
-
-          statics.forEach((s) => {
-            const div = document.createElement("div");
-            div.classList.add("vega-hidden-layer");
-            vegaEmbed(div, s, { renderer: "svg" }).then(() => {
-              adjustAxisAndErrorbars();
-            });
-            document.querySelector(otherLayers).appendChild(div);
+    return new Promise((res) => {
+      drawSpec(index, source).then(() => {
+        timeoutId = setTimeout(() => {
+          d3.select(descr).html(currMeta.description);
+          anim.play(visSelector).then(() => {
+            d3.select(slider).property("value", index + 1);
+            res();
           });
-        }
-      }, frameDelay);
+
+          const transformX = currMeta.transformX || 0;
+          const transformY = currMeta.transformY || 0;
+
+          d3.select(visSelector)
+            .transition()
+            .duration(750)
+            .style("left", transformX + "px")
+            .style("top", transformY + "px");
+
+          // show/hide axis vega chart
+          if (currHasAxes) {
+            drawAxis(index + 1);
+            d3.select(axisSelector)
+              .transition()
+              .duration(1000)
+              .style("opacity", 1);
+            d3.select(visSelector).classed("with-axes", true);
+            d3.select(otherLayers).classed("with-axes", true);
+          } else {
+            d3.select(axisSelector)
+              .transition()
+              .duration(1000)
+              .style("opacity", 0);
+            d3.select(visSelector).classed("with-axes", false);
+            d3.select(otherLayers).classed("with-axes", false);
+            d3.select(controls).style("width", width + transformX + 10 + "px");
+          }
+
+          const nextSpec = vegaLiteSpecs[index + 1];
+
+          if (nextSpec && Array.isArray(nextSpec)) {
+            const statics = nextSpec.filter((d) => !d.meta.animated);
+
+            d3.select(otherLayers)
+              .html("")
+              .style("opacity", 0)
+              .transition()
+              // .delay(frameDuration / 3)
+              .duration(frameDuration / 2)
+              .style("opacity", 1);
+
+            statics.forEach((s) => {
+              const div = document.createElement("div");
+              div.classList.add("vega-hidden-layer");
+              vegaEmbed(div, s, { renderer: "svg" }).then(() => {
+                adjustAxisAndErrorbars();
+              });
+              document.querySelector(otherLayers).appendChild(div);
+            });
+          }
+        }, frameDelay);
+      });
     });
   }
 
@@ -449,9 +457,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * - meta.jitter = jitters data using d3.forceCollide
    * - spec.layer = splits layers to stack on top on each other
    */
-  async function transformSpecs() {
-    const n = d3.max(vegaLiteSpecs[0].data.values, (d) => d.n);
-    let rows = Math.ceil(Math.sqrt(n));
+  async function transformSpecs() { 
+    const rows = getRows(vegaLiteSpecs);
 
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
       let vlSpec = vegaLiteSpecs[i];
@@ -477,23 +484,51 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         let funName = meta.custom_animation;
         let p = null;
 
-        if (Array.isArray(meta.custom_animation) && meta.custom_animation[0] === "quantile") {
+        if (
+          Array.isArray(meta.custom_animation) &&
+          meta.custom_animation[0] === "quantile"
+        ) {
           p = meta.custom_animation[1];
           funName = "median";
+        }
+
+        let source = {
+          ...rawSpecs[i - 1],
+          data: rawSpecsDontChange[i - 1].data,
+        };
+        let target = vlSpec;
+
+        // fake facets
+        if (rawSpecsDontChange[i - 1].facet) {
+          source = {
+            ...vegaLiteSpecs[i - 1],
+            meta: {
+              ...vegaLiteSpecs[i - 1].meta,
+              hasFacet: true,
+              columnFacet: rawSpecsDontChange[i - 1].facet.column,
+              rowFacet: rawSpecsDontChange[i - 1].facet.row,
+            },
+            data: {
+              values: vegaLiteSpecs[i - 1].data.values.map((d) => {
+                return {
+                  ...d,
+                  [CONF.X_FIELD]: d[CONF.X_FIELD + "_num"],
+                };
+              }),
+            },
+          };
+        }
+
+        if (vegaLiteSpecs[i].facet) {
+          const newSpecTarget = await hackFacet(vegaLiteSpecs[i]);
+          vegaLiteSpecs[i] = newSpecTarget;
+          target = newSpecTarget;
         }
 
         const fn = CustomAnimations[funName];
 
         if (fn) {
-          const sequence = await fn(
-            {
-              ...rawSpecs[i - 1],
-              data: rawSpecsDontChange[i - 1].data,
-            },
-            vlSpec,
-            vegaLiteSpecs[i - 1],
-            p
-          );
+          const sequence = await fn(source, target, vegaLiteSpecs[i - 1], p);
           vegaLiteSpecs[i] = {
             custom: meta.custom_animation,
             sequence,
@@ -617,16 +652,15 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         let resp = null;
 
         if (curr.custom) {
-          console.log(curr.sequence)
           resp = await gemini.recommendForSeq(curr.sequence, {
             ...options,
             stageN: curr.sequence.length - 1,
-            totalDuration: options.totalDuration,
+            totalDuration: frameDuration * 2,
           });
 
           const _gemSpec = resp[0].specs.map((d) => d.spec);
 
-          // make sure to add gemini_id to data change. 
+          // make sure to add gemini_id to data change.
           // gemini recommend does not add it by itself.
           _gemSpec.forEach((d) => {
             if (d.timeline.concat.length) {
@@ -650,10 +684,13 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
             currMeta,
           });
         } else {
-          resp = await gemini.recommend(prev, curr, options);
+          resp = await gemini.recommend(
+            prev.custom ? gemini.vl2vg4gemini(prev.sequence[prev.sequence.length - 1]) : prev,
+            curr,
+            options
+          );
 
           const _gemSpec = resp[0] ? resp[0].spec : gemSpec;
-
           const sync = _gemSpec.timeline.concat[0].sync;
 
           if (!sync.some((d) => d.component === "view")) {
@@ -688,10 +725,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * Slider on change callback
    */
   function onSlide() {
+    playing = false;
     const { slider } = getSelectors(id);
     const index = document.querySelector(slider).value;
     drawSpec(index);
-    if (intervalId) clearInterval(intervalId);
   }
 
   init();
@@ -700,5 +737,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     onSlide,
     play,
     animateFrame,
+    getFrames: () => frames,
   };
 }

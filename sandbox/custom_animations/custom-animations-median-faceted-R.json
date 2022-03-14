@@ -6682,7 +6682,7 @@
         "y": {
           "field": "datamations_y",
           "type": "quantitative",
-          "title": "median(bill_length_mm)",
+          "title": ["median", "bill_length_mm"],
           "scale": {
             "domain": [32.1, 59.6]
           }
@@ -6698,7 +6698,7 @@
           {
             "field": "datamations_y_tooltip",
             "type": "quantitative",
-            "title": "median(bill_length_mm)"
+            "title": ["median", "bill_length_mm"]
           },
           {
             "field": "sex",
@@ -9861,7 +9861,7 @@
         "y": {
           "field": "datamations_y",
           "type": "quantitative",
-          "title": "median(bill_length_mm)",
+          "title": ["median", "bill_length_mm"],
           "scale": {
             "domain": [36.8, 50.95]
           }
@@ -9877,7 +9877,7 @@
           {
             "field": "datamations_y_tooltip",
             "type": "quantitative",
-            "title": "median(bill_length_mm)"
+            "title": ["median", "bill_length_mm"]
           },
           {
             "field": "sex",
