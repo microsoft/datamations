@@ -749,8 +749,9 @@ const CustomAnimations = {
     return [rawSource, intermediate, step_1, step_2, step_3, step_4, target];
   },
   median: (rawSource, target, calculatedSource, p) => {
-    const initial = getMedianStep(rawSource, target, 0, p ?? 0.5);
-    const last_with_points = getMedianStep(rawSource, target, null, p ?? 0.5);
+    const percent = (p === undefined || p === null) ? 0.5 : p;
+    const initial = getMedianStep(rawSource, target, 0, percent);
+    const last_with_points = getMedianStep(rawSource, target, null, percent);
 
     const source = {
       $schema: rawSource.$schema,
