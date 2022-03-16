@@ -39,6 +39,14 @@ dependencies:
    version: 0.0.1
    src: htmlwidgets/js
    script: custom-animations.js
+ - name: gifshot
+   version: 0.0.1
+   src: htmlwidgets/js
+   script: gifshot.min.js
+ - name: download2
+   version: 0.0.1
+   src: htmlwidgets/js
+   script: download2.js
  - name: layout
    version: 0.0.1
    src: htmlwidgets/js
