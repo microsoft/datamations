@@ -753,44 +753,11 @@ const CustomAnimations = {
     const initial = getMedianStep(rawSource, target, 0, percent);
     const last_with_points = getMedianStep(rawSource, target, null, percent);
 
-    const source = {
-      $schema: rawSource.$schema,
-      data: rawSource.data,
-      width: rawSource.width,
-      height: rawSource.height,
-      meta: rawSource.meta,
-      layer: [
-        {
-          name: "main",
-          mark: rawSource.mark,
-          encoding: rawSource.encoding,
-        },
-        ...initial.layer.slice(1),
-      ],
-      resolve: { axis: { y: "independent" } },
-    };
-
-    const targetLayered = {
-      $schema: target.$schema,
-      data: target.data,
-      width: target.width,
-      height: target.height,
-      meta: target.meta,
-      layer: [
-        {
-          name: "main",
-          mark: target.mark,
-          encoding: target.encoding,
-        }
-      ],
-      resolve: { axis: { y: "independent" } },
-    };
-
     return [
-      source,
+      rawSource,
       initial,
       last_with_points,
-      targetLayered
+      target
     ];
   },
 };
