@@ -35,6 +35,10 @@ dependencies:
    version: 0.0.1
    src: htmlwidgets/js
    script: hack-facet-view.js
+ - name: custom-animations
+   version: 0.0.1
+   src: htmlwidgets/js
+   script: custom-animations.js
  - name: layout
    version: 0.0.1
    src: htmlwidgets/js

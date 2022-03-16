@@ -12,138 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
     <script src="../gemini/gemini.web.js"></script>
     <script src="../js/html2canvas.min.js"></script>
-    <style>
-      .vega-vis-wrapper {
-        position: relative;
-      }
 
-      .vega-vis-wrapper > div {
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-
-      /* .vega-vis-wrapper * {
-        pointer-events: none !important;
-      } */
-
-      .vega-vis-wrapper .vega-vis svg {
-        background-color: transparent !important;
-      }
-
-      .vega-vis-wrapper .vega-vis.with-axes .background {
-        stroke: none !important;
-      }
-
-      .vega-vis-wrapper .vega-vis.with-axes details {
-        display: none;
-      }
-
-      .vega-vis-wrapper .vega-for-axis {
-        opacity: 0;
-      }
-
-      .vega-vis-wrapper .vega-for-axis .mark-symbol {
-        display: none;
-      }
-
-      /* .vega-vis {
-        opacity: 0;
-      } */
-
-      .vega-vis-wrapper .vega-for-axis .role-title {
-        display: none;
-      }
-
-      .vega-vis-wrapper .vega-for-axis .role-legend {
-        display: none;
-      }
-
-      .control-bar {
-        width: 100%;
-        display: flex;
-        align-items: center;
-      }
-
-      .button-wrapper {
-        padding: 10px;
-      }
-
-      .slider-wrapper {
-        padding-left: 10px;
-        flex-grow: 1;
-      }
-
-      .slider-wrapper input {
-        width: 100%;
-      }
-
-      details {
-        display: none !important;
-      }
-
-      .vega-embed.has-actions {
-        padding-right: 0px !important;
-      }
-
-      .description {
-        text-align: center;
-        margin-bottom: 10px;
-      }
-
-      .vega-other-layers {
-        position: relative;
-      }
-
-      .vega-other-layers > div {
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-
-      .vega-other-layers > div svg {
-        background-color: transparent !important;
-      }
-
-      .vega-other-layers .vega-hidden-layer {
-        transition: 1s all ease-in-out;
-      }
-
-      .vega-other-layers .vega-hidden-layer .role-legend {
-        display: none;
-      }
-
-      .vega-other-layers .vega-hidden-layer .role-axis {
-        display: none;
-      }
-
-      .vega-other-layers .vega-hidden-layer .role-title {
-        display: none;
-      }
-
-      .vega-other-layers .vega-hidden-layer .background {
-        stroke: none !important;
-      }
-
-      .vega-other-layers.with-axes details {
-        display: none;
-      }
-/* 
-      .flex-wrap {
-        width: 100%;
-      } */
-
-      /* .flex-wrap > div {
-        position: relative;
-        width: 100%;
-        min-height: 600px;
-      } */
-
-      .export-wrapper {
-        height: 500px;
-        width: 500px;
-      }
-    </style>
+    <link rel="stylesheet" href="../css/datamationSandDance.css" />
   </head>
 
   <body>
@@ -152,6 +22,7 @@
         <div class="controls-wrapper">
           <div class="control-bar">
             <div class="button-wrapper">
+              <button onclick="app.exportGif(true)">GIF</button>
               <button onclick="app.play()">Replay</button>
             </div>
             <div class="slider-wrapper">
@@ -165,7 +36,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="export-wrapper">
           <div class="description"></div>
           <div class="vega-vis-wrapper">
@@ -173,222 +44,38 @@
             <div class="vega-other-layers"></div>
             <div class="vega-vis"></div>
           </div>
+          <div class="loader">
+            <div class="loader-circles">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
         </div>
-        <!-- <button onclick="app.exportPNG()">Export frames</button> -->
-        <button onclick="app.exportGif()" id="gif">GIF</button>
       </div>
     </div>
 
     <script src="../js/gifshot.min.js"></script>
 
+    <script src="../js/download2.js"></script>
+
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/layout.js"></script>
     <script src="../js/hack-facet-view.js"></script>
+    <script src="../js/custom-animations.js"></script>
     <script src="../js/app.js"></script>
     <script>
-        const app = App("app", {
-          specs: [
-            {
-              "height": 300,
-              "width": 300,
-              "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-              "meta": {
-                "parse": "grid",
-                "description": "Initial data"
-              },
-              "data": {
-                "values": [
-                  {
-                    "n": 100
-                  }
-                ]
-              },
-              "mark": {
-                "type": "point",
-                "filled": true,
-                "strokeWidth": 2,
-                "color": "#888",
-                "stroke": "#888",
-              },
-              "encoding": {
-                "x": {
-                  "field": "datamations_x",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "y": {
-                  "field": "datamations_y",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "tooltip": [
-                  {
-                    "field": "gemini_id",
-                    "type": "nominal"
-                  }
-                ]
-              }
-            },
-            {
-              "height": 300,
-              "width": 300,
-              "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-              "meta": {
-                "parse": "grid",
-                "description": "Group by Degree",
-                "splitField": "Degree",
-                "axes": false
-              },
-              "data": {
-                "values": [
-                  {
-                    "Degree": "Masters",
-                    "n": 48,
-                    "meta": {
-                      "Work": {
-                        "Academia": 28,
-                        "Industry": 20,
-                      }
-                    }
-                  },
-                  {
-                    "Degree": "PhD",
-                    "n": 52,
-                    "meta": {
-                      "Work": {
-                        "Academia": 20,
-                        "Industry": 32,
-                      }
-                    }
-                  }
-                ]
-              },
+      const animationType = "median-faceted";
+      const base = "../../../sandbox/custom_animations/";
+      let app = null;
 
-              // "transform": [
-              //   { filter: "datum.Work == 'Academia'" }
-              // ],
-
-              "mark": {
-                "type": "point",
-                "filled": true,
-                "strokeWidth": 2,
-                "color": "#888",
-              },
-              "encoding": {
-                "x": {
-                  "field": "datamations_x",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "y": {
-                  "field": "datamations_y",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "fill": {
-                  "field": "Work",
-                  "type": "nominal",
-                  "scale": {
-                    "domain": ["Academia", "Industry"],
-                    "range": ["#888", "#fff"]
-                  },
-                  "legend": {
-                    "title": 'filter(Work == "Academia")'
-                  }
-                },
-                "stroke": {
-                  "field": "Work",
-                  "type": "nominal",
-                  "scale": {
-                    "domain": ["Academia", "Industry"],
-                    "range": ["#888", "#888"]
-                  }
-                }
-              }
-            },
-
-            {
-              "height": 300,
-              "width": 300,
-              "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-              "meta": {
-                "parse": "grid",
-                "description": "Group by Degree",
-                "splitField": "Degree",
-                "axes": false
-              },
-              "data": {
-                "values": [
-                  {
-                    "Degree": "Masters",
-                    "n": 48,
-                    "meta": {
-                      "Work": {
-                        "Academia": 28,
-                        "Industry": 20,
-                      }
-                    }
-                  },
-                  {
-                    "Degree": "PhD",
-                    "n": 52,
-                    "meta": {
-                      "Work": {
-                        "Academia": 20,
-                        "Industry": 32,
-                      }
-                    }
-                  }
-                ]
-              },
-
-              "transform": [
-                { filter: "datum.Work == 'Academia'" }
-              ],
-
-              "mark": {
-                "type": "point",
-                "filled": true,
-                "strokeWidth": 2,
-                "color": "#888",
-              },
-              "encoding": {
-                "x": {
-                  "field": "datamations_x",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "y": {
-                  "field": "datamations_y",
-                  "type": "quantitative",
-                  "axis": null
-                },
-                "fill": {
-                  "field": "Work",
-                  "type": "nominal",
-                  "scale": {
-                    "domain": ["Academia", "Industry"],
-                    "range": ["#888", "#fff"]
-                  },
-                  "legend": {
-                    "title": 'filter(Work == "Academia")'
-                  }
-                },
-                "stroke": {
-                  "field": "Work",
-                  "type": "nominal",
-                  "scale": {
-                    "domain": ["Academia", "Industry"],
-                    "range": ["#888", "#888"]
-                  }
-                }
-              }
-            }
-          
-          ] 
-        });
-        window.app = app;
+      d3.json(`${base}/custom-animations-${animationType}-R.json`).then(
+        (specs) => {
+          app = App("app", { specs, frameDur: 3000 });
+        }
+      );
     </script>
   </body>
 </html>

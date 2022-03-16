@@ -39,9 +39,11 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   spec_encoding <- list(
     x = x_encoding,
-    y = y_encoding,
-    color = color_encoding
+    y = y_encoding
   )
+
+  # Only append color to the specs if the color mapping isnt null
+  if(!is.null(color_name)) { spec_encoding$color <- color_encoding }
 
   facet_col_encoding <- list(field = mapping$column, type = "ordinal", title = mapping$column)
   facet_row_encoding <- list(field = mapping$row, type = "ordinal", title = mapping$row)
