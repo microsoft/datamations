@@ -73,6 +73,103 @@ function splitLayers(input) {
  * @param {Array} buckets list of numbers
  * @param {Number} value score to lookup
  */
- function lookupByBucket(words, buckets, value) {
-  return words[buckets.findIndex(d => value <= d)];
+function lookupByBucket(words, buckets, value) {
+  return words[buckets.findIndex((d) => value <= d)];
+}
+
+function getRows(vegaLiteSpecs) {
+  let maxRows = 0;
+
+  vegaLiteSpecs
+    .filter((d) => d.meta.parse === "grid")
+    .forEach((spec) => {
+      let { width: specWidth, height: specHeight } = spec.spec || spec;
+      const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
+      const splitField = spec.meta.splitField;
+      const groupKeys = [];
+
+      if (spec.facet) {
+        if (spec.facet.column) {
+          groupKeys.push(spec.facet.column.field);
+        }
+        if (spec.facet.row) {
+          groupKeys.push(spec.facet.row.field);
+        }
+      }
+
+      let specValues = spec.data.values;
+
+      const gap = 2;
+      const distance = 4 + gap;
+
+      let secondarySplit = Object.keys(encoding).filter((d) => {
+        const field = encoding[d].field;
+        return (
+          field !== splitField &&
+          IGNORE_FIELDS.indexOf(d) === -1 &&
+          groupKeys.indexOf(field) === -1
+        );
+      })[0];
+
+      // combine groups if secondarySplit
+      if (splitField && secondarySplit) {
+        const secondaryField = encoding[secondarySplit].field;
+        const keys = [...groupKeys, splitField];
+
+        const grouped = d3.rollups(
+          specValues,
+          (arr) => {
+            const obj = {};
+            let sum = 0;
+
+            arr.forEach((x) => {
+              sum += x.n;
+              obj[x[secondaryField]] = sum;
+            });
+
+            const o = {
+              [splitField]: arr[0][splitField],
+              [secondaryField]: obj,
+              n: sum,
+            };
+
+            groupKeys.forEach((x) => {
+              o[x] = arr[0][x];
+            });
+
+            return o;
+          },
+          ...keys.map((key) => {
+            return (d) => d[key];
+          })
+        );
+
+        specValues = grouped.flatMap((d) => {
+          if (keys.length === 1) {
+            return d[1];
+          } else {
+            return d[1].flatMap((d) => d[1]);
+          }
+        });
+
+        specWidth = specWidth / grouped.length;
+      }
+
+      const maxN = d3.max(specValues, (d) => d.n);
+
+      let rows = Math.ceil(Math.sqrt(maxN));
+      let maxCols = Math.ceil(maxN / rows);
+
+      // if horizontal gap is less than 5,
+      // then take up all vertical space to increase rows and reduce columns
+      if (specWidth / maxCols < 5) {
+        rows = Math.floor(specHeight / distance);
+      }
+
+      if (rows > maxRows) {
+        maxRows = rows;
+      }
+    });
+
+  return maxRows;
 }

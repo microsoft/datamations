@@ -1,10 +1,8 @@
-function generateGrid(spec, rows = 10) {
+function generateGrid(spec, rows = 10, stacked = false) {
   const splitField = spec.meta.splitField;
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const groupKeys = [];
 
-  const gap = 2;
-  const distance = 4 + gap;
   let {width: specWidth, height: specHeight} = spec.spec || spec;
 
   if (spec.facet) {
@@ -29,12 +27,10 @@ function generateGrid(spec, rows = 10) {
     }
   });
 
-  const ingoreFields = ['tooltip', 'x', 'y', 'datamations_x', 'datamations_y'];
-
   let secondarySplit = Object.keys(encoding).filter(d => {
     const field = encoding[d].field;
     return field !== splitField &&
-           ingoreFields.indexOf(d) === -1 &&
+           IGNORE_FIELDS.indexOf(d) === -1 &&
            groupKeys.indexOf(field) === -1 &&
            metas.indexOf(field) === -1;
   })[0];
@@ -97,14 +93,6 @@ function generateGrid(spec, rows = 10) {
   }
 
   let maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
-
-  // if width divided by maxCols is less than 5, 
-  // then take up all vertical space to increase rows and reduce columns 
-  if (specWidth / maxCols < 5) {
-    rows = Math.floor(specHeight / distance);
-    maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
-  }
-
   let splitOptions = [];
 
   if (splitField) {
@@ -125,25 +113,19 @@ function generateGrid(spec, rows = 10) {
       let startCol = (xCenter - 1) * maxCols + j; // inner grid start
       startCol += Math.floor((maxCols - Math.ceil(n / rows)) / 2); // center alignment
 
-      const metaFields = Object.keys(d.meta || {});
+      const datum = {};
+
+      // remove n and gemini_ids, we won't need them any more
+      Object.keys(d).forEach(k => {
+        if (k !== 'n' && k !== 'gemini_ids') {
+          datum[k] = d[k];
+        }
+      });
 
       for (let i = 0; i < n; i++) {
         const x = startCol + Math.floor(i / rows);
         const y = rows - 1 - i % rows;
         const colorFieldObj = {};
-        const additionals = {};
-
-        metaFields.forEach(f => {
-          const m = lookupByBucket(
-            Object.keys(d.meta[f]),
-            d3.cumsum(Object.values(d.meta[f])),
-            i + 1,
-          );
-
-          if (m) {
-            additionals[f] = m;
-          }
-        });
 
         if (secondaryField && typeof[d[secondaryField]] === "object") {
           const keys = Object.keys(d[secondaryField]).sort((a, b) => {
@@ -158,12 +140,11 @@ function generateGrid(spec, rows = 10) {
         }
 
         arr.push({
-          ...d,
+          ...datum,
           ...colorFieldObj,
-          ...additionals,
           gemini_id: d.gemini_ids ? d.gemini_ids[i] : counter,
-          [CONF.X_FIELD]: x,
-          [CONF.Y_FIELD]: y,
+          [CONF.X_FIELD]: stacked ? xCenter : x,
+          [CONF.Y_FIELD]: stacked ? i + 1 : y,
         });
 
         counter++;
@@ -199,22 +180,24 @@ function generateGrid(spec, rows = 10) {
  * @param {Number} rows number of rows in a grid
  * @returns grid specification
  */
-function getGridSpec(spec, rows = 10) {
+function getGridSpec(spec, rows = 10, stacked = false) {
   return new Promise((res) => {
-    const grid = generateGrid(spec, rows);
+    const grid = generateGrid(spec, rows, stacked);
     const obj = {...spec};
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
+    const dx = stacked ? 1 : 2;
+
     const xDomain = [
-      d3.min(grid, d => d[CONF.X_FIELD]) - 2,
-      d3.max(grid, d => d[CONF.X_FIELD]) + 2
+      d3.min(grid, d => d[CONF.X_FIELD]) - dx,
+      d3.max(grid, d => d[CONF.X_FIELD]) + dx
     ];
 
     const yPadding = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
 
     const yDomain = [
-      d3.min(grid, (d) => d[CONF.Y_FIELD]) - yPadding,
-      d3.max(grid, (d) => d[CONF.Y_FIELD]) + yPadding,
+      stacked ? 0 : d3.min(grid, (d) => d[CONF.Y_FIELD]) - yPadding,
+      d3.max(grid, (d) => d[CONF.Y_FIELD]) + yPadding + (stacked ? 10 : 0),
     ];
 
     const middle = yDomain[0] + (yDomain[1] - yDomain[0]) / 2;
@@ -255,6 +238,14 @@ function getGridSpec(spec, rows = 10) {
         expr[middle] = d;
       });
 
+      spec.meta.rules = obj.meta.rules = labels.map(m => {
+        return {
+          filter: `datum['${spec.meta.splitField}'] === '${m}'`,
+          groupKey: spec.meta.splitField,
+          groupValue: m,
+        }
+      });
+
       encoding.x.axis = {
         labelExpr: `${JSON.stringify(expr)}[datum.label]`,
         values: Object.keys(expr).map(d => +d),
@@ -292,7 +283,8 @@ function getJitterSpec(spec) {
   const yExtent = d3.extent(nodes, d => d[CONF.Y_FIELD]);
   const xScale = d3.scaleBand()
     .domain(d3.range(1, innerGroupCount + 1))
-    .range([0, facetSize]);
+    .range([0, facetSize])
+    .paddingOuter(0.5);
 
   const arr = nodes.slice().filter(d => d[CONF.Y_FIELD] !== undefined).map((d, i) => {
     d.oldX = d[CONF.X_FIELD];
@@ -300,6 +292,8 @@ function getJitterSpec(spec) {
 
     let x = xScale(d[CONF.X_FIELD]) + xScale.bandwidth() / 2;
     let y = d[CONF.Y_FIELD];
+
+    d.scaledX = Math.round(x);
 
     return {
       ...d,
@@ -336,8 +330,12 @@ function getJitterSpec(spec) {
       })
     }
 
-    encoding.y.scale = {
-      domain: yExtent
+    if (encoding.y.scale) {
+      encoding.y.scale.domain = yExtent
+    } else {
+      encoding.y.scale = {
+        domain: yExtent
+      }
     }
 
     encoding.x.scale = {
