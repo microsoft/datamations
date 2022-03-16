@@ -281,17 +281,17 @@ datamationSandDance_html <- function(...) {
         shiny::tags$div(class = "vega-for-axis"),
         shiny::tags$div(class = "vega-other-layers"),
         shiny::tags$div(class = "vega-vis")
-      ),
-      shiny::tags$div(
-        class = "loader",
-        shiny::tags$div(
-          class = "loader-circles",
-          shiny::tags$div(),
-          shiny::tags$div(),
-          shiny::tags$div(),
-          shiny::tags$div(),
-        ),
       )
+    ),
+    shiny::tags$div(
+      class = "loader",
+      shiny::tags$div(
+        class = "loader-circles",
+        shiny::tags$div(),
+        shiny::tags$div(),
+        shiny::tags$div(),
+        shiny::tags$div(),
+      ),
     )
   )
 }
