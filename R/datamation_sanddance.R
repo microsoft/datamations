@@ -264,7 +264,7 @@ datamationSandDance_html <- function(...) {
         class = "control-bar",
         shiny::tags$div(
           class = "button-wrapper",
-          shiny::tags$button(onclick = htmlwidgets::JS(paste0("window.", app_name, ".play('", id, "')")), "Replay")
+          shiny::tags$button(onclick = htmlwidgets::JS(paste0("window.", app_name, ".play('')")), "Replay")
         ),
         shiny::tags$div(
           class = "slider-wrapper",

@@ -173,165 +173,19 @@
     <script src="../js/utils.js"></script>
     <script src="../js/layout.js"></script>
     <script src="../js/hack-facet-view.js"></script>
+    <script src="../js/custom-animations.js"></script>
     <script src="../js/app.js"></script>
     <script>
-      const app1 = App("app", {
-        specs: [
-  {
-    "height": 300,
-    "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-    "meta": {
-      "parse": "grid",
-      "description": "Initial data"
-    },
-    "data": {
-      "values": [
-        {
-          "n": 100
-        }
-      ]
-    },
-    "mark": {
-      "type": "point",
-      "filled": true
-    },
-    "encoding": {
-      "x": {
-        "field": "datamations_x",
-        "type": "quantitative",
-        "axis": null
-      },
-      "y": {
-        "field": "datamations_y",
-        "type": "quantitative",
-        "axis": null
-      }
-    }
-  },
-  {
-    "height": 300,
-    "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-    "meta": {
-      "parse": "grid",
-      "description": "Group by group",
-      "splitField": "group",
-      "axes": false
-    },
-    "data": {
-      "values": [
-        {
-          "group": "group1",
-          "n": 5
-        },
-        {
-          "group": "group10",
-          "n": 5
-        },
-        {
-          "group": "group11",
-          "n": 5
-        },
-        {
-          "group": "group12",
-          "n": 5
-        },
-        {
-          "group": "group13",
-          "n": 5
-        },
-        {
-          "group": "group14",
-          "n": 5
-        },
-        {
-          "group": "group15",
-          "n": 5
-        },
-        {
-          "group": "group16",
-          "n": 5
-        },
-        {
-          "group": "group17",
-          "n": 5
-        },
-        {
-          "group": "group18",
-          "n": 5
-        },
-        {
-          "group": "group19",
-          "n": 5
-        },
-        {
-          "group": "group2",
-          "n": 5
-        },
-        {
-          "group": "group20",
-          "n": 5
-        },
-        {
-          "group": "group3",
-          "n": 5
-        },
-        {
-          "group": "group4",
-          "n": 5
-        },
-        {
-          "group": "group5",
-          "n": 5
-        },
-        {
-          "group": "group6",
-          "n": 5
-        },
-        {
-          "group": "group7",
-          "n": 5
-        },
-        {
-          "group": "group8",
-          "n": 5
-        },
-        {
-          "group": "group9",
-          "n": 5
-        }
-      ]
-    },
-    "mark": {
-      "type": "point",
-      "filled": true
-    },
-    "encoding": {
-      "x": {
-        "field": "datamations_x",
-        "type": "quantitative",
-        "axis": null
-      },
-      "y": {
-        "field": "datamations_y",
-        "type": "quantitative",
-        "axis": null
-      },
-      "color": {
-        "field": null,
-        "type": "nominal"
-      },
-      "tooltip": [
-        {
-          "field": "group",
-          "type": "nominal"
-        }
-      ]
-    }
-  }
-] 
-  
+      const animationType = "median-faceted";
+      const base = "../../../sandbox/custom_animations/";
+      let app1 = null;
+
+      d3.json(
+        `${base}/custom-animations-${animationType}-R.json`
+        // 'https://raw.githubusercontent.com/microsoft/datamations/scales-transform/sandbox/mutations/mutate-scale-R.json'
+      ).then(specs => {
+        window.rawSpecs = JSON.parse(JSON.stringify(specs));
+        app1 = App("app", { specs, frameDur: 3000 });
       });
     </script>
   </body>
