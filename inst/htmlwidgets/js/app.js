@@ -637,13 +637,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
       intervalId = setInterval(() => {
         html2canvas(document.querySelector(exportWrap)).then((canvas) => {
-          // document.body.appendChild(canvas);
-
-          // var image_gif = new Image();
-          // image_gif.src = canvas.toDataURL();
-          // image_gif.height = canvas.height;
-          // image_gif.width = canvas.width;
-
           images.push(canvas.toDataURL());
         });
       }, frameDuration / 10);
@@ -669,16 +662,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
                 if (!obj.error) {
                   var image = obj.image;
 
-                  // var animatedImage = document.createElement("img");
-                  // animatedImage.src = image;
-
-                  // document.body.appendChild(animatedImage);
-
                   res(image);
-                  // var a = document.createElement("a");
-                  // a.href = image;
-                  // a.download = `exported.gif`;
-                  // a.click();
                 }
               }
             );
