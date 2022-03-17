@@ -494,7 +494,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
 
     y_range <- range(data_2[[Y_FIELD_CHR]], na.rm = TRUE)
 
-    y_scale_type <- ifelse(mapping$mutation_function=="log", "log", "linear")
+    y_scale_type <- ifelse(mapping$mutation_function=="log" | mapping$mutation_function=="log10", "log", "linear")
 
     if(!is.null(mapping$mutation_variables)) {
       y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$mutation_name, scale = list(domain = y_range, type = y_scale_type))
