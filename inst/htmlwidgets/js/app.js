@@ -381,7 +381,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     }
 
     // initial frame
-    if (index === 0) cb(0);
+    if (index === 0 && cb) cb(0);
 
     return new Promise((res) => {
       drawSpec(index, source).then(() => {
@@ -389,7 +389,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           d3.select(descr).html(currMeta.description);
           anim.play(visSelector).then(() => {
             d3.select(slider).property("value", index + 1);
-            cb(index + 1);
+            cb && cb(index + 1);
             res();
           });
 
@@ -786,7 +786,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
     if (fromWeb) {
       loaderOnOff(true);
-      disableEnable("disable");
+      disableEnable("disable", { slider: true });
     }
 
     let intervalId,
@@ -829,7 +829,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
               function (obj) {
                 if (fromWeb) {
                   loaderOnOff(false);
-                  disableEnable("enable");
+                  disableEnable("enable", { slider: true });
                 }
 
                 if (!obj.error) {
@@ -855,9 +855,13 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     });
   }
 
-  function disableEnable(cmd) {
+  function disableEnable(cmd, components) {
     const { replayBtn, exportBtn, slider } = getSelectors(id);
-    const arr = [replayBtn, exportBtn, slider];
+    const arr = [replayBtn, exportBtn];
+
+    if (components && components.slider) {
+      arr.push(slider);
+    }
 
     arr.forEach((sel) => {
       const el = document.querySelector(sel);
