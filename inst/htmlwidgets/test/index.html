@@ -13,6 +13,7 @@
     <script src="../gemini/gemini.web.js"></script>
     <script src="../js/html2canvas.min.js"></script>
 
+    <link rel="stylesheet" href="../css/fa-all.min.css">
     <link rel="stylesheet" href="../css/datamationSandDance.css" />
   </head>
 
@@ -22,8 +23,7 @@
         <div class="controls-wrapper">
           <div class="control-bar">
             <div class="button-wrapper">
-              <button onclick="app.exportGif(true)">GIF</button>
-              <button onclick="app.play()">Replay</button>
+              <button class="replay-btn" onclick="app.play()">Replay</button>
             </div>
             <div class="slider-wrapper">
               <input
@@ -34,6 +34,11 @@
                 onchange="app.onSlide()"
               />
             </div>
+            <div class="button-wrap">
+              <button class="export-btn" onclick="app.exportGif(true)">
+                <i class="fas fa-download"></i>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -43,15 +48,6 @@
             <div class="vega-for-axis"></div>
             <div class="vega-other-layers"></div>
             <div class="vega-vis"></div>
-          </div>
-        </div>
-
-        <div class="loader">
-          <div class="loader-circles">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
           </div>
         </div>
       </div>
@@ -67,7 +63,7 @@
     <script src="../js/custom-animations.js"></script>
     <script src="../js/app.js"></script>
     <script>
-      const animationType = "median-faceted";
+      const animationType = "median";
       const base = "../../../sandbox/custom_animations/";
       let app = null;
 

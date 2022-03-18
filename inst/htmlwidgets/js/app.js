@@ -130,7 +130,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     drawSpec(0);
 
     if (autoPlay) {
-      setTimeout(() => play(), 100);
+      setTimeout(play, 100);
     }
 
     initializing = false;
@@ -150,6 +150,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
           if (frames[frameIndex]) {
             tick();
+          } else {
+            playing = false;
+            disableEnable("enable");
           }
         }
       });
@@ -160,6 +163,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       }
     };
 
+    disableEnable("disable");
     tick();
   }
 
@@ -180,8 +184,15 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
     const meta = metas[index];
 
-    const { axisSelector, visSelector, descr, slider, otherLayers, controls, exportWrap } =
-      getSelectors(id);
+    const {
+      axisSelector,
+      visSelector,
+      descr,
+      slider,
+      otherLayers,
+      controls,
+      exportWrap,
+    } = getSelectors(id);
 
     d3.select(slider).property("value", index);
     d3.select(descr).html(meta.description || "frame " + index);
@@ -352,12 +363,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     let anim = null;
 
     if (source.custom) {
-      const _source_spec = gemini.vl2vg4gemini(source.sequence[source.sequence.length - 1])
-      anim = await gemini.animate(
-        _source_spec,
-        target,
-        gemSpec
+      const _source_spec = gemini.vl2vg4gemini(
+        source.sequence[source.sequence.length - 1]
       );
+      anim = await gemini.animate(_source_spec, target, gemSpec);
     } else if (target.custom) {
       anim = await gemini.animateSequence(target.sequence, gemSpec);
     } else {
@@ -465,7 +474,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * - meta.jitter = jitters data using d3.forceCollide
    * - spec.layer = splits layers to stack on top on each other
    */
-  async function transformSpecs() { 
+  async function transformSpecs() {
     const rows = getRows(vegaLiteSpecs);
 
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
@@ -698,7 +707,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           });
         } else {
           resp = await gemini.recommend(
-            prev.custom ? gemini.vl2vg4gemini(prev.sequence[prev.sequence.length - 1]) : prev,
+            prev.custom
+              ? gemini.vl2vg4gemini(prev.sequence[prev.sequence.length - 1])
+              : prev,
             curr,
             options
           );
@@ -739,6 +750,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    */
   function onSlide() {
     playing = false;
+    disableEnable("enable");
     const { slider } = getSelectors(id);
     const index = document.querySelector(slider).value;
     drawSpec(index);
@@ -770,9 +782,12 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   }
 
   function exportGif(fromWeb) {
-    const { exportWrap, loader } = getSelectors(id);
+    const { exportWrap, exportBtn } = getSelectors(id);
 
-    d3.select(loader).style("display", "block");
+    if (fromWeb) {
+      loaderOnOff(true);
+      disableEnable("disable");
+    }
 
     let intervalId,
       images = [];
@@ -793,11 +808,13 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     return new Promise((res) => {
       const callback = (index) => {
         const done = index >= frames.length;
-        const bound = document.querySelector(exportWrap).getBoundingClientRect();
+        const bound = document
+          .querySelector(exportWrap)
+          .getBoundingClientRect();
 
         if (bound.width > maxWidth) maxWidth = bound.width;
         if (bound.height > maxHeight) maxHeight = bound.height;
-        
+
         if (done) {
           intervalId && clearInterval(intervalId);
 
@@ -807,20 +824,23 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
                 images,
                 gifWidth: maxWidth,
                 gifHeight: maxHeight,
-                frameDuration: 2.5
+                frameDuration: 2.5,
               },
               function (obj) {
-                d3.select(loader).style("display", null);
+                if (fromWeb) {
+                  loaderOnOff(false);
+                  disableEnable("enable");
+                }
 
                 if (!obj.error) {
                   var image = obj.image;
 
                   if (fromWeb) {
-                    download(image, "animation.gif", "image/gif")
+                    download(image, "animation.gif", "image/gif");
                   }
                   res(image);
                 } else {
-                  console.error("error creating gif", obj.errorMsg)
+                  console.error("error creating gif", obj.errorMsg);
                 }
               }
             );
@@ -832,8 +852,33 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       };
 
       play(callback);
-    })
+    });
+  }
 
+  function disableEnable(cmd) {
+    const { replayBtn, exportBtn, slider } = getSelectors(id);
+    const arr = [replayBtn, exportBtn, slider];
+
+    arr.forEach((sel) => {
+      const el = document.querySelector(sel);
+
+      if (cmd == "disable") {
+        el.setAttribute("disabled", "disabled");
+      } else {
+        el.removeAttribute("disabled");
+      }
+    });
+  }
+
+  function loaderOnOff(loading) {
+    const { exportBtn } = getSelectors(id);
+    let className = "fas fa-download";
+
+    if (loading) {
+      className = "fas fa-spinner spin";
+    }
+
+    d3.select(exportBtn).select("i").attr("class", className);
   }
 
   init();

@@ -14,7 +14,8 @@ function getSelectors(id) {
     otherLayers: base + " .vega-other-layers",
     controls: base + " .controls-wrapper",
     exportWrap: base + " .export-wrapper",
-    loader: base + " .loader"
+    exportBtn: base + " .export-btn",
+    replayBtn: base + " .replay-btn",
   };
 }
 
