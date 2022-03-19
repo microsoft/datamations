@@ -279,7 +279,7 @@ datamationSandDance_html <- function(...) {
           shiny::tags$button(
             class = "export-btn",
             onclick = htmlwidgets::JS(paste0("window.", app_name, ".exportGif('1')")), 
-            shiny::tags$i(class = "fas fa-download")
+            shiny::icon("download")
           )
         ),
       )
