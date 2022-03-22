@@ -130,7 +130,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     drawSpec(0);
 
     if (autoPlay) {
-      setTimeout(() => play(), 100);
+      setTimeout(play, 100);
     }
 
     initializing = false;
@@ -139,17 +139,20 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   /**
    * Plays animation
    */
-  function play(startIndex) {
+  function play(cb = () => {}) {
     playing = true;
-    frameIndex = startIndex || 0;
+    frameIndex = 0;
 
     const tick = () => {
-      animateFrame(frameIndex).then(() => {
+      animateFrame(frameIndex, cb).then(() => {
         if (playing) {
           frameIndex++; // next frame
 
           if (frames[frameIndex]) {
             tick();
+          } else {
+            playing = false;
+            disableEnable("enable");
           }
         }
       });
@@ -160,6 +163,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       }
     };
 
+    disableEnable("disable");
     tick();
   }
 
@@ -180,8 +184,15 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
     const meta = metas[index];
 
-    const { axisSelector, visSelector, descr, slider, otherLayers, controls } =
-      getSelectors(id);
+    const {
+      axisSelector,
+      visSelector,
+      descr,
+      slider,
+      otherLayers,
+      controls,
+      exportWrap,
+    } = getSelectors(id);
 
     d3.select(slider).property("value", index);
     d3.select(descr).html(meta.description || "frame " + index);
@@ -204,7 +215,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       .style("left", transformX + "px")
       .style("top", transformY + "px");
 
-    d3.select(controls).style("width", spec.width + transformX + 10 + "px");
+    const _width = spec.width + transformX + 10;
+    d3.select(controls).style("width", _width + "px");
+    d3.select(descr).style("width", _width + "px");
 
     // draw vis
     return drawChart(spec, vegaSpec && vegaSpec.custom ? null : vegaSpec);
@@ -290,7 +303,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     }
 
     const columnFacet = spec.facet && spec.facet.column;
-    const { axisSelector, controls, otherLayers } = getSelectors(id);
+    const { axisSelector, controls, descr, otherLayers } = getSelectors(id);
 
     // update axis domain to matched hacked facet view
     const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
@@ -329,6 +342,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         .node()
         .getBoundingClientRect().width;
       d3.select(controls).style("width", width + "px");
+      d3.select(descr).style("width", width + "px");
     });
   }
 
@@ -337,7 +351,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * @param {Number} index specification index in vegaLiteSpecs
    * @returns a promise of gemini.animate
    */
-  async function animateFrame(index) {
+  async function animateFrame(index, cb) {
     if (!frames[index]) return;
 
     console.log("animating frame", index);
@@ -349,12 +363,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     let anim = null;
 
     if (source.custom) {
-      const _source_spec = gemini.vl2vg4gemini(source.sequence[source.sequence.length - 1])
-      anim = await gemini.animate(
-        _source_spec,
-        target,
-        gemSpec
+      const _source_spec = gemini.vl2vg4gemini(
+        source.sequence[source.sequence.length - 1]
       );
+      anim = await gemini.animate(_source_spec, target, gemSpec);
     } else if (target.custom) {
       anim = await gemini.animateSequence(target.sequence, gemSpec);
     } else {
@@ -368,12 +380,16 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       clearTimeout(timeoutId);
     }
 
+    // initial frame
+    if (index === 0 && cb) cb(0);
+
     return new Promise((res) => {
       drawSpec(index, source).then(() => {
         timeoutId = setTimeout(() => {
           d3.select(descr).html(currMeta.description);
           anim.play(visSelector).then(() => {
             d3.select(slider).property("value", index + 1);
+            cb && cb(index + 1);
             res();
           });
 
@@ -403,6 +419,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
             d3.select(visSelector).classed("with-axes", false);
             d3.select(otherLayers).classed("with-axes", false);
             d3.select(controls).style("width", width + transformX + 10 + "px");
+            d3.select(descr).style("width", width + transformX + 10 + "px");
           }
 
           const nextSpec = vegaLiteSpecs[index + 1];
@@ -459,7 +476,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * - meta.jitter = jitters data using d3.forceCollide
    * - spec.layer = splits layers to stack on top on each other
    */
-  async function transformSpecs() { 
+  async function transformSpecs() {
     const rows = getRows(vegaLiteSpecs);
 
     for (let i = 0; i < vegaLiteSpecs.length; i++) {
@@ -468,7 +485,12 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       if (Array.isArray(vlSpec)) continue; // just sanity check, making sure that it is not an array
 
       // if filter has empty `oneOf`, then generate empty spec and avoid any further processing
-      if (vlSpec.transform && vlSpec.transform[0].filter.oneOf.length === 0) {
+      if (
+        vlSpec.transform &&
+        vlSpec.transform[0].filter &&
+        vlSpec.transform[0].filter.oneOf &&
+        vlSpec.transform[0].filter.oneOf.length === 0
+      ) {
         const emptySpec = getEmptySpec(vlSpec);
 
         metas[i] = emptySpec.meta;
@@ -687,7 +709,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
           });
         } else {
           resp = await gemini.recommend(
-            prev.custom ? gemini.vl2vg4gemini(prev.sequence[prev.sequence.length - 1]) : prev,
+            prev.custom
+              ? gemini.vl2vg4gemini(prev.sequence[prev.sequence.length - 1])
+              : prev,
             curr,
             options
           );
@@ -728,9 +752,139 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    */
   function onSlide() {
     playing = false;
+    disableEnable("enable");
     const { slider } = getSelectors(id);
     const index = document.querySelector(slider).value;
     drawSpec(index);
+  }
+
+  function exportPNG() {
+    const { exportWrap } = getSelectors(id);
+
+    const pngs = [];
+
+    const callback = (index) => {
+      const done = index >= frames.length;
+
+      html2canvas(document.querySelector(exportWrap)).then((canvas) => {
+        pngs.push(canvas.toDataURL());
+
+        if (done) {
+          pngs.forEach((uri, i) => {
+            var a = document.createElement("a");
+            a.href = uri;
+            a.download = `frame-${i + 1}.png`;
+            a.click();
+          });
+        }
+      });
+    };
+
+    play(callback);
+  }
+
+  function exportGif(fromWeb) {
+    const { exportWrap, exportBtn } = getSelectors(id);
+
+    if (fromWeb) {
+      loaderOnOff(true);
+      disableEnable("disable", { slider: true });
+    }
+
+    let intervalId,
+      images = [];
+
+    const startInterval = () => {
+      if (intervalId) clearInterval(intervalId);
+
+      intervalId = setInterval(() => {
+        html2canvas(document.querySelector(exportWrap)).then((canvas) => {
+          images.push(canvas.toDataURL());
+        });
+      }, 16.66666);
+    };
+
+    let maxWidth = 300;
+    let maxHeight = 300;
+
+    return new Promise((res) => {
+      const callback = (index) => {
+        const done = index >= frames.length;
+        const bound = document
+          .querySelector(exportWrap)
+          .getBoundingClientRect();
+
+        if (bound.width > maxWidth) maxWidth = bound.width;
+        if (bound.height > maxHeight) maxHeight = bound.height;
+
+        if (done) {
+          intervalId && clearInterval(intervalId);
+
+          setTimeout(() => {
+            gifshot.createGIF(
+              {
+                images,
+                gifWidth: maxWidth,
+                gifHeight: maxHeight,
+                frameDuration: 2.5,
+              },
+              function (obj) {
+                if (fromWeb) {
+                  loaderOnOff(false);
+                  disableEnable("enable", { slider: true });
+                }
+
+                if (!obj.error) {
+                  var image = obj.image;
+
+                  if (fromWeb) {
+                    download(image, "animation.gif", "image/gif");
+                  }
+                  res(image);
+                } else {
+                  console.error("error creating gif", obj.errorMsg);
+                }
+              }
+            );
+          }, 1000);
+        } else {
+          intervalId && clearInterval(intervalId);
+          setTimeout(startInterval, frameDelay);
+        }
+      };
+
+      play(callback);
+    });
+  }
+
+  function disableEnable(cmd, components) {
+    const { replayBtn, exportBtn, slider } = getSelectors(id);
+    const arr = [replayBtn, exportBtn];
+
+    if (components && components.slider) {
+      arr.push(slider);
+    }
+
+    arr.forEach((sel) => {
+      const el = document.querySelector(sel);
+
+      if (cmd == "disable") {
+        el.setAttribute("disabled", "disabled");
+      } else {
+        el.removeAttribute("disabled");
+      }
+    });
+  }
+
+  function loaderOnOff(loading) {
+    const { exportBtn } = getSelectors(id);
+    let className = "fas fa-download";
+
+    if (loading) {
+      className = "fas fa-spinner spin";
+    }
+
+    d3.select(exportBtn).select("i").attr("class", className);
   }
 
   init();
@@ -738,6 +892,8 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   return {
     onSlide,
     play,
+    exportPNG,
+    exportGif,
     animateFrame,
     getFrames: () => frames,
   };
