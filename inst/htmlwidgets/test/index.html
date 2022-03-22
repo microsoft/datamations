@@ -176,17 +176,16 @@
     <script src="../js/custom-animations.js"></script>
     <script src="../js/app.js"></script>
     <script>
-      const animationType = "median-faceted";
+      const animationType = "median";
       const base = "../../../sandbox/custom_animations/";
       let app1 = null;
 
-      d3.json(
-        `${base}/custom-animations-${animationType}-R.json`
-        // 'https://raw.githubusercontent.com/microsoft/datamations/scales-transform/sandbox/mutations/mutate-scale-R.json'
-      ).then(specs => {
-        window.rawSpecs = JSON.parse(JSON.stringify(specs));
-        app1 = App("app", { specs, frameDur: 3000 });
-      });
+      d3.json(`${base}/custom-animations-${animationType}-R.json`).then(
+        (specs) => {
+          window.rawSpecs = JSON.parse(JSON.stringify(specs));
+          app1 = App("app", { specs: specs, frameDur: 3000 });
+        }
+      );
     </script>
   </body>
 </html>
