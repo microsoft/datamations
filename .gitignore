@@ -14,3 +14,4 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints
 *.xml
+node_modules

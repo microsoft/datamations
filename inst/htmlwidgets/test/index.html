@@ -11,133 +11,10 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.0.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
     <script src="../gemini/gemini.web.js"></script>
-    <style>
-      .vega-vis-wrapper {
-        position: relative;
-      }
+    <script src="../js/html2canvas.min.js"></script>
 
-      .vega-vis-wrapper > div {
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-
-      /* .vega-vis-wrapper * {
-        pointer-events: none !important;
-      } */
-
-      .vega-vis-wrapper .vega-vis svg {
-        background-color: transparent !important;
-      }
-
-      .vega-vis-wrapper .vega-vis.with-axes .background {
-        stroke: none !important;
-      }
-
-      .vega-vis-wrapper .vega-vis.with-axes details {
-        display: none;
-      }
-
-      .vega-vis-wrapper .vega-for-axis {
-        opacity: 0;
-      }
-
-      .vega-vis-wrapper .vega-for-axis .mark-symbol {
-        display: none;
-      }
-
-      /* .vega-vis {
-        opacity: 0;
-      } */
-
-      .vega-vis-wrapper .vega-for-axis .role-title {
-        display: none;
-      }
-
-      .vega-vis-wrapper .vega-for-axis .role-legend {
-        display: none;
-      }
-
-      .control-bar {
-        width: 100%;
-        display: flex;
-        align-items: center;
-      }
-
-      .button-wrapper {
-        padding: 10px;
-      }
-
-      .slider-wrapper {
-        padding-left: 10px;
-        flex-grow: 1;
-      }
-
-      .slider-wrapper input {
-        width: 100%;
-      }
-
-      details {
-        display: none !important;
-      }
-
-      .vega-embed.has-actions {
-        padding-right: 0px !important;
-      }
-
-      .description {
-        text-align: center;
-        margin-bottom: 10px;
-      }
-
-      .vega-other-layers {
-        position: relative;
-      }
-
-      .vega-other-layers > div {
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-
-      .vega-other-layers > div svg {
-        background-color: transparent !important;
-      }
-
-      .vega-other-layers .vega-hidden-layer {
-        transition: 1s all ease-in-out;
-      }
-
-      .vega-other-layers .vega-hidden-layer .role-legend {
-        display: none;
-      }
-
-      .vega-other-layers .vega-hidden-layer .role-axis {
-        display: none;
-      }
-
-      .vega-other-layers .vega-hidden-layer .role-title {
-        display: none;
-      }
-
-      .vega-other-layers .vega-hidden-layer .background {
-        stroke: none !important;
-      }
-
-      .vega-other-layers.with-axes details {
-        display: none;
-      }
-
-      .flex-wrap {
-        width: 100%;
-      }
-
-      .flex-wrap > div {
-        position: relative;
-        width: 100%;
-        min-height: 600px;
-      }
-    </style>
+    <link rel="stylesheet" href="../css/fa-all.min.css">
+    <link rel="stylesheet" href="../css/datamationSandDance.css" />
   </head>
 
   <body>
@@ -146,7 +23,7 @@
         <div class="controls-wrapper">
           <div class="control-bar">
             <div class="button-wrapper">
-              <button onclick="app1.play()">Replay</button>
+              <button class="replay-btn" onclick="app.play()">Replay</button>
             </div>
             <div class="slider-wrapper">
               <input
@@ -154,20 +31,30 @@
                 type="range"
                 min="0"
                 value="0"
-                onchange="app1.onSlide()"
+                onchange="app.onSlide()"
               />
             </div>
+            <div class="button-wrap">
+              <button class="export-btn" onclick="app.exportGif(true)">
+                <i class="fas fa-download"></i>
+              </button>
+            </div>
           </div>
-          <div class="description"></div>
         </div>
 
-        <div class="vega-vis-wrapper">
-          <div class="vega-for-axis"></div>
-          <div class="vega-other-layers"></div>
-          <div class="vega-vis"></div>
+        <div class="export-wrapper">
+          <div class="description"></div>
+          <div class="vega-vis-wrapper">
+            <div class="vega-for-axis"></div>
+            <div class="vega-other-layers"></div>
+            <div class="vega-vis"></div>
+          </div>
         </div>
       </div>
     </div>
+
+    <script src="../js/gifshot.min.js"></script>
+    <script src="../js/download2.js"></script>
 
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
@@ -178,12 +65,11 @@
     <script>
       const animationType = "median";
       const base = "../../../sandbox/custom_animations/";
-      let app1 = null;
+      let app = null;
 
       d3.json(`${base}/custom-animations-${animationType}-R.json`).then(
         (specs) => {
-          window.rawSpecs = JSON.parse(JSON.stringify(specs));
-          app1 = App("app", { specs: specs, frameDur: 3000 });
+          app = App("app", { specs, frameDur: 3000 });
         }
       );
     </script>
