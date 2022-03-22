@@ -3,7 +3,7 @@ function generateGrid(spec, rows = 10, stacked = false) {
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const groupKeys = [];
 
-  let {width: specWidth, height: specHeight} = spec.spec || spec;
+  let {width: specWidth} = spec.spec || spec;
 
   if (spec.facet) {
     if (spec.facet.column) {
@@ -108,10 +108,12 @@ function generateGrid(spec, rows = 10, stacked = false) {
 
     v.forEach((d, j) => {
       const n = d.n;
+      const columns = Math.ceil(n / rows);
+
       const xCenter = splitField ? splitOptions.indexOf(d[splitField]) + 1 : 1;
 
       let startCol = (xCenter - 1) * maxCols + j; // inner grid start
-      startCol += Math.floor((maxCols - Math.ceil(n / rows)) / 2); // center alignment
+      startCol += Math.floor((maxCols - columns) / 2); // center alignment
 
       const datum = {};
 
@@ -154,24 +156,37 @@ function generateGrid(spec, rows = 10, stacked = false) {
     return arr;
   };
 
+  let gridValues = [];
+
   if (groupKeys.length === 0) {
-    return reduce(specValues);
+    gridValues = reduce(specValues);
+  } else {
+    gridValues = d3.rollups(
+      specValues,
+      reduce,
+      ...groupKeys.map((key) => {
+        return (d) => d[key];
+      })
+    )
+    .flatMap((d) => {
+      if (groupKeys.length === 1) {
+        return d[1];
+      } else {
+        return d[1].flatMap((d) => d[1]);
+      }
+    });
   }
 
-  return d3.rollups(
-    specValues,
-    reduce,
-    ...groupKeys.map((key) => {
-      return (d) => d[key];
-    })
-  )
-  .flatMap((d) => {
-    if (groupKeys.length === 1) {
-      return d[1];
-    } else {
-      return d[1].flatMap((d) => d[1]);
-    }
-  });
+  const num_groups = splitOptions.length;
+
+  return {
+    gridValues,
+    domain: [
+      -maxCols / 2,
+      (num_groups * maxCols) + (num_groups - 1) + maxCols / 2 - 1
+    ],
+    num_groups
+  };
 }
 
 /**
@@ -182,16 +197,16 @@ function generateGrid(spec, rows = 10, stacked = false) {
  */
 function getGridSpec(spec, rows = 10, stacked = false) {
   return new Promise((res) => {
-    const grid = generateGrid(spec, rows, stacked);
+    const { gridValues: grid, domain, num_groups } = generateGrid(spec, rows, stacked);
     const obj = {...spec};
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
-    const dx = stacked ? 1 : 2;
+    const dx = stacked ? 1 : 1;
 
-    const xDomain = [
+    const xDomain = stacked || num_groups === 0 ? [
       d3.min(grid, d => d[CONF.X_FIELD]) - dx,
       d3.max(grid, d => d[CONF.X_FIELD]) + dx
-    ];
+    ] : domain;
 
     const yPadding = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
 
@@ -234,7 +249,7 @@ function getGridSpec(spec, rows = 10, stacked = false) {
           d => d[CONF.X_FIELD],
         );
 
-        const middle = Math.floor(extent[0] + (extent[1] - extent[0]) / 2);
+        const middle = Math.ceil(extent[0] + (extent[1] - extent[0]) / 2);
         expr[middle] = d;
       });
 

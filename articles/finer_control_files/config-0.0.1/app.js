@@ -426,8 +426,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
               });
               document.querySelector(otherLayers).appendChild(div);
             });
-          }
-        }, frameDelay);
+          } 
+        }, 
+        // removed delay between frames for custom animations
+        target.custom ? 0 : frameDelay);
       });
     });
   }
