@@ -1,50 +1,76 @@
 ## Functions
 
 <dl>
+<dt><a href="#getEmptySpec">getEmptySpec(spec)</a> ⇒</dt>
+<dd><p>Get empty spec, if no data is present</p>
+</dd>
 <dt><a href="#getSpecTemplate">getSpecTemplate(width, height, axes, spec)</a> ⇒</dt>
-<dd><p>Creates vega-lite spec template</p>
+<dd><p>Creates and returns a template for vega spec</p>
 </dd>
 <dt><a href="#getHackedSpec">getHackedSpec(param0)</a> ⇒</dt>
-<dd><p>Creates a vega-lite specification, without facets</p>
+<dd><p>Get hacked spec
+Finding coordinates of each circle and treat them as real values in the one axis view 
+Adding axis layer underneath to look exactly same as faceted view</p>
 </dd>
 <dt><a href="#hackFacet">hackFacet(spec)</a> ⇒</dt>
-<dd></dd>
+<dd><p>turns faceted spec to regular spec, using hacking technique</p>
+</dd>
 </dl>
+
+<a name="getEmptySpec"></a>
+
+## getEmptySpec(spec) ⇒
+Get empty spec, if no data is present
+
+**Kind**: global function  
+**Returns**: vega-lite spec  
+
+| Param | Type |
+| --- | --- |
+| spec | <code>Object</code> | 
 
 <a name="getSpecTemplate"></a>
 
 ## getSpecTemplate(width, height, axes, spec) ⇒
-Creates vega-lite spec template
+Creates and returns a template for vega spec
 
 **Kind**: global function  
-**Returns**: vega-lite spec template  
+**Returns**: vega-lite spec  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| width | <code>Number</code> | chart width |
-| height | <code>Number</code> | chart height |
-| axes | <code>Object</code> | which axis to include |
-| spec | <code>Object</code> | vega-lite spec |
+| width | <code>Number</code> | spec width |
+| height | <code>Number</code> | spec height |
+| axes | <code>Object</code> | which axes to add |
+| spec | <code>Object</code> | original spec |
 
 <a name="getHackedSpec"></a>
 
 ## getHackedSpec(param0) ⇒
-Creates a vega-lite specification, without facets
+Get hacked spec
+Finding coordinates of each circle and treat them as real values in the one axis view 
+Adding axis layer underneath to look exactly same as faceted view
 
 **Kind**: global function  
-**Returns**: new vega-lite specification  
+**Returns**: vega-lite spec  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| param0 | <code>Object</code> | some parameters to generate hacked specification |
+| param0 | <code>Object</code> | parameters |
+| param0.view | <code>Object</code> | a vega view instance |
+| param0.spec | <code>Object</code> | a vega spec |
+| param0.width | <code>Object</code> | spec width |
+| param0.height | <code>Object</code> | spec height |
 
 <a name="hackFacet"></a>
 
 ## hackFacet(spec) ⇒
+turns faceted spec to regular spec, using hacking technique
+
 **Kind**: global function  
-**Returns**: a promise of vegaEmbed  
+**Returns**: vega-lite spec  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| spec | <code>Object</code> | vega-lite spec |
+| spec | <code>Object</code> | vega lite spec with facets |
 

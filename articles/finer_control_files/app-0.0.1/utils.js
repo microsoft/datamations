@@ -80,6 +80,11 @@ function lookupByBucket(words, buckets, value) {
   return words[buckets.findIndex((d) => value <= d)];
 }
 
+/**
+ * Finds correct number of rows for grid based on biggest group
+ * @param {Array} vegaLiteSpecs an array of vega lite specs
+ * @returns a number of rows
+ */
 function getRows(vegaLiteSpecs) {
   let maxRows = 0;
 

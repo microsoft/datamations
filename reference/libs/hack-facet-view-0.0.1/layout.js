@@ -1,3 +1,17 @@
+/*
+* Layout generation functions for datamations.
+* Supports:
+* - grid view: meta.parse = "grid"
+* - jittered  view: meta.parse = "jitter"
+*/
+
+/**
+ * Generates data for grid specs
+ * @param {Object} spec vega-lite spec
+ * @param {Number} rows number of rows
+ * @param {Boolean} stacked if true, circles are stacked and vertically aliged
+ * @returns an array of objects
+ */
 function generateGrid(spec, rows = 10, stacked = false) {
   const splitField = spec.meta.splitField;
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;

@@ -1,13 +1,19 @@
 /**
  * Entry point of Datamations JavaScript code
- * Reads vega-lite specifications, converts to vega specs and animates using gemini
+ * Reads vega-lite specifications, converts to vega specs and animates them
  *
  * ### Dependencies:
  * - gemini: https://github.com/uwdata/gemini
  * - vega-lite: https://vega.github.io/vega-lite/
  * - vega: https://vega.github.io/vega/
  * - vega-embed: https://github.com/vega/vega-embed
+ * - d3: https://d3js.org/
+ * - gifshot: https://github.com/yahoo/gifshot
+ * - html2canvas: https://html2canvas.hertzen.com/
+ * - download2: http://danml.com/download.html
  */
+
+
 
 /**
  *
@@ -15,8 +21,10 @@
  * @param {Object} param1 configuration object
  * @param {Array} param1.specUrls list of urls
  * @param {Array} param1.specs list of vega-lite specifications
- * @param {Boolean} param1.autoPlay autoPlay yes | no
- * @returns exposed functions
+ * @param {Boolean} param1.autoPlay autoPlay
+ * @param {Number} param1.frameDel frame duration (in ms.)
+ * @param {Number} param1.frameDel delay between frames (in ms.)
+ * @returns an object of exposed functions
  */
 function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   let rawSpecsDontChange;
@@ -270,6 +278,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     }
   }
 
+  /**
+   * Fixes hacked axis spec and error bar alignment
+   */
   function adjustAxisAndErrorbars() {
     const { axisSelector, otherLayers } = getSelectors(id);
     const axisCells = d3
@@ -349,6 +360,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
   /**
    * Animates a frame, from source to target vega specification using gemini
    * @param {Number} index specification index in vegaLiteSpecs
+   * @param {Function} cb callback function of each frame drawal
    * @returns a promise of gemini.animate
    */
   async function animateFrame(index, cb) {
@@ -474,6 +486,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
    * Transforms specifications into proper format:
    * - meta.grid = generates infogrid
    * - meta.jitter = jitters data using d3.forceCollide
+   * - meta.custom_animation = handles custom animation type
    * - spec.layer = splits layers to stack on top on each other
    */
   async function transformSpecs() {
@@ -504,6 +517,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       const parse = meta.parse;
 
       // parsing
+
       if (meta.custom_animation) {
         let funName = meta.custom_animation;
         let p = null;
@@ -611,7 +625,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
       }
     }
 
-    console.log("final", vegaLiteSpecs);
+    console.log("parsed specs:", vegaLiteSpecs);
   }
 
   /**
@@ -630,6 +644,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
   /**
    * Generates animation frames
+   * @returns array of objects of \{ source, target, gemSpec, prevMeta, currMeta \}
    */
   async function makeFrames() {
     const options = {
@@ -758,6 +773,9 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     drawSpec(index);
   }
 
+  /**
+   * Exports png files for each frame
+   */
   function exportPNG() {
     const { exportWrap } = getSelectors(id);
 
@@ -783,6 +801,11 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     play(callback);
   }
 
+  /**
+   * Exports datamation as gif.
+   * @param {Boolean} fromWeb truthy if it is called from webpage, falsy from command line tool
+   * @returns either base64 string, or downloads .gif file
+   */
   function exportGif(fromWeb) {
     const { exportWrap, exportBtn } = getSelectors(id);
 
@@ -857,6 +880,11 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     });
   }
 
+  /**
+   * Disables or enables some components
+   * @param {String} cmd "disable" or "enable"
+   * @param {Array} components array of components
+   */
   function disableEnable(cmd, components) {
     const { replayBtn, exportBtn, slider } = getSelectors(id);
     const arr = [replayBtn, exportBtn];
@@ -876,6 +904,10 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     });
   }
 
+  /**
+   * Download button icon adjustment
+   * @param {Boolean} loading
+   */
   function loaderOnOff(loading) {
     const { exportBtn } = getSelectors(id);
     let className = "fas fa-download";
