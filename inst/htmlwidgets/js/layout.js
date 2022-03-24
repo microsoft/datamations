@@ -1,11 +1,23 @@
+/*
+* Layout generation functions for datamations.
+* Supports:
+* - grid view: meta.parse = "grid"
+* - jittered  view: meta.parse = "jitter"
+*/
+
+/**
+ * Generates data for grid specs
+ * @param {Object} spec vega-lite spec
+ * @param {Number} rows number of rows
+ * @param {Boolean} stacked if true, circles are stacked and vertically aliged
+ * @returns an array of objects
+ */
 function generateGrid(spec, rows = 10, stacked = false) {
   const splitField = spec.meta.splitField;
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const groupKeys = [];
 
-  const gap = 2;
-  const distance = 4 + gap;
-  let {width: specWidth, height: specHeight} = spec.spec || spec;
+  let {width: specWidth} = spec.spec || spec;
 
   if (spec.facet) {
     if (spec.facet.column) {
@@ -29,15 +41,10 @@ function generateGrid(spec, rows = 10, stacked = false) {
     }
   });
 
-  const ingoreFields = [
-    'tooltip', 'x', 'y', 
-    'datamations_x', 'datamations_y'
-  ];
-
   let secondarySplit = Object.keys(encoding).filter(d => {
     const field = encoding[d].field;
     return field !== splitField &&
-           ingoreFields.indexOf(d) === -1 &&
+           IGNORE_FIELDS.indexOf(d) === -1 &&
            groupKeys.indexOf(field) === -1 &&
            metas.indexOf(field) === -1;
   })[0];
@@ -100,14 +107,6 @@ function generateGrid(spec, rows = 10, stacked = false) {
   }
 
   let maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
-
-  // if width divided by maxCols is less than 5, 
-  // then take up all vertical space to increase rows and reduce columns 
-  if (specWidth / maxCols < 5) {
-    rows = Math.floor(specHeight / distance);
-    maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
-  }
-
   let splitOptions = [];
 
   if (splitField) {
@@ -123,10 +122,12 @@ function generateGrid(spec, rows = 10, stacked = false) {
 
     v.forEach((d, j) => {
       const n = d.n;
+      const columns = Math.ceil(n / rows);
+
       const xCenter = splitField ? splitOptions.indexOf(d[splitField]) + 1 : 1;
 
       let startCol = (xCenter - 1) * maxCols + j; // inner grid start
-      startCol += Math.floor((maxCols - Math.ceil(n / rows)) / 2); // center alignment
+      startCol += Math.floor((maxCols - columns) / 2); // center alignment
 
       const datum = {};
 
@@ -169,24 +170,37 @@ function generateGrid(spec, rows = 10, stacked = false) {
     return arr;
   };
 
+  let gridValues = [];
+
   if (groupKeys.length === 0) {
-    return reduce(specValues);
+    gridValues = reduce(specValues);
+  } else {
+    gridValues = d3.rollups(
+      specValues,
+      reduce,
+      ...groupKeys.map((key) => {
+        return (d) => d[key];
+      })
+    )
+    .flatMap((d) => {
+      if (groupKeys.length === 1) {
+        return d[1];
+      } else {
+        return d[1].flatMap((d) => d[1]);
+      }
+    });
   }
 
-  return d3.rollups(
-    specValues,
-    reduce,
-    ...groupKeys.map((key) => {
-      return (d) => d[key];
-    })
-  )
-  .flatMap((d) => {
-    if (groupKeys.length === 1) {
-      return d[1];
-    } else {
-      return d[1].flatMap((d) => d[1]);
-    }
-  });
+  const num_groups = splitOptions.length;
+
+  return {
+    gridValues,
+    domain: [
+      -maxCols / 2,
+      (num_groups * maxCols) + (num_groups - 1) + maxCols / 2 - 1
+    ],
+    num_groups
+  };
 }
 
 /**
@@ -197,16 +211,16 @@ function generateGrid(spec, rows = 10, stacked = false) {
  */
 function getGridSpec(spec, rows = 10, stacked = false) {
   return new Promise((res) => {
-    const grid = generateGrid(spec, rows, stacked);
+    const { gridValues: grid, domain, num_groups } = generateGrid(spec, rows, stacked);
     const obj = {...spec};
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
-    const dx = stacked ? 1 : 2;
+    const dx = stacked ? 1 : 1;
 
-    const xDomain = [
+    const xDomain = stacked || num_groups === 0 ? [
       d3.min(grid, d => d[CONF.X_FIELD]) - dx,
       d3.max(grid, d => d[CONF.X_FIELD]) + dx
-    ];
+    ] : domain;
 
     const yPadding = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
 
@@ -249,7 +263,7 @@ function getGridSpec(spec, rows = 10, stacked = false) {
           d => d[CONF.X_FIELD],
         );
 
-        const middle = Math.floor(extent[0] + (extent[1] - extent[0]) / 2);
+        const middle = Math.ceil(extent[0] + (extent[1] - extent[0]) / 2);
         expr[middle] = d;
       });
 
@@ -308,6 +322,8 @@ function getJitterSpec(spec) {
     let x = xScale(d[CONF.X_FIELD]) + xScale.bandwidth() / 2;
     let y = d[CONF.Y_FIELD];
 
+    d.scaledX = Math.round(x);
+
     return {
       ...d,
       x: x,
@@ -343,8 +359,12 @@ function getJitterSpec(spec) {
       })
     }
 
-    encoding.y.scale = {
-      domain: yExtent
+    if (encoding.y.scale) {
+      encoding.y.scale.domain = yExtent
+    } else {
+      encoding.y.scale = {
+        domain: yExtent
+      }
     }
 
     encoding.x.scale = {

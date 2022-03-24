@@ -2,7 +2,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Initial data"
@@ -36,7 +36,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "grid",
       "description": "Group by Degree",
@@ -84,7 +84,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "parse": "jitter",
       "axes": false,
@@ -839,7 +839,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "axes": false,
       "description": "Plot quantile Salary of each group",
@@ -1595,7 +1595,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
       "axes": false,
       "description": "Plot quantile Salary of each group, zoomed in"

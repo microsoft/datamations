@@ -1,3 +1,14 @@
+/**
+ * Hack faceted view since gemini.js does not support multi view animations
+ * Finding coordinates of each circle and treat them as real values in the one axis view 
+ * Adding axis layer underneath to look exactly same as faceted view
+ */
+
+/**
+ * Get empty spec, if no data is present
+ * @param {Object} spec 
+ * @returns vega-lite spec
+ */
 function getEmptySpec(spec) {
   const description = spec.meta.description;
   const splitField = spec.meta.splitField;
@@ -57,6 +68,14 @@ function getEmptySpec(spec) {
   };
 }
 
+/**
+ * Creates and returns a template for vega spec
+ * @param {Number} width spec width
+ * @param {Number} height spec height
+ * @param {Object} axes which axes to add
+ * @param {Object} spec original spec
+ * @returns vega-lite spec
+ */
 function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   const encoding = spec.spec.encoding;
   const mark = spec.spec.mark;
@@ -126,6 +145,17 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   };
 }
 
+/**
+ * Get hacked spec
+ * Finding coordinates of each circle and treat them as real values in the one axis view 
+ * Adding axis layer underneath to look exactly same as faceted view
+ * @param {Object} param0 parameters
+ * @param {Object} param0.view a vega view instance
+ * @param {Object} param0.spec a vega spec
+ * @param {Object} param0.width spec width
+ * @param {Object} param0.height spec height
+ * @returns vega-lite spec
+ */
 function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   const rowId = spec.facet.row ? spec.facet.row.field : null;
   const colId = spec.facet.column ? spec.facet.column.field : null;
@@ -159,7 +189,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     const yAxisValues = [];
     const yAxisExpr = {};
 
-    row_header.forEach((d) => {
+    row_header.forEach((d, i) => {
       const bounds = d.bounds;
       const name = d.datum[rowId];
       const y1 = bounds.y1;
@@ -218,10 +248,15 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     const xField = spec.meta.parse === "jitter" ? "x" : CONF.X_FIELD;
     const yField = spec.meta.parse === "jitter" ? "y" : CONF.Y_FIELD;
 
+    const xCoord = xStart + scaleX(d[xField]);
+
     values.push({
       ...d,
-      [CONF.X_FIELD]: xStart + scaleX(d[xField]),
+      [CONF.X_FIELD]: xCoord,
       [CONF.Y_FIELD]: yStart + scaleY(d[yField]),
+      [CONF.X_FIELD + "_num"]: d.scaledX ? xStart + scaleX(d.scaledX) : xCoord,
+      scaleX: (val) => yStart + scaleX(val),
+      scaleY: (val) => yStart + scaleY(val),
     });
   });
 
@@ -234,6 +269,11 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   return newSpec;
 }
 
+/**
+ * turns faceted spec to regular spec, using hacking technique
+ * @param {Object} spec vega lite spec with facets
+ * @returns vega-lite spec
+ */
 function hackFacet(spec) {
   const div = document.createElement("div");
 

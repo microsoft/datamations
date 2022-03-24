@@ -68,6 +68,13 @@ library(palmerpenguins)
   datamation_sanddance()
 ```
 
+```{r}
+"small_salary %>%
+  group_by(Degree) %>%
+  summarise(quan = quantile(Salary, probs = 0.01))" %>%
+  datamation_sanddance()
+```
+
 # filter()
 
 ## Filtering initial data
@@ -102,5 +109,35 @@ library(palmerpenguins)
 ```{r}
 "small_salary %>%
   count(Work)" %>%
+  datamation_sanddance()
+```
+
+# Binary variables
+
+A basic example of a dataframe containing data that represents Simpson's paradox.
+
+```{r} 
+head(jeter_justice)
+```
+
+
+In this datamation, Jeter has a higher batting average than Justice overall.
+
+```{r}
+'jeter_justice %>%
+  group_by(player) %>%
+  summarize(batting_average = mean(is_hit),
+            se = sqrt(batting_average * (1 - batting_average) / n()) )' %>%
+  datamation_sanddance()
+```
+<br>
+<br>
+In this datamation, the visual shows that Justice has a higher batting average than Jeter within each year.
+
+```{r}
+'jeter_justice %>%
+  group_by(player, year) %>%
+  summarize(batting_average = mean(is_hit),
+            se = sqrt(batting_average * (1 - batting_average) / n()) )' %>%
   datamation_sanddance()
 ```

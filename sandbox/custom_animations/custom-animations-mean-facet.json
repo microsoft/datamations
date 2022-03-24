@@ -3476,7 +3476,7 @@
         "y": {
           "field": "datamations_y",
           "type": "quantitative",
-          "title": "bill_length_mm",
+          "title": "mean bill_length",
           "scale": {
             "domain": [32.1, 59.6]
           }
@@ -3513,8 +3513,8 @@
   {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
-      "axes": false,
-      "description": "Plot mean bill_length_mm of each group",
+      "axes": true,
+      "description": "Plot bill_length_mm of each group",
       "custom_animation": "mean"
     },
     "data": {
@@ -6654,7 +6654,7 @@
         "y": {
           "field": "datamations_y",
           "type": "quantitative",
-          "title": "mean(bill_length_mm)",
+          "title": "mean bill_length",
           "scale": {
             "domain": [32.1, 59.6]
           }
@@ -6670,7 +6670,7 @@
           {
             "field": "datamations_y_tooltip",
             "type": "quantitative",
-            "title": "mean(bill_length_mm)"
+            "title": "bill_length_mm"
           },
           {
             "field": "species",
@@ -6692,7 +6692,7 @@
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "axes": true,
-      "description": "Plot mean bill_length_mm of each group, with errorbar"
+      "description": "Plot bill_length_mm of each group, with errorbar"
     },
     "data": {
       "values": [
@@ -10859,7 +10859,7 @@
             "y": {
               "field": "datamations_y_raw",
               "type": "quantitative",
-              "title": "mean(bill_length_mm)",
+              "title": "mean bill_length",
               "scale": {
                 "domain": [32.1, 59.6]
               }
@@ -10875,17 +10875,17 @@
               {
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
-                "title": "mean(bill_length_mm)"
+                "title": "bill_length_mm"
               },
               {
                 "field": "Upper",
                 "type": "nominal",
-                "title": "mean(bill_length_mm) + standard error"
+                "title": "bill_length_mm + standard error"
               },
               {
                 "field": "Lower",
                 "type": "nominal",
-                "title": "mean(bill_length_mm) - standard error"
+                "title": "bill_length_mm - standard error"
               },
               {
                 "field": "species",
@@ -10925,7 +10925,7 @@
             "y": {
               "field": "datamations_y",
               "type": "quantitative",
-              "title": "mean(bill_length_mm)",
+              "title": "mean bill_length",
               "scale": {
                 "domain": [32.1, 59.6]
               }
@@ -10941,17 +10941,17 @@
               {
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
-                "title": "mean(bill_length_mm)"
+                "title": "bill_length_mm"
               },
               {
                 "field": "Upper",
                 "type": "nominal",
-                "title": "mean(bill_length_mm) + standard error"
+                "title": "bill_length_mm + standard error"
               },
               {
                 "field": "Lower",
                 "type": "nominal",
-                "title": "mean(bill_length_mm) - standard error"
+                "title": "bill_length_mm - standard error"
               },
               {
                 "field": "species",
@@ -10975,7 +10975,7 @@
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "axes": true,
-      "description": "Plot mean bill_length_mm of each group, with errorbar, zoomed in"
+      "description": "Plot bill_length_mm of each group, with errorbar, zoomed in"
     },
     "data": {
       "values": [
@@ -15142,7 +15142,7 @@
             "y": {
               "field": "datamations_y_raw",
               "type": "quantitative",
-              "title": "mean(bill_length_mm)",
+              "title": "mean bill_length",
               "scale": {
                 "domain": [36.481220238402, 51.3624372072661]
               }
@@ -15158,17 +15158,17 @@
               {
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
-                "title": "mean(bill_length_mm)"
+                "title": "bill_length_mm"
               },
               {
                 "field": "Upper",
                 "type": "nominal",
-                "title": "mean(bill_length_mm) + standard error"
+                "title": "bill_length_mm + standard error"
               },
               {
                 "field": "Lower",
                 "type": "nominal",
-                "title": "mean(bill_length_mm) - standard error"
+                "title": "bill_length_mm - standard error"
               },
               {
                 "field": "species",
@@ -15208,7 +15208,7 @@
             "y": {
               "field": "datamations_y",
               "type": "quantitative",
-              "title": "mean(bill_length_mm)",
+              "title": "mean bill_length",
               "scale": {
                 "domain": [36.481220238402, 51.3624372072661]
               }
@@ -15224,17 +15224,17 @@
               {
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
-                "title": "mean(bill_length_mm)"
+                "title": "bill_length_mm"
               },
               {
                 "field": "Upper",
                 "type": "nominal",
-                "title": "mean(bill_length_mm) + standard error"
+                "title": "bill_length_mm + standard error"
               },
               {
                 "field": "Lower",
                 "type": "nominal",
-                "title": "mean(bill_length_mm) - standard error"
+                "title": "bill_length_mm - standard error"
               },
               {
                 "field": "species",

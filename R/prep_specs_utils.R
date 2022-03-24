@@ -153,9 +153,9 @@ generate_group_by_description <- function(mapping, ...) {
 }
 
 generate_group_by_tooltip <- function(.data) {
-  tooltip_vars <- .data %>%
-    dplyr::select(-.data$n, -.data$gemini_ids) %>%
-    names()
+    tooltip_vars <- .data %>%
+      dplyr::select(-one_of("n", "gemini_ids")) %>%
+      names()
 
   purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
 }
@@ -253,7 +253,7 @@ generate_x_domain <- function(data) {
   if (is.null(data)) {
     list(domain = c(0.5, 1.5))
   } else {
-    list(domain = c(min(data[[X_FIELD_CHR]]) - 0.5, max(data[[X_FIELD_CHR]]) + 0.5))
+    list(domain = c(min(data[[X_FIELD_CHR]]) - 1.0, max(data[[X_FIELD_CHR]]) + 1.0))
   }
 }
 
@@ -285,7 +285,11 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
   if (is.null(summary_function)) {
     y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = summary_variable)
   } else {
-    y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = glue::glue("{summary_function}({summary_variable})"))
+    if (!is.null(summary_variable)) {
+      y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = glue::glue("{summary_function}({summary_variable})"))
+    } else {
+      y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative")
+    }
   }
 
   tooltip_vars <- .data %>%
