@@ -2,7 +2,7 @@
 
 <dl>
 <dt><a href="#CustomAnimations">CustomAnimations</a></dt>
-<dd><p>Configuration for custom animations
+<dd><p>Configuration for custom animations.
 When meta.custom_animation is present, 
 it looks up a function here and generates custom animation specifications</p>
 </dd>
@@ -28,7 +28,7 @@ it looks up a function here and generates custom animation specifications</p>
 <a name="CustomAnimations"></a>
 
 ## CustomAnimations
-Configuration for custom animations
+Configuration for custom animations.
 When meta.custom_animation is present, 
 it looks up a function here and generates custom animation specifications
 
