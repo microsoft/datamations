@@ -1,0 +1,96 @@
+---
+title: "Mutation examples"
+output: html_document
+date: '2022-03-24'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load, warning = FALSE, message = FALSE}
+library(dplyr)
+library(datamations)
+```
+
+
+### New data with added variable
+
+```{r newdata}
+
+small_salary <- dplyr::mutate(
+  small_salary, 
+  SalaryTwo = runif(nrow(small_salary), min = 60, max = 110),
+  logNorm = rlnorm(nrow(small_salary), meanlog = 0, sdlog = 1)
+  )
+
+```
+
+### Log normal mutation
+
+```{r lognorm}
+
+"small_salary %>%
+  mutate(logged = log10(logNorm)) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(logged))" %>%
+  datamation_sanddance()
+```
+
+
+### Mathematical Notation
+
+```{r mutations}
+
+"small_salary %>%
+  mutate(newVar = Salary^2) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(newVar))" %>%
+  datamation_sanddance()
+
+"small_salary %>%
+  mutate(newVar = 1 / Salary) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(newVar))" %>%
+  datamation_sanddance()
+
+```
+
+### Multivariate
+
+```{r mutivar}
+
+"small_salary %>%
+  mutate(newVar = Salary + SalaryTwo) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(newVar))" %>%
+  datamation_sanddance()
+
+"small_salary %>%
+  mutate(newVar = Salary / SalaryTwo) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(newVar))" %>%
+  datamation_sanddance()
+
+```
+
+### Mutations in a summarize
+
+Currently the following statements error:
+
+a. summarize(z = sum(x + y))
+b. summarize(z = sum(x / y))
+c. summarize(z = sum(x) / sum(y))
+
+
+### Two variable mutates
+
+Two variable mutates also currently error
+
+```{r twovar, error = TRUE}
+"small_salary %>%
+  mutate(newVar = Salary + SalaryTwo, newVarTwo = Salary^2) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(newVar))" %>%
+  datamation_sanddance()
+```
