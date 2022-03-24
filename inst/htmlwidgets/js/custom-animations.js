@@ -498,7 +498,7 @@ const getMeanStep = (source, target) => {
  * Generates a spec for min and max animations
  * @param {Object} source source spec
  * @param {Object} target target spec
- * @param {String} minOrMax ("min" | "max")
+ * @param {String} minOrMax "min" | "max"
  * @returns a vega lite spec
  */
 const getMinMaxStep = (source, target, minOrMax = "min") => {
@@ -646,7 +646,7 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
 };
 
 /**
- * Configuration for custom animations
+ * Configuration for custom animations.
  * When meta.custom_animation is present, 
  * it looks up a function here and generates custom animation specifications
  */
