@@ -21,7 +21,7 @@
  * @param {Object} param1 configuration object
  * @param {Array} param1.specUrls list of urls
  * @param {Array} param1.specs list of vega-lite specifications
- * @param {Boolean} param1.autoPlay autoPlay true | false
+ * @param {Boolean} param1.autoPlay autoPlay
  * @param {Number} param1.frameDel frame duration (in ms.)
  * @param {Number} param1.frameDel delay between frames (in ms.)
  * @returns an object of exposed functions
@@ -882,7 +882,7 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
 
   /**
    * Disables or enables some components
-   * @param {String} cmd ("disable" | "enable")
+   * @param {String} cmd "disable" or "enable"
    * @param {Array} components array of components
    */
   function disableEnable(cmd, components) {

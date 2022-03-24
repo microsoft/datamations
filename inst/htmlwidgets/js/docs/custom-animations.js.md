@@ -182,5 +182,5 @@ Generates a spec for min and max animations
 | --- | --- | --- | --- |
 | source | <code>Object</code> |  | source spec |
 | target | <code>Object</code> |  | target spec |
-| minOrMax | <code>String</code> | <code>min</code> | "min" | "max" |
+| minOrMax | <code>String</code> | <code>min</code> | "min" or "max" |
 

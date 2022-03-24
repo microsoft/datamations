@@ -10,7 +10,7 @@
 | param1 | <code>Object</code> | configuration object |
 | param1.specUrls | <code>Array</code> | list of urls |
 | param1.specs | <code>Array</code> | list of vega-lite specifications |
-| param1.autoPlay | <code>Boolean</code> | autoPlay true | false |
+| param1.autoPlay | <code>Boolean</code> | autoPlay |
 | param1.frameDel | <code>Number</code> | frame duration (in ms.) |
 | param1.frameDel | <code>Number</code> | delay between frames (in ms.) |
 
@@ -178,7 +178,7 @@ Disables or enables some components
 
 | Param | Type | Description |
 | --- | --- | --- |
-| cmd | <code>String</code> | ("disable" | "enable") |
+| cmd | <code>String</code> | "disable" or "enable" |
 | components | <code>Array</code> | array of components |
 
 <a name="App..loaderOnOff"></a>
