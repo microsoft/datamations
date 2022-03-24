@@ -1,4 +1,25 @@
-function addRules(source, target, shrink = false) {
+/**
+ * Custom animations generation script.
+ * Supports:
+ * - count
+ * - median
+ * - mean
+ * - quantile
+ * - min
+ * - max
+ * Inspiration from: https://giorgi-ghviniashvili.github.io/aggregate-animation-data/designs/
+ */
+
+
+
+/**
+ * Generates a spec for count animation
+ * @param {Object} source source spec
+ * @param {Object} target target spec
+ * @param {Object} shrink if truthy, circles will be pulled up
+ * @returns a vega lite spec
+ */
+const getCountStep = (source, target, shrink = false) => {
   const { width, height } = target.spec || target;
   let values = source.data.values.slice();
   const sourceMeta = source.meta;
@@ -51,8 +72,16 @@ function addRules(source, target, shrink = false) {
       ...rules,
     ],
   };
-}
+};
 
+/**
+ * Generates a spec for median and quantile animations
+ * @param {Object} source source spec
+ * @param {Object} target target spec
+ * @param {Number} step step counter. null is the last step
+ * @param {Number} p a percentile
+ * @returns a vega lite spec
+ */
 const getMedianStep = (source, target, step = 0, p = 0.5) => {
   const all_groups = [];
   const { width, height } = target.spec || target;
@@ -278,6 +307,12 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
   };
 };
 
+/**
+ * Generates a spec for mean animation
+ * @param {Object} source source spec
+ * @param {Object} target target spec
+ * @returns a vega lite spec
+ */
 const getMeanStep = (source, target) => {
   const all_groups = [];
   const { width, height } = target.spec || target;
@@ -459,6 +494,13 @@ const getMeanStep = (source, target) => {
   };
 };
 
+/**
+ * Generates a spec for min and max animations
+ * @param {Object} source source spec
+ * @param {Object} target target spec
+ * @param {String} minOrMax ("min" | "max")
+ * @returns a vega lite spec
+ */
 const getMinMaxStep = (source, target, minOrMax = "min") => {
   const { width, height } = target.spec || target;
   const aggrFn = minOrMax === "min" ? d3.min : d3.max;
@@ -603,19 +645,39 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
   };
 };
 
+/**
+ * Configuration for custom animations
+ * When meta.custom_animation is present, 
+ * it looks up a function here and generates custom animation specifications
+ */
 const CustomAnimations = {
-  // steps:
-  // 1) stack sets
-  // 2) put rules (lines) using aggregate count
-  // 3) replace with count bubbles (aggregate count) (basically target spec)
+  /**
+   * steps:
+   * 1) stack sets
+   * 2) put rules (lines) using aggregate count
+   * 3) replace with count bubbles (aggregate count) (basically target spec)
+   * @param {Object} rawSource source spec
+   * @param {Object} target target spec
+   * @returns an array of vega-lite specs
+   */
   count: async (rawSource, target) => {
     const stacks = await getGridSpec(rawSource, 10, true);
     delete stacks.encoding.y.axis;
-    const rules = addRules(rawSource, target, false);
-    const pullUp = addRules(rawSource, target, true);
+    const rules = getCountStep(rawSource, target, false);
+    const pullUp = getCountStep(rawSource, target, true);
     return [stacks, rules, pullUp, target];
   },
-  min: (rawSource, target, source) => {
+  /**
+   * min animation steps:
+   * 1) source spec
+   * 2) stack sets, with a rule line at min circle
+   * 3) pull circles down
+   * 4) target spec
+   * @param {Object} rawSource source spec
+   * @param {Object} target target spec
+   * @returns an array of vega-lite specs
+   */
+  min: (rawSource, target) => {
     const step_1 = getMinMaxStep(rawSource, target, "min");
 
     const step_2 = {
@@ -638,6 +700,16 @@ const CustomAnimations = {
 
     return [rawSource, step_1, step_2, target];
   },
+  /**
+   * max animation steps:
+   * 1) source spec
+   * 2) stack sets, with a rule line at max circle
+   * 3) pull circles up
+   * 4) target spec
+   * @param {Object} rawSource source spec
+   * @param {Object} target target spec
+   * @returns an array of vega-lite specs
+   */
   max: (rawSource, target, source) => {
     const step_1 = getMinMaxStep(rawSource, target, "max");
 
@@ -661,6 +733,19 @@ const CustomAnimations = {
 
     return [rawSource, step_1, step_2, target];
   },
+  /**
+   * mean animation steps:
+   * 1) source spec
+   * 2) intermediate: circles will be placed diagonally "/" 
+   * 3) add lines (rules) at mean level
+   * 4) convert circles to small ticks
+   * 5) show vertical lines
+   * 6) collapse the lines to mean level
+   * 7) target spec
+   * @param {Object} rawSource source spec
+   * @param {Object} target target spec
+   * @returns an array of vega-lite specs
+   */
   mean: (rawSource, target) => {
     const step_1 = getMeanStep(rawSource, target);
 
@@ -748,6 +833,16 @@ const CustomAnimations = {
 
     return [rawSource, intermediate, step_1, step_2, step_3, step_4, target];
   },
+  /**
+   * median and quantile animation steps:
+   * 1) source spec
+   * 2) show rules at the top and bottom
+   * 3) split circles by median and move to the right and left and move rules to median level
+   * 4) target spec
+   * @param {Object} rawSource source spec
+   * @param {Object} target target spec
+   * @returns an array of vega-lite specs
+   */
   median: (rawSource, target, calculatedSource, p) => {
     const percent = (p === undefined || p === null) ? 0.5 : p;
     const initial = getMedianStep(rawSource, target, 0, percent);

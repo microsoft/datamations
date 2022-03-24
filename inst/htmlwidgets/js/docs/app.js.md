@@ -1,207 +1,194 @@
-## Members
+<a name="App"></a>
 
-<dl>
-<dt><a href="#rawSpecs">rawSpecs</a></dt>
-<dd><p>Entry point of Datamations JavaScript code
-Reads vega-lite specifications, converts to vega specs and animates using gemini</p>
-<h3 id="dependencies">Dependencies:</h3>
-<ul>
-<li>gemini: <a href="https://github.com/uwdata/gemini">https://github.com/uwdata/gemini</a></li>
-<li>vega-lite: <a href="https://vega.github.io/vega-lite/">https://vega.github.io/vega-lite/</a></li>
-<li>vega: <a href="https://vega.github.io/vega/">https://vega.github.io/vega/</a></li>
-<li>vega-embed: <a href="https://github.com/vega/vega-embed">https://github.com/vega/vega-embed</a></li>
-</ul>
-</dd>
-</dl>
-
-## Functions
-
-<dl>
-<dt><a href="#reset">reset()</a></dt>
-<dd><p>Resets all the instance variables to be able to re-run animation</p>
-</dd>
-<dt><a href="#init">init(id, param1)</a></dt>
-<dd><p>Initializes datamation app</p>
-</dd>
-<dt><a href="#play">play(id)</a></dt>
-<dd><p>Plays animation</p>
-</dd>
-<dt><a href="#drawSpec">drawSpec(index, id, vegaSpec)</a> ⇒</dt>
-<dd><p>Draws vega lite spec statically (without transition), also updates slider, description, show/hides some layers</p>
-</dd>
-<dt><a href="#drawChart">drawChart(spec, id, vegaSpec)</a> ⇒</dt>
-<dd><p>Draws a chart
-Supports single view as well as multiple view chart</p>
-</dd>
-<dt><a href="#drawAxis">drawAxis(index, id)</a> ⇒</dt>
-<dd><p>Draws an axis layer. This is called when meta.axes = true.</p>
-</dd>
-<dt><a href="#animateFrame">animateFrame(index, id)</a> ⇒</dt>
-<dd><p>Animates a frame, from source to target vega specification using gemini</p>
-</dd>
-<dt><a href="#loadData">loadData(specUrls)</a> ⇒</dt>
-<dd><p>Loads specifications using d3.json</p>
-</dd>
-<dt><a href="#transformSpecs">transformSpecs()</a></dt>
-<dd><p>Transforms specifications into proper format:</p>
-<ul>
-<li>meta.grid = generates infogrid</li>
-<li>meta.jitter = jitters data using d3.forceCollide</li>
-<li>spec.layer = splits layers to stack on top on each other</li>
-</ul>
-</dd>
-<dt><a href="#toVegaSpecs">toVegaSpecs()</a></dt>
-<dd><p>Converts vega-lite specs to vega specs using vl2vg4gemini (<a href="https://github.com/uwdata/gemini#vl2vg4gemini">https://github.com/uwdata/gemini#vl2vg4gemini</a>)</p>
-</dd>
-<dt><a href="#makeFrames">makeFrames()</a></dt>
-<dd><p>Generates animation frames</p>
-</dd>
-<dt><a href="#onSlide">onSlide(id)</a></dt>
-<dd><p>Slider on change callback</p>
-</dd>
-</dl>
-
-<a name="rawSpecs"></a>
-
-## rawSpecs
-Entry point of Datamations JavaScript code
-Reads vega-lite specifications, converts to vega specs and animates using gemini
-
-### Dependencies: 
-- gemini: https://github.com/uwdata/gemini
-- vega-lite: https://vega.github.io/vega-lite/
-- vega: https://vega.github.io/vega/
-- vega-embed: https://github.com/vega/vega-embed
-
-**Kind**: global variable  
-<a name="reset"></a>
-
-## reset()
-Resets all the instance variables to be able to re-run animation
-
+## App(id, param1) ⇒
 **Kind**: global function  
-<a name="init"></a>
-
-## init(id, param1)
-Initializes datamation app
-
-**Kind**: global function  
+**Returns**: an object of exposed functions  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | <code>String</code> | root div id where vega visualizations are rendered |
+| id | <code>String</code> | conteiner id |
 | param1 | <code>Object</code> | configuration object |
 | param1.specUrls | <code>Array</code> | list of urls |
 | param1.specs | <code>Array</code> | list of vega-lite specifications |
-| param1.autoPlay | <code>Boolean</code> | autoPlay yes | no |
+| param1.autoPlay | <code>Boolean</code> | autoPlay true | false |
+| param1.frameDel | <code>Number</code> | frame duration (in ms.) |
+| param1.frameDel | <code>Number</code> | delay between frames (in ms.) |
 
-<a name="play"></a>
 
-## play(id)
+* [App(id, param1)](#App) ⇒
+    * [~reset()](#App..reset)
+    * [~init()](#App..init)
+    * [~play()](#App..play)
+    * [~drawSpec(index, vegaSpec)](#App..drawSpec) ⇒
+    * [~drawChart(spec, vegaSpec)](#App..drawChart) ⇒
+    * [~adjustAxisAndErrorbars()](#App..adjustAxisAndErrorbars)
+    * [~drawAxis(index)](#App..drawAxis) ⇒
+    * [~animateFrame(index, cb)](#App..animateFrame) ⇒
+    * [~loadData(specUrls)](#App..loadData) ⇒
+    * [~transformSpecs()](#App..transformSpecs)
+    * [~toVegaSpecs()](#App..toVegaSpecs)
+    * [~makeFrames()](#App..makeFrames) ⇒
+    * [~onSlide()](#App..onSlide)
+    * [~exportPNG()](#App..exportPNG)
+    * [~exportGif(fromWeb)](#App..exportGif) ⇒
+    * [~disableEnable(cmd, components)](#App..disableEnable)
+    * [~loaderOnOff(loading)](#App..loaderOnOff)
+
+<a name="App..reset"></a>
+
+### App~reset()
+Resets all the instance variables to be able to re-run animation
+
+**Kind**: inner method of [<code>App</code>](#App)  
+<a name="App..init"></a>
+
+### App~init()
+Initializes datamation app
+
+**Kind**: inner method of [<code>App</code>](#App)  
+<a name="App..play"></a>
+
+### App~play()
 Plays animation
 
-**Kind**: global function  
+**Kind**: inner method of [<code>App</code>](#App)  
+<a name="App..drawSpec"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>String</code> | root container id where vega visualizations are mounted |
-
-<a name="drawSpec"></a>
-
-## drawSpec(index, id, vegaSpec) ⇒
+### App~drawSpec(index, vegaSpec) ⇒
 Draws vega lite spec statically (without transition), also updates slider, description, show/hides some layers
 
-**Kind**: global function  
+**Kind**: inner method of [<code>App</code>](#App)  
 **Returns**: a promise of vegaEmbed  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>Number</code> | specification index in vegaLiteSpecs |
-| id | <code>String</code> | root container id where vega visualizations are mounted |
 | vegaSpec | <code>Object</code> | source vega spec of current frame |
 
-<a name="drawChart"></a>
+<a name="App..drawChart"></a>
 
-## drawChart(spec, id, vegaSpec) ⇒
-Draws a chart
+### App~drawChart(spec, vegaSpec) ⇒
+Draws a chart, either spec or vegaSpec (which is passed from animate function)
 Supports single view as well as multiple view chart
 
-**Kind**: global function  
+**Kind**: inner method of [<code>App</code>](#App)  
 **Returns**: a promise of vegaEmbed  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | spec | <code>Object</code> | vega-lite spec |
-| id | <code>String</code> | root container id where vega visualizations are rendered |
 | vegaSpec | <code>Object</code> | source vega spec of current frame |
 
-<a name="drawAxis"></a>
+<a name="App..adjustAxisAndErrorbars"></a>
 
-## drawAxis(index, id) ⇒
+### App~adjustAxisAndErrorbars()
+Fixes hacked axis spec and error bar alignment
+
+**Kind**: inner method of [<code>App</code>](#App)  
+<a name="App..drawAxis"></a>
+
+### App~drawAxis(index) ⇒
 Draws an axis layer. This is called when meta.axes = true.
 
-**Kind**: global function  
+**Kind**: inner method of [<code>App</code>](#App)  
 **Returns**: a promise of vegaEmbed  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>Number</code> | specification index in vegaLiteSpecs |
-| id | <code>String</code> | root container id where vega visualizations are mounted |
 
-<a name="animateFrame"></a>
+<a name="App..animateFrame"></a>
 
-## animateFrame(index, id) ⇒
+### App~animateFrame(index, cb) ⇒
 Animates a frame, from source to target vega specification using gemini
 
-**Kind**: global function  
+**Kind**: inner method of [<code>App</code>](#App)  
 **Returns**: a promise of gemini.animate  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>Number</code> | specification index in vegaLiteSpecs |
-| id | <code>String</code> | root container id where vega visualizations are mounted |
+| cb | <code>function</code> | callback function of each frame drawal |
 
-<a name="loadData"></a>
+<a name="App..loadData"></a>
 
-## loadData(specUrls) ⇒
+### App~loadData(specUrls) ⇒
 Loads specifications using d3.json
 
-**Kind**: global function  
+**Kind**: inner method of [<code>App</code>](#App)  
 **Returns**: a promise of Promise.all  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | specUrls | <code>Array</code> | list of urls |
 
-<a name="transformSpecs"></a>
+<a name="App..transformSpecs"></a>
 
-## transformSpecs()
+### App~transformSpecs()
 Transforms specifications into proper format:
 - meta.grid = generates infogrid
 - meta.jitter = jitters data using d3.forceCollide
+- meta.custom_animation = handles custom animation type
 - spec.layer = splits layers to stack on top on each other
 
-**Kind**: global function  
-<a name="toVegaSpecs"></a>
+**Kind**: inner method of [<code>App</code>](#App)  
+<a name="App..toVegaSpecs"></a>
 
-## toVegaSpecs()
+### App~toVegaSpecs()
 Converts vega-lite specs to vega specs using vl2vg4gemini (https://github.com/uwdata/gemini#vl2vg4gemini)
 
-**Kind**: global function  
-<a name="makeFrames"></a>
+**Kind**: inner method of [<code>App</code>](#App)  
+<a name="App..makeFrames"></a>
 
-## makeFrames()
+### App~makeFrames() ⇒
 Generates animation frames
 
-**Kind**: global function  
-<a name="onSlide"></a>
+**Kind**: inner method of [<code>App</code>](#App)  
+**Returns**: array of objects of \{ source, target, gemSpec, prevMeta, currMeta \}  
+<a name="App..onSlide"></a>
 
-## onSlide(id)
+### App~onSlide()
 Slider on change callback
 
-**Kind**: global function  
+**Kind**: inner method of [<code>App</code>](#App)  
+<a name="App..exportPNG"></a>
+
+### App~exportPNG()
+Exports png files for each frame
+
+**Kind**: inner method of [<code>App</code>](#App)  
+<a name="App..exportGif"></a>
+
+### App~exportGif(fromWeb) ⇒
+Exports datamation as gif.
+
+**Kind**: inner method of [<code>App</code>](#App)  
+**Returns**: either base64 string, or downloads .gif file  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | <code>String</code> | root container id where vega visualizations are mounted |
+| fromWeb | <code>Boolean</code> | truthy if it is called from webpage, falsy from command line tool |
+
+<a name="App..disableEnable"></a>
+
+### App~disableEnable(cmd, components)
+Disables or enables some components
+
+**Kind**: inner method of [<code>App</code>](#App)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cmd | <code>String</code> | ("disable" | "enable") |
+| components | <code>Array</code> | array of components |
+
+<a name="App..loaderOnOff"></a>
+
+### App~loaderOnOff(loading)
+Download button icon adjustment
+
+**Kind**: inner method of [<code>App</code>](#App)  
+
+| Param | Type |
+| --- | --- |
+| loading | <code>Boolean</code> | 
 
