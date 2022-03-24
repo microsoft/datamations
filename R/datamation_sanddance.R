@@ -278,20 +278,35 @@ datamationSandDance_html <- function(...) {
         class = "control-bar",
         shiny::tags$div(
           class = "button-wrapper",
-          shiny::tags$button(onclick = htmlwidgets::JS(paste0("window.", app_name, ".play('", id, "')")), "Replay")
+          shiny::tags$button(
+            class = "replay-btn",
+            onclick = htmlwidgets::JS(paste0("window.", app_name, ".play('')")), 
+            "Replay"
+          )
         ),
         shiny::tags$div(
           class = "slider-wrapper",
           shiny::tags$input(class = "slider", type = "range", min = "0", value = "0", onchange = htmlwidgets::JS(paste0("window.", app_name, ".onSlide('", id, "')")))
-        )
-      ),
-      shiny::tags$div(class = "description")
+        ),
+        shiny::tags$div(
+          class = "button-wrapper",
+          shiny::tags$button(
+            class = "export-btn",
+            onclick = htmlwidgets::JS(paste0("window.", app_name, ".exportGif('1')")), 
+            shiny::icon("download")
+          )
+        ),
+      )
     ),
     shiny::tags$div(
-      class = "vega-vis-wrapper",
-      shiny::tags$div(class = "vega-for-axis"),
-      shiny::tags$div(class = "vega-other-layers"),
-      shiny::tags$div(class = "vega-vis")
+      class = "export-wrapper",
+      shiny::tags$div(class = "description"),
+      shiny::tags$div(
+        class = "vega-vis-wrapper",
+        shiny::tags$div(class = "vega-for-axis"),
+        shiny::tags$div(class = "vega-other-layers"),
+        shiny::tags$div(class = "vega-vis")
+      )
     )
   )
 }
