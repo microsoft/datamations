@@ -1,7 +1,5 @@
 #### Welcome to javascript code documentation!
 
-/main/inst/htmlwidgets/js/docs/app.js.md
-
 * app.js - entry point [read docs](https://github.com/microsoft/datamations/blob/main/inst/htmlwidgets/js/docs/app.js.md)
 * custom-animations.js - entry point [read docs](https://github.com/microsoft/datamations/blob/main/inst/htmlwidgets/js/docs/custom-animations.js.md)
 * hack-facet-view.js - hacks vega-lite facet views, because gemini does not support multi layer animations [read docs](https://github.com/microsoft/datamations/blob/main/inst/htmlwidgets/js/docs/hack-facet-view.js.md)
