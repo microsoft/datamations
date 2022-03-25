@@ -233,9 +233,16 @@ generate_labelsExpr <- function(data) {
     ))
   }
 
-  data <- data %>%
-    dplyr::mutate(label = dplyr::coalesce(.data$label, "undefined")) %>%
-    dplyr::arrange(.data$datamations_x)
+  # handling for undefined only needs to happen for character vector of labels
+  if(is.numeric(data[["label"]])) {
+    data <- data %>%
+      dplyr::arrange(.data$datamations_x)
+  }
+  else {
+    data <- data %>%
+      dplyr::mutate(label = dplyr::coalesce(.data$label, "undefined")) %>%
+      dplyr::arrange(.data$datamations_x)
+  }
 
   n_breaks <- nrow(data)
   breaks <- data[[X_FIELD_CHR]]

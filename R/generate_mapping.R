@@ -91,10 +91,11 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
         mutation_function = mutate_operation %>%
             purrr::pluck(1) %>%
             rlang::quo_name(),
-        mutation_name = names(mutations),
-        mutation_expression = unname(mutations),
+        mutation_name = names(mutations)[1],
+        mutation_expression = unname(mutations)[1],
         mutation_variables = variables_for_mutation
       )
+      warning('Datamations currently only supports a single mutation call for visualization. Defaulting to the first provided new variable and discarding subsequent variables.')
     }
 
     else {

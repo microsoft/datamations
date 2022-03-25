@@ -44,6 +44,16 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
 
       basis_type <- check_type(.data[[mutation_variable]])
 
+      if(length(mutation_variables)>1) {
+
+        mutation_basis_two <- rlang::as_name(mutation_variables[2]) %>%
+          rlang::parse_expr()
+
+        mutation_basis_two_chr <- rlang::as_name(mutation_basis_two)
+
+        basis_type_two <- check_type(.data[[mutation_variable]])
+
+      }
     } else {basis_type <- 'null'}
 
     # Check whether the response variable is numeric or binary / categorical
@@ -86,15 +96,14 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     }
 
     data_1 <- .data %>%
-      dplyr::rename(!!Y_FIELD := {{ mutation_basis }},
-
+      dplyr::rename(!!Y_FIELD := {{ mutation_basis }}
       )
 
     # Add an x variable to use as the center of jittering
     # It can just be 1, except if mapping$x is not 1!
     # Generate the labels for these too - label by colour grouping variable or not at all
 
-    if (mapping$x == 1) {
+    if (length(mutation_variables)==1) {
       data_1 <- data_1 %>%
         dplyr::mutate(!!X_FIELD := 1)
 
@@ -102,7 +111,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
       x_domain <- generate_x_domain(NULL)
       x_title <- NULL
     } else {
-      x_var <- rlang::parse_expr(mapping$x)
+      x_var <- rlang::parse_expr(mutation_basis_two_chr)
 
       data_1 <- data_1 %>%
         dplyr::mutate(
@@ -119,13 +128,17 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
         dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
         generate_x_domain()
 
-      x_title <- mapping$x
+      x_title <- mutation_basis_two_chr
     }
 
     ### Prep encoding ----
+    if(length(mutation_variables)>1) {
+      x_range <- range(data_1[["datamations_x"]], na.rm = TRUE)
 
-    x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
-
+      x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", title = x_title, scale = list(domain = x_range))
+    } else {
+      x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
+    }
     y_range <- range(data_1[[Y_FIELD_CHR]], na.rm = TRUE)
 
     if(!is.null(mapping$mutation_variables)) {
@@ -296,7 +309,13 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
       description <- generate_generic_description(mutation_basis, group_by = length(group_vars) != 0)
 
       # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
-      meta <- list(parse = "jitter", axes = has_facets, description = description)
+      # No jitter if we provide an x value
+      if(length(mutation_variables)==1) {
+        meta <- list(parse = "jitter", axes = has_facets, description = description)
+      }
+      else {
+        meta <- list(axes = TRUE, description = description)
+      }
     } else if (basis_type %in% c("binary", "categorical")) {
 
       # Generate description
@@ -460,7 +479,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     # It can just be 1, except if mapping$x is not 1!
     # Generate the labels for these too - label by colour grouping variable or not at all
 
-    if (mapping$x == 1) {
+    if (length(mutation_variables)==1) {
       data_2 <- data_2 %>%
         dplyr::mutate(!!X_FIELD := 1)
 
@@ -468,7 +487,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
       x_domain <- generate_x_domain(NULL)
       x_title <- NULL
     } else {
-      x_var <- rlang::parse_expr(mapping$x)
+      x_var <- rlang::parse_expr(mutation_basis_two_chr)
 
       data_2 <- data_2 %>%
         dplyr::mutate(
@@ -485,13 +504,17 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
         dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
         generate_x_domain()
 
-      x_title <- mapping$x
+      x_title <- mutation_basis_two_chr
     }
 
     ### Prep encoding ----
+    if(length(mutation_variables)>1) {
+      x_range <- range(data_1[["datamations_x"]], na.rm = TRUE)
 
-    x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
-
+      x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", title = x_title, scale = list(domain = x_range))
+    } else {
+      x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
+    }
     y_range <- range(data_2[[Y_FIELD_CHR]], na.rm = TRUE)
 
     if(!is.null(mapping$mutation_variables)) {
@@ -657,8 +680,13 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
       description <- generate_mutation_description(mutation_variable, group_by = length(group_vars) != 0)
 
       # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
-      meta <- list(parse = "jitter", axes = has_facets, description = description)
-    } else if (y_type %in% c("binary", "categorical")) {
+      # No jitter if we provide an x value
+      if(length(mutation_variables)==1) {
+        meta <- list(parse = "jitter", axes = has_facets, description = description)
+      }
+      else {
+        meta <- list(axes = TRUE, description = description)
+      }    } else if (y_type %in% c("binary", "categorical")) {
 
       # Generate description
       description <- generate_mutation_description(mutation_variable, group_by = length(group_vars) != 0)
