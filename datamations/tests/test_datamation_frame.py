@@ -90,7 +90,7 @@ def test_three_variables_frame_specs():
     df = DatamationFrame(load_penguins()) 
     script_dir = os.path.dirname( __file__ )
     specs_file = open(os.path.join(script_dir, '../../sandbox/penguins_three_groups.json'), 'r')
-    specs = df.groupby(['species', 'island', 'sex']).mean().specs()
+    specs = df.groupby(['species', 'island', 'sex']).mean('bill_length_mm').specs()
     #compare_specs_with_file(specs, specs_file)
 
 

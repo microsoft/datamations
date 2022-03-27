@@ -14,6 +14,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         return DatamationGroupBy._internal_ctor
 
     _by = []
+    _axis = None
     _output = {}
     _error = {}
     _states = []
@@ -38,7 +39,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         return self._operations
 
     # Override the 'mean' function
-    def mean(self):
+    def mean(self, axis=None):
+        self._axis = axis
         self._states.append(self)
         self._operations.append('mean')
         df = super(DatamationGroupBy, self).mean()

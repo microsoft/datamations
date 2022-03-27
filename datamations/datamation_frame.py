@@ -264,15 +264,20 @@ class DatamationFrame(pd.DataFrame):
                 'vega-lite': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/vega-lite/vega-lite',
                 'vega-embed': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/vega-embed/vega-embed',
                 gemini: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/gemini/gemini.web',
+                html2canvas: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/html2canvas.min',
+                gifshot: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/gifshot.min',
+                download2: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/download2',
                 config: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/config',
                 utils: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/utils',
                 layout: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/layout',
                 'hack-facet-view': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/hack-facet-view',
+                'custom-animations': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/custom-animations',
                 app: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/app'
             }});
 
             (function(element) {
                 element.append($('<div>').html(`
+                <link href="https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/css/fa-all.min.css" rel="stylesheet" type="text/css">
                 <link href="https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/css/datamationSandDance.css" rel="stylesheet" type="text/css">
                 <style type="text/css">
                     .vega-vis-wrapper > div {
@@ -284,7 +289,7 @@ class DatamationFrame(pd.DataFrame):
                     <div class="controls-wrapper">
                     <div class="control-bar">
                         <div class="button-wrapper">
-                        <button onclick="window.%s.play('%s')">Replay</button>
+                        <button class="replay-btn" onclick="window.%s.play('%s')">Replay</button>
                         </div>
                         <div class="slider-wrapper">
                         <input
@@ -295,27 +300,36 @@ class DatamationFrame(pd.DataFrame):
                             onchange="window.%s.onSlide('%s')"
                         />
                         </div>
-                    </div>
-                    <div class="description"></div>
+                        <div class="button-wrap">
+                            <button class="export-btn" onclick="%s.exportGif(true)">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
                     </div>
                     
-                    <div class="vega-vis-wrapper">
-                    <div class="vega-for-axis"></div>
-                    <div class="vega-other-layers"></div>
-                    <div class="vega-vis"></div>
+                    <div class="export-wrapper">
+                        <div class="description"></div>
+                        <div class="vega-vis-wrapper">
+                            <div class="vega-for-axis"></div>
+                            <div class="vega-other-layers"></div>
+                            <div class="vega-vis"></div>
+                        </div>
                     </div>
                 </div>
                 </div>
                 `));
 
-                require(['d3', 'vega', 'vega-util', 'vega-lite', 'vega-embed', 'gemini', 'app', 'utils', 'layout', 'config', 'hack-facet-view'], function(d3, vega, vegaUtil, vegaLite, vegaEmbed, gemini, app, utils, layout, config, hackFacetView) {
+                require(['d3', 'vega', 'vega-util', 'vega-lite', 'vega-embed', 'gemini', 'html2canvas', 'gifshot', 'download2', 'app', 'utils', 'layout', 'config', 'hack-facet-view', 'custom-animations'], function(d3, vega, vegaUtil, vegaLite, vegaEmbed, gemini, html2canvas, gifshot, download2, app, utils, layout, config, hackFacetView, customAnimations) {
                     window.d3 = d3
                     window.vegaEmbed = vegaEmbed
                     window.gemini = gemini
+                    window.html2canvas = html2canvas
+                    window.gifshot = gifshot
+                    window.CustomAnimations = customAnimations
                     window.%s = App("%s", {specs: %s, autoPlay: true});
                 });            
             })(element);
-        """ % (app, app, app, app, app, app, app, json.dumps(self.specs()))))
+        """ % (app, app, app, app, app, app, app, app, json.dumps(self.specs()))))
 
         # returns an object with the final output along with the internal states and operations
         return Datamation(self._states, self._operations, self)
