@@ -229,6 +229,71 @@ class DatamationFrame(pd.DataFrame):
 
             spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
             specs_list.append(spec)
+
+            if len(self._by) > 2:
+                meta = { 
+                    'parse': "grid",
+                    'description': "Group by " + ', '.join(self._by),
+                    "splitField": self._by[2],
+                    "axes": True
+                }
+
+                cols = []
+                rows = []
+                count = {}
+                data = []
+                start = {}
+                for key in self.states[1].groups.keys():
+                    if len(self._by) > 2:
+                        col, row, third = key
+                    else:
+                        col, row = key
+                    if col not in cols:
+                        cols.append(col)
+                    if pd.isna(third):
+                        if "NA" not in rows:
+                            rows.append("NA")
+                    else:
+                        if third not in rows:
+                            rows.append(third)
+                    if col not in count:
+                        count[col] = 0
+                    k = ','.join(map(lambda x: "NA" if pd.isna(x) else str(x), [col, row, third]))
+                    if k not in count:
+                        count[k] = 0
+                    count[k] = count[k] + len(self.states[1].groups[key])
+                    data.append(k)
+
+                id = 1
+                for key in data:
+                    if key not in start:
+                        start[key] = id
+                    id = id + count[key]
+
+                data = list(map(lambda key: {self._by[0]: key.split(',')[0], self._by[1]: key.split(',')[1], self._by[2]: key.split(',')[2], 'n': count[key], 'gemini_ids': start[key] if count[key] == 1 else list(range(start[key], start[key]+count[key], 1))}, data))
+
+                tooltip = []
+                for field in self._by:
+                    tooltip.append({
+                        "field": field,
+                        "type": "nominal"
+                    })
+
+                spec_encoding = {
+                    'x': x_encoding,
+                    'y': y_encoding,
+                    'color': {
+                        'field': self._by[2],
+                        'type': "nominal",
+                        'legend': {
+                            'values': rows,
+                        },
+                    },
+                    'tooltip': tooltip,
+                }
+
+                spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+                specs_list.append(spec)
         else:            
             cols = []
             count = {}
