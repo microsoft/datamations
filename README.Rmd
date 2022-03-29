@@ -71,7 +71,7 @@ library(dplyr)
 ```
 
 ```{r mean-salary-degree-plot-datamations-gif, echo = FALSE}
-knitr::include_graphics("man/figures/README-mean_salary_group_by_degree.gif")
+knitr::include_graphics("man/figures/README-mean_salary_grouped_degree.gif")
 ```
 
 datamations supports the following `dplyr` functions:
@@ -79,4 +79,4 @@ datamations supports the following `dplyr` functions:
 * `group_by()` (up to three grouping variables)
 * `summarize()`/`summarise()` (limited to summarizing one variable)
 * `filter()`
-* `count()`
+* `count()`/`tally`
