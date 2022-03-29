@@ -132,7 +132,7 @@ Methods:
 #### app.animateFrame - animates a single frame
 #### app.getFrames - returns frames.
 
-For more detailed code documentation, see README [here](./inst/htmlwidgets/js/)
+For more detailed code documentation, see README [here](./htmlwidgets/js/)
 
 
 
