@@ -19,14 +19,13 @@
  *
  * @param {String} id conteiner id
  * @param {Object} param1 configuration object
- * @param {Array} param1.specUrls list of urls
  * @param {Array} param1.specs list of vega-lite specifications
  * @param {Boolean} param1.autoPlay autoPlay
  * @param {Number} param1.frameDel frame duration (in ms.)
  * @param {Number} param1.frameDel delay between frames (in ms.)
  * @returns an object of exposed functions
  */
-function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
+function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
   let rawSpecsDontChange;
   let rawSpecs; // holds raw vega-lite specs, not transformed
   let vegaLiteSpecs;
@@ -110,8 +109,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
     // load or set data
     if (specs) {
       vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
-    } else if (specUrls) {
-      vegaLiteSpecs = await loadData(specUrls);
     }
 
     // save raw specs to use for facet axes drawing
@@ -461,25 +458,6 @@ function App(id, { specUrls, specs, autoPlay = false, frameDur, frameDel }) {
         target.custom ? 0 : frameDelay);
       });
     });
-  }
-
-  /**
-   * Loads specifications using d3.json
-   * @param {Array} specUrls list of urls
-   * @returns a promise of Promise.all
-   */
-  function loadData(specUrls) {
-    return Promise.all(
-      specUrls.map((url) => {
-        return d3.json(url);
-      })
-    )
-      .then((res) => {
-        return res;
-      })
-      .catch((e) => {
-        console.error(e.message);
-      });
   }
 
   /**
