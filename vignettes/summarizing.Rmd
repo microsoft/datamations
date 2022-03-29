@@ -1,0 +1,128 @@
+---
+title: "summarize, count, and tally"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{datamations steps and conventions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
+```
+
+The datamations API can visualize the summarization of variables with several dplyr verbs, like `summarize()`/`summarise()`, `count()`, and `tally()`
+
+## summary functions
+
+`datamations_sanddance` has special animations to visualize certain common summary functions passed to `summarize`. These custom animations include:
+
+-   `mean`
+-   `median`
+-   `max`/`min`
+-   `quantile`
+
+
+### mean of a variable
+
+```{r setup}
+library(datamations)
+library(dplyr)
+```
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  summarise(mean_salary = mean(Salary))" %>%
+  datamation_sanddance()
+```
+
+### median of a variable
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  summarise(median_salary = median(Salary))" %>%
+  datamation_sanddance()
+```
+
+### min and max of a variable
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  summarise(min_salary = min(Salary))" %>%
+  datamation_sanddance()
+```
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  summarise(max_salary = max(Salary))" %>%
+  datamation_sanddance()
+```
+
+### quantile() function
+
+The summarize function includes the capacity to pass some parameterized functions that result in custom animations. Currently datamations supports the `quantile()` function with the `probs` parameter as an example of this capability. 
+
+```{r}
+"small_salary %>%
+  group_by(Degree) %>%
+  summarise(quan = quantile(Salary, probs = 0.01))" %>%
+  datamation_sanddance()
+```
+
+## Other summary functions
+
+Common summary functions may include count-like operations, like n_distinct.
+
+### n_distinct()
+
+```{r}
+library(palmerpenguins)
+
+"penguins %>%
+  group_by(island) %>%
+  summarise(n = n_distinct(species))" %>%
+  datamation_sanddance()
+```
+
+You can find the API can support a large variety of mathematical functions and dplyr functions
+
+
+```{r}
+"small_salary %>%
+  group_by(Degree) %>%
+  summarize(floor_salary = trunc(Salary))" %>%
+  datamation_sanddance()
+```
+
+```{r}
+"small_salary %>%
+  group_by(Degree) %>%
+  summarize(first_salary = first(Salary))" %>%
+  datamation_sanddance()
+```
+
+```{r}
+"small_salary %>%
+  group_by(Degree) %>%
+  summarize(lagged_salary = lag(Salary))" %>%
+  datamation_sanddance()
+```
+
+## count() and tally()
+
+datamations treats `count()` and `tally()` calls equivalently to `group_by()` + `summarize(n = n())`.
+
+```{r}
+"small_salary %>%
+  group_by(Degree) %>%
+  count(Salary)" %>%
+  datamation_sanddance()
+```
