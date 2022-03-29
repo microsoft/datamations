@@ -51,11 +51,11 @@ library(dplyr)
   datamation_sanddance()
 ```
 
-<img src="man/figures/README-mean_salary_group_by_degree.gif" width="80%" />
+<img src="man/figures/README-mean_salary_grouped_degree.gif" width="80%" />
 
 datamations supports the following `dplyr` functions:
 
 -   `group_by()` (up to three grouping variables)
 -   `summarize()`/`summarise()` (limited to summarizing one variable)
 -   `filter()`
--   `count()`
+-   `count()`/`tally`
