@@ -681,10 +681,8 @@
     "width": 300,
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "meta": {
-      "axes": true,
-      "description": "Create new variable newVar",
-      "splitField": 1,
-      "xAxisLabels": null
+      "axes": false,
+      "description": "Create new variable newVar"
     },
     "data": {
       "values": [
