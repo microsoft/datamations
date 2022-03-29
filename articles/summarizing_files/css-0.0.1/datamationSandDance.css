@@ -1,0 +1,119 @@
+.vega-vis-wrapper {
+  position: relative;
+}
+
+.vega-vis-wrapper > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.vega-vis-wrapper .vega-vis svg {
+  background-color: transparent !important;
+}
+
+.vega-vis-wrapper .vega-vis.with-axes .background {
+  stroke: none !important;
+}
+
+.vega-vis-wrapper .vega-vis.with-axes details {
+  display: none;
+}
+
+.vega-vis-wrapper .vega-for-axis {
+  opacity: 0;
+}
+
+.vega-vis-wrapper .vega-for-axis .mark-symbol {
+  display: none;
+}
+
+.vega-vis-wrapper .vega-for-axis .role-title {
+  display: none;
+}
+
+.vega-vis-wrapper .vega-for-axis .role-legend {
+  display: none;
+}
+
+.control-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.slider-wrapper {
+  padding-left: 10px;
+  padding-right: 10px;
+  flex-grow: 1;
+}
+
+.slider-wrapper input {
+  width: 100%;
+}
+
+details {
+  display: none !important;
+}
+
+.vega-embed.has-actions {
+  padding-right: 0px !important;
+}
+
+.description {
+  text-align: center;
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+
+.vega-other-layers {
+  position: relative;
+}
+
+.vega-other-layers > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.vega-other-layers > div svg {
+  background-color: transparent !important;
+}
+
+.vega-other-layers .vega-hidden-layer {
+  transition: 1s all ease-in-out;
+}
+
+.vega-other-layers .vega-hidden-layer .role-legend {
+  display: none;
+}
+
+.vega-other-layers .vega-hidden-layer .role-axis {
+  display: none;
+}
+
+.vega-other-layers .vega-hidden-layer .role-title {
+  display: none;
+}
+
+.vega-other-layers .vega-hidden-layer .background {
+  stroke: none !important;
+}
+
+.vega-other-layers.with-axes details {
+  display: none;
+}
+
+.export-wrapper {
+  height: 575px;
+  width: 575px;
+}
+
+.spin {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
