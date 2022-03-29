@@ -29,6 +29,11 @@ The datamations API can visualize the summarization of variables with several dp
 
 ### mean of a variable
 
+```{r setup}
+library(datamations)
+library(dplyr)
+```
+
 ```{r}
 "small_salary %>%
   group_by(Work) %>%
