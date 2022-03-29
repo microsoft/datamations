@@ -508,10 +508,18 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
         dplyr::group_by(!!!group_vars) %>%
         dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, !!summary_parameters, na.rm = TRUE))
     }
-    else {
+    else if (as.character(summary_function) %in% c("mean", "max", "min", "median")) {
       data_2 <- data_1 %>%
         dplyr::group_by(!!!group_vars) %>%
         dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
+    } else if(!is.null(mapping$summary_parameters)) {
+      data_2 <- data_1 %>%
+        dplyr::group_by(!!!group_vars) %>%
+        dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, !!summary_parameters))
+    } else {
+      data_2 <- data_1 %>%
+        dplyr::group_by(!!!group_vars) %>%
+        dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function))
     }
 
   } else if (y_type == "null") {
