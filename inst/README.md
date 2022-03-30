@@ -1,8 +1,11 @@
 # Datamations
 
-Datamations Javascript code relies on [vega](https://vega.github.io/vega/), [vega-lite](https://vega.github.io/vega-lite/) for rendering and [gemini](https://github.com/uwdata/gemini) for animations. An animation consists of vega-lite frames with a datamations specific `meta` fields.
+Datamations Javascript code relies on [vega](https://vega.github.io/vega/), [vega-lite](https://vega.github.io/vega-lite/) for rendering and [gemini](https://github.com/uwdata/gemini) for animations. An animation is a collection of vega-lite specs with a datamations specific fields.
 
-Example vega-lite spec:
+A `datamations spec` is a superset of vega-lite spec, meaning it has some more fields on top on the vega-lite spec. 
+
+* meta - a configuration metafields used to instruct vega-lite spec processing
+* data.values are handled differently when `meta.parse = grid`. More on that, below. 
 
 ```
 {
@@ -52,6 +55,17 @@ Meta fields explanation:
 | meta.splitField       | If specified, splits points on x axis and forms inner groups.          |
 | meta.axes             | If true, renders a spec as a separate layout under the the main chart. |
 | meta.xAxisLabels      | Labels for x axis. Used when splitField is specified.                  |
+
+Data format:
+
+* `data.values` is an array of objects with `gemini_id`, which is used to keep track of circle during animation
+* If `meta.parse = "grid"`, `data.values` should be: 
+
+```
+[
+  { n: [group size], gemini_ids: [1, 2, ...n], ...[any other fields] }
+]
+```
 
 
 ### Usage
