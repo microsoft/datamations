@@ -333,11 +333,11 @@ function getJitterSpec(spec) {
 
   const simulation = d3
     .forceSimulation(arr)
-    .force("x", d3.forceX().strength(0.0001))
+    .force("x", d3.forceX().x(d => d.x))
     .force("y", d3.forceY().strength(0.002).y(d => d[CONF.Y_FIELD]))
     .force("collide", d3
       .forceCollide()
-      .strength(0.001)
+      .strength(0.01)
       .radius(circleRadius)
     )
     .stop();
