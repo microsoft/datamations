@@ -314,7 +314,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
         meta <- list(parse = "jitter", axes = has_facets, description = description)
       }
       else {
-        meta <- list(axes = TRUE, description = description)
+        meta <- list(axes = FALSE, description = description)
       }
     } else if (basis_type %in% c("binary", "categorical")) {
 
@@ -685,7 +685,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
         meta <- list(parse = "jitter", axes = has_facets, description = description)
       }
       else {
-        meta <- list(axes = TRUE, description = description)
+        meta <- list(axes = FALSE, description = description)
       }    } else if (y_type %in% c("binary", "categorical")) {
 
       # Generate description
