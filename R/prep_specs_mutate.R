@@ -416,15 +416,15 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     }
 
     # Variables that need to be passed to JS
-    if (!is.null(mapping$x)) {
-      # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
-      meta <- append(meta, list(splitField = mapping$x))
+    # if(length(mutation_variables)>1) {
+    #   # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
+    #   meta <- append(meta, list(splitField = mapping$x))
 
-      if (!has_facets) {
-        # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
-        meta <- append(meta, list(xAxisLabels = levels(data_1[[mapping$x]])))
-      }
-    }
+    #   if (!has_facets) {
+    #     # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
+    #     meta <- append(meta, list(xAxisLabels = levels(data_1[[mapping$x]])))
+    #   }
+    # }
 
     spec <- generate_vega_specs(
       .data = data_1,
@@ -786,15 +786,15 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     }
 
     # Variables that need to be passed to JS
-    if (!is.null(mapping$x)) {
-      # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
-      meta <- append(meta, list(splitField = mapping$x))
+    # if(length(mutation_variables)>1) {
+    #   # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
+    #   meta <- append(meta, list(splitField = mapping$x))
 
-      if (!has_facets) {
-        # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
-        meta <- append(meta, list(xAxisLabels = levels(data_2[[mapping$x]])))
-      }
-    }
+    #   if (!has_facets) {
+    #     # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
+    #     meta <- append(meta, list(xAxisLabels = levels(data_2[[mapping$x]])))
+    #   }
+    # }
 
     spec <- generate_vega_specs(
       .data = data_2,

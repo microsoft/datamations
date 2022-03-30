@@ -5,7 +5,7 @@
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 #' @noRd
-prep_specs_tally <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, ...) {
+prep_specs_tally <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, mutation_before, ...) {
 
   # Treat tally as summarize(n = n()) with optional group mappings
   # Call prep_specs_group_by and prep_specs_summarize
@@ -14,7 +14,7 @@ prep_specs_tally <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heigh
 
   # Group by ----
 
-  res[["group_by"]] <- prep_specs_group_by(.data, mapping, toJSON = toJSON, pretty = pretty, height = height, width = width)
+  res[["group_by"]] <- prep_specs_group_by(.data, mapping, toJSON = toJSON, pretty = pretty, height = height, width = width, mutation_before = FALSE)
 
   # Summarize ----
 
@@ -31,7 +31,7 @@ prep_specs_tally <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heigh
   .data <- .data %>%
     dplyr::group_by(!!!group_vars)
 
-  res[["summarize"]] <- prep_specs_summarize(.data, mapping, toJSON = toJSON, pretty = pretty, height = height, width = width)
+  res[["summarize"]] <- prep_specs_summarize(.data, mapping, toJSON = toJSON, pretty = pretty, height = height, width = width, mutation_before = FALSE)
 
   # Add meta field for "tally" custom animation
   res[["summarize"]][[1]][["meta"]][["custom_animation"]] <- "tally"
