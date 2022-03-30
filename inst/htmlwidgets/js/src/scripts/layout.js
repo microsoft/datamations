@@ -4,6 +4,8 @@
 * - grid view: meta.parse = "grid"
 * - jittered  view: meta.parse = "jitter"
 */
+import { CONF, IGNORE_FIELDS } from "./config";
+import { lookupByBucket } from "./utils";
 
 /**
  * Generates data for grid specs
@@ -12,7 +14,7 @@
  * @param {Boolean} stacked if true, circles are stacked and vertically aliged
  * @returns an array of objects
  */
-function generateGrid(spec, rows = 10, stacked = false) {
+export function generateGrid(spec, rows = 10, stacked = false) {
   const splitField = spec.meta.splitField;
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const groupKeys = [];
@@ -209,7 +211,7 @@ function generateGrid(spec, rows = 10, stacked = false) {
  * @param {Number} rows number of rows in a grid
  * @returns grid specification
  */
-function getGridSpec(spec, rows = 10, stacked = false) {
+export function getGridSpec(spec, rows = 10, stacked = false) {
   return new Promise((res) => {
     const { gridValues: grid, domain, num_groups } = generateGrid(spec, rows, stacked);
     const obj = {...spec};
@@ -294,7 +296,7 @@ function getGridSpec(spec, rows = 10, stacked = false) {
  * @param {Object} spec vega-lite specification
  * @returns jittered spec
  */
-function getJitterSpec(spec) {
+export function getJitterSpec(spec) {
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const width = spec.spec ? spec.spec.width : spec.width;
   const nodes = spec.data.values;

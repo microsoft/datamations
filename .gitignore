@@ -8,7 +8,6 @@ rsconnect/
 .idea/
 *.egg-info/
 lib/
-dist/
 build/
 __pycache__/
 *.pyc

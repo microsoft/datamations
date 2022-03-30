@@ -13,7 +13,11 @@
  * - download2: http://danml.com/download.html
  */
 
-
+import { CONF, META_PARSE_VALUES } from "./config";
+import { getSelectors, splitLayers, getRows } from "./utils";
+import { hackFacet, getEmptySpec } from "./hack-facet-view";
+import { getGridSpec, getJitterSpec } from "./layout";
+import { CustomAnimations } from "./custom-animations";
 
 /**
  *
@@ -25,7 +29,7 @@
  * @param {Number} param1.frameDel delay between frames (in ms.)
  * @returns an object of exposed functions
  */
-function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
+export default function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
   let rawSpecsImmutable; // saving passed specs here, not changed by reference
   let rawSpecs; // holds raw vega-lite specs, not transformed
   let vegaLiteSpecs;

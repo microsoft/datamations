@@ -4,12 +4,14 @@
  * Adding axis layer underneath to look exactly same as faceted view
  */
 
+import { CONF, META_PARSE_VALUES } from "./config";
+
 /**
  * Get empty spec, if no data is present
  * @param {Object} spec 
  * @returns vega-lite spec
  */
-function getEmptySpec(spec) {
+export function getEmptySpec(spec) {
   const description = spec.meta.description;
   const splitField = spec.meta.splitField;
 
@@ -76,7 +78,7 @@ function getEmptySpec(spec) {
  * @param {Object} spec original spec
  * @returns vega-lite spec
  */
-function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
+export function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   const encoding = spec.spec.encoding;
   const mark = spec.spec.mark;
   const facet = spec.facet;
@@ -156,7 +158,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
  * @param {Object} param0.height spec height
  * @returns vega-lite spec
  */
-function getHackedSpec({ view, spec, width = 600, height = 600 }) {
+export function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   const rowId = spec.facet.row ? spec.facet.row.field : null;
   const colId = spec.facet.column ? spec.facet.column.field : null;
 
@@ -275,7 +277,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
  * @param {Object} spec vega lite spec with facets
  * @returns vega-lite spec
  */
-function hackFacet(spec) {
+export function hackFacet(spec) {
   const div = document.createElement("div");
 
   spec.data.name = "source";
