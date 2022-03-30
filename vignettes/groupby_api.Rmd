@@ -1,0 +1,78 @@
+---
+title: "datamations group_by api"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{datamations steps and conventions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
+```
+
+datamations allows the visualization of `dplyr::group_by` calls containing up to three variables.
+
+## group_by api
+
+The `datamations_sanddance` call can finish with a `group_by` call, displaying proportional data faceted by the grouping variables.
+
+## Single grouping variable
+
+```{r}
+library(datamations)
+library(dplyr)
+
+"small_salary %>%
+  group_by(Work, Degree)"
+```
+## Two grouping variables
+
+```{r}
+"small_salary %>%
+  group_by(Work, Degree)" %>%
+  datamation_sanddance()
+```
+
+## Three grouping variables
+
+```{r}
+library(palmerpenguins)
+
+"penguins %>%
+  group_by(sex, island, species)" %>%
+  datamation_sanddance()
+```
+
+## summarizing and filtering by group
+
+The `datamations_sanddance` call can also show the filtering and summarization of data based on group facets.
+
+### group_by into filter
+
+```{r}
+"small_salary %>%
+  group_by(Degree) %>%
+  filter(Salary > 90)" %>%
+  datamation_sanddance()
+```
+
+### group_by into summarize
+
+```{r}
+"small_salary %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(Salary))" %>%
+  datamation_sanddance()
+
+"penguins %>%
+  group_by(sex, island, species) %>%
+  summarize(mean = median(bill_length_mm))" %>%
+  datamation_sanddance()
+```
+
+
