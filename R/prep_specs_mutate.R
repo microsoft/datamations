@@ -44,6 +44,10 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
 
       basis_type <- check_type(.data[[mutation_variable]])
 
+      # add a split grid if there are multiple mutation basis variables defined and we have no grouped mapping
+      # If we have a grouped mapping, just take first mutation variable
+      if(grouping_before) mutation_variables <- mutation_variables[1]
+
       if(length(mutation_variables)>1) {
 
         mutation_basis_two <- rlang::as_name(mutation_variables[2]) %>%
@@ -103,14 +107,16 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     # It can just be 1, except if mapping$x is not 1!
     # Generate the labels for these too - label by colour grouping variable or not at all
 
-    if (length(mutation_variables)==1) {
+    # if we have only one mutation variable and no groups, do the following:
+    if (length(mutation_variables)==1 && mapping$x==1) {
       data_1 <- data_1 %>%
         dplyr::mutate(!!X_FIELD := 1)
 
       x_labels <- generate_labelsExpr(NULL)
       x_domain <- generate_x_domain(NULL)
       x_title <- NULL
-    } else {
+    # if we have more than one mutation variable and no groups, do the following:
+    } else if (length(mutation_variables)>1) {
       x_var <- rlang::parse_expr(mutation_basis_two_chr)
 
       data_1 <- data_1 %>%
@@ -129,6 +135,26 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
         generate_x_domain()
 
       x_title <- mutation_basis_two_chr
+    # in cases where we have grouping, use default grid showing single variable transition
+    } else {
+      x_var <- rlang::parse_expr(mapping$x)
+
+      data_1 <- data_1 %>%
+        dplyr::mutate(
+          !!X_FIELD := as.numeric({{ x_var }})
+        )
+
+      x_labels <- data_1 %>%
+        dplyr::ungroup() %>%
+        dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
+        generate_labelsExpr()
+
+      x_domain <- data_1 %>%
+        dplyr::ungroup() %>%
+        dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
+        generate_x_domain()
+
+      x_title <- mapping$x
     }
 
     ### Prep encoding ----
@@ -416,15 +442,15 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     }
 
     # Variables that need to be passed to JS
-    # if(length(mutation_variables)>1) {
-    #   # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
-    #   meta <- append(meta, list(splitField = mapping$x))
+    if(!is.null(mapping$x) && !mapping$x==1 && length(mutation_variables)==1) {
+      # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
+      meta <- append(meta, list(splitField = mapping$x))
 
-    #   if (!has_facets) {
-    #     # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
-    #     meta <- append(meta, list(xAxisLabels = levels(data_1[[mapping$x]])))
-    #   }
-    # }
+      if (!has_facets) {
+        # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
+        meta <- append(meta, list(xAxisLabels = levels(data_1[[mapping$x]])))
+      }
+    }
 
     spec <- generate_vega_specs(
       .data = data_1,
@@ -479,14 +505,14 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     # It can just be 1, except if mapping$x is not 1!
     # Generate the labels for these too - label by colour grouping variable or not at all
 
-    if (length(mutation_variables)==1) {
+    if (length(mutation_variables)==1 && mapping$x==1) {
       data_2 <- data_2 %>%
         dplyr::mutate(!!X_FIELD := 1)
 
       x_labels <- generate_labelsExpr(NULL)
       x_domain <- generate_x_domain(NULL)
       x_title <- NULL
-    } else {
+    } else if (length(mutation_variables)>1 && mapping$x==1) {
       x_var <- rlang::parse_expr(mutation_basis_two_chr)
 
       data_2 <- data_2 %>%
@@ -505,6 +531,25 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
         generate_x_domain()
 
       x_title <- mutation_basis_two_chr
+    } else {
+      x_var <- rlang::parse_expr(mapping$x)
+
+      data_2 <- data_2 %>%
+        dplyr::mutate(
+          !!X_FIELD := as.numeric({{ x_var }})
+        )
+
+      x_labels <- data_2 %>%
+        dplyr::ungroup() %>%
+        dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
+        generate_labelsExpr()
+
+      x_domain <- data_2 %>%
+        dplyr::ungroup() %>%
+        dplyr::distinct(!!X_FIELD, label = {{ x_var }}) %>%
+        generate_x_domain()
+
+      x_title <- mapping$x
     }
 
     ### Prep encoding ----
@@ -786,15 +831,15 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     }
 
     # Variables that need to be passed to JS
-    # if(length(mutation_variables)>1) {
-    #   # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
-    #   meta <- append(meta, list(splitField = mapping$x))
+    if(!is.null(mapping$x) && !mapping$x==1 && length(mutation_variables)==1) {
+      # If there is a grouping variable on the x-axis, then each jitter field needs to be split by that X, so we have to tell the JS code that
+      meta <- append(meta, list(splitField = mapping$x))
 
-    #   if (!has_facets) {
-    #     # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
-    #     meta <- append(meta, list(xAxisLabels = levels(data_2[[mapping$x]])))
-    #   }
-    # }
+      if (!has_facets) {
+        # If there are facets, they're fake and don't actually have labels, so we need to send those over too!
+        meta <- append(meta, list(xAxisLabels = levels(data_2[[mapping$x]])))
+      }
+    }
 
     spec <- generate_vega_specs(
       .data = data_2,
