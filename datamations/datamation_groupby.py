@@ -379,19 +379,37 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "gemini_id": i,
                         x_axis: self.states[0][x_axis][index],
                         self._by[1]: self.states[0][self._by[1]][index],
-                        "datamations_x": 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2,
-                        "datamations_y": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]],
-                        "datamations_y_tooltip": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]], 
-                        "datamations_y_raw": self.states[0][y_axis][index],
-                        "Lower": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] - self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]],
-                        "Upper": self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] + self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                        "datamations_x": 1 + l3groups.index("NA" if pd.isna(self.states[0][self._by[2]][index]) else self.states[0][self._by[2]][index]) if len(self._by) > 2 else 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2
                     }
+                    if len(self._by) > 2:
+                        value[self._by[2]] = "NA" if pd.isna(self.states[0][self._by[2]][index]) else self.states[0][self._by[2]][index]
+                        if pd.isna(self.states[0][self._by[2]][index]):
+                            value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")]
+                            value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")]
+                            value["Lower"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")] - (0 if pd.isna(self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")]) else self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")])
+                            value["Upper"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")] + (0 if pd.isna(self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")]) else self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")])
+                            if (pd.isna(self.states[0][y_axis][index]) == False):
+                                value["datamations_y_raw"] = self.states[0][y_axis][index]
+                        else:
+                            value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]]
+                            value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] if pd.isna(self.states[0][self._by[2]][index]) == False else "NA"
+                            value["Lower"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] - self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]]
+                            value["Upper"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] + self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]]
+                            if (pd.isna(self.states[0][y_axis][index]) == False):
+                                value["datamations_y_raw"] = self.states[0][y_axis][index]
+                    else:
+                        value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                        value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                        value["datamations_y_raw"] = self.states[0][y_axis][index]
+                        value["Lower"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] - self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                        value["Upper"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] + self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+
                     data.append(value)
                     i = i+1
                         
             facet_dims = {
                 "ncol": len(cols),
-                "nrow": 1
+                "nrow": len(groups) if len(self._by) > 2 else 1
             }
         else:
             id = 1
