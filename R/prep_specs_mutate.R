@@ -677,7 +677,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
     if (y_type == "numeric") {
 
       # Generate description
-      description <- generate_mutation_description(mutation_variable, group_by = length(group_vars) != 0)
+      description <- generate_mutation_description(mutation_variable, mutation_expression, group_by = length(group_vars) != 0)
 
       # meta = list(parse = "jitter") communicates to the JS code that the x values need to be jittered
       # No jitter if we provide an x value
@@ -689,7 +689,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
       }    } else if (y_type %in% c("binary", "categorical")) {
 
       # Generate description
-      description <- generate_mutation_description(mutation_variable, group_by = length(group_vars) != 0)
+      description <- generate_mutation_description(mutation_variable, mutation_expression, group_by = length(group_vars) != 0)
 
       # meta = list(parse = "grid") communicates to the JS code to turn these into real specs
       # Use this if the response variable is categorical

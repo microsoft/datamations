@@ -340,7 +340,7 @@ generate_mutation_description <- function(mutation_variable, mutation_function =
       group_description = ifelse(group_by, " of each group", "")
     )
   } else {
-    glue::glue("Create new variable {mutation_variable} of the function {mutation_function}{group_description}",
+    glue::glue("Create new variable {mutation_variable} as `{mutation_function}`{group_description}",
       group_description = ifelse(group_by, " of each group", "")
     )
   }

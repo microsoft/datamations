@@ -20,7 +20,7 @@ library(datamations)
 
 small_salary <- dplyr::mutate(
   small_salary, 
-  SalaryTwo = runif(nrow(small_salary), min = 60, max = 110),
+  supplementalIncome = runif(nrow(small_salary), min = 60, max = 110),
   logNorm = rlnorm(nrow(small_salary), meanlog = 0, sdlog = 1)
   )
 
@@ -43,15 +43,15 @@ small_salary <- dplyr::mutate(
 ```{r mutations}
 
 "small_salary %>%
-  mutate(newVar = Salary^2) %>%
+  mutate(salarySquared = Salary^2) %>%
   group_by(Degree) %>%
-  summarize(mean = mean(newVar))" %>%
+  summarize(mean = mean(salarySquared))" %>%
   datamation_sanddance()
 
 "small_salary %>%
-  mutate(newVar = 1 / Salary) %>%
+  mutate(inverseSalary = 1 / Salary) %>%
   group_by(Degree) %>%
-  summarize(mean = mean(newVar))" %>%
+  summarize(mean = mean(inverseSalary))" %>%
   datamation_sanddance()
 
 ```
@@ -61,15 +61,15 @@ small_salary <- dplyr::mutate(
 ```{r mutivar}
 
 "small_salary %>%
-  mutate(newVar = Salary + SalaryTwo) %>%
+  mutate(totalIncome = Salary + supplementalIncome) %>%
   group_by(Degree) %>%
-  summarize(mean = mean(newVar))" %>%
+  summarize(mean = mean(totalIncome))" %>%
   datamation_sanddance()
 
 "small_salary %>%
-  mutate(newVar = Salary / SalaryTwo) %>%
+  mutate(incomePer = Salary / supplementalIncome) %>%
   group_by(Degree) %>%
-  summarize(mean = mean(newVar))" %>%
+  summarize(mean = mean(incomePer))" %>%
   datamation_sanddance()
 
 ```
@@ -85,12 +85,12 @@ c. summarize(z = sum(x) / sum(y))
 
 ### Two variable mutates
 
-Two variable mutates also currently error
+Two variable mutates results in a warning, but does not error
 
 ```{r twovar, error = TRUE}
 "small_salary %>%
-  mutate(newVar = Salary + SalaryTwo, newVarTwo = Salary^2) %>%
+  mutate(totalIncome = Salary + supplementalIncome, squaredIncome = Salary^2) %>%
   group_by(Degree) %>%
-  summarize(mean = mean(newVar))" %>%
+  summarize(mean = mean(totalIncome))" %>%
   datamation_sanddance()
 ```
