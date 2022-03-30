@@ -61,24 +61,32 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         if len(self.states[1].groups.keys()) == 2:
             groups = list(self.states[1].groups.keys())
         else:
-            groups = [list(self.states[1].groups.keys())[0][0], list(self.states[1].groups.keys())[2][0]]
-            subgroups = [list(self.states[1].groups.keys())[0][1], list(self.states[1].groups.keys())[1][1]]
+            groups = list(sorted(set(map(lambda x: x[0], self.states[1].groups.keys()))))
+            subgroups = list(sorted(set(map(lambda x: x[1], self.states[1].groups.keys()))))
+            if (len(self._by) > 2):
+                l3groups = []
+                for key in list(map(lambda x: "NA" if pd.isna(x[2]) else str(x[2]), self.states[1].groups.keys())):
+                    if key not in l3groups:
+                        l3groups.append(key)
 
         specs_list = []
 
         labels = [subgroups[0] if len(self._by) > 1 else groups[0], subgroups[1] if len(self._by) > 1 else groups[1]]
 
+        if (len(self._by) > 2):
+            sublabel = "round(datum.label) == 1 ? '" + l3groups[0] + "' : " + "round(datum.label) == 2 ? '" + l3groups[1] + "' : '" + l3groups[2] + "'"
+
         x_encoding = {
             "field": "datamations_x",
             "type": "quantitative",
             "axis": {
-            "values": [1, 2],
-            "labelExpr": "round(datum.label) == 1 ? '" + labels[0] + "' : '"  +  labels[1] + "'",
+            "values": list(range(1, len(groups)+1)),
+            "labelExpr": sublabel if len(self._by) > 2 else "round(datum.label) == 1 ? '" + labels[0] + "' : '"  +  labels[1] + "'",
             "labelAngle": -90
             },
-            "title": self._by[1] if len(self._by) > 1 else x_axis,
+            "title": self._by[-1] if len(self._by) > 1 else x_axis,
             "scale": {
-            "domain": [0.5, 2.5]
+            "domain": [0.5, 3.5 if len(self._by) > 2 else 2.5]
             }
         }
 
@@ -120,11 +128,12 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         facet_encoding = {}
 
         if len(self._by) > 1:
-            sort = [list(self.states[1].groups.keys())[0][0], list(self.states[1].groups.keys())[2][0]]
+            sort = groups
             facet_encoding["column"] = { "field": self._by[0], "sort": sort, "type": "ordinal", "title": self._by[0] }
 
         if len(self._by) > 2:
-            facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
+            sort = subgroups
+            facet_encoding["row"] = { "field": self._by[1], "sort": sort, "type": "ordinal", "title": self._by[1] }
 
         facet_dims = {
                 "ncol": 1,
@@ -167,10 +176,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "gemini_id": i,
                         self._by[0]: self.states[0][self._by[0]][index],
                         self._by[1]: self.states[0][self._by[1]][index],
-                        "datamations_x": 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2,
-                        "datamations_y": self.states[0][y_axis][index],
-                        "datamations_y_tooltip": self.states[0][y_axis][index]   
+                        "datamations_x": 1 + l3groups.index("NA" if pd.isna(self.states[0][self._by[2]][index]) else self.states[0][self._by[2]][index]) if len(self._by) > 2 else 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2,
                     }
+                    if (not pd.isna(self.states[0][y_axis][index])):
+                        value["datamations_y"] = self.states[0][y_axis][index]
+                        value["datamations_y_tooltip"] = self.states[0][y_axis][index]   
+
+                    if len(self._by) > 2:
+                        value[self._by[2]] = "NA" if pd.isna(self.states[0][self._by[2]][index]) else self.states[0][self._by[2]][index] 
                     data.append(value)
                     i = i+1
                         
@@ -178,6 +191,11 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "ncol": len(cols),
                 "nrow": 1
             }
+            if len(self._by) > 2:
+                facet_dims = {
+                    "ncol": len(groups),
+                    "nrow": len(subgroups),
+                }
         else:
             id = 1
             for i in range(len(self.states[0])):
@@ -221,6 +239,19 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
+        if len(self._by) > 2:
+            spec_encoding = {
+                'x': x_encoding,
+                'y': y_encoding,
+                "color": {
+                    "field": self._by[2],
+                    "type": "nominal",
+                    "legend": {
+                        "values": l3groups,
+                    },
+                },
+                "tooltip": tooltip
+            }
         spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
         specs_list.append(spec)
 
@@ -413,10 +444,16 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         # Show the summarized values along with error bars, zoomed in
         if len(self._by) > 2:
-            domain = [
-                round(min(self._output[y_axis][groups[0]][subgroups[0]][0] - self._error[y_axis][groups[0]][subgroups[0]][0], self._output[y_axis][groups[1]][subgroups[1]][1] - self._error[y_axis][groups[0]][subgroups[0]][0]),13),
-                round(max(self._output[y_axis][groups[1]][subgroups[0]][0] + self._error[y_axis][groups[1]][subgroups[0]][0], self._output[y_axis][groups[1]][subgroups[1]][1] + self._error[y_axis][groups[1]][subgroups[1]][0]),13),
-              ]
+            min_array = []
+            max_array = []
+            for group in groups:
+                for subgroup in subgroups:
+                    for l3group in l3groups:
+                        if subgroup in self._output[y_axis][group] and l3group in self._output[y_axis][group][subgroup]:
+                            min_array.append(self._output[y_axis][group][subgroup][l3group] - self._error[y_axis][(group, subgroup, l3group)])
+                        if subgroup in self._output[y_axis][group] and l3group in self._output[y_axis][group][subgroup]:
+                            max_array.append(self._output[y_axis][group][subgroup][l3group] + self._error[y_axis][(group, subgroup, l3group)])
+            domain = [round(min(min_array), 13), round(max(max_array), 13)]
         elif len(self._by) > 1:
             domain = [
                 round(min(self._output[y_axis][groups[0]][subgroups[0]] - self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] - self._error[y_axis][groups[0]][subgroups[0]]),13),
