@@ -2,7 +2,7 @@
 title: "Variable types"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{datamations steps and conventions}
+  %\VignetteIndexEntry{Variable types}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
