@@ -4,8 +4,8 @@
 * - grid view: meta.parse = "grid"
 * - jittered  view: meta.parse = "jitter"
 */
-import { CONF, IGNORE_FIELDS } from "./config";
-import { lookupByBucket } from "./utils";
+import { CONF, IGNORE_FIELDS } from "./config.js";
+import { lookupByBucket } from "./utils.js";
 
 /**
  * Generates data for grid specs

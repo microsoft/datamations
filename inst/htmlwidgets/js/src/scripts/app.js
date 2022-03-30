@@ -13,11 +13,11 @@
  * - download2: http://danml.com/download.html
  */
 
-import { CONF, META_PARSE_VALUES } from "./config";
-import { getSelectors, splitLayers, getRows } from "./utils";
-import { hackFacet, getEmptySpec } from "./hack-facet-view";
-import { getGridSpec, getJitterSpec } from "./layout";
-import { CustomAnimations } from "./custom-animations";
+import { CONF, META_PARSE_VALUES } from "./config.js";
+import { getSelectors, splitLayers, getRows } from "./utils.js";
+import { hackFacet, getEmptySpec } from "./hack-facet-view.js";
+import { getGridSpec, getJitterSpec } from "./layout.js";
+import { CustomAnimations } from "./custom-animations.js";
 
 /**
  *

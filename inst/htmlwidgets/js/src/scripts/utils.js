@@ -1,4 +1,4 @@
-import { IGNORE_FIELDS } from "./config";
+import { IGNORE_FIELDS } from "./config.js";
 
 /**
  * Gets selectors for each componenent, such as slider and animation divs

@@ -1,6 +1,6 @@
 import assert from 'assert';
-import { generateGrid, getGridSpec, getJitterSpec } from "../dist/esm/index.js";
 import * as d3 from "d3";
+import { generateGrid } from "../scripts/layout.js";
 
 // set d3 globally. The functions expect d3 to be globally set
 global.d3 = d3;

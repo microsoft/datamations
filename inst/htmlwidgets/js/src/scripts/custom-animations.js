@@ -10,8 +10,8 @@
  * Inspiration from: https://giorgi-ghviniashvili.github.io/aggregate-animation-data/designs/
  */
 
-import { CONF } from "./config";
-import { getGridSpec } from "./layout";
+import { CONF } from "./config.js";
+import { getGridSpec } from "./layout.js";
 
 /**
  * Generates a spec for count animation

@@ -4,7 +4,7 @@
  * Adding axis layer underneath to look exactly same as faceted view
  */
 
-import { CONF, META_PARSE_VALUES } from "./config";
+import { CONF, META_PARSE_VALUES } from "./config.js";
 
 /**
  * Get empty spec, if no data is present
