@@ -56,7 +56,7 @@ class DatamationFrame(pd.DataFrame):
     def groupby(self, by):
         self._by = [by] if type(by) == str else by
         self._operations.append('groupby')
-        df = super(DatamationFrame, self).groupby(by=by)
+        df = super(DatamationFrame, self).groupby(by=by, dropna=False)
         return datamation_groupby.DatamationGroupBy(self, by)
 
     # The second spec in the json to show initial points divided into groups.
