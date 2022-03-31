@@ -1,18 +1,23 @@
 ---
-title: "Mutation examples"
-output: html_document
-date: '2022-03-24'
+title: "datamations mutation api"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{datamations mutation api}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
 ```
 
-```{r load, warning = FALSE, message = FALSE}
-library(dplyr)
-library(datamations)
-```
+{datamations} supports the limited definition of mutations in a pipeline. It is capable of showing a single mutation involving multiple variables in a scatterplot or grid fashion.
 
+We can define new data to use in some example mutations.
 
 ### New data with added variable
 
@@ -25,6 +30,8 @@ small_salary <- dplyr::mutate(
   )
 
 ```
+
+{datamations} can visualize mutations to help one understand mathematical distributions, scales, and relationships. 
 
 ### Log normal mutation
 
@@ -56,7 +63,10 @@ small_salary <- dplyr::mutate(
 
 ```
 
-### Multivariate
+
+### Multivariate mutates
+
+{datamations} can also showcase the relationship between more than variable in your data pipelines. We can see below the relationship between our Salary variable and a new variable and use the mutation in grouping, filtering, and summarization.
 
 ```{r mutivar}
 
@@ -74,18 +84,9 @@ small_salary <- dplyr::mutate(
 
 ```
 
-### Mutations in a summarize
-
-Currently the following statements error:
-
-a. summarize(z = sum(x + y))
-b. summarize(z = sum(x / y))
-c. summarize(z = sum(x) / sum(y))
-
-
 ### Two variable mutates
 
-Two variable mutates results in a warning, but does not error
+{datamations} will allow the definition of a mutate statement with multiple mutates, but it will ignore anything after the first defined mutate. Two variable mutates results in a warning.
 
 ```{r twovar, error = TRUE}
 "small_salary %>%
