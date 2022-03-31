@@ -2,7 +2,7 @@
 title: "Binary variables and simpson's paradox"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{datamations steps and conventions}
+  %\VignetteIndexEntry{Binary variables and simpson's paradox}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

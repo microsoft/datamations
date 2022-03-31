@@ -2,7 +2,7 @@
 title: "datamations group_by api"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{datamations steps and conventions}
+  %\VignetteIndexEntry{datamations group_by api}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

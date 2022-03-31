@@ -2,7 +2,7 @@
 title: "summarize, count, and tally"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{datamations steps and conventions}
+  %\VignetteIndexEntry{summarize, count, and tally}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
