@@ -8,7 +8,6 @@
 | --- | --- | --- |
 | id | <code>String</code> | conteiner id |
 | param1 | <code>Object</code> | configuration object |
-| param1.specUrls | <code>Array</code> | list of urls |
 | param1.specs | <code>Array</code> | list of vega-lite specifications |
 | param1.autoPlay | <code>Boolean</code> | autoPlay |
 | param1.frameDel | <code>Number</code> | frame duration (in ms.) |
@@ -24,7 +23,6 @@
     * [~adjustAxisAndErrorbars()](#App..adjustAxisAndErrorbars)
     * [~drawAxis(index)](#App..drawAxis) ⇒
     * [~animateFrame(index, cb)](#App..animateFrame) ⇒
-    * [~loadData(specUrls)](#App..loadData) ⇒
     * [~transformSpecs()](#App..transformSpecs)
     * [~toVegaSpecs()](#App..toVegaSpecs)
     * [~makeFrames()](#App..makeFrames) ⇒
@@ -109,18 +107,6 @@ Animates a frame, from source to target vega specification using gemini
 | --- | --- | --- |
 | index | <code>Number</code> | specification index in vegaLiteSpecs |
 | cb | <code>function</code> | callback function of each frame drawal |
-
-<a name="App..loadData"></a>
-
-### App~loadData(specUrls) ⇒
-Loads specifications using d3.json
-
-**Kind**: inner method of [<code>App</code>](#App)  
-**Returns**: a promise of Promise.all  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| specUrls | <code>Array</code> | list of urls |
 
 <a name="App..transformSpecs"></a>
 

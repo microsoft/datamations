@@ -24,6 +24,7 @@ const getCountStep = (source, target, shrink = false) => {
   let values = source.data.values.slice();
   const sourceMeta = source.meta;
 
+  // generate rules layer
   const rules = sourceMeta.rules.map((d, i) => {
     const n = sourceMeta.rules.length;
     return {
@@ -106,6 +107,7 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
         };
       });
 
+    // inspired by median animation https://uwdata.github.io/gemini2-editor/ 
     const y_median = d3.quantile(sorted, p, (d) => {
       return hasFacet ? d.oldY : d[CONF.Y_FIELD];
     });
@@ -293,12 +295,6 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
             field: CONF.X_FIELD + "_pos",
           },
           color: source.encoding.color
-          // color: {
-          //   field: "bisection",
-          //   legend: null,
-          //   type: "nominal",
-          //   scale: { domain: [-1, 0, 1], range: ["orange", "#aaa", "green"] },
-          // },
         },
       },
       ...rules,
@@ -505,8 +501,6 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
   const { width, height } = target.spec || target;
   const aggrFn = minOrMax === "min" ? d3.min : d3.max;
   const domain = source.encoding.y.scale.domain;
-  const minMaxPoints = {};
-
   const groupKeys = [CONF.X_FIELD];
   const hasFacet = source.meta.hasFacet;
   const meta = source.meta;

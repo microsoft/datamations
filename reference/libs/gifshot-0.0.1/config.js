@@ -9,3 +9,8 @@ const IGNORE_FIELDS = [
   'tooltip', 'x', 'y',
   'datamations_x', 'datamations_y'
 ];
+
+const META_PARSE_VALUES = {
+  grid: "grid",
+  jitter: "jitter",
+};

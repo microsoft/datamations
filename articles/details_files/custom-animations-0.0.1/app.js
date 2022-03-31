@@ -26,7 +26,7 @@
  * @returns an object of exposed functions
  */
 function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
-  let rawSpecsDontChange;
+  let rawSpecsImmutable; // saving passed specs here, not changed by reference
   let rawSpecs; // holds raw vega-lite specs, not transformed
   let vegaLiteSpecs;
   let vegaSpecs; // vega specs
@@ -39,7 +39,7 @@ function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
   let frameDuration = frameDur || 2000;
   let frameDelay = frameDel || 1000;
 
-  // a fallback gemini spec in case gemini.animate could not find anything
+  // a fallback gemini spec in case gemini.animate could not recommend anything
   const gemSpec = {
     timeline: {
       concat: [
@@ -82,7 +82,7 @@ function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
     vegaLiteSpecs = [];
     vegaSpecs = [];
     rawSpecs = [];
-    rawSpecsDontChange = [];
+    rawSpecsImmutable = [];
     frames = [];
     metas = [];
     frameIndex = 0;
@@ -114,7 +114,7 @@ function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
     // save raw specs to use for facet axes drawing
     vegaLiteSpecs.forEach((d) => {
       rawSpecs.push(JSON.parse(JSON.stringify(d)));
-      rawSpecsDontChange.push(JSON.parse(JSON.stringify(d)));
+      rawSpecsImmutable.push(JSON.parse(JSON.stringify(d)));
 
       if (d.meta) {
         metas.push(d.meta);
@@ -500,6 +500,7 @@ function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
         let funName = meta.custom_animation;
         let p = null;
 
+        // handle quantile
         if (
           Array.isArray(meta.custom_animation) &&
           meta.custom_animation[0] === "quantile"
@@ -510,19 +511,18 @@ function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
 
         let source = {
           ...rawSpecs[i - 1],
-          data: rawSpecsDontChange[i - 1].data,
+          data: rawSpecsImmutable[i - 1].data,
         };
         let target = vlSpec;
 
-        // fake facets
-        if (rawSpecsDontChange[i - 1].facet) {
+        if (rawSpecsImmutable[i - 1].facet) {
           source = {
             ...vegaLiteSpecs[i - 1],
             meta: {
               ...vegaLiteSpecs[i - 1].meta,
               hasFacet: true,
-              columnFacet: rawSpecsDontChange[i - 1].facet.column,
-              rowFacet: rawSpecsDontChange[i - 1].facet.row,
+              columnFacet: rawSpecsImmutable[i - 1].facet.column,
+              rowFacet: rawSpecsImmutable[i - 1].facet.row,
             },
             data: {
               values: vegaLiteSpecs[i - 1].data.values.map((d) => {
@@ -535,6 +535,7 @@ function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
           };
         }
 
+        // if custom animations have facets, fake them before passing to CustomAnimation
         if (vegaLiteSpecs[i].facet) {
           const newSpecTarget = await hackFacet(vegaLiteSpecs[i]);
           vegaLiteSpecs[i] = newSpecTarget;
@@ -550,16 +551,18 @@ function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
             sequence,
           };
         }
-      } else if (parse === "grid") {
+      } else if (parse === META_PARSE_VALUES.grid) {
         const gridSpec = await getGridSpec(vlSpec, rows);
 
         const enc = gridSpec.spec ? gridSpec.spec.encoding : gridSpec.encoding;
         rawSpecs[i].data.values = gridSpec.data.values;
 
+        // update domain for raw spec axis layer
         if (rawSpecs[i].meta.axes && rawSpecs[i].meta.splitField) {
           const encoding = rawSpecs[i].spec
             ? rawSpecs[i].spec.encoding
             : rawSpecs[i].encoding;
+
           encoding.x.axis = enc.x.axis;
           encoding.y.scale = {
             domain: enc.y.scale.domain,
@@ -570,9 +573,13 @@ function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
         }
 
         vegaLiteSpecs[i] = gridSpec;
-      } else if (parse === "jitter") {
+      } 
+      else if (parse === META_PARSE_VALUES.jitter) {
         vegaLiteSpecs[i] = await getJitterSpec(vlSpec);
-      } else if (vlSpec.layer || (vlSpec.spec && vlSpec.spec.layer)) {
+      } 
+      // since gemini does not support multiple multiple axis transitions, 
+      // we must split the layers and draw as separate vega spec
+      else if (vlSpec.layer || (vlSpec.spec && vlSpec.spec.layer)) {
         const arr = splitLayers(vlSpec);
 
         vegaLiteSpecs[i] = [];

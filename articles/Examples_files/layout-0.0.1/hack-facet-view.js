@@ -184,7 +184,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
 
   let row_header, column_header;
 
-  // need y axis
+  // y axis
   if (rowId && (row_header = view.data("row_header"))) {
     const yAxisValues = [];
     const yAxisExpr = {};
@@ -212,7 +212,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     )}[datum.label]`;
   }
 
-  // need x axis
+  // x axis
   if (colId && (column_header = view.data("column_header"))) {
     const xAxisValues = [];
     const xAxisExpr = {};
@@ -238,6 +238,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     )}[datum.label]`;
   }
 
+  // generating data.values
   source.forEach((d) => {
     const col = d[colId];
     const row = d[rowId];
@@ -245,8 +246,8 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     const xStart = colMap.get(col) || 0;
     const yStart = rowMap.get(row) || 0;
 
-    const xField = spec.meta.parse === "jitter" ? "x" : CONF.X_FIELD;
-    const yField = spec.meta.parse === "jitter" ? "y" : CONF.Y_FIELD;
+    const xField = spec.meta.parse === META_PARSE_VALUES.jitter ? "x" : CONF.X_FIELD;
+    const yField = spec.meta.parse === META_PARSE_VALUES.jitter ? "y" : CONF.Y_FIELD;
 
     const xCoord = xStart + scaleX(d[xField]);
 

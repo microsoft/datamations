@@ -123,7 +123,6 @@ function generateGrid(spec, rows = 10, stacked = false) {
     v.forEach((d, j) => {
       const n = d.n;
       const columns = Math.ceil(n / rows);
-
       const xCenter = splitField ? splitOptions.indexOf(d[splitField]) + 1 : 1;
 
       let startCol = (xCenter - 1) * maxCols + j; // inner grid start
@@ -143,6 +142,7 @@ function generateGrid(spec, rows = 10, stacked = false) {
         const y = rows - 1 - i % rows;
         const colorFieldObj = {};
 
+        // for secondary split, e.g. is_hit, find correct key and value
         if (secondaryField && typeof[d[secondaryField]] === "object") {
           const keys = Object.keys(d[secondaryField]).sort((a, b) => {
             return d[secondaryField][a] - d[secondaryField][b];
@@ -249,6 +249,7 @@ function getGridSpec(spec, rows = 10, stacked = false) {
     encoding.x.field = CONF.X_FIELD;
     encoding.y.field = CONF.Y_FIELD;
 
+    // set axis labels when splitField
     if (spec.meta.splitField) {
       const labels = Array.from(
         new Set(grid.map(d => d[spec.meta.splitField]))
@@ -289,7 +290,7 @@ function getGridSpec(spec, rows = 10, stacked = false) {
 }
 
 /**
- * Generates jittered specification
+ * Generates jittered specification using d3-force
  * @param {Object} spec vega-lite specification
  * @returns jittered spec
  */
@@ -351,7 +352,8 @@ function getJitterSpec(spec) {
       arr.forEach(d => {
         const x = xScale(d.oldX);
         d.y = d.oldY;
-
+        
+        // restrict to the bounds: [5%, 95%] of width
         d.x = Math.max(
           x + xScale.bandwidth() * 0.05,
           Math.min(x + bandwidth, d.x),
@@ -376,7 +378,7 @@ function getJitterSpec(spec) {
     encoding.x.field = "x";
     encoding.y.field = "y";
 
-    // if no axes is drawn, and we have custom x-axis
+    // if meta.axes is falsy, and we have custom x-axis
     if (!spec.meta.axes && encoding.x.axis && spec.meta.xAxisLabels) {
       const labels = spec.meta.xAxisLabels;
 

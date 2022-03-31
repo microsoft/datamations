@@ -8,7 +8,7 @@
 <dd><p>Generates infogrid specification</p>
 </dd>
 <dt><a href="#getJitterSpec">getJitterSpec(spec)</a> ⇒</dt>
-<dd><p>Generates jittered specification</p>
+<dd><p>Generates jittered specification using d3-force</p>
 </dd>
 </dl>
 
@@ -42,7 +42,7 @@ Generates infogrid specification
 <a name="getJitterSpec"></a>
 
 ## getJitterSpec(spec) ⇒
-Generates jittered specification
+Generates jittered specification using d3-force
 
 **Kind**: global function  
 **Returns**: jittered spec  
