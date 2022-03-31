@@ -1,6 +1,18 @@
 ## Constants
 
 <dl>
+<dt><a href="#getCountStep">getCountStep</a> ⇒</dt>
+<dd><p>Generates a spec for count animation</p>
+</dd>
+<dt><a href="#getMedianStep">getMedianStep</a> ⇒</dt>
+<dd><p>Generates a spec for median and quantile animations</p>
+</dd>
+<dt><a href="#getMeanStep">getMeanStep</a> ⇒</dt>
+<dd><p>Generates a spec for mean animation</p>
+</dd>
+<dt><a href="#getMinMaxStep">getMinMaxStep</a> ⇒</dt>
+<dd><p>Generates a spec for min and max animations</p>
+</dd>
 <dt><a href="#CustomAnimations">CustomAnimations</a></dt>
 <dd><p>Configuration for custom animations.
 When meta.custom_animation is present, 
@@ -8,22 +20,61 @@ it looks up a function here and generates custom animation specifications</p>
 </dd>
 </dl>
 
-## Functions
+<a name="getCountStep"></a>
 
-<dl>
-<dt><a href="#getCountStep">getCountStep(source, target, shrink)</a> ⇒</dt>
-<dd><p>Generates a spec for count animation</p>
-</dd>
-<dt><a href="#getMedianStep">getMedianStep(source, target, step, p)</a> ⇒</dt>
-<dd><p>Generates a spec for median and quantile animations</p>
-</dd>
-<dt><a href="#getMeanStep">getMeanStep(source, target)</a> ⇒</dt>
-<dd><p>Generates a spec for mean animation</p>
-</dd>
-<dt><a href="#getMinMaxStep">getMinMaxStep(source, target, minOrMax)</a> ⇒</dt>
-<dd><p>Generates a spec for min and max animations</p>
-</dd>
-</dl>
+## getCountStep ⇒
+Generates a spec for count animation
+
+**Kind**: global constant  
+**Returns**: a vega lite spec  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| source | <code>Object</code> | source spec |
+| target | <code>Object</code> | target spec |
+| shrink | <code>Object</code> | if truthy, circles will be pulled up |
+
+<a name="getMedianStep"></a>
+
+## getMedianStep ⇒
+Generates a spec for median and quantile animations
+
+**Kind**: global constant  
+**Returns**: a vega lite spec  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| source | <code>Object</code> | source spec |
+| target | <code>Object</code> | target spec |
+| step | <code>Number</code> | step counter. null is the last step |
+| p | <code>Number</code> | a percentile |
+
+<a name="getMeanStep"></a>
+
+## getMeanStep ⇒
+Generates a spec for mean animation
+
+**Kind**: global constant  
+**Returns**: a vega lite spec  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| source | <code>Object</code> | source spec |
+| target | <code>Object</code> | target spec |
+
+<a name="getMinMaxStep"></a>
+
+## getMinMaxStep ⇒
+Generates a spec for min and max animations
+
+**Kind**: global constant  
+**Returns**: a vega lite spec  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| source | <code>Object</code> | source spec |
+| target | <code>Object</code> | target spec |
+| minOrMax | <code>String</code> | "min" or "max" |
 
 <a name="CustomAnimations"></a>
 
@@ -34,12 +85,17 @@ it looks up a function here and generates custom animation specifications
 
 **Kind**: global constant  
 
-* [CustomAnimations](#CustomAnimations)
-    * [.count(rawSource, target)](#CustomAnimations.count) ⇒
-    * [.min(rawSource, target)](#CustomAnimations.min) ⇒
-    * [.max(rawSource, target)](#CustomAnimations.max) ⇒
-    * [.mean(rawSource, target)](#CustomAnimations.mean) ⇒
-    * [.median(rawSource, target)](#CustomAnimations.median) ⇒
+- [Constants](#constants)
+- [getCountStep ⇒](#getcountstep-)
+- [getMedianStep ⇒](#getmedianstep-)
+- [getMeanStep ⇒](#getmeanstep-)
+- [getMinMaxStep ⇒](#getminmaxstep-)
+- [CustomAnimations](#customanimations)
+  - [CustomAnimations.count(rawSource, target) ⇒](#customanimationscountrawsource-target-)
+  - [CustomAnimations.min(rawSource, target) ⇒](#customanimationsminrawsource-target-)
+  - [CustomAnimations.max(rawSource, target) ⇒](#customanimationsmaxrawsource-target-)
+  - [CustomAnimations.mean(rawSource, target) ⇒](#customanimationsmeanrawsource-target-)
+  - [CustomAnimations.median(rawSource, target) ⇒](#customanimationsmedianrawsource-target-)
 
 <a name="CustomAnimations.count"></a>
 
@@ -127,60 +183,4 @@ median and quantile animation steps:
 | --- | --- | --- |
 | rawSource | <code>Object</code> | source spec |
 | target | <code>Object</code> | target spec |
-
-<a name="getCountStep"></a>
-
-## getCountStep(source, target, shrink) ⇒
-Generates a spec for count animation
-
-**Kind**: global function  
-**Returns**: a vega lite spec  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| source | <code>Object</code> |  | source spec |
-| target | <code>Object</code> |  | target spec |
-| shrink | <code>Object</code> | <code>false</code> | if truthy, circles will be pulled up |
-
-<a name="getMedianStep"></a>
-
-## getMedianStep(source, target, step, p) ⇒
-Generates a spec for median and quantile animations
-
-**Kind**: global function  
-**Returns**: a vega lite spec  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| source | <code>Object</code> |  | source spec |
-| target | <code>Object</code> |  | target spec |
-| step | <code>Number</code> | <code>0</code> | step counter. null is the last step |
-| p | <code>Number</code> | <code>0.5</code> | a percentile |
-
-<a name="getMeanStep"></a>
-
-## getMeanStep(source, target) ⇒
-Generates a spec for mean animation
-
-**Kind**: global function  
-**Returns**: a vega lite spec  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| source | <code>Object</code> | source spec |
-| target | <code>Object</code> | target spec |
-
-<a name="getMinMaxStep"></a>
-
-## getMinMaxStep(source, target, minOrMax) ⇒
-Generates a spec for min and max animations
-
-**Kind**: global function  
-**Returns**: a vega lite spec  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| source | <code>Object</code> |  | source spec |
-| target | <code>Object</code> |  | target spec |
-| minOrMax | <code>String</code> | <code>min</code> | "min" or "max" |
 

@@ -8,7 +8,7 @@ HTMLWidgets.widget({
 
             renderValue: function (x) {
                 el.id = el.id.replace(/-/g, "");
-                window['app' + el.id] = App(el.id, {specs: x.specs, autoPlay: true});
+                window['app' + el.id] = datamations.App(el.id, {specs: x.specs, autoPlay: true});
             },
 
             resize: function (width, height) { },
