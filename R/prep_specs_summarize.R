@@ -534,7 +534,15 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Tooltip
   spec_encoding$tooltip <- generate_summarize_tooltip(data_2, mapping$y, mapping$summary_function)
 
-  if(!is.null(mapping$y)) {
+
+if(!is.null(mapping$y)) {
+  spec_encoding$y$title <- c(
+    paste0(mapping$summary_function, 'of'),
+    # Util function to split strings first on a delimiter, then on a character cutoff
+    # second argument is max character in a substring to pass
+    # third argument is a threshold so it wont leave hanging strings that are too short
+    split_string_sensibly(mapping$y, 15, 6)
+    )
     spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
   }
 

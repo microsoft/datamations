@@ -300,3 +300,60 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
 
   append(list(y_tooltip), tooltip)
 }
+
+  split_strings <- function(string, max_characters, min_final) {
+
+    if(nchar(string) < max_characters) return (string)
+
+    number_of_chops = trunc(nchar(string) / max_characters)
+    split_starts <- seq(1, nchar(string), by = max_characters)
+    last_split <- split_starts[length(split_starts)]
+
+    # TODO UPDATE CUTOFF HANDLING HERE
+    #if ((nchar(string) - last)<min_final) split_starts <- setdiff(split_starts, last_split)
+
+    string_vec <- sapply(split_starts, function(ii) {
+      substr(string, ii, ii+max_characters-1)
+    })
+
+    return(string_vec)
+
+  }
+
+  split_string_sensibly <- function(string, max_characters, min_final) {
+
+    if(stringr::str_detect(string, '_')) {
+      split_string <- strsplit(string, "(?<=[_])", perl = TRUE)[[1]]
+    }
+
+    if(any(nchar(split_string)>max_characters)) {
+      strings_cutoff <- lapply(split_string, split_strings, max_characters, min_final)
+      strings_flattened <- unlist(strings_cutoff)
+
+      prelim_string <- strings_flattened
+
+    } else {
+      prelim_string <- split_string
+    }
+
+    final_string <- list()
+
+    # post adjustments
+    # Look at biterms and check character count, combine if less than threshold
+    for (i in seq(1, length(prelim_string), 2)) {
+      # if we are not at the final string
+      if(!is.na(prelim_string[i+1])) {
+        # if the character count of the biterm is less than the max
+        if(nchar(prelim_string[i]) + nchar(prelim_string[i+1]) < max_characters) {
+        final_string[i] <- paste0(prelim_string[i], prelim_string[i+1])
+        } else {
+          final_string[i] <- prelim_string[i]
+          final_string[i+1] <- prelim_string[i+1]
+        }
+      } else {
+        final_string[i] <- prelim_string[i]
+      }
+    }
+    return(unlist(final_string))
+
+  }
