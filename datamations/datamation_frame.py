@@ -380,7 +380,7 @@ class DatamationFrame(pd.DataFrame):
                 <link href="https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/css/datamationSandDance.css" rel="stylesheet" type="text/css">
                 <style type="text/css">
                     .vega-vis-wrapper > div {
-                        position: relative;
+                        position: absolute
                     }
                 </style>
                 <div class="flex-wrap">
