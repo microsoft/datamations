@@ -72,15 +72,6 @@
         // 'https://raw.githubusercontent.com/microsoft/datamations/specs_mutate/sandbox/mutations/mutation_specs_multiple_variables-R.json'
       ).then(
         (specs) => {
-          // specs[1].meta.axes = false;
-          // specs[1].data.values.sort((a, b) => {
-          //   return a.datamations_x - b.datamations_x;
-          // }).forEach((d, i) => {
-          //   specs[0].data.values[0].gemini_ids[i] = d.gemini_id;
-          // });
-          // console.log(specs[0].data.values[0].gemini_ids);
-          console.log(specs[3]);
-          // specs[3].meta.axes = true;
           app = App("app", { specs, frameDur: 3000 });
         }
       );
