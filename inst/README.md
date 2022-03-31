@@ -120,16 +120,10 @@ Data format:
 <script src="../js/html2canvas.min.js"></script>
 <script src="../js/gifshot.min.js"></script>
 <script src="../js/download2.js"></script>
-
-<script src="../js/config.js"></script>
-<script src="../js/utils.js"></script>
-<script src="../js/layout.js"></script>
-<script src="../js/hack-facet-view.js"></script>
-<script src="../js/custom-animations.js"></script>
-<script src="../js/app.js"></script>
+<script src="../js/src/dist/datamations.min.js"></script>
 
 <script>
-  const app = App("app", { 
+  const app = datamations.App("app", { 
     specs: [], // pass array of vega-lite specs
     frameDur: 3000, 
     autoPlay: false,  
@@ -145,6 +139,20 @@ Methods:
 #### app.exportGif - export gif.
 #### app.animateFrame - animates a single frame
 #### app.getFrames - returns frames.
+
+### Development
+
+js code is an npm project, run these commands below to build datamations js module.
+
+```
+npm install
+npm build 
+```
+
+### Tests
+```
+npm run test
+```
 
 For more detailed code documentation, see README [here](./htmlwidgets/js/)
 

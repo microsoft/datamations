@@ -10,7 +10,8 @@
  * Inspiration from: https://giorgi-ghviniashvili.github.io/aggregate-animation-data/designs/
  */
 
-
+import { CONF } from "./config.js";
+import { getGridSpec } from "./layout.js";
 
 /**
  * Generates a spec for count animation
@@ -19,7 +20,7 @@
  * @param {Object} shrink if truthy, circles will be pulled up
  * @returns a vega lite spec
  */
-const getCountStep = (source, target, shrink = false) => {
+export const getCountStep = (source, target, shrink = false) => {
   const { width, height } = target.spec || target;
   let values = source.data.values.slice();
   const sourceMeta = source.meta;
@@ -83,7 +84,7 @@ const getCountStep = (source, target, shrink = false) => {
  * @param {Number} p a percentile
  * @returns a vega lite spec
  */
-const getMedianStep = (source, target, step = 0, p = 0.5) => {
+export const getMedianStep = (source, target, step = 0, p = 0.5) => {
   const all_groups = [];
   const { width, height } = target.spec || target;
   const isLast = step === null;
@@ -309,7 +310,7 @@ const getMedianStep = (source, target, step = 0, p = 0.5) => {
  * @param {Object} target target spec
  * @returns a vega lite spec
  */
-const getMeanStep = (source, target) => {
+export const getMeanStep = (source, target) => {
   const all_groups = [];
   const { width, height } = target.spec || target;
   const domain = source.encoding.y.scale.domain;
@@ -497,7 +498,7 @@ const getMeanStep = (source, target) => {
  * @param {String} minOrMax "min" or "max"
  * @returns a vega lite spec
  */
-const getMinMaxStep = (source, target, minOrMax = "min") => {
+export const getMinMaxStep = (source, target, minOrMax = "min") => {
   const { width, height } = target.spec || target;
   const aggrFn = minOrMax === "min" ? d3.min : d3.max;
   const domain = source.encoding.y.scale.domain;
@@ -644,7 +645,7 @@ const getMinMaxStep = (source, target, minOrMax = "min") => {
  * When meta.custom_animation is present, 
  * it looks up a function here and generates custom animation specifications
  */
-const CustomAnimations = {
+export const CustomAnimations = {
   /**
    * steps:
    * 1) stack sets

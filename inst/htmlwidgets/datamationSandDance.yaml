@@ -19,26 +19,6 @@ dependencies:
    version: 0.1.0
    src: htmlwidgets/gemini
    script: gemini.web.js
- - name: config
-   version: 0.0.1
-   src: htmlwidgets/js
-   script: config.js
- - name: utils
-   version: 0.0.1
-   src: htmlwidgets/js
-   script: utils.js
- - name: app
-   version: 0.0.1
-   src: htmlwidgets/js
-   script: app.js
- - name: hack-facet-view
-   version: 0.0.1
-   src: htmlwidgets/js
-   script: hack-facet-view.js
- - name: custom-animations
-   version: 0.0.1
-   src: htmlwidgets/js
-   script: custom-animations.js
  - name: gifshot
    version: 0.0.1
    src: htmlwidgets/js
@@ -51,10 +31,10 @@ dependencies:
    version: 0.0.1
    src: htmlwidgets/js
    script: download2.js
- - name: layout
+ - name: datamations
    version: 0.0.1
-   src: htmlwidgets/js
-   script: layout.js
+   src: htmlwidgets/js/src/dist
+   script: datamations.min.js
  - name: css
    version: 0.0.1
    src: htmlwidgets/css
