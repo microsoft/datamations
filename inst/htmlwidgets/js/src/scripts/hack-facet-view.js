@@ -4,12 +4,14 @@
  * Adding axis layer underneath to look exactly same as faceted view
  */
 
+import { CONF, META_PARSE_VALUES } from "./config.js";
+
 /**
  * Get empty spec, if no data is present
  * @param {Object} spec 
  * @returns vega-lite spec
  */
-function getEmptySpec(spec) {
+export function getEmptySpec(spec) {
   const description = spec.meta.description;
   const splitField = spec.meta.splitField;
 
@@ -76,7 +78,7 @@ function getEmptySpec(spec) {
  * @param {Object} spec original spec
  * @returns vega-lite spec
  */
-function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
+export function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
   const encoding = spec.spec.encoding;
   const mark = spec.spec.mark;
   const facet = spec.facet;
@@ -156,7 +158,7 @@ function getSpecTemplate(width, height, axes = { x: true, y: true }, spec) {
  * @param {Object} param0.height spec height
  * @returns vega-lite spec
  */
-function getHackedSpec({ view, spec, width = 600, height = 600 }) {
+export function getHackedSpec({ view, spec, width = 600, height = 600 }) {
   const rowId = spec.facet.row ? spec.facet.row.field : null;
   const colId = spec.facet.column ? spec.facet.column.field : null;
 
@@ -184,7 +186,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
 
   let row_header, column_header;
 
-  // need y axis
+  // y axis
   if (rowId && (row_header = view.data("row_header"))) {
     const yAxisValues = [];
     const yAxisExpr = {};
@@ -212,7 +214,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     )}[datum.label]`;
   }
 
-  // need x axis
+  // x axis
   if (colId && (column_header = view.data("column_header"))) {
     const xAxisValues = [];
     const xAxisExpr = {};
@@ -238,6 +240,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     )}[datum.label]`;
   }
 
+  // generating data.values
   source.forEach((d) => {
     const col = d[colId];
     const row = d[rowId];
@@ -245,8 +248,8 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
     const xStart = colMap.get(col) || 0;
     const yStart = rowMap.get(row) || 0;
 
-    const xField = spec.meta.parse === "jitter" ? "x" : CONF.X_FIELD;
-    const yField = spec.meta.parse === "jitter" ? "y" : CONF.Y_FIELD;
+    const xField = spec.meta.parse === META_PARSE_VALUES.jitter ? "x" : CONF.X_FIELD;
+    const yField = spec.meta.parse === META_PARSE_VALUES.jitter ? "y" : CONF.Y_FIELD;
 
     const xCoord = xStart + scaleX(d[xField]);
 
@@ -274,7 +277,7 @@ function getHackedSpec({ view, spec, width = 600, height = 600 }) {
  * @param {Object} spec vega lite spec with facets
  * @returns vega-lite spec
  */
-function hackFacet(spec) {
+export function hackFacet(spec) {
   const div = document.createElement("div");
 
   spec.data.name = "source";
