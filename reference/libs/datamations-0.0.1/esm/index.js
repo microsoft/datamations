@@ -2965,8 +2965,8 @@ function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
               .html("")
               .style("opacity", 0)
               .transition()
-              // .delay(frameDuration / 3)
-              .duration(frameDuration / 2)
+              .delay(frameDuration * 0.9)
+              .duration(frameDuration / 3)
               .style("opacity", 1);
 
             statics.forEach((s) => {
