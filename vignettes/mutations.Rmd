@@ -1,0 +1,99 @@
+---
+title: "datamations mutation api"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{datamations mutation api}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
+```
+
+{datamations} supports the limited definition of mutations in a pipeline. It is capable of showing a single mutation involving multiple variables in a scatterplot or grid fashion.
+
+We can define new data to use in some example mutations.
+
+### New data with added variable
+
+```{r newdata}
+library(dplyr)
+library(datamations)
+
+small_salary <- dplyr::mutate(
+  small_salary, 
+  supplementalIncome = runif(nrow(small_salary), min = 60, max = 110),
+  logNorm = rlnorm(nrow(small_salary), meanlog = 0, sdlog = 1)
+  )
+
+```
+
+{datamations} can visualize mutations to help one understand mathematical distributions, scales, and relationships. 
+
+### Log normal mutation
+
+```{r lognorm}
+
+"small_salary %>%
+  mutate(logged = log10(logNorm)) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(logged))" %>%
+  datamation_sanddance()
+```
+
+
+### Mathematical Notation
+
+```{r mutations}
+
+"small_salary %>%
+  mutate(salarySquared = Salary^2) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(salarySquared))" %>%
+  datamation_sanddance()
+
+"small_salary %>%
+  mutate(inverseSalary = 1 / Salary) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(inverseSalary))" %>%
+  datamation_sanddance()
+
+```
+
+
+### Multivariate mutates
+
+{datamations} can also showcase the relationship between more than variable in your data pipelines. We can see below the relationship between our Salary variable and a new variable and use the mutation in grouping, filtering, and summarization.
+
+```{r mutivar}
+
+"small_salary %>%
+  mutate(totalIncome = Salary + supplementalIncome) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(totalIncome))" %>%
+  datamation_sanddance()
+
+"small_salary %>%
+  mutate(incomePer = Salary / supplementalIncome) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(incomePer))" %>%
+  datamation_sanddance()
+
+```
+
+### Two variable mutates
+
+{datamations} will allow the definition of a mutate statement with multiple mutates, but it will ignore anything after the first defined mutate. Two variable mutates results in a warning.
+
+```{r twovar, error = TRUE}
+"small_salary %>%
+  mutate(totalIncome = Salary + supplementalIncome, squaredIncome = Salary^2) %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(totalIncome))" %>%
+  datamation_sanddance()
+```
