@@ -123,15 +123,9 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     facet_col_encoding <- list(field = mapping$column, type = "ordinal", title = mapping$column)
 
-    if (!is.null(mapping$column)) {
-      facet_col_encoding$sort <- unique(.data[[mapping$column]])
-    }
 
     facet_row_encoding <- list(field = mapping$row, type = "ordinal", title = mapping$row)
 
-    if (!is.null(mapping$row)) {
-      facet_row_encoding$sort <- unique(.data[[mapping$row]])
-    }
 
     facet_encoding <- list(
       column = facet_col_encoding,
@@ -539,8 +533,15 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Tooltip
   spec_encoding$tooltip <- generate_summarize_tooltip(data_2, mapping$y, mapping$summary_function)
 
-  if(!is.null(mapping$y)) {
-    spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
+
+if(!is.null(mapping$y)) {
+  spec_encoding$y$title <- c(
+    paste0(mapping$summary_function, ' of'),
+    # Util function to split strings first on a delimiter, then on a character cutoff
+    # second argument is max character in a substring to pass
+    # third argument is a threshold so it wont leave hanging strings that are too short
+    split_string_sensibly(mapping$y, 20, 6)
+    )
   }
 
   # Remove any stroke/fillOpacity/shape

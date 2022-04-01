@@ -2,6 +2,25 @@
 
 Datamations Javascript code relies on [vega](https://vega.github.io/vega/), [vega-lite](https://vega.github.io/vega-lite/) for rendering and [gemini](https://github.com/uwdata/gemini) for animations. An animation is a collection of vega-lite specs with a datamations specific fields.
 
+### Development
+
+js code is an npm project, run these commands below to build datamations js module any time that the js code is updated so that backend languages have access to the updated datamations.min.js file (there's also a map file that should make for easy debugging despite the minified code)
+
+```
+npm install
+npm run build 
+```
+
+### Tests
+```
+npm run test
+```
+
+For more detailed code documentation, see README [here](./htmlwidgets/js/)
+
+
+
+
 A `datamations spec` is a superset of vega-lite spec, meaning it has some more fields on top on the vega-lite spec. 
 
 * meta - a configuration metafields used to instruct vega-lite spec processing
@@ -120,16 +139,10 @@ Data format:
 <script src="../js/html2canvas.min.js"></script>
 <script src="../js/gifshot.min.js"></script>
 <script src="../js/download2.js"></script>
-
-<script src="../js/config.js"></script>
-<script src="../js/utils.js"></script>
-<script src="../js/layout.js"></script>
-<script src="../js/hack-facet-view.js"></script>
-<script src="../js/custom-animations.js"></script>
-<script src="../js/app.js"></script>
+<script src="../js/src/dist/datamations.min.js"></script>
 
 <script>
-  const app = App("app", { 
+  const app = datamations.App("app", { 
     specs: [], // pass array of vega-lite specs
     frameDur: 3000, 
     autoPlay: false,  
@@ -145,12 +158,3 @@ Methods:
 #### app.exportGif - export gif.
 #### app.animateFrame - animates a single frame
 #### app.getFrames - returns frames.
-
-For more detailed code documentation, see README [here](./htmlwidgets/js/)
-
-
-
-
-
-
-

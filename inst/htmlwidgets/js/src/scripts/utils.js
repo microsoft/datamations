@@ -1,9 +1,11 @@
+import { IGNORE_FIELDS } from "./config.js";
+
 /**
  * Gets selectors for each componenent, such as slider and animation divs
  * @param {String} id root container id where all the animation components are rendered
  * @returns object of selectors
  */
-function getSelectors(id) {
+export function getSelectors(id) {
   const base = "#" + id;
 
   return {
@@ -24,7 +26,7 @@ function getSelectors(id) {
  * @param {Object} input vega-lite specification with layers
  * @returns a list of specs
  */
-function splitLayers(input) {
+export function splitLayers(input) {
   const specArray = [];
   const spec = input.spec;
 
@@ -76,7 +78,7 @@ function splitLayers(input) {
  * @param {Array} buckets list of numbers
  * @param {Number} value score to lookup
  */
-function lookupByBucket(words, buckets, value) {
+export function lookupByBucket(words, buckets, value) {
   return words[buckets.findIndex((d) => value <= d)];
 }
 
@@ -85,7 +87,7 @@ function lookupByBucket(words, buckets, value) {
  * @param {Array} vegaLiteSpecs an array of vega lite specs
  * @returns a number of rows
  */
-function getRows(vegaLiteSpecs) {
+export function getRows(vegaLiteSpecs) {
   let maxRows = 0;
 
   vegaLiteSpecs

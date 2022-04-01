@@ -306,7 +306,7 @@ class DatamationFrame(pd.DataFrame):
                     window.d3 = d3
                     window.vegaEmbed = vegaEmbed
                     window.gemini = gemini
-                    window.%s = App("%s", {specs: %s, autoPlay: true});
+                    window.%s = datamations.App("%s", {specs: %s, autoPlay: true});
                 });            
             })(element);
         """ % (app, app, app, app, app, app, app, json.dumps(self.specs()))))
