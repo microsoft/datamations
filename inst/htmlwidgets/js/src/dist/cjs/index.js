@@ -983,11 +983,11 @@ function generateGrid(spec, rows = 10, stacked = false) {
   if (spec.facet) {
     if (spec.facet.column) {
       groupKeys.push(spec.facet.column.field);
-      spec.facet.column.sort = { "field": CONF.ORDER_FIELD };
+      // spec.facet.column.sort = { "field": CONF.ORDER_FIELD };
     }
     if (spec.facet.row) {
       groupKeys.push(spec.facet.row.field);
-      spec.facet.row.sort = { "field": CONF.ORDER_FIELD };
+      // spec.facet.row.sort = { "field": CONF.ORDER_FIELD };
     }
   }
 
@@ -996,7 +996,7 @@ function generateGrid(spec, rows = 10, stacked = false) {
   const metas = [];
 
   specValues.forEach((d, i) => {
-    d[CONF.ORDER_FIELD] = i;
+    // d[CONF.ORDER_FIELD] = i;
     if (d.meta) {
       metas.push(...Object.keys(d.meta));
     }
