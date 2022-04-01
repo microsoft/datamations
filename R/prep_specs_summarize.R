@@ -123,15 +123,9 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     facet_col_encoding <- list(field = mapping$column, type = "ordinal", title = mapping$column)
 
-    if (!is.null(mapping$column)) {
-      facet_col_encoding$sort <- unique(.data[[mapping$column]])
-    }
 
     facet_row_encoding <- list(field = mapping$row, type = "ordinal", title = mapping$row)
 
-    if (!is.null(mapping$row)) {
-      facet_row_encoding$sort <- unique(.data[[mapping$row]])
-    }
 
     facet_encoding <- list(
       column = facet_col_encoding,
