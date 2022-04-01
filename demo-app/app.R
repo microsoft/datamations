@@ -2,9 +2,11 @@ library(shiny)
 library(datamations)
 library(dplyr)
 library(shinyAce)
+library(shinyjs)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
+  shinyjs::useShinyjs(),
   style = "max-width: 1200px;",
       # Send slider value, for changing tabs
     shiny::tags$script(shiny::HTML('
@@ -51,23 +53,47 @@ server <- function(session, input, output) {
       tagList(
         shiny::p("Construct a tidyverse pipeline by choosing from the options below. Select a data set, then up to three variables to group by, and finally a variable to summarize and a summary function to apply to it."),
         shiny::hr(),
-          tags$div(
-            class = "button-container",
-            shiny::selectInput(inputId = "dataset",
-                               "Dataset",
-                               width = "150px",
-                               selected = "small_salary",
-                               choices = c("small_salary", "penguins", "jeter_justice"),
+            tags$div(
+              class = "button-container",
+              shiny::selectInput(inputId = "dataset",
+                                "Dataset",
+                                width = "150px",
+                                selected = "small_salary",
+                                choices = c("small_salary", "penguins", "jeter_justice"),
+              ),
+              tags$div(id = "firstAdjustmentWrapper",
+                class = "no-display",
+              tags$button(
+                id = "additionalSelectionOne",
+                class = "action-button additional-selection",
+                type = "button",
+                "Mutate"
+              ),
+              tags$button(
+                id = "additionalSelectionTwo",
+                class = "action-button additional-selection",
+                type = "button",
+                "Filter"
+              ),
+              shiny::selectInput(
+                inputId = "firstAdjust",
+                width = "110px",
+                label = NULL,
+                choices = NULL
+              ),
+            tags$button(id = "removeOne", class = "btn action-button remove-button", type = "button", tags$span("-")),
+            
             ),
-            #tags$button(class = "add-button", shiny::icon("plus")),
+            tags$button(id = "addOne", class = "btn action-button add-button", type = "button", shiny::icon("plus")),
             shiny::selectInput(
               inputId = "group_by",
               "Group by",
-              width = "150px",
+              width = "130px",
               choices = c("Work", "Degree"),
               selected = "Degree",
               multiple = TRUE
             ),
+            tags$button(id = "addTwo", class = "btn add-button", type = "button", shiny::icon("plus")),
             shiny::selectInput(
               inputId = "summary_variable",
               width = "150px",
@@ -83,6 +109,30 @@ server <- function(session, input, output) {
             shiny::actionButton(inputId = "go", HTML("Run <span>➜</span>"), width = "100px", style = "height: 40px;")
           )
       )
+    })
+
+    observeEvent(input$addOne, {
+      shinyjs::toggleClass(id = "addTwo", class = "no-display")
+      shinyjs::toggleClass(id = "addOne", class = "no-display")
+      shinyjs::toggleClass(id = "firstAdjustmentWrapper", class = "no-display")
+    })
+
+    observeEvent(input$removeOne, {
+      shinyjs::toggleClass(id = "addTwo", class = "no-display")
+      shinyjs::toggleClass(id = "addOne", class = "no-display")
+      shinyjs::toggleClass(id = "firstAdjustmentWrapper", class = "no-display")
+    })
+
+    observeEvent(input$additionalSelectionOne, {
+      shinyjs::addClass(id = "additionalSelectionOne", class = "additional-selected")
+      shinyjs::removeClass(id = "additionalSelectionTwo", class = "additional-selected")
+      shiny::updateSelectInput(session, inputId = "firstAdjust", choices = c("log(x)", "x^2", "x*runif()"))
+    })
+
+    observeEvent(input$additionalSelectionTwo, {
+      shinyjs::addClass(id = "additionalSelectionTwo", class = "additional-selected")
+      shinyjs::removeClass(id = "additionalSelectionOne", class = "additional-selected")
+      shiny::updateSelectInput(session, inputId = "firstAdjust", choices = c("var > x", "var < x"))
     })
 
     dataset <- shiny::reactive({
@@ -190,10 +240,7 @@ server <- function(session, input, output) {
           shiny::column(
             width = 6,
             shiny::h2("Data stages", class = "header-two-long"),
-            shiny::tabsetPanel(id = "data_tabs_panel",
-                               tabPanel("1"),
-                               tabPanel("2"),
-                               tabPanel("3"))
+            shiny::tabsetPanel(id = "data_tabs_panel")
           )
         )
       )

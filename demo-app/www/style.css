@@ -150,7 +150,7 @@ h1, h2, h3, h4 {
 .button-container {
   display:flex; 
   flex-wrap:wrap; 
-  gap:32px; 
+  gap:16px; 
   padding:0 16px; 
   align-items: center; 
   justify-content: center;
@@ -164,6 +164,7 @@ h1, h2, h3, h4 {
   border-radius:4px;
   margin-top:-4px;
   margin-left:-4px;
+  padding:0;
 }
 
 .add-button > i {
@@ -172,5 +173,63 @@ h1, h2, h3, h4 {
 
 .add-button:hover, 
 .add-button:focus {
+  /* todo -- add proper hover and focus stylings */
+  box-shadow: 1px black;
+}
+
+.no-display {
+  background-color:black;
+  display:none;
+}
+
+#firstAdjustmentWrapper {
+  position:relative;
+  padding-right:16px;
+  margin-top:-8px;
+}
+
+.additional-selection {
+  height:22px;
+  width:50px;
+  font-size:12px;
+  padding: 0;
+  border-radius: 4px;
+  background-color: floralwhite;
+  border: 1px solid lightgrey;
+  margin-bottom:4px;
+  font-weight:400;
+}
+
+.additional-selected {
+  background-color:darkorange;
+  color:white;
+  font-weight:500;
+}
+
+.remove-button {
+  line-height:12px;
+  width:16px; 
+  height: 16px;
+  /* border: 1px solid darksalmon; */
+  background-color: rgb(255, 240, 240);
+  border-radius:4px;
+  margin-top:-4px;
+  margin-left:-4px;
+  padding:0 0 1px 0;
+  position:absolute;
+  top:-2px;
+  right:-4px;
+  font-size:16px;
+  font-weight:600;
+  border-radius:4px;
+}
+
+.remove-button > span {
+  color:red;
+}
+
+.remove-button:hover, 
+.remove-button:focus {
+  /* todo -- add proper hover and focus stylings */
   box-shadow: 1px black;
 }
