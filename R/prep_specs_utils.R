@@ -233,9 +233,16 @@ generate_labelsExpr <- function(data) {
     ))
   }
 
-  data <- data %>%
-    dplyr::mutate(label = dplyr::coalesce(.data$label, "undefined")) %>%
-    dplyr::arrange(.data$datamations_x)
+  # handling for undefined only needs to happen for character vector of labels
+  if(is.numeric(data[["label"]])) {
+    data <- data %>%
+      dplyr::arrange(.data$datamations_x)
+  }
+  else {
+    data <- data %>%
+      dplyr::mutate(label = dplyr::coalesce(.data$label, "undefined")) %>%
+      dplyr::arrange(.data$datamations_x)
+  }
 
   n_breaks <- nrow(data)
   breaks <- data[[X_FIELD_CHR]]
@@ -287,6 +294,65 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
   } else {
     if (!is.null(summary_variable)) {
       y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = glue::glue("{summary_function}({summary_variable})"))
+    } else {
+      y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative")
+    }
+  }
+
+  tooltip_vars <- .data %>%
+    dplyr::select(-tidyselect::any_of(c("gemini_id", X_FIELD_CHR, Y_FIELD_CHR, Y_TOOLTIP_FIELD_CHR, "stroke", "gemini_ids"))) %>%
+    names()
+
+  tooltip <- purrr::map(tooltip_vars, ~ list(field = .x, type = "nominal"))
+
+  append(list(y_tooltip), tooltip)
+}
+
+
+# Generate description for summarize steps
+# Depending on whether there's errorbars, any groups, etc.
+generate_generic_description <- function(variable, function_obj = NULL, group_by = TRUE) {
+
+  if (is.null(function_obj)) {
+    glue::glue("Plot variable {variable}{group_description}",
+      group_description = ifelse(group_by, " within each group", "")
+    )
+  } else if (is.null(variable)) {
+    glue::glue("Plot {variable}(){group_description}",
+      group_description = ifelse(group_by, " of each group", "")
+    )
+  } else {
+    glue::glue("Plot {variable} of the function {function_obj}{group_description}",
+      group_description = ifelse(group_by, " of each group", "")
+    )
+  }
+}
+
+# Generate description for summarize steps
+# Depending on whether there's errorbars, any groups, etc.
+generate_mutation_description <- function(mutation_variable, mutation_function = NULL, group_by = TRUE) {
+
+  if (is.null(mutation_function)) {
+    glue::glue("Create new variable {mutation_variable}{group_description}",
+      group_description = ifelse(group_by, " within each group", "")
+    )
+  } else if (is.null(mutation_variable)) {
+    glue::glue("Plot {mutation_function}(){group_description}",
+      group_description = ifelse(group_by, " of each group", "")
+    )
+  } else {
+    glue::glue("Create new variable {mutation_variable} as `{mutation_function}`{group_description}",
+      group_description = ifelse(group_by, " of each group", "")
+    )
+  }
+}
+
+generate_mutation_tooltip <- function(.data, mutation_variable, mutation_function = NULL) {
+  if (is.null(mutation_function)) {
+    y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = mutation_variable)
+  } else {
+    if (!is.null(mutation_variable)) {
+      y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative", title = glue::glue("{mutation_function}({mutation_variable})"))
     } else {
       y_tooltip <- list(field = Y_TOOLTIP_FIELD_CHR, type = "quantitative")
     }
@@ -361,3 +427,4 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
     return(unlist(final_string))
 
   }
+

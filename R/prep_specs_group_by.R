@@ -5,7 +5,7 @@
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 #' @noRd
-prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
+prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, mutation_before, ...) {
 
   # Extract mapping ----
 
@@ -66,6 +66,11 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
 
   specs_list <- list()
 
+  # If we have a mutation before we do not want to show info grids, return an empty spec set and transition directly to following steps
+  if(mutation_before) {
+    return(specs_list)
+  }
+
   # Order of grouping should go column -> row -> x/color
   # But only if they actually exist in the mapping!
 
@@ -100,9 +105,10 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
       column = TRUE, color = identical(mapping$column, mapping$color) # Also do color if it's the same as the column variable
     )
 
-    specs_list <- specs_list %>%
-      append(list(spec))
+      specs_list <- specs_list %>%
+        append(list(spec))
   }
+
 
   # State 2: Grouped icon array, by column and row ----
 
@@ -142,6 +148,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
     specs_list <- specs_list %>%
       append(list(spec))
   }
+  
 
   # State 3: Grouped icon array, by column, row, and x/color ----
 
@@ -208,6 +215,7 @@ prep_specs_group_by <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, he
   }
 
   # Return the specs
+
   specs_list
 }
 

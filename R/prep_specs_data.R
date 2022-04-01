@@ -5,7 +5,7 @@
 #' @param toJSON Whether to converts the spec to JSON. Defaults to TRUE.
 #' @inheritParams datamation_sanddance
 #' @noRd
-prep_specs_data <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
+prep_specs_data <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, ...) {
 
   # Generate the data and specs for each state
   specs_list <- vector("list", length = 1)
