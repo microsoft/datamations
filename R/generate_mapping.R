@@ -95,7 +95,7 @@ generate_mapping <- function(data_states, tidy_functions_arg, plot_mapping) {
         mutation_expression = unname(mutations)[1],
         mutation_variables = variables_for_mutation
       )
-      warning('Datamations currently only supports a single mutation call for visualization. Defaulting to the first provided new variable and discarding subsequent variables.')
+      stop('Datamations currently only supports a single mutation call for visualization. Edit your pipeline to only include a single mutation necessary for the visualization.')
     }
 
     else {

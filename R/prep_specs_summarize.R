@@ -24,7 +24,13 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     summary_variable <- mapping$y %>%
       rlang::parse_expr()
 
-    summary_variable_chr <- rlang::as_name(summary_variable)
+    summary_variable_chr <- tryCatch(rlang::as_name(summary_variable),
+        error = function(e)
+        stop("Unable to parse the summary function.
+              \n Error is likely due to passing a mutation in the summary function.
+              \n Consider adding a mutate step above and then calling the summary function on the output.
+            ")
+        )
 
     # Check whether the response variable is numeric or binary / categorical
     # If it is numeric, the first summary frame should be a jittered distribution

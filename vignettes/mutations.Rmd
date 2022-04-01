@@ -22,6 +22,8 @@ We can define new data to use in some example mutations.
 ### New data with added variable
 
 ```{r newdata}
+library(dplyr)
+library(datamations)
 
 small_salary <- dplyr::mutate(
   small_salary, 
