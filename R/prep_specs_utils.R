@@ -322,8 +322,12 @@ generate_summarize_tooltip <- function(.data, summary_variable, summary_function
 
   split_string_sensibly <- function(string, max_characters, min_final) {
 
+    if(nchar(string) < max_characters) {return(string)}
+
     if(stringr::str_detect(string, '_')) {
       split_string <- strsplit(string, "(?<=[_])", perl = TRUE)[[1]]
+    } else {
+      split_string <- string
     }
 
     if(any(nchar(split_string)>max_characters)) {

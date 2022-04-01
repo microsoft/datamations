@@ -531,13 +531,12 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
 if(!is.null(mapping$y)) {
   spec_encoding$y$title <- c(
-    paste0(mapping$summary_function, 'of'),
+    paste0(mapping$summary_function, ' of'),
     # Util function to split strings first on a delimiter, then on a character cutoff
     # second argument is max character in a substring to pass
     # third argument is a threshold so it wont leave hanging strings that are too short
-    split_string_sensibly(mapping$y, 15, 6)
+    split_string_sensibly(mapping$y, 20, 6)
     )
-    spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
   }
 
   # Remove any stroke/fillOpacity/shape
