@@ -1326,8 +1326,8 @@
           "title": "Degree",
           "scale": {
             "domain": [
-              0.5,
-              2.5
+              0,
+              3
             ]
           }
         },
@@ -2215,8 +2215,8 @@
           "title": "Degree",
           "scale": {
             "domain": [
-              0.5,
-              2.5
+              0,
+              3
             ]
           }
         },
@@ -3401,8 +3401,8 @@
               "title": "Degree",
               "scale": {
                 "domain": [
-                  0.5,
-                  2.5
+                  0,
+                  3
                 ]
               }
             },
@@ -3475,8 +3475,8 @@
               "title": "Degree",
               "scale": {
                 "domain": [
-                  0.5,
-                  2.5
+                  0,
+                  3
                 ]
               }
             },
@@ -4673,8 +4673,8 @@
               "title": "Degree",
               "scale": {
                 "domain": [
-                  0.5,
-                  2.5
+                  0,
+                  3
                 ]
               }
             },
@@ -4747,8 +4747,8 @@
               "title": "Degree",
               "scale": {
                 "domain": [
-                  0.5,
-                  2.5
+                  0,
+                  3
                 ]
               }
             },
