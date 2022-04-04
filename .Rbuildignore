@@ -21,3 +21,4 @@ azure-pipelines.yml
 ^setup\.py$
 ^notebooks$
 ^PythonSettings\.json$
+^demo-app$

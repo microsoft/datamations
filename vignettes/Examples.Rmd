@@ -1,0 +1,143 @@
+---
+title: "Examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
+```
+
+```{r setup}
+library(datamations)
+library(dplyr)
+```
+
+# group_by()
+
+## One grouping variable
+
+```{r}
+"small_salary %>%
+  group_by(Work)" %>%
+  datamation_sanddance()
+```
+
+## Two grouping variables
+
+```{r}
+"small_salary %>%
+  group_by(Work, Degree)" %>%
+  datamation_sanddance()
+```
+
+## Three grouping variables
+
+```{r}
+library(palmerpenguins)
+
+"penguins %>%
+  group_by(sex, island, species)" %>%
+  datamation_sanddance()
+```
+
+# summarise()
+
+## mean of a variable
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  summarise(mean_salary = mean(Salary))" %>%
+  datamation_sanddance()
+```
+
+## Other summary functions
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  summarise(median_salary = median(Salary))" %>%
+  datamation_sanddance()
+```
+
+```{r}
+"small_salary %>%
+  group_by(Degree) %>%
+  summarise(quan = quantile(Salary, probs = 0.01))" %>%
+  datamation_sanddance()
+```
+
+# filter()
+
+## Filtering initial data
+
+```{r}
+"small_salary %>%
+  filter(Salary > 90)" %>%
+  datamation_sanddance()
+```
+
+## Filtering within groups
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  filter(Salary == mean(Salary))" %>%
+  datamation_sanddance()
+```
+
+## Filtering after summarize
+
+```{r}
+"small_salary %>%
+  group_by(Work) %>%
+  summarise(median_salary = median(Salary)) %>%
+  filter(median_salary > 90)"  %>%
+  datamation_sanddance()
+```
+
+# count()
+
+```{r}
+"small_salary %>%
+  count(Work)" %>%
+  datamation_sanddance()
+```
+
+# Binary variables
+
+A basic example of a dataframe containing data that represents Simpson's paradox.
+
+```{r} 
+head(jeter_justice)
+```
+
+
+In this datamation, Jeter has a higher batting average than Justice overall.
+
+```{r}
+'jeter_justice %>%
+  group_by(player) %>%
+  summarize(batting_average = mean(is_hit),
+            se = sqrt(batting_average * (1 - batting_average) / n()) )' %>%
+  datamation_sanddance()
+```
+<br>
+<br>
+In this datamation, the visual shows that Justice has a higher batting average than Jeter within each year.
+
+```{r}
+'jeter_justice %>%
+  group_by(player, year) %>%
+  summarize(batting_average = mean(is_hit),
+            se = sqrt(batting_average * (1 - batting_average) / n()) )' %>%
+  datamation_sanddance()
+```

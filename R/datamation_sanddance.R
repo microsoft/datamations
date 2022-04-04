@@ -36,7 +36,9 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   }
 
   # Specify which functions are supported, for parsing functions out and for erroring if any are not in this list
-  supported_tidy_functions <- c("group_by", "summarize", "filter", "count")
+  supported_tidy_functions <- c("group_by", "summarize", "filter", "count", "tally", "mutate")
+
+  discarded_noop_functions <- c("arrange", "select")
 
   # Convert pipeline into list
   full_fittings <- pipeline %>%
@@ -78,8 +80,11 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
   # Check that all functions are supported
   purrr::map(
     tidy_functions_list[-1], # Since the first one is data
-    ~ if (!(.x %in% supported_tidy_functions)) {
+    ~ if (!(.x %in% c(supported_tidy_functions, discarded_noop_functions))) {
       stop(paste(.x, "is not supported by `datamation_sanddance`"), call. = FALSE)
+    } else if (.x %in% discarded_noop_functions) {
+      tidy_functions_list <- setdiff(tidy_functions_list, discarded_noop_functions)
+      warning(glue::glue('Pipeline step for {.x} discarded as a non-visualized function.'))
     }
   )
 
@@ -152,18 +157,36 @@ datamation_sanddance <- function(pipeline, envir = rlang::global_env(), pretty =
       verb <- tidy_function_args[[i]][[1]]
     }
 
+    if(verb %in% discarded_noop_functions) next
+
     # Define which function to call for that step in the pipeline
     call_verb <- switch(verb,
       data = prep_specs_data,
       group_by = prep_specs_group_by,
       summarize = prep_specs_summarize,
       filter = prep_specs_filter,
-      count = prep_specs_count
+      count = prep_specs_count,
+      tally = prep_specs_tally,
+      mutate = prep_specs_mutate
     )
+
+
+    # Checks if the group_by occurs before this fitting
+    if (!length(which(stringr::str_detect(names(tidy_function_args), "group_by")))==0 &&
+        which(stringr::str_detect(names(tidy_function_args), "group_by")) < i) {
+      grouping_before <- TRUE
+    } else grouping_before <- FALSE
+
+    if (!length(which(stringr::str_detect(names(tidy_function_args), "mutate")))==0 &&
+        which(stringr::str_detect(names(tidy_function_args), "mutate")) == (i-1)) {
+      mutation_before <- TRUE
+    } else mutation_before <- FALSE
 
     # Call that function with the data and mapping
     if (verb != "filter") {
-      res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width))
+
+      res[[i]] <- do.call(call_verb, list(data, mapping, toJSON = FALSE, pretty = pretty, height = height, width = width, grouping_before = grouping_before, mutation_before = mutation_before))
+
     } else if (verb == "filter") {
       previous_frame <- res[[i - 1]]
 
@@ -252,6 +275,8 @@ renderDatamationSandDance <- function(expr, env = parent.frame(), quoted = FALSE
 
 datamationSandDance_html <- function(...) {
   id <- c(...)[["id"]]
+  id <- stringr::str_remove(id, "-")
+  app_name <- glue::glue("app{id}")
 
   shiny::tags$div(
     ...,
@@ -261,20 +286,35 @@ datamationSandDance_html <- function(...) {
         class = "control-bar",
         shiny::tags$div(
           class = "button-wrapper",
-          shiny::tags$button(onclick = htmlwidgets::JS(paste0("window.app.play('", id, "')")), "Replay")
+          shiny::tags$button(
+            class = "replay-btn",
+            onclick = htmlwidgets::JS(paste0("window.", app_name, ".play('')")),
+            "Replay"
+          )
         ),
         shiny::tags$div(
           class = "slider-wrapper",
-          shiny::tags$input(class = "slider", type = "range", min = "0", value = "0", onchange = htmlwidgets::JS(paste0("window.app.onSlide('", id, "')")))
-        )
-      ),
-      shiny::tags$div(class = "description")
+          shiny::tags$input(class = "slider", type = "range", min = "0", value = "0", onchange = htmlwidgets::JS(paste0("window.", app_name, ".onSlide('", id, "')")))
+        ),
+        shiny::tags$div(
+          class = "button-wrapper",
+          shiny::tags$button(
+            class = "export-btn",
+            onclick = htmlwidgets::JS(paste0("window.", app_name, ".exportGif('1')")),
+            shiny::icon("download")
+          )
+        ),
+      )
     ),
     shiny::tags$div(
-      class = "vega-vis-wrapper",
-      shiny::tags$div(class = "vega-for-axis"),
-      shiny::tags$div(class = "vega-other-layers"),
-      shiny::tags$div(class = "vega-vis")
+      class = "export-wrapper",
+      shiny::tags$div(class = "description"),
+      shiny::tags$div(
+        class = "vega-vis-wrapper",
+        shiny::tags$div(class = "vega-for-axis"),
+        shiny::tags$div(class = "vega-other-layers"),
+        shiny::tags$div(class = "vega-vis")
+      )
     )
   )
 }

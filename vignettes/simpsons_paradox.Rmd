@@ -1,0 +1,67 @@
+---
+title: "Binary variables and simpson's paradox"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Binary variables and simpson's paradox}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
+```
+
+{datamations} is useful for visualizing unique statistical effects and occurrences. Visualizing the steps in a data transformation that lead to a statistical calculate can help uncover phenomena in underlying data.
+
+
+## Simpson's paradox
+
+A working example of using {datamations} in this way is visualizing a [Simpson's paradox](https://en.wikipedia.org/wiki/Simpson%27s_paradox). Simpson's paradox is a phenomenon in probability where a trend might occurs in several groups of data individually, but disappears when groups are combined. {datamations} is the perfect package to understand effects of grouping variables.
+
+### Derek Jeter and David Justice
+
+One common example of Simpson's paradox involves combined hit averages of two well known baseball players, Derek Jeter and David Justice, during the 1995 and 1996 seasons. During these two years of play, David Justice individually had higher batting averages than Derek Jeter. However, combined, Jeter had a higher average than Justice across the two years.
+
+The total values of hits and batting averages are displayed here:
+
+| Year Batter   |   1995  |      |   1996  |      | Combined |      |
+|--------------:|:-------:|:----:|:-------:|:----:|:--------:|:----:|
+| Derek Jeter   | 12/48   | .250 | 183/582 | .314 | 195/630  | .310 |
+| David Justice | 104/411 | .253 | 45/140  | .321 | 149/551  | .270 |
+
+We can use datamations to visualize each step of these binary data. {datamations} includes a built in dataset called `jeter_justice` to explore this phenomenon. Call `?jeter_justice` for documentation on this dataset.
+
+When we just group by individual player, Jeter overall has a higher batting average.
+
+```{r setup}
+library(datamations)
+library(dplyr)
+```
+
+```{r}
+'jeter_justice %>%
+  group_by(player) %>%
+  summarize(batting_average = mean(is_hit),
+            se = sqrt(batting_average * (1 - batting_average) / n()) )' %>%
+  datamation_sanddance()
+```
+
+<div style = "height:175px;"></div>
+
+Grouping by both year and player though, we can see Justice has a higher batting average than Jeter within each year.
+
+```{r}
+'jeter_justice %>%
+  group_by(player, year) %>%
+  summarize(batting_average = mean(is_hit),
+            se = sqrt(batting_average * (1 - batting_average) / n()) )' %>%
+  datamation_sanddance()
+```
+
+<div style = "height:175px;"></div>
+
+Viewing each data step, we can see how the frequency imbalance of each player within each year creates this phenomenon. {datamations} can help us understand how data is transformed when binary frequency data is used to produce statistics.

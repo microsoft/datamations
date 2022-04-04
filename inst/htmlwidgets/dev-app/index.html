@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Datamations</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.15.1"></script>
+    <script src="../gemini/gemini.web.js"></script>
+    <script src="../js/html2canvas.min.js"></script>
+
+    <link rel="stylesheet" href="../css/fa-all.min.css">
+    <link rel="stylesheet" href="../css/datamationSandDance.css" />
+  </head>
+
+  <body>
+    <div class="flex-wrap">
+      <div id="app">
+        <div class="controls-wrapper">
+          <div class="control-bar">
+            <div class="button-wrapper">
+              <button class="replay-btn" onclick="app.play()">Replay</button>
+            </div>
+            <div class="slider-wrapper">
+              <input
+                class="slider"
+                type="range"
+                min="0"
+                value="0"
+                onchange="app.onSlide()"
+              />
+            </div>
+            <div class="button-wrap">
+              <button class="export-btn" onclick="app.exportGif(true)">
+                <i class="fas fa-download"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="export-wrapper">
+          <div class="description"></div>
+          <div class="vega-vis-wrapper">
+            <div class="vega-for-axis"></div>
+            <div class="vega-other-layers"></div>
+            <div class="vega-vis"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/gifshot.min.js"></script>
+    <script src="../js/download2.js"></script>
+
+    <!-- <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/hack-facet-view.js"></script>
+    <script src="../js/custom-animations.js"></script>
+    <script src="../js/app.js"></script> -->
+
+    <script src="../js/src/dist/datamations.min.js"></script>
+
+    <script>
+      const animationType = "mean";
+      const base = "../../../sandbox/custom_animations/";
+      let app = null;
+
+      d3.json(
+        `${base}/custom-animations-${animationType}-R.json`
+        // 'https://raw.githubusercontent.com/microsoft/datamations/specs_mutate/sandbox/mutations/mutation_specs_multiple_variables-R.json'
+      ).then(
+        (specs) => {
+          app = datamations.App("app", { specs, frameDur: 3000 });
+        }
+      );
+    </script>
+  </body>
+</html>

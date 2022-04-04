@@ -42,12 +42,9 @@
   align-items: center;
 }
 
-.button-wrapper {
-  padding: 10px;
-}
-
 .slider-wrapper {
   padding-left: 10px;
+  padding-right: 10px;
   flex-grow: 1;
 }
 
@@ -65,6 +62,7 @@ details {
 
 .description {
   text-align: center;
+  padding-top: 10px;
   margin-bottom: 10px;
 }
 
@@ -104,4 +102,18 @@ details {
 
 .vega-other-layers.with-axes details {
   display: none;
+}
+
+.export-wrapper {
+  height: 575px;
+  width: 575px;
+}
+
+.spin {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

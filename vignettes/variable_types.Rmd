@@ -1,0 +1,69 @@
+---
+title: "Variable types"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Variable types}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
+```
+
+{datamations} provides useful visual encodings to help visualize transformations that occur in various types of data:
+
+-   numeric
+-   categorical
+-   binary
+
+## Numeric data
+
+{datamations} can accept calculations on numeric data and provides encodings on faceted numeric scales. 
+
+Test out the functionality on the built in dataset `small_salary`, which includes synthetic salary data for different types of work and different degree qualifications.
+
+```{r setup}
+library(datamations)
+library(dplyr)
+```
+
+```{r}
+"small_salary %>%
+  group_by(Degree) %>%
+  summarize(mean = mean(Salary, trim=0.1))" %>%
+  datamation_sanddance()
+```
+
+## Categorical data
+
+{datamations} generates shape encoding for categorical variables passed to `group_by` or in summary functions. A useful example is in the {palmerpenguins} `penguins` dataset.
+
+```{r}
+library(palmerpenguins)
+
+"penguins %>%
+  group_by(year, island) %>%
+  summarise(n = n_distinct(species))" %>%
+    datamation_sanddance()
+```
+
+## Binary data
+
+{datamations} similarly can produce visualizations for binary outcomes, displaying variables encoded with opacity and stroke. Binary variables can be passed as a true binary class in R, e.g. `TRUE`/`FALSE`, or via a numeric variable encoded to `1`/`0`. This is examplified in the built in dataset `jeter_justice`, where outcome values are encoded as `1` and `0`.
+
+```{r}
+head(jeter_justice)
+```
+
+```{r}
+"jeter_justice %>%
+  group_by(year) %>%
+  summarise(mean = mean(is_hit))" %>% datamation_sanddance()
+```
+
+The appearance of this encoding can also be controlled more finely with [ggplot aesthetics](https://microsoft.github.io/datamations/articles/finer_control.html).

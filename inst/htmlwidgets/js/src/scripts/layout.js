@@ -1,11 +1,25 @@
-function generateGrid(spec, rows = 10) {
+/*
+* Layout generation functions for datamations.
+* Supports:
+* - grid view: meta.parse = "grid"
+* - jittered  view: meta.parse = "jitter"
+*/
+import { CONF, IGNORE_FIELDS } from "./config.js";
+import { lookupByBucket } from "./utils.js";
+
+/**
+ * Generates data for grid specs
+ * @param {Object} spec vega-lite spec
+ * @param {Number} rows number of rows
+ * @param {Boolean} stacked if true, circles are stacked and vertically aliged
+ * @returns an array of objects
+ */
+export function generateGrid(spec, rows = 10, stacked = false) {
   const splitField = spec.meta.splitField;
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const groupKeys = [];
 
-  const gap = 2;
-  const distance = 4 + gap;
-  let {width: specWidth, height: specHeight} = spec.spec || spec;
+  let {width: specWidth} = spec.spec || spec;
 
   if (spec.facet) {
     if (spec.facet.column) {
@@ -29,12 +43,10 @@ function generateGrid(spec, rows = 10) {
     }
   });
 
-  const ingoreFields = ['tooltip', 'x', 'y', 'datamations_x', 'datamations_y'];
-
   let secondarySplit = Object.keys(encoding).filter(d => {
     const field = encoding[d].field;
     return field !== splitField &&
-           ingoreFields.indexOf(d) === -1 &&
+           IGNORE_FIELDS.indexOf(d) === -1 &&
            groupKeys.indexOf(field) === -1 &&
            metas.indexOf(field) === -1;
   })[0];
@@ -97,14 +109,6 @@ function generateGrid(spec, rows = 10) {
   }
 
   let maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
-
-  // if width divided by maxCols is less than 5, 
-  // then take up all vertical space to increase rows and reduce columns 
-  if (specWidth / maxCols < 5) {
-    rows = Math.floor(specHeight / distance);
-    maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows);
-  }
-
   let splitOptions = [];
 
   if (splitField) {
@@ -120,31 +124,27 @@ function generateGrid(spec, rows = 10) {
 
     v.forEach((d, j) => {
       const n = d.n;
+      const columns = Math.ceil(n / rows);
       const xCenter = splitField ? splitOptions.indexOf(d[splitField]) + 1 : 1;
 
       let startCol = (xCenter - 1) * maxCols + j; // inner grid start
-      startCol += Math.floor((maxCols - Math.ceil(n / rows)) / 2); // center alignment
+      startCol += Math.floor((maxCols - columns) / 2); // center alignment
 
-      const metaFields = Object.keys(d.meta || {});
+      const datum = {};
+
+      // remove n and gemini_ids, we won't need them any more
+      Object.keys(d).forEach(k => {
+        if (k !== 'n' && k !== 'gemini_ids') {
+          datum[k] = d[k];
+        }
+      });
 
       for (let i = 0; i < n; i++) {
         const x = startCol + Math.floor(i / rows);
         const y = rows - 1 - i % rows;
         const colorFieldObj = {};
-        const additionals = {};
 
-        metaFields.forEach(f => {
-          const m = lookupByBucket(
-            Object.keys(d.meta[f]),
-            d3.cumsum(Object.values(d.meta[f])),
-            i + 1,
-          );
-
-          if (m) {
-            additionals[f] = m;
-          }
-        });
-
+        // for secondary split, e.g. is_hit, find correct key and value
         if (secondaryField && typeof[d[secondaryField]] === "object") {
           const keys = Object.keys(d[secondaryField]).sort((a, b) => {
             return d[secondaryField][a] - d[secondaryField][b];
@@ -158,12 +158,11 @@ function generateGrid(spec, rows = 10) {
         }
 
         arr.push({
-          ...d,
+          ...datum,
           ...colorFieldObj,
-          ...additionals,
           gemini_id: d.gemini_ids ? d.gemini_ids[i] : counter,
-          [CONF.X_FIELD]: x,
-          [CONF.Y_FIELD]: y,
+          [CONF.X_FIELD]: stacked ? xCenter : x,
+          [CONF.Y_FIELD]: stacked ? i + 1 : y,
         });
 
         counter++;
@@ -173,24 +172,37 @@ function generateGrid(spec, rows = 10) {
     return arr;
   };
 
+  let gridValues = [];
+
   if (groupKeys.length === 0) {
-    return reduce(specValues);
+    gridValues = reduce(specValues);
+  } else {
+    gridValues = d3.rollups(
+      specValues,
+      reduce,
+      ...groupKeys.map((key) => {
+        return (d) => d[key];
+      })
+    )
+    .flatMap((d) => {
+      if (groupKeys.length === 1) {
+        return d[1];
+      } else {
+        return d[1].flatMap((d) => d[1]);
+      }
+    });
   }
 
-  return d3.rollups(
-    specValues,
-    reduce,
-    ...groupKeys.map((key) => {
-      return (d) => d[key];
-    })
-  )
-  .flatMap((d) => {
-    if (groupKeys.length === 1) {
-      return d[1];
-    } else {
-      return d[1].flatMap((d) => d[1]);
-    }
-  });
+  const num_groups = splitOptions.length;
+
+  return {
+    gridValues,
+    domain: [
+      -maxCols / 2,
+      (num_groups * maxCols) + (num_groups - 1) + maxCols / 2 - 1
+    ],
+    num_groups
+  };
 }
 
 /**
@@ -199,22 +211,24 @@ function generateGrid(spec, rows = 10) {
  * @param {Number} rows number of rows in a grid
  * @returns grid specification
  */
-function getGridSpec(spec, rows = 10) {
+export function getGridSpec(spec, rows = 10, stacked = false) {
   return new Promise((res) => {
-    const grid = generateGrid(spec, rows);
+    const { gridValues: grid, domain, num_groups } = generateGrid(spec, rows, stacked);
     const obj = {...spec};
     const encoding = obj.spec ? obj.spec.encoding : obj.encoding;
 
-    const xDomain = [
-      d3.min(grid, d => d[CONF.X_FIELD]) - 2,
-      d3.max(grid, d => d[CONF.X_FIELD]) + 2
-    ];
+    const dx = stacked ? 1 : 1;
+
+    const xDomain = stacked || num_groups === 0 ? [
+      d3.min(grid, d => d[CONF.X_FIELD]) - dx,
+      d3.max(grid, d => d[CONF.X_FIELD]) + dx
+    ] : domain;
 
     const yPadding = (spec.facet && spec.facet.row) ? 0.8 : 0.4;
 
     const yDomain = [
-      d3.min(grid, (d) => d[CONF.Y_FIELD]) - yPadding,
-      d3.max(grid, (d) => d[CONF.Y_FIELD]) + yPadding,
+      stacked ? 0 : d3.min(grid, (d) => d[CONF.Y_FIELD]) - yPadding,
+      d3.max(grid, (d) => d[CONF.Y_FIELD]) + yPadding + (stacked ? 10 : 0),
     ];
 
     const middle = yDomain[0] + (yDomain[1] - yDomain[0]) / 2;
@@ -237,6 +251,7 @@ function getGridSpec(spec, rows = 10) {
     encoding.x.field = CONF.X_FIELD;
     encoding.y.field = CONF.Y_FIELD;
 
+    // set axis labels when splitField
     if (spec.meta.splitField) {
       const labels = Array.from(
         new Set(grid.map(d => d[spec.meta.splitField]))
@@ -251,8 +266,16 @@ function getGridSpec(spec, rows = 10) {
           d => d[CONF.X_FIELD],
         );
 
-        const middle = Math.floor(extent[0] + (extent[1] - extent[0]) / 2);
+        const middle = Math.ceil(extent[0] + (extent[1] - extent[0]) / 2);
         expr[middle] = d;
+      });
+
+      spec.meta.rules = obj.meta.rules = labels.map(m => {
+        return {
+          filter: `datum['${spec.meta.splitField}'] === '${m}'`,
+          groupKey: spec.meta.splitField,
+          groupValue: m,
+        }
       });
 
       encoding.x.axis = {
@@ -269,11 +292,11 @@ function getGridSpec(spec, rows = 10) {
 }
 
 /**
- * Generates jittered specification
+ * Generates jittered specification using d3-force
  * @param {Object} spec vega-lite specification
  * @returns jittered spec
  */
-function getJitterSpec(spec) {
+export function getJitterSpec(spec) {
   const encoding = spec.spec ? spec.spec.encoding : spec.encoding;
   const width = spec.spec ? spec.spec.width : spec.width;
   const nodes = spec.data.values;
@@ -292,7 +315,8 @@ function getJitterSpec(spec) {
   const yExtent = d3.extent(nodes, d => d[CONF.Y_FIELD]);
   const xScale = d3.scaleBand()
     .domain(d3.range(1, innerGroupCount + 1))
-    .range([0, facetSize]);
+    .range([0, facetSize])
+    .paddingOuter(0.5);
 
   const arr = nodes.slice().filter(d => d[CONF.Y_FIELD] !== undefined).map((d, i) => {
     d.oldX = d[CONF.X_FIELD];
@@ -300,6 +324,8 @@ function getJitterSpec(spec) {
 
     let x = xScale(d[CONF.X_FIELD]) + xScale.bandwidth() / 2;
     let y = d[CONF.Y_FIELD];
+
+    d.scaledX = Math.round(x);
 
     return {
       ...d,
@@ -310,11 +336,11 @@ function getJitterSpec(spec) {
 
   const simulation = d3
     .forceSimulation(arr)
-    .force("x", d3.forceX().strength(0.0001))
+    .force("x", d3.forceX().x(d => d.x))
     .force("y", d3.forceY().strength(0.002).y(d => d[CONF.Y_FIELD]))
     .force("collide", d3
       .forceCollide()
-      .strength(0.001)
+      .strength(0.01)
       .radius(circleRadius)
     )
     .stop();
@@ -328,7 +354,8 @@ function getJitterSpec(spec) {
       arr.forEach(d => {
         const x = xScale(d.oldX);
         d.y = d.oldY;
-
+        
+        // restrict to the bounds: [5%, 95%] of width
         d.x = Math.max(
           x + xScale.bandwidth() * 0.05,
           Math.min(x + bandwidth, d.x),
@@ -336,8 +363,12 @@ function getJitterSpec(spec) {
       })
     }
 
-    encoding.y.scale = {
-      domain: yExtent
+    if (encoding.y.scale) {
+      encoding.y.scale.domain = yExtent
+    } else {
+      encoding.y.scale = {
+        domain: yExtent
+      }
     }
 
     encoding.x.scale = {
@@ -349,7 +380,7 @@ function getJitterSpec(spec) {
     encoding.x.field = "x";
     encoding.y.field = "y";
 
-    // if no axes is drawn, and we have custom x-axis
+    // if meta.axes is falsy, and we have custom x-axis
     if (!spec.meta.axes && encoding.x.axis && spec.meta.xAxisLabels) {
       const labels = spec.meta.xAxisLabels;
 

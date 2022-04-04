@@ -1,0 +1,55 @@
+---
+title: "Controlling appearance with ggplot2"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Controlling appearance with ggplot2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
+
+ggplot2::theme_set(ggplot2::theme_minimal())
+```
+
+If you would like to change the default conventions, or to match an existing plot style, datamations can take ggplot2 code as input.
+
+For example, to match this plot, which has Work on the x-axis and Degree in row facets:
+
+```{r ggplot2-existing-plot, dpi = 300}
+library(datamations)
+library(dplyr)
+library(ggplot2)
+
+small_salary %>%
+  group_by(Work, Degree) %>%
+  summarize(mean_salary = mean(Salary)) %>%
+  ggplot(aes(x = Work, y = mean_salary)) + 
+  geom_point() + 
+  facet_grid(rows = vars(Degree))
+```
+
+Simply define the code and pass to `datamation_sanddance()`, which will produce an animation with desired plot layout.
+
+```{r mean-salary-degree-work-ggplot-setup, eval = TRUE}
+"small_salary %>%
+  group_by(Work, Degree) %>%
+  summarize(mean_salary = mean(Salary)) %>%
+  ggplot(aes(x = Work, y = mean_salary)) + 
+  geom_point() + 
+  facet_grid(rows = vars(Degree))" %>%
+  datamation_sanddance()
+```
+
+When ggplot2 code is provided, the order of animation is not determined by the order in `group_by()`, but by the plot layout. Variables are first animated by what's in the column facets, then the row facets, by the x-axis, and finally by color.
+
+Some limitations:
+
+* `facet_wrap()` is not supported - please use `facet_grid()`
+* datamations expects different variables in the column and row facets than in the x-axis. datamations generated that do not match this layout may look different than the final plot!
+* Only `geom_point()` is supported, e.g. specifying `geom_bar()` will not produce a bar in the datamation.

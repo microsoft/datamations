@@ -5,12 +5,16 @@
 #' @inheritParams datamation_sanddance
 #' @inheritParams prep_specs_data
 #' @noRd
-prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300) {
+prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, height = 300, width = 300, mutation_before, ...) {
 
   # Get summary function and variable
 
   summary_function <- mapping$summary_function %>%
     rlang::parse_expr()
+
+  if(!is.null(mapping$summary_parameters)) {
+    summary_parameters <- mapping$summary_parameters
+  }
 
   # Check if there _is_ a y variable - e.g. if summary_function is n(), there is no variable
 
@@ -20,7 +24,13 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     summary_variable <- mapping$y %>%
       rlang::parse_expr()
 
-    summary_variable_chr <- rlang::as_name(summary_variable)
+    summary_variable_chr <- tryCatch(rlang::as_name(summary_variable),
+        error = function(e)
+        stop("Unable to parse the summary function.
+              \n Error is likely due to passing a mutation in the summary function.
+              \n Consider adding a mutate step above and then calling the summary function on the output.
+            ")
+        )
 
     # Check whether the response variable is numeric or binary / categorical
     # If it is numeric, the first summary frame should be a jittered distribution
@@ -67,7 +77,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
       x_labels <- generate_labelsExpr(NULL)
       x_domain <- generate_x_domain(NULL)
-      x_title <- ""
+      x_title <- NULL
     } else {
       x_var <- rlang::parse_expr(mapping$x)
 
@@ -94,35 +104,34 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
 
     y_range <- range(.data[[Y_FIELD_CHR]], na.rm = TRUE)
-    y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y, scale = list(domain = y_range))
 
-    color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
+    if(!is.null(mapping$y)) {
+      y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y, scale = list(domain = y_range))
+    }
+    else {
+      y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", scale = list(domain = y_range))
+    }
 
-    # Need to manually set order of colour legend, otherwise it's not in the same order as the grids/points!
     if (!is.null(mapping$color)) {
+      color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
       color_encoding <- append(color_encoding, list(legend = list(values = levels(.data[[mapping$color]]))))
     }
 
     spec_encoding <- list(
       x = x_encoding,
-      y = y_encoding,
-      color = color_encoding
+      y = y_encoding
     )
+
+    if(exists("color_encoding")) { spec_encoding$color <- color_encoding }
 
     # Flag for whether the plot will have facets - used to set axes = TRUE (if it does have facets, and the "fake facets" need to be used) or FALSE (if it doesn't, and the real axes can be used)
     has_facets <- !is.null(mapping$column) | !is.null(mapping$row)
 
     facet_col_encoding <- list(field = mapping$column, type = "ordinal", title = mapping$column)
 
-    if (!is.null(mapping$column)) {
-      facet_col_encoding$sort <- unique(.data[[mapping$column]])
-    }
 
     facet_row_encoding <- list(field = mapping$row, type = "ordinal", title = mapping$row)
 
-    if (!is.null(mapping$row)) {
-      facet_row_encoding$sort <- unique(.data[[mapping$row]])
-    }
 
     facet_encoding <- list(
       column = facet_col_encoding,
@@ -146,6 +155,16 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     ### Prep data ----
 
+    # If gemini_id is not already added, e.g. if this function is called on its own for testing purposes
+    if (!"gemini_id" %in% names(.data)) {
+      # Convert NA to "NA", put at the end of factors, and arrange by all grouping variables so that IDs are consistent
+      .data <- .data %>%
+        arrange_by_groups_coalesce_na(group_vars, group_vars_chr) %>%
+        # Add an ID used internally by our JS code / by gemini that controls how points are animated between frames
+        # Not defined in any of the previous steps since the JS takes care of generating it
+        dplyr::mutate(gemini_id = dplyr::row_number())
+    }
+
     ### Prep encoding ----
 
     x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = NULL)
@@ -157,18 +176,18 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       rlang::quo_name(mapping$color)
     }
 
-    color_encoding <- list(field = color_name, type = "nominal")
-
-    # Need to manually set order of colour legend, otherwise it's not in the same order as the grids/points!
     if (!is.null(mapping$color)) {
+      color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
       color_encoding <- append(color_encoding, list(legend = list(values = levels(.data[[mapping$color]]))))
     }
 
     spec_encoding <- list(
       x = x_encoding,
-      y = y_encoding,
-      color = color_encoding
+      y = y_encoding
     )
+
+    if(exists("color_encoding")) { spec_encoding$color <- color_encoding }
+
 
     # Flag for whether the plot will have facets - used to set axes = TRUE (if it does have facets, and the "fake facets" need to be used) or FALSE (if it doesn't, and the real axes can be used)
     has_facets <- !is.null(mapping$column) | !is.null(mapping$row)
@@ -219,7 +238,8 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       spec_encoding$tooltip <- generate_summarize_tooltip(data_1, mapping$y)
     } else if (y_type %in% c("binary", "categorical")) { # Otherwise, another infogrid!
       data_1 <- .data %>%
-        dplyr::count(!!!group_vars, !!summary_variable)
+        dplyr::count(!!!group_vars, !!summary_variable) %>%
+        add_ids_to_count_data(.data, mapping$column, mapping$x, mapping$y)
 
       # If the summary variable is a factor, order according to its values to match the legend
 
@@ -357,17 +377,22 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
       }
     }
 
-    spec <- generate_vega_specs(
-      .data = data_1,
-      mapping = mapping,
-      meta = meta,
-      spec_encoding = spec_encoding, facet_encoding = facet_encoding,
-      height = height, width = width, facet_dims = facet_dims,
-      # Flags for column / row  facets or color
-      column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
-    )
+    # Skip this step if we have a mutation directly before
+    if(!mutation_before) {
 
-    specs_list <- append(specs_list, list(spec))
+      spec <- generate_vega_specs(
+        .data = data_1,
+        mapping = mapping,
+        meta = meta,
+        spec_encoding = spec_encoding, facet_encoding = facet_encoding,
+        height = height, width = width, facet_dims = facet_dims,
+        # Flags for column / row  facets or color
+        column = !is.null(mapping$column), row = !is.null(mapping$row), color = !is.null(mapping$color)
+      )
+      specs_list <- append(specs_list, list(spec))
+
+    }
+
   }
 
   # Switch settings for states ----
@@ -427,7 +452,7 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
       x_labels <- generate_labelsExpr(NULL)
       x_domain <- generate_x_domain(NULL)
-      x_title <- ""
+      x_title <- NULL
     } else {
       x_var <- rlang::parse_expr(mapping$x)
 
@@ -451,19 +476,25 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
 
     x_encoding <- list(field = X_FIELD_CHR, type = "quantitative", axis = list(values = x_labels[["breaks"]], labelExpr = x_labels[["labelExpr"]], labelAngle = -90), title = x_title, scale = x_domain)
 
-    y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y)
+    if(!is.null(mapping$y)) {
+      y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative", title = mapping$y)
+    }
 
-    color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
+    else {
+      y_encoding <- list(field = Y_FIELD_CHR, type = "quantitative")
+    }
 
     if (!is.null(mapping$color)) {
+      color_encoding <- list(field = rlang::quo_name(mapping$color), type = "nominal")
       color_encoding <- append(color_encoding, list(legend = list(values = levels(.data[[mapping$color]]))))
     }
 
     spec_encoding <- list(
       x = x_encoding,
-      y = y_encoding,
-      color = color_encoding
+      y = y_encoding
     )
+
+    if(exists("color_encoding")) { spec_encoding$color <- color_encoding }
 
     data_1 <- .data %>%
       dplyr::select(.data$gemini_id, tidyselect::any_of(group_vars_chr), !!X_FIELD, !!Y_FIELD) %>%
@@ -474,9 +505,28 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # There should still be a point for each datapoint, just all overlapping
 
   if (y_type %in% c("numeric", "categorical", "binary")) {
-    data_2 <- data_1 %>%
-      dplyr::group_by(!!!group_vars) %>%
-      dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
+
+    # Build in specific handling for functions with necessary parameters
+    # Can genericize this down the line
+    if(!is.null(mapping$summary_parameters) && summary_function=="quantile") {
+      data_2 <- data_1 %>%
+        dplyr::group_by(!!!group_vars) %>%
+        dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, !!summary_parameters, na.rm = TRUE))
+    }
+    else if (as.character(summary_function) %in% c("mean", "max", "min", "median")) {
+      data_2 <- data_1 %>%
+        dplyr::group_by(!!!group_vars) %>%
+        dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, na.rm = TRUE))
+    } else if(!is.null(mapping$summary_parameters)) {
+      data_2 <- data_1 %>%
+        dplyr::group_by(!!!group_vars) %>%
+        dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function, !!summary_parameters))
+    } else {
+      data_2 <- data_1 %>%
+        dplyr::group_by(!!!group_vars) %>%
+        dplyr::mutate(dplyr::across(c(!!Y_FIELD, !!Y_TOOLTIP_FIELD), !!summary_function))
+    }
+
   } else if (y_type == "null") {
     data_2 <- data_1
 
@@ -489,7 +539,16 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
   # Tooltip
   spec_encoding$tooltip <- generate_summarize_tooltip(data_2, mapping$y, mapping$summary_function)
 
-  spec_encoding$y$title <- glue::glue("{mapping$summary_function}({mapping$y})")
+
+if(!is.null(mapping$y)) {
+  spec_encoding$y$title <- c(
+    paste0(mapping$summary_function, ' of'),
+    # Util function to split strings first on a delimiter, then on a character cutoff
+    # second argument is max character in a substring to pass
+    # third argument is a threshold so it wont leave hanging strings that are too short
+    split_string_sensibly(mapping$y, 20, 6)
+    )
+  }
 
   # Remove any stroke/fillOpacity/shape
 
@@ -521,10 +580,19 @@ prep_specs_summarize <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, h
     y_type = y_type
   )
 
-  # If the summary function is mean or median, add meta.custom_animation
+  # If the summary function is mean or median, min, max, or quantile, add meta.custom_animation
+  ## -- TODO, Add specific meta specs for quantile that pass the probs value
 
-  if (mapping$summary_function %in% c("mean", "median")) {
-    spec[["meta"]][["custom_animation"]] <- mapping$summary_function
+  if (y_type %in% c("numeric", "categorical")) {
+
+    if (mapping$summary_function %in% c("quantile")) {
+      spec[["meta"]][["custom_animation"]] <- list(mapping$summary_function, mapping$summary_parameters)
+    }
+
+    if (mapping$summary_function %in% c("mean", "median", "min", "max")) {
+      spec[["meta"]][["custom_animation"]] <- mapping$summary_function
+    }
+
   }
 
   specs_list <- append(specs_list, list(spec))
