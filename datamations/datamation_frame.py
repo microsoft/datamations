@@ -366,12 +366,7 @@ class DatamationFrame(pd.DataFrame):
                 html2canvas: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/html2canvas.min',
                 gifshot: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/gifshot.min',
                 download2: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/download2',
-                config: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/config',
-                utils: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/utils',
-                layout: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/layout',
-                'hack-facet-view': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/hack-facet-view',
-                'custom-animations': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/custom-animations',
-                app: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/app'
+                datamations: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@include_externals/inst/htmlwidgets/js/src/dist/datamations.min'
             }});
 
             (function(element) {
@@ -418,14 +413,13 @@ class DatamationFrame(pd.DataFrame):
                 </div>
                 `));
 
-                require(['d3', 'vega', 'vega-util', 'vega-lite', 'vega-embed', 'gemini', 'html2canvas', 'gifshot', 'download2', 'app', 'utils', 'layout', 'config', 'hack-facet-view', 'custom-animations'], function(d3, vega, vegaUtil, vegaLite, vegaEmbed, gemini, html2canvas, gifshot, download2, app, utils, layout, config, hackFacetView, customAnimations) {
+                require(['d3', 'vega', 'vega-util', 'vega-lite', 'vega-embed', 'gemini', 'html2canvas', 'gifshot', 'download2', 'datamations'], function(d3, vega, vegaUtil, vegaLite, vegaEmbed, gemini, html2canvas, gifshot, download2, datamations) {
                     window.d3 = d3
                     window.vegaEmbed = vegaEmbed
                     window.gemini = gemini
                     window.html2canvas = html2canvas
                     window.gifshot = gifshot
-                    window.CustomAnimations = customAnimations
-                    window.%s = App("%s", {specs: %s, autoPlay: true});
+                    window.%s = datamations.App("%s", {specs: %s, autoPlay: true});
                 });            
             })(element);
         """ % (app, app, app, app, app, app, app, app, json.dumps(self.specs()))))

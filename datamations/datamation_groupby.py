@@ -86,7 +86,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             },
             "title": self._by[-1] if len(self._by) > 1 else x_axis,
             "scale": {
-            "domain": [0.5, 3.5 if len(self._by) > 2 else 2.5]
+            "domain": [0, 3]
             }
         }
 
