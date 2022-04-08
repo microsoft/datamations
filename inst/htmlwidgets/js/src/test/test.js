@@ -5,6 +5,17 @@ import { generateGrid } from "../scripts/layout.js";
 // set d3 globally. The functions expect d3 to be globally set
 global.d3 = d3;
 
+import fs from 'fs';
+import chai from 'chai';
+import * as datamations from "../scripts/datamation-sanddance.js";
+
+const epsilon = 0.0001;
+
+var data = [];
+var raw_spec = [];
+var penguins = [];
+var groupby_degree_work = [];
+
 const gridSpecInput = {
   "height": 300,
   "width": 300,
@@ -40,6 +51,65 @@ const gridSpecInput = {
   }
 };
 
+function compare_specs_with_file(specs, raw_spec) {
+  for (var i = 0; i < specs.length; i++) {
+    for (var key of Object.keys(specs[i])) {
+      if (key == "data") {
+        for (var j = 0; j < specs[i][key]["values"].length; j++) {
+          for (var field of Object.keys(specs[i][key]["values"][j])) {
+            if (field.startsWith("datamations_y") || field == "Lower" || field == "Upper") {
+              chai
+                .expect(specs[i][key]["values"][j][field])
+                .to.be.approximately(
+                  raw_spec[i][key]["values"][j][field],
+                  epsilon,
+                  "spec#" + i + ", gemini_id: " + specs[i][key]["values"][j]["gemini_id"] + ", approx field: " + field
+                );
+            } else {
+              chai
+                .expect(specs[i][key]["values"][j][field])
+                .to.deep.equal(
+                  raw_spec[i][key]["values"][j][field],
+                  "spec#" + i + ", gemini_id: " + raw_spec[i][key]["values"][j]["gemini_id"] + ", failed data: " + field
+                );
+            }
+          }
+        }
+      } else {
+        if (key == "layer") {
+          for (j = 0; j < specs[i][key].length; j++) {
+            chai
+              .expect(specs[i][key][j]["encoding"]["y"]["scale"]["domain"][0])
+              .to.be.approximately(raw_spec[i][key][j]["encoding"]["y"]["scale"]["domain"][0], epsilon);
+            chai
+              .expect(specs[i][key][j]["encoding"]["y"]["scale"]["domain"][1])
+              .to.be.approximately(raw_spec[i][key][j]["encoding"]["y"]["scale"]["domain"][1], epsilon);
+
+            specs[i][key][j]["encoding"]["y"]["scale"]["domain"] =
+              raw_spec[i][key][j]["encoding"]["y"]["scale"]["domain"];
+          }
+          chai.expect(specs[i][key]).to.deep.equal(raw_spec[i][key], "failed layer#" + j);
+        } else if (key == "spec" && specs[i][key]["layer"]) {
+          for (j = 0; j < specs[i][key]["layer"].length; j++) {
+            chai
+              .expect(specs[i][key]["layer"][j]["encoding"]["y"]["scale"]["domain"][0])
+              .to.be.approximately(raw_spec[i][key]["layer"][j]["encoding"]["y"]["scale"]["domain"][0], epsilon);
+            chai
+              .expect(specs[i][key]["layer"][j]["encoding"]["y"]["scale"]["domain"][1])
+              .to.be.approximately(raw_spec[i][key]["layer"][j]["encoding"]["y"]["scale"]["domain"][1], epsilon);
+
+            specs[i][key]["layer"][j]["encoding"]["y"]["scale"]["domain"] =
+              raw_spec[i][key]["layer"][j]["encoding"]["y"]["scale"]["domain"];
+          }
+          chai.expect(specs[i][key]).to.deep.equal(raw_spec[i][key], "failed spec#" + i);
+        } else {
+          chai.expect(specs[i][key]).to.deep.equal(raw_spec[i][key], "failed spec#" + i + ", key=" + key);
+        }
+      }
+    }
+  }
+}
+
 describe('Layout Functions', function () {
   describe('#generateGrid()', function () {
     let {gridValues} = generateGrid(gridSpecInput);
@@ -62,6 +132,88 @@ describe('Layout Functions', function () {
                d.gemini_id === undefined || d.gemini_id === null;
       });
       assert.equal(invalid.length, 0);
+    });
+  });
+});
+
+describe("palmer penguins", function () {
+  before(function (done) {
+    fs.readFile("../../../../data-raw/penguins.csv", "utf8", function (err, fileContents) {
+      if (err) throw err;
+      var lines = fileContents.split(/\r?\n/);
+      data = [];
+      for (var line of lines) {
+        if (line.trim()) {
+          var parts = line.split(",");
+          data.push(parts);
+        }
+      }
+      fs.readFile("../../../../sandbox/penguins_three_groups.json", "utf8", function (err, fileContents) {
+        if (err) throw err;
+        penguins = JSON.parse(fileContents);
+        done();
+      });
+    });
+  });
+  context("group by three columns", function () {
+    it("should match", function () {
+      var specs = datamations.specs({ values: data }, ["species", "island", "sex"], "Average of bill_length_mm", {
+        Adelie: {
+          Biscoe: { female: 37.35909091, male: 40.59090909 },
+          Dream: { female: 36.91111111, male: 40.07142857, NA: 37.5 },
+          Torgersen: { female: 37.55416667, male: 40.58695652, NA: 37.925 },
+        },
+        Chinstrap: {
+          Dream: { female: 46.57352941, male: 51.09411765 },
+        },
+        Gentoo: {
+          Biscoe: { female: 45.5637931, male: 49.47377049, NA: 45.625 },
+        },
+      });
+      compare_specs_with_file(specs, penguins);
+    });
+  });
+});
+
+describe("small salary", function () {
+  before(function (done) {
+    fs.readFile("../../../../data-raw/small_salary.csv", "utf8", function (err, fileContents) {
+      if (err) throw err;
+      var lines = fileContents.split(/\r?\n/);
+      data = [];
+      for (var line of lines) {
+        if (line.trim()) {
+          var parts = line.split(",");
+          data.push(parts);
+        }
+      }
+      fs.readFile("../../../../inst/specs/raw_spec.json", "utf8", function (err, fileContents) {
+        if (err) throw err;
+        raw_spec = JSON.parse(fileContents);
+        fs.readFile("../../../../inst/specs/groupby_degree_work.json", "utf8", function (err, fileContents) {
+          if (err) throw err;
+          groupby_degree_work = JSON.parse(fileContents);
+          done();
+        });
+      });
+    });
+  });
+  context("group by single column", function () {
+    it("should match", function () {
+      var specs = datamations.specs({ values: data }, ["Degree"], "Average of Salary", {
+        Masters: 90.22633401,
+        PhD: 88.24560613,
+      });
+      compare_specs_with_file(specs, raw_spec);
+    });
+  });
+  context("group by two columns", function () {
+    it("should match", function () {
+      var specs = datamations.specs({ values: data }, ["Degree", "Work"], "Average of Salary", {
+        Masters: { Academia: 84.029883, Industry: 91.225762 },
+        PhD: { Academia: 85.557966, Industry: 93.083359 },
+      });
+      compare_specs_with_file(specs, groupby_degree_work);
     });
   });
 });
