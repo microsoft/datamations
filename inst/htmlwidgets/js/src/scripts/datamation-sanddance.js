@@ -963,10 +963,22 @@ function prep_specs_summarize(states, groupby, summarize, output) {
     for (group of groups) {
       for (subgroup of subgroups) {
         for (var l3group of l3groups) {
-          if (output[group][subgroup] && !isNaN(output[group][subgroup][l3group]))
-            min_array.push(output[group][subgroup][l3group] - _error[[group, subgroup, l3group].join(",")]);
-          if (output[group][subgroup] && !isNaN(output[group][subgroup][l3group]))
-            max_array.push(output[group][subgroup][l3group] + _error[[group, subgroup, l3group].join(",")]);
+          if (output[group][subgroup] && !isNaN(output[group][subgroup][l3group])) {
+            if (operation == "mean") {
+              min_array.push(output[group][subgroup][l3group] - _error[[group, subgroup, l3group].join(",")]);
+            }
+            else {
+              min_array.push(output[group][subgroup][l3group]);
+            }
+          }
+          if (output[group][subgroup] && !isNaN(output[group][subgroup][l3group])) {
+            if (operation == "mean") {
+              max_array.push(output[group][subgroup][l3group] + _error[[group, subgroup, l3group].join(",")]);
+            }
+            else {
+              max_array.push(output[group][subgroup][l3group]);
+            }
+          }
         }
       }
     }

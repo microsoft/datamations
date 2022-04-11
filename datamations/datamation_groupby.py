@@ -3,6 +3,7 @@
 # Create a subclass from a pandas DataFrameGroupBy.
 #
 import json
+import math
 import pandas as pd
 from . import utils
 from . import datamation_frame
@@ -49,7 +50,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         df._states = self._states
         df._operations = self._operations
         self._output = df
-        self._error = super(DatamationGroupBy, self).sem()
+        self._axis = axis if axis else df.keys()[0]
+        self._error = super(DatamationGroupBy, self).std()
+        for i in range(len(self._error[self._axis])):
+            self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
         return df
 
     # Override the 'median' function
@@ -63,7 +67,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         df._states = self._states
         df._operations = self._operations
         self._output = df
-        self._error = super(DatamationGroupBy, self).sem()
+        self._axis = axis if axis else df.keys()[0]
+        self._error = super(DatamationGroupBy, self).std()
+        for i in range(len(self._error[self._axis])):
+            self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
         return df
 
     # The specs to show summarized points on the chart
@@ -267,7 +274,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
-            "title": [self.operations[-1] + " of", y_axis] if self.operations == "median" else self.operations[-1] + "(" + y_axis + ")",
+            "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" else self.operations[-1] + "(" + y_axis + ")",
             "scale": {
             "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
             }
@@ -487,9 +494,15 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 for subgroup in subgroups:
                     for l3group in l3groups:
                         if subgroup in self._output[y_axis][group] and l3group in self._output[y_axis][group][subgroup]:
-                            min_array.append(self._output[y_axis][group][subgroup][l3group] - self._error[y_axis][(group, subgroup, l3group)])
+                            if self.operations[-1] == "mean":
+                                min_array.append(self._output[y_axis][group][subgroup][l3group] - self._error[y_axis][(group, subgroup, l3group)])
+                            else:
+                                min_array.append(self._output[y_axis][group][subgroup][l3group])
                         if subgroup in self._output[y_axis][group] and l3group in self._output[y_axis][group][subgroup]:
-                            max_array.append(self._output[y_axis][group][subgroup][l3group] + self._error[y_axis][(group, subgroup, l3group)])
+                            if self.operations[-1] == "mean":
+                                max_array.append(self._output[y_axis][group][subgroup][l3group] + self._error[y_axis][(group, subgroup, l3group)])
+                            else:
+                                max_array.append(self._output[y_axis][group][subgroup][l3group])
             domain = [round(min(min_array), 13), round(max(max_array), 13)]
         elif len(self._by) > 1:
             domain = [
