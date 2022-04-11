@@ -192,7 +192,7 @@ describe("palmer penguins", function () {
           Biscoe: { female: 14.25, male: 15.7, NA: 14.35 },
         },
       });
-      // compare_specs_with_file(specs, medians);
+      compare_specs_with_file(specs, medians);
     });
   });
 });
