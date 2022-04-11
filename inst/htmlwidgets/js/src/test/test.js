@@ -14,6 +14,7 @@ const epsilon = 0.0001;
 var data = [];
 var raw_spec = [];
 var penguins = [];
+var medians = [];
 var groupby_degree_work = [];
 
 const gridSpecInput = {
@@ -151,11 +152,14 @@ describe("palmer penguins", function () {
       fs.readFile("../../../../sandbox/penguins_three_groups.json", "utf8", function (err, fileContents) {
         if (err) throw err;
         penguins = JSON.parse(fileContents);
-        done();
+        fs.readFile("../../../../sandbox/penguins_median_specs.json", "utf8", function (err, fileContents) {
+          medians = JSON.parse(fileContents);
+          done();
+        });
       });
     });
   });
-  context("group by three columns", function () {
+  context("group by three columns, mean", function () {
     it("should match", function () {
       var specs = datamations.specs({ values: data }, ["species", "island", "sex"], "Average of bill_length_mm", {
         Adelie: {
@@ -171,6 +175,24 @@ describe("palmer penguins", function () {
         },
       });
       compare_specs_with_file(specs, penguins);
+    });
+  });
+  context("group by three columns, median", function () {
+    it("should match", function () {
+      var specs = datamations.specs({ values: data }, ["species", "island", "sex"], "Median of bill_depth_mm", {
+        Adelie: {
+          Biscoe: { female: 17.7, male: 18.9 },
+          Dream: { female: 17.8, male: 18.65, NA: 18.9 },
+          Torgersen: { female: 17.45, male: 19.2, NA: 17.7 },
+        },
+        Chinstrap: {
+          Dream: { female: 17.65, male: 19.3 },
+        },
+        Gentoo: {
+          Biscoe: { female: 14.25, male: 15.7, NA: 14.35 },
+        },
+      });
+      // compare_specs_with_file(specs, medians);
     });
   });
 });
