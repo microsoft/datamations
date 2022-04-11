@@ -35365,6 +35365,16 @@ function prep_specs_summarize(states, groupby, summarize, output) {
   var x_axis = groupby.length == 1 ? groupby[0] : groupby[0];
   var y_axis = groupby.length == 1 ? summarize.split(" ")[2] : summarize.split(" ")[2];
 
+  var operation = summarize.split(" ")[0].toLowerCase();
+  switch (operation) {
+    case "average":
+      operation = "mean";
+      break;
+    case "median":
+      operation = "median";
+      break;
+  }
+
   if (groupby.length == 1) {
     var groups = Object.keys(states[1].groups);
   } else {
@@ -35408,7 +35418,7 @@ function prep_specs_summarize(states, groupby, summarize, output) {
     },
     title: groupby.length > 1 ? groupby[groupby.length - 1] : x_axis,
     scale: {
-      domain: [0, groupby.length > 2 ? 3.5 : 3],
+      domain: [0, groupby.length > 2 ? 3 : 3],
     },
   };
 
@@ -35472,11 +35482,21 @@ function prep_specs_summarize(states, groupby, summarize, output) {
 
   if (groupby.length > 1) {
     var sort = groups;
-    facet_encoding["column"] = { field: groupby[0], sort: sort, type: "ordinal", title: groupby[0] };
+    if (operation == "mean") {
+      facet_encoding["column"] = { field: groupby[0], sort: sort, type: "ordinal", title: groupby[0] };
+    }
+    else {
+      facet_encoding["column"] = { field: groupby[0], type: "ordinal", title: groupby[0] };
+    }
   }
   if (groupby.length > 2) {
     sort = subgroups;
-    facet_encoding["row"] = { field: groupby[1], sort: sort, type: "ordinal", title: groupby[1] };
+    if (operation == "mean") {
+      facet_encoding["row"] = { field: groupby[1], sort: sort, type: "ordinal", title: groupby[1] };
+    }
+    else {
+      facet_encoding["row"] = { field: groupby[1], type: "ordinal", title: groupby[1] };
+    }
   }
 
   var facet_dims = {
@@ -35615,13 +35635,13 @@ function prep_specs_summarize(states, groupby, summarize, output) {
 
   meta = {
     axes: groupby.length > 1,
-    description: "Plot mean " + y_axis + " of each group",
+    description: "Plot " + operation + " " + y_axis + " of each group",
   };
 
   y_encoding = {
     field: "datamations_y",
     type: "quantitative",
-    title: "mean(" + y_axis + ")",
+    title: operation == "median" ? [operation + " of", y_axis] : operation + "(" + y_axis + ")",
     scale: {
       domain: [lodash.round(min, 13), lodash.round(max, 13)],
     },
@@ -35631,7 +35651,7 @@ function prep_specs_summarize(states, groupby, summarize, output) {
     {
       field: "datamations_y_tooltip",
       type: "quantitative",
-      title: "mean(" + y_axis + ")",
+      title: operation + "(" + y_axis + ")",
     },
   ];
 
@@ -35660,6 +35680,7 @@ function prep_specs_summarize(states, groupby, summarize, output) {
           gemini_id: i,
           [x_axis]: item[x_axis],
           [groupby[1]]: item[groupby[1]],
+          [groupby[2]]: item[groupby[2]],
           datamations_x:
             groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] == subgroups[0] ? 1 : 2,
           datamations_y:
@@ -35711,7 +35732,7 @@ function prep_specs_summarize(states, groupby, summarize, output) {
     }
   }
 
-  meta["custom_animation"] = "mean";
+  meta["custom_animation"] = operation;
 
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip: tooltip };
   if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color: color, tooltip: tooltip };
@@ -35722,19 +35743,22 @@ function prep_specs_summarize(states, groupby, summarize, output) {
     {
       field: "datamations_y_tooltip",
       type: "quantitative",
-      title: "mean(" + y_axis + ")",
-    },
-    {
+      title: operation + "(" + y_axis + ")",
+    }
+  ];
+
+  if (operation == "mean") {
+    tooltip.push({
       field: "Upper",
       type: "nominal",
-      title: "mean(" + y_axis + ") + standard error",
-    },
-    {
+      title: operation + "(" + y_axis + ") + standard error",
+    });
+    tooltip.push({
       field: "Lower",
       type: "nominal",
-      title: "mean(" + y_axis + ") - standard error",
-    },
-  ];
+      title: operation + "(" + y_axis + ") - standard error",
+    });
+  }
 
   for (field of groupby) {
     tooltip.push({
@@ -35776,19 +35800,19 @@ function prep_specs_summarize(states, groupby, summarize, output) {
           datamations_y_tooltip:
             groupby.length > 2
               ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
-              : output[item[groupby[0]]][item[groupby[1]]],
-          Lower:
-            groupby.length > 2
-              ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]] -
-                _error[[item[groupby[0]], item[groupby[1]], item[groupby[2]]].join(",")]
-              : output[item[groupby[0]]][item[groupby[1]]] - _error[[item[groupby[0]], item[groupby[1]]].join(",")],
-          Upper:
-            groupby.length > 2
-              ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]] +
-                _error[[item[groupby[0]], item[groupby[1]], item[groupby[2]]].join(",")]
-              : output[item[groupby[0]]][item[groupby[1]]] + _error[[item[groupby[0]], item[groupby[1]]].join(",")],
+              : output[item[groupby[0]]][item[groupby[1]]]
         };
-        if (!isNaN(item[y_axis])) {
+        if (operation == "mean") {
+          value["Lower"] = groupby.length > 2
+            ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]] -
+            _error[[item[groupby[0]], item[groupby[1]], item[groupby[2]]].join(",")]
+            : output[item[groupby[0]]][item[groupby[1]]] - _error[[item[groupby[0]], item[groupby[1]]].join(",")];
+          value["Upper"] =  groupby.length > 2
+            ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]] +
+            _error[[item[groupby[0]], item[groupby[1]], item[groupby[2]]].join(",")]
+            : output[item[groupby[0]]][item[groupby[1]]] + _error[[item[groupby[0]], item[groupby[1]]].join(",")];
+        }
+        if (operation == "mean" && !isNaN(item[y_axis])) {
           value["datamations_y_raw"] = lodash.round(item[y_axis], 13);
         }
         data.push(value);
@@ -35811,9 +35835,11 @@ function prep_specs_summarize(states, groupby, summarize, output) {
         datamations_y: output[groups[0]],
         datamations_y_tooltip: output[groups[0]],
         datamations_y_raw: lodash.round(states[0][i][y_axis], 13),
-        Lower: output[groups[0]] - _error[groups[0]],
-        Upper: output[groups[0]] + _error[groups[0]],
       };
+      if (operation == "mean") {
+        value["Lower"] = output[groups[0]] - _error[groups[0]];
+        value["Upper"] = output[groups[0]] + _error[groups[0]];
+      }
       data.push(value);
       id = id + 1;
     }
@@ -35829,9 +35855,11 @@ function prep_specs_summarize(states, groupby, summarize, output) {
         datamations_y: output[groups[1]],
         datamations_y_tooltip: output[groups[1]],
         datamations_y_raw: lodash.round(states[0][i][y_axis], 13),
-        Lower: output[groups[1]] - _error[groups[1]],
-        Upper: output[groups[1]] + _error[groups[1]],
       };
+      if (operation == "mean") {
+        value["Lower"] = output[groups[1]] - _error[groups[1]];
+        value["Upper"] = output[groups[1]] + _error[groups[1]];
+      }
       data.push(value);
       id = id + 1;
     }
@@ -35839,13 +35867,15 @@ function prep_specs_summarize(states, groupby, summarize, output) {
 
   meta = {
     axes: groupby.length > 1,
-    description: "Plot mean " + y_axis + " of each group, with errorbar",
+    description: "Plot " + operation + " " + y_axis + " of each group, with errorbar",
   };
 
-  spec_encoding = { x: x_encoding, y: y_encoding, tooltip: tooltip };
-  if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color: color, tooltip: tooltip };
-  spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, true);
-  specs_list.push(spec);
+  if (operation == "mean") {
+    spec_encoding = { x: x_encoding, y: y_encoding, tooltip: tooltip };
+    if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color: color, tooltip: tooltip };
+    spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, true);
+    specs_list.push(spec);
+  }
 
   // Show the summarized values along with error bars, zoomed in
   if (groupby.length > 2) {
@@ -35854,10 +35884,22 @@ function prep_specs_summarize(states, groupby, summarize, output) {
     for (group of groups) {
       for (subgroup of subgroups) {
         for (var l3group of l3groups) {
-          if (output[group][subgroup] && !isNaN(output[group][subgroup][l3group]))
-            min_array.push(output[group][subgroup][l3group] - _error[[group, subgroup, l3group].join(",")]);
-          if (output[group][subgroup] && !isNaN(output[group][subgroup][l3group]))
-            max_array.push(output[group][subgroup][l3group] + _error[[group, subgroup, l3group].join(",")]);
+          if (output[group][subgroup] && !isNaN(output[group][subgroup][l3group])) {
+            if (operation == "mean") {
+              min_array.push(output[group][subgroup][l3group] - _error[[group, subgroup, l3group].join(",")]);
+            }
+            else {
+              min_array.push(output[group][subgroup][l3group]);
+            }
+          }
+          if (output[group][subgroup] && !isNaN(output[group][subgroup][l3group])) {
+            if (operation == "mean") {
+              max_array.push(output[group][subgroup][l3group] + _error[[group, subgroup, l3group].join(",")]);
+            }
+            else {
+              max_array.push(output[group][subgroup][l3group]);
+            }
+          }
         }
       }
     }
@@ -35895,7 +35937,7 @@ function prep_specs_summarize(states, groupby, summarize, output) {
   y_encoding = {
     field: "datamations_y",
     type: "quantitative",
-    title: "mean(" + y_axis + ")",
+    title: operation == "median" ? [operation + " of", y_axis] : operation + "(" + y_axis + ")",
     scale: {
       domain: domain,
     },
@@ -35903,12 +35945,12 @@ function prep_specs_summarize(states, groupby, summarize, output) {
 
   meta = {
     axes: groupby.length > 1,
-    description: "Plot mean " + y_axis + " of each group, with errorbar, zoomed in",
+    description: "Plot " + operation + " " + y_axis + " of each group, " + (operation == "mean" ? "with errorbar, " : "") + "zoomed in",
   };
 
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip: tooltip };
   if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color: color, tooltip: tooltip };
-  spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, true);
+  spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, operation == "mean" ? true : false);
   specs_list.push(spec);
 
   return specs_list;

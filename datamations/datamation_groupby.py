@@ -493,14 +493,16 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             for group in groups:
                 for subgroup in subgroups:
                     for l3group in l3groups:
+                        if l3group == "NA":
+                            l3group = float("nan")
                         if subgroup in self._output[y_axis][group] and l3group in self._output[y_axis][group][subgroup]:
                             if self.operations[-1] == "mean":
-                                min_array.append(self._output[y_axis][group][subgroup][l3group] - self._error[y_axis][(group, subgroup, l3group)])
+                                min_array.append(self._output[y_axis][group][subgroup][l3group] - self._error[y_axis][group][subgroup][l3group])
                             else:
                                 min_array.append(self._output[y_axis][group][subgroup][l3group])
                         if subgroup in self._output[y_axis][group] and l3group in self._output[y_axis][group][subgroup]:
                             if self.operations[-1] == "mean":
-                                max_array.append(self._output[y_axis][group][subgroup][l3group] + self._error[y_axis][(group, subgroup, l3group)])
+                                max_array.append(self._output[y_axis][group][subgroup][l3group] + self._error[y_axis][group][subgroup][l3group])
                             else:
                                 max_array.append(self._output[y_axis][group][subgroup][l3group])
             domain = [round(min(min_array), 13), round(max(max_array), 13)]
