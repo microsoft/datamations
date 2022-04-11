@@ -2,7 +2,7 @@
   {
     "height": 300,
     "width": 300,
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "parse": "grid",
       "description": "Initial data"
@@ -34,7 +34,7 @@
     }
   },
   {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "parse": "grid",
       "description": "Group by species"
@@ -94,7 +94,7 @@
     }
   },
   {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "parse": "grid",
       "description": "Group by species, island"
@@ -178,7 +178,7 @@
     }
   },
   {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "parse": "grid",
       "description": "Group by species, island, sex",
@@ -336,7 +336,7 @@
     }
   },
   {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "parse": "jitter",
       "axes": true,
@@ -3470,7 +3470,7 @@
           },
           "title": "sex",
           "scale": {
-            "domain": [0, 4]
+            "domain": [0, 3]
           }
         },
         "y": {
@@ -3511,7 +3511,7 @@
     }
   },
   {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "axes": true,
       "description": "Plot median bill_depth_mm of each group",
@@ -6648,7 +6648,7 @@
           },
           "title": "sex",
           "scale": {
-            "domain": [0, 4]
+            "domain": [0, 3]
           }
         },
         "y": {
@@ -6689,7 +6689,7 @@
     }
   },
   {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "axes": true,
       "description": "Plot median bill_depth_mm of each group, zoomed in"
@@ -9825,7 +9825,7 @@
           },
           "title": "sex",
           "scale": {
-            "domain": [0, 4]
+            "domain": [0, 3]
           }
         },
         "y": {

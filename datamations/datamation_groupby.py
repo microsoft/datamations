@@ -51,11 +51,25 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         self._output = df
         self._error = super(DatamationGroupBy, self).sem()
         return df
-        
+
+    # Override the 'median' function
+    def median(self, axis=None):
+        self._axis = axis
+        self._states.append(self)
+        self._operations.append('median')
+        df = super(DatamationGroupBy, self).median()
+        df = datamation_frame.DatamationFrame(df)
+        df._by = self.states[1]._by
+        df._states = self._states
+        df._operations = self._operations
+        self._output = df
+        self._error = super(DatamationGroupBy, self).sem()
+        return df
+
     # The specs to show summarized points on the chart
     def prep_specs_summarize(self, width=300, height=300):
         x_axis = self.states[1].dtypes.axes[0].name if len(self._by) == 1 else self.states[1].dtypes.axes[0].names[0]
-        y_axis = self.states[1].dtypes.axes[1].values[1] if len(self._by) == 1 else self.states[1].dtypes.axes[1].values[0]
+        y_axis = self._axis if self._axis else self.states[1].dtypes.axes[1].values[1] if len(self._by) == 1 else self.states[1].dtypes.axes[1].values[0]
 
 
         if len(self.states[1].groups.keys()) == 2:
@@ -126,11 +140,17 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         if len(self._by) > 1:
             sort = groups
-            facet_encoding["column"] = { "field": self._by[0], "sort": sort, "type": "ordinal", "title": self._by[0] }
+            if self._axis:
+                facet_encoding["column"] = { "field": self._by[0], "type": "ordinal", "title": self._by[0] }
+            else:
+                facet_encoding["column"] = { "field": self._by[0], "sort": sort, "type": "ordinal", "title": self._by[0] }
 
         if len(self._by) > 2:
             sort = subgroups
-            facet_encoding["row"] = { "field": self._by[1], "sort": sort, "type": "ordinal", "title": self._by[1] }
+            if self._axis:
+                facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
+            else:
+                facet_encoding["row"] = { "field": self._by[1], "sort": sort, "type": "ordinal", "title": self._by[1] }
 
         facet_dims = {
                 "ncol": 1,
@@ -241,13 +261,13 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         meta = { 
             "axes": len(self._by) > 1,
-            "description": "Plot mean " + y_axis + " of each group"
+            "description": "Plot " + self.operations[-1] + " " + y_axis + " of each group"
         }
 
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
-            "title": "mean(" + y_axis + ")",
+            "title": [self.operations[-1] + " of", y_axis] if self._axis else self.operations[-1] + "(" + y_axis + ")",
             "scale": {
             "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
             }
@@ -257,7 +277,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             {
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
-                "title": "mean(" + y_axis + ")"
+                "title": self.operations[-1] + "(" + y_axis + ")"
             }
         ]
         
@@ -332,7 +352,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 }
                 data.append(value)
                 id = id + 1
-        meta['custom_animation'] = 'mean'
+        meta['custom_animation'] = self.operations[-1]
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
@@ -343,19 +363,21 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             {
             "field": "datamations_y_tooltip",
             "type": "quantitative",
-            "title": "mean(" + y_axis + ")"
-            },
-            {
-            "field": "Upper",
-            "type": "nominal",
-            "title": "mean(" + y_axis + ") + standard error"
-            },
-            {
-            "field": "Lower",
-            "type": "nominal",
-            "title": "mean(" + y_axis + ") - standard error"
+            "title": self.operations[-1] + "(" + y_axis + ")"
             }
         ]
+
+        if self.operations[-1] == 'mean':
+            tooltip.append({
+                "field": "Upper",
+                "type": "nominal",
+                "title": self.operations[-1] + "(" + y_axis + ") + standard error"
+            })
+            tooltip.append({
+                "field": "Lower",
+                "type": "nominal",
+                "title": self.operations[-1] + "(" + y_axis + ") - standard error"
+            })
 
         for field in self._by:
             tooltip.append({
@@ -445,14 +467,15 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         meta = { 
             "axes": len(self._by) > 1,
-            "description": "Plot mean " + y_axis + " of each group, with errorbar"
+            "description": "Plot " + self.operations[-1] + " " + y_axis + " of each group, with errorbar"
         }
 
-        spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
-        if len(self._by) > 1:
-            spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
-        spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, True)
-        specs_list.append(spec)
+        if self.operations[-1] == "mean":
+            spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
+            if len(self._by) > 1:
+                spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
+            spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, True)
+            specs_list.append(spec)
 
         # Show the summarized values along with error bars, zoomed in
         if len(self._by) > 2:
@@ -480,7 +503,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
-            "title": "mean(" + y_axis + ")",
+            "title": [self.operations[-1] + " of", y_axis] if self._axis else self.operations[-1] + "(" + y_axis + ")",
             "scale": {
             "domain": domain
             }
@@ -488,12 +511,12 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         meta = { 
             "axes": len(self._by) > 1,
-            "description": "Plot mean " + y_axis + " of each group, with errorbar, zoomed in"
+            "description": "Plot " + self.operations[-1] + " " + y_axis + " of each group" + (", with errorbar" if self.operations[-1] == 'mean' else "") + ", zoomed in"
         }
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
-        spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, True)
+        spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, True if self.operations[-1] == 'mean' else False)
         specs_list.append(spec)
                 
         return specs_list

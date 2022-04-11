@@ -96,7 +96,7 @@ def test_three_variables_frame_specs():
     # median support
     script_dir = os.path.dirname( __file__ )
     specs_file = open(os.path.join(script_dir, '../../sandbox/penguins_median_specs.json'), 'r')
-    #specs = df.groupby(['species', 'island', 'sex']).median('bill_depth_mm').specs()
+    specs = df.groupby(['species', 'island', 'sex']).median('bill_depth_mm').specs()
     #compare_specs_with_file(specs, specs_file)
 
 
