@@ -15,6 +15,7 @@ var data = [];
 var raw_spec = [];
 var penguins = [];
 var medians = [];
+var products = [];
 var groupby_degree_work = [];
 
 const gridSpecInput = {
@@ -133,6 +134,52 @@ describe('Layout Functions', function () {
                d.gemini_id === undefined || d.gemini_id === null;
       });
       assert.equal(invalid.length, 0);
+    });
+  });
+});
+
+describe("products rating", function () {
+  before(function (done) {
+    fs.readFile("../../../../data-raw/products.csv", "utf8", function (err, fileContents) {
+      if (err) throw err;
+      var lines = fileContents.split(/\r?\n/);
+      data = [];
+      for (var line of lines) {
+        if (line.trim()) {
+          var parts = line.split(",");
+          data.push(parts);
+        }
+      }
+      fs.readFile("../../../../sandbox/products_mean_rating.json", "utf8", function (err, fileContents) {
+        if (err) throw err;
+        products = JSON.parse(fileContents);
+        done();
+      });
+    });
+  });
+  context("group by two columns, mean", function () {
+    it("should match", function () {
+      var specs = datamations.specs({ values: data }, ["Year", "Category"], "Average of Rating", {
+        2015: {
+          Accessories: 0.631666666666667,
+          Bikes: 0.3875,
+          Clothing: 0.34625,
+          Components: 0.495714285714286,
+        },
+        2016: {
+          Accessories: 0.875,
+          Bikes: 0.3675,
+          Clothing: 0.48375,
+          Components: 0.424285714285714,
+        },
+        2017: {
+          Accessories: 0.936666666666667,
+          Bikes: 0.4825,
+          Clothing: 0.56,
+          Components: 0.501428571428571,
+        },
+      });
+      //compare_specs_with_file(specs, products);
     });
   });
 });
