@@ -1071,7 +1071,7 @@ export function specs(data, groupby, summarize, output) {
   for (var i = 1; i < data.values.length; i++) {
     var value = {};
     for (var j = 0; j < data.values[0].length; j++) {
-      value[data.values[0][j]] = data.values[i][j];
+      value[data.values[0][j].trim()] = data.values[i][j];
     }
     values.push(value);
   }
