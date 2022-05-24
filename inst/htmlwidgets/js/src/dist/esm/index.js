@@ -35878,9 +35878,9 @@ function prep_specs_summarize(states, groupby, summarize, output) {
   }
 
   // Show the summarized values along with error bars, zoomed in
+  var min_array = [];
+  var max_array = [];
   if (groupby.length > 2) {
-    var min_array = [];
-    var max_array = [];
     for (group of groups) {
       for (subgroup of subgroups) {
         for (var l3group of l3groups) {
@@ -35911,27 +35911,59 @@ function prep_specs_summarize(states, groupby, summarize, output) {
     });
     var domain = [lodash.round(Math.min(...min_array), 13), lodash.round(Math.max(...max_array), 13)];
   } else if (groupby.length > 1) {
-    domain = [
-      lodash.round(
-        Math.min(
-          output[groups[0]][subgroups[0]] - _error[[groups[0], subgroups[0]].join(",")],
-          output[groups[1]][subgroups[1]] - _error[[groups[0], subgroups[0]].join(",")]
-        ),
-        13
-      ),
-      lodash.round(
-        Math.max(
-          output[groups[1]][subgroups[0]] + _error[[groups[1], subgroups[0]].join(",")],
-          output[groups[1]][subgroups[1]] + _error[[groups[1], subgroups[1]].join(",")]
-        ),
-        13
-      ),
-    ];
+    for (group of groups) {
+      for (subgroup of subgroups) {
+        if (output[group][subgroup] && !isNaN(output[group][subgroup])) {
+          if (operation == "mean") {
+            min_array.push(output[group][subgroup] - _error[[group, subgroup].join(",")]);
+          }
+          else {
+            min_array.push(output[group][subgroup]);
+          }
+        }
+        if (output[group][subgroup] && !isNaN(output[group][subgroup])) {
+          if (operation == "mean") {
+            max_array.push(output[group][subgroup] + _error[[group, subgroup].join(",")]);
+          }
+          else {
+            max_array.push(output[group][subgroup]);
+          }
+        }
+      }
+    }
+    min_array = min_array.filter((item) => {
+      return !isNaN(item);
+    });
+    max_array = max_array.filter((item) => {
+      return !isNaN(item);
+    });
+    domain = [lodash.round(Math.min(...min_array), 13), lodash.round(Math.max(...max_array), 13)];
   } else {
-    domain = [
-      lodash.round(Math.min(output[groups[0]] - _error[groups[0]], output[groups[1]] - _error[groups[1]]), 13),
-      lodash.round(Math.max(output[groups[0]] + _error[groups[0]], output[groups[1]] + _error[groups[1]]), 13),
-    ];
+    for (group of groups) {
+      if (output[group] && !isNaN(output[group])) {
+        if (operation == "mean") {
+          min_array.push(output[group] - _error[group]);
+        }
+        else {
+          min_array.push(output[group]);
+        }
+      }
+      if (output[group] && !isNaN(output[group])) {
+        if (operation == "mean") {
+          max_array.push(output[group] + _error[group]);
+        }
+        else {
+          max_array.push(output[group]);
+        }
+      }
+    }
+    min_array = min_array.filter((item) => {
+      return !isNaN(item);
+    });
+    max_array = max_array.filter((item) => {
+      return !isNaN(item);
+    });
+    domain = [lodash.round(Math.min(...min_array), 13), lodash.round(Math.max(...max_array), 13)];
   }
 
   y_encoding = {
@@ -35992,7 +36024,7 @@ function specs(data, groupby, summarize, output) {
   for (var i = 1; i < data.values.length; i++) {
     var value = {};
     for (var j = 0; j < data.values[0].length; j++) {
-      value[data.values[0][j]] = data.values[i][j];
+      value[data.values[0][j].trim()] = data.values[i][j];
     }
     values.push(value);
   }
@@ -36113,6 +36145,7 @@ function App(id, { specs, autoPlay = false, frameDur, frameDel }) {
     // load or set data
     if (specs) {
       vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
+      console.log("vega specs:", vegaLiteSpecs);
     }
 
     // save raw specs to use for facet axes drawing
