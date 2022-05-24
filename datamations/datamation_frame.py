@@ -56,7 +56,7 @@ class DatamationFrame(pd.DataFrame):
     def groupby(self, by):
         self._by = [by] if type(by) == str else by
         self._operations.append('groupby')
-        df = super(DatamationFrame, self).groupby(by=by)
+        df = super(DatamationFrame, self).groupby(by=by, dropna=False)
         return datamation_groupby.DatamationGroupBy(self, by)
 
     # The second spec in the json to show initial points divided into groups.
@@ -84,8 +84,8 @@ class DatamationFrame(pd.DataFrame):
         if len(self._by) > 1:
             facet_encoding["column"] = { "field": self._by[0], "type": "ordinal", "title": self._by[0] }
 
-        if len(self._by) > 2:
-            facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
+        # if len(self._by) > 2:
+        #     facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
 
         facet_dims = {
             "ncol": 1,
@@ -109,7 +109,10 @@ class DatamationFrame(pd.DataFrame):
             count = {}
             start = {}
             for key in self.states[1].groups.keys():
-                col, row = key
+                if len(self._by) > 2:
+                    col, row, third = key
+                else:
+                    col, row = key
                 if col not in cols:
                     cols.append(col)
                 if col not in count:
@@ -144,18 +147,33 @@ class DatamationFrame(pd.DataFrame):
             rows = []
             count = {}
             data = []
-            start = 1
+            start = {}
             for key in self.states[1].groups.keys():
-                col, row = key
+                if len(self._by) > 2:
+                    col, row, third = key
+                else:
+                    col, row = key
                 if col not in cols:
                     cols.append(col)
                 if row not in rows:
                     rows.append(row)
                 if col not in count:
                     count[col] = 0
-                count[col] = count[col] + len(self.states[1].groups[key])
-                data.append({self._by[0]: col, self._by[1]: row,'n': len(self.states[1].groups[key]), 'gemini_ids': list(range(start, start+len(self.states[1].groups[key]), 1))})
-                start  = start + len(self.states[1].groups[key])
+                k = col + "," + row
+                if k not in count:
+                    count[k] = 0
+                count[k] = count[k] + len(self.states[1].groups[key])
+                data.append(k)
+
+            data = sorted(set(data))
+
+            id = 1
+            for key in data:
+                if key not in start:
+                    start[key] = id
+                id = id + count[key]
+
+            data = list(map(lambda key: {self._by[0]: key.split(',')[0], self._by[1]: key.split(',')[1],'n': count[key], 'gemini_ids': list(range(start[key], start[key]+count[key], 1))}, data))
 
             facet_dims = {
                 "ncol": len(cols),
@@ -163,13 +181,13 @@ class DatamationFrame(pd.DataFrame):
             }
             meta = { 
                     'parse': "grid",
-                    'description': "Group by " + ', '.join(self._by),
+                    'description': "Group by " + ', '.join(self._by[0:2]),
                     "splitField": self._by[1],
                     "axes": True
             }
 
             tooltip = []
-            for field in self._by:
+            for field in self._by[0:2]:
                 tooltip.append({
                     "field": field,
                     "type": "nominal"
@@ -187,8 +205,95 @@ class DatamationFrame(pd.DataFrame):
                 },
                 "tooltip": tooltip
             }
+
+            if len(self._by) > 2:
+                meta = {
+                    'parse': "grid",
+                    'description': "Group by " + self._by[0] + ", " + self._by[1],
+                }
+
+                facet_dims = {
+                    'ncol': len(self._by),
+                    'nrow': len(self._by),
+                }
+
+                facet_encoding = {}
+                facet_encoding["column"] = { 'field': self._by[0], 'type': "ordinal", 'title': self._by[0] }
+                facet_encoding["row"] = { 'field': self._by[1], 'type': "ordinal", 'title': self._by[1] }
+
+                spec_encoding = {
+                    'x': x_encoding,
+                    'y': y_encoding,
+                    'tooltip': tooltip,
+                }
+
             spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
             specs_list.append(spec)
+
+            if len(self._by) > 2:
+                meta = { 
+                    'parse': "grid",
+                    'description': "Group by " + ', '.join(self._by),
+                    "splitField": self._by[2],
+                    "axes": True
+                }
+
+                cols = []
+                rows = []
+                count = {}
+                data = []
+                start = {}
+                for key in self.states[1].groups.keys():
+                    if len(self._by) > 2:
+                        col, row, third = key
+                    else:
+                        col, row = key
+                    if col not in cols:
+                        cols.append(col)
+                    if pd.isna(third):
+                        if "NA" not in rows:
+                            rows.append("NA")
+                    else:
+                        if third not in rows:
+                            rows.append(third)
+                    if col not in count:
+                        count[col] = 0
+                    k = ','.join(map(lambda x: "NA" if pd.isna(x) else str(x), [col, row, third]))
+                    if k not in count:
+                        count[k] = 0
+                    count[k] = count[k] + len(self.states[1].groups[key])
+                    data.append(k)
+
+                id = 1
+                for key in data:
+                    if key not in start:
+                        start[key] = id
+                    id = id + count[key]
+
+                data = list(map(lambda key: {self._by[0]: key.split(',')[0], self._by[1]: key.split(',')[1], self._by[2]: key.split(',')[2], 'n': count[key], 'gemini_ids': start[key] if count[key] == 1 else list(range(start[key], start[key]+count[key], 1))}, data))
+
+                tooltip = []
+                for field in self._by:
+                    tooltip.append({
+                        "field": field,
+                        "type": "nominal"
+                    })
+
+                spec_encoding = {
+                    'x': x_encoding,
+                    'y': y_encoding,
+                    'color': {
+                        'field': self._by[2],
+                        'type': "nominal",
+                        'legend': {
+                            'values': rows,
+                        },
+                    },
+                    'tooltip': tooltip,
+                }
+
+                spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+                specs_list.append(spec)
         else:            
             cols = []
             count = {}
@@ -258,19 +363,19 @@ class DatamationFrame(pd.DataFrame):
                 'vega-lite': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/vega-lite/vega-lite',
                 'vega-embed': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/vega-embed/vega-embed',
                 gemini: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/gemini/gemini.web',
-                config: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/config',
-                utils: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/utils',
-                layout: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/layout',
-                'hack-facet-view': 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/hack-facet-view',
-                app: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/app'
+                html2canvas: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/html2canvas.min',
+                gifshot: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/gifshot.min',
+                download2: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/js/download2',
+                datamations: 'https://cdn.jsdelivr.net/gh/microsoft/datamations@include_externals/inst/htmlwidgets/js/src/dist/datamations.min'
             }});
 
             (function(element) {
                 element.append($('<div>').html(`
+                <link href="https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/css/fa-all.min.css" rel="stylesheet" type="text/css">
                 <link href="https://cdn.jsdelivr.net/gh/microsoft/datamations@main/inst/htmlwidgets/css/datamationSandDance.css" rel="stylesheet" type="text/css">
                 <style type="text/css">
                     .vega-vis-wrapper > div {
-                        position: relative;
+                        position: absolute
                     }
                 </style>
                 <div class="flex-wrap">
@@ -278,7 +383,7 @@ class DatamationFrame(pd.DataFrame):
                     <div class="controls-wrapper">
                     <div class="control-bar">
                         <div class="button-wrapper">
-                        <button onclick="window.%s.play('%s')">Replay</button>
+                        <button class="replay-btn" onclick="window.%s.play('%s')">Replay</button>
                         </div>
                         <div class="slider-wrapper">
                         <input
@@ -289,27 +394,35 @@ class DatamationFrame(pd.DataFrame):
                             onchange="window.%s.onSlide('%s')"
                         />
                         </div>
-                    </div>
-                    <div class="description"></div>
+                        <div class="button-wrap">
+                            <button class="export-btn" onclick="%s.exportGif(true)">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
                     </div>
                     
-                    <div class="vega-vis-wrapper">
-                    <div class="vega-for-axis"></div>
-                    <div class="vega-other-layers"></div>
-                    <div class="vega-vis"></div>
+                    <div class="export-wrapper">
+                        <div class="description"></div>
+                        <div class="vega-vis-wrapper">
+                            <div class="vega-for-axis"></div>
+                            <div class="vega-other-layers"></div>
+                            <div class="vega-vis"></div>
+                        </div>
                     </div>
                 </div>
                 </div>
                 `));
 
-                require(['d3', 'vega', 'vega-util', 'vega-lite', 'vega-embed', 'gemini', 'app', 'utils', 'layout', 'config', 'hack-facet-view'], function(d3, vega, vegaUtil, vegaLite, vegaEmbed, gemini, app, utils, layout, config, hackFacetView) {
+                require(['d3', 'vega', 'vega-util', 'vega-lite', 'vega-embed', 'gemini', 'html2canvas', 'gifshot', 'download2', 'datamations'], function(d3, vega, vegaUtil, vegaLite, vegaEmbed, gemini, html2canvas, gifshot, download2, datamations) {
                     window.d3 = d3
                     window.vegaEmbed = vegaEmbed
                     window.gemini = gemini
+                    window.html2canvas = html2canvas
+                    window.gifshot = gifshot
                     window.%s = datamations.App("%s", {specs: %s, autoPlay: true});
                 });            
             })(element);
-        """ % (app, app, app, app, app, app, app, json.dumps(self.specs()))))
+        """ % (app, app, app, app, app, app, app, app, json.dumps(self.specs()))))
 
         # returns an object with the final output along with the internal states and operations
         return Datamation(self._states, self._operations, self)

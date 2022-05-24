@@ -2,6 +2,8 @@
 # 
 
 from datamations import *
+from palmerpenguins import load_penguins
+from pytest import approx
 
 def test_datamation_groupby():
     df = small_salary().df
@@ -50,3 +52,15 @@ def test_datamation_groupby_multiple():
     assert mean.Salary.PhD.Academia == 85.55796571969728
     assert mean.Salary.PhD.Industry == 93.08335885824636
     
+    # Group by species, island, sex
+    df = DatamationFrame(load_penguins()) 
+    mean = df.groupby(['species', 'island', 'sex']).mean()
+
+    assert "groupby" in mean.operations
+    assert "mean" in mean.operations
+    
+    assert len(mean.states) == 2
+    assert df.equals(mean.states[0])
+    
+    assert mean.bill_length_mm.Adelie.Biscoe.male == approx(40.5909090909091)
+    assert mean.bill_length_mm.Adelie.Biscoe.female == approx(37.35909090909092)

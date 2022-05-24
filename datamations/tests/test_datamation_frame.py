@@ -2,6 +2,7 @@
 # 
 import os, json
 from datamations import *
+from palmerpenguins import load_penguins
 from pytest import approx
 
 def compare_specs_with_file(specs, specs_file):
@@ -81,6 +82,21 @@ def test_datamation_frame_specs():
     specs = df.groupby(['Work', 'Degree']).mean().specs()
     script_dir = os.path.dirname( __file__ )
     specs_file = open(os.path.join(script_dir, '../../inst/specs/groupby_work_degree.json'), 'r')
+    compare_specs_with_file(specs, specs_file)
+
+
+def test_three_variables_frame_specs():
+    # three-variable grouping
+    df = DatamationFrame(load_penguins()) 
+    script_dir = os.path.dirname( __file__ )
+    specs_file = open(os.path.join(script_dir, '../../sandbox/penguins_three_groups.json'), 'r')
+    specs = df.groupby(['species', 'island', 'sex']).mean('bill_length_mm').specs()
+    compare_specs_with_file(specs, specs_file)
+
+    # median support
+    script_dir = os.path.dirname( __file__ )
+    specs_file = open(os.path.join(script_dir, '../../sandbox/penguins_median_specs.json'), 'r')
+    specs = df.groupby(['species', 'island', 'sex']).median('bill_depth_mm').specs()
     compare_specs_with_file(specs, specs_file)
 
 
