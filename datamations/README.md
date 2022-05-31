@@ -8,8 +8,12 @@ pip install -e ../
 ```
 
 ## Usage
+To get started, start Jupyter server and open a notebook:
+```
+jupyter notebook ../notebooks/Datamations.ipynb
+```
 
-[datamation_sanddance()](https://github.com/microsoft/datamations/blob/main/datamations/datamation_frame.py#L127) is the main function that a user will call to generate a datamation.
+[datamation_sanddance()](https://github.com/microsoft/datamations/blob/main/datamations/datamation_frame.py#L350) is the main function that a user will call to generate a datamation.
 
 ```python
 from datamations import *
