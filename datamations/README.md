@@ -1,3 +1,13 @@
+
+## Installation
+
+You can install datamations from GitHub with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("microsoft/datamations")
+```
+
 # datamation_sanddance()
 
 [datamation_sanddance()](https://github.com/microsoft/datamations/blob/main/datamations/datamation_frame.py#L127) is the main function that a user will call to generate a datamation.
