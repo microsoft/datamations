@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation
 # 
 
-from datamations import *
+from datamations import small_salary
 
 def test_small_salary(capsys):
     df = small_salary().df

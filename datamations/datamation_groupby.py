@@ -2,11 +2,10 @@
 #
 # Create a subclass from a pandas DataFrameGroupBy.
 #
-import json
 import math
 import pandas as pd
-from . import utils
-from . import datamation_frame
+from datamations import utils
+from datamations import datamation_frame
 
 # The subclass of DataFrameGroupBy
 class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
@@ -26,7 +25,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         return cls(*args, **kwargs)
 
     def __init__(self, obj, by, keys=None, axis=0, level=None):
-        self._by = [by] if type(by) == str else by
+        self._by = [by] if isinstance(by) == str else by
         super(DatamationGroupBy, self).__init__(obj=obj, keys=self._by, dropna=False)
         self._states = list(obj.states)
         self._operations = list(obj.operations)
@@ -74,7 +73,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         return df
 
     # The specs to show summarized points on the chart
-    def prep_specs_summarize(self, width=300, height=300):
+    def prep_specs_summarize(self):
         x_axis = self.states[1].dtypes.axes[0].name if len(self._by) == 1 else self.states[1].dtypes.axes[0].names[0]
         y_axis = self._axis if self._axis else self.states[1].dtypes.axes[1].values[1] if len(self._by) == 1 else self.states[1].dtypes.axes[1].values[0]
 
@@ -84,7 +83,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         else:
             groups = list(sorted(set(map(lambda x: x[0], self.states[1].groups.keys()))))
             subgroups = list(sorted(set(map(lambda x: x[1], self.states[1].groups.keys()))))
-            if (len(self._by) > 2):
+            if len(self._by) > 2:
                 l3groups = []
                 for key in list(map(lambda x: "NA" if pd.isna(x[2]) else str(x[2]), self.states[1].groups.keys())):
                     if key not in l3groups:
@@ -94,7 +93,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         labels = [subgroups[0] if len(self._by) > 1 else groups[0], subgroups[1] if len(self._by) > 1 else groups[1]]
 
-        if (len(self._by) > 2):
+        if len(self._by) > 2:
             sublabel = "round(datum.label) == 1 ? '" + l3groups[0] + "' : " + "round(datum.label) == 2 ? '" + l3groups[1] + "' : '" + l3groups[2] + "'"
 
         x_encoding = {
@@ -202,7 +201,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         self._by[1]: self.states[0][self._by[1]][index],
                         "datamations_x": 1 + l3groups.index("NA" if pd.isna(self.states[0][self._by[2]][index]) else self.states[0][self._by[2]][index]) if len(self._by) > 2 else 1 if self.states[0][self._by[1]][index] == subgroups[0]  else 2,
                     }
-                    if (not pd.isna(self.states[0][y_axis][index])):
+                    if not pd.isna(self.states[0][y_axis][index]):
                         value["datamations_y"] = self.states[0][y_axis][index]
                         value["datamations_y_tooltip"] = self.states[0][y_axis][index]   
 
@@ -320,7 +319,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                             value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")]
                         else:
                             value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]]
-                            value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] if pd.isna(self.states[0][self._by[2]][index]) == False else "NA"
+                            value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] if pd.isna(self.states[0][self._by[2]][index]) is False else "NA"
                     else:
                         value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
                         value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]  
@@ -418,15 +417,15 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                             if self.operations[-1] == "mean":
                                 value["Lower"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")] - (0 if pd.isna(self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")]) else self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")])
                                 value["Upper"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")] + (0 if pd.isna(self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")]) else self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]].values[l3groups.index("NA")])
-                            if (self.operations[-1] == "mean" and pd.isna(self.states[0][y_axis][index]) == False):
+                            if (self.operations[-1] == "mean" and pd.isna(self.states[0][y_axis][index]) is False):
                                 value["datamations_y_raw"] = self.states[0][y_axis][index]
                         else:
                             value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]]
-                            value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] if pd.isna(self.states[0][self._by[2]][index]) == False else "NA"
+                            value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] if pd.isna(self.states[0][self._by[2]][index]) is False else "NA"
                             if self.operations[-1] == "mean":
                                 value["Lower"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] - self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]]
                                 value["Upper"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] + self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]]
-                            if (self.operations[-1] == "mean" and pd.isna(self.states[0][y_axis][index]) == False):
+                            if (self.operations[-1] == "mean" and pd.isna(self.states[0][y_axis][index]) is False):
                                 value["datamations_y_raw"] = self.states[0][y_axis][index]
                     else:
                         value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
@@ -533,7 +532,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
-        spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, True if self.operations[-1] == 'mean' else False)
+        spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, self.operations[-1] == 'mean')
         specs_list.append(spec)
                 
         return specs_list

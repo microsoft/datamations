@@ -3,12 +3,11 @@
 # Create a subclass from a pandas DataFrame.
 #
 import time
-import pandas as pd
-from . import datamation_groupby
-from . import utils
-
 import json
-from IPython.core.display import display, Javascript
+import pandas as pd
+from IPython.display import display, Javascript
+from datamations import datamation_groupby, utils
+
 
 # A class to return the final results
 class Datamation:
@@ -35,11 +34,12 @@ class DatamationFrame(pd.DataFrame):
         return cls(*args, **kwargs)
 
     def __init__(self, data, index=None, columns=None, dtype=None, copy=True):
-        super(DatamationFrame, self).__init__(data=data,
-                                      index=index,
-                                      columns=columns,
-                                      dtype=dtype,
-                                      copy=copy)
+        super(DatamationFrame, self).__init__(data, index, columns, dtype)
+        self._data=data
+        self._index=index
+        self._columns=columns
+        self._dtype=dtype
+        self._copy=copy
         self._states = []
         self._states.append(data)
         self._operations = []
@@ -54,13 +54,13 @@ class DatamationFrame(pd.DataFrame):
 
     # Override the 'groupby' function
     def groupby(self, by):
-        self._by = [by] if type(by) == str else by
+        self._by = [by] if isinstance(by) == str else by
         self._operations.append('groupby')
         df = super(DatamationFrame, self).groupby(by=by, dropna=False)
         return datamation_groupby.DatamationGroupBy(self, by)
 
     # The second spec in the json to show initial points divided into groups.
-    def prep_specs_group_by(self, width=300, height=300):
+    def prep_specs_group_by(self):
         x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
         y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
 
@@ -319,7 +319,7 @@ class DatamationFrame(pd.DataFrame):
         return specs_list
 
     # The first spec in the json to layout all the points in one frame.
-    def prep_specs_data(self, width=300, height=300):
+    def prep_specs_data(self):
         x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
         y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
 

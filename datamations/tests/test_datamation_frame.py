@@ -1,7 +1,10 @@
 # Copyright (c) Microsoft Corporation
 # 
-import os, json
-from datamations import *
+import os
+import json
+from datamations import DatamationFrame
+from datamations import DatamationGroupBy
+from datamations import small_salary
 from palmerpenguins import load_penguins
 from pytest import approx
 

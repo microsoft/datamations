@@ -1,7 +1,8 @@
 # Copyright (c) Microsoft Corporation
 # 
 
-from datamations import *
+from datamations import DatamationFrame
+from datamations import small_salary
 from palmerpenguins import load_penguins
 from pytest import approx
 
