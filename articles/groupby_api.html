@@ -50,10 +50,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Examples.html">Examples</a>
+      <a href="../articles/details.html">datamations steps and conventions</a>
     </li>
     <li>
-      <a href="../articles/details.html">datamations steps and conventions</a>
+      <a href="../articles/Examples.html">Examples</a>
     </li>
     <li>
       <a href="../articles/finer_control.html">Controlling appearance with ggplot2</a>
@@ -86,7 +86,7 @@
 
       
 
-      </header><script src="groupby_api_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="groupby_api_files/font-awesome-5.15.3/css/all.min.css" rel="stylesheet">
+      </header><link href="groupby_api_files/font-awesome-5.15.3/css/all.min.css" rel="stylesheet">
 <link href="groupby_api_files/font-awesome-5.15.3/css/v4-shims.min.css" rel="stylesheet">
 <script src="groupby_api_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="groupby_api_files/vega-5.20.2/vega.js"></script><script src="groupby_api_files/vega-lite-5.1.0/vega-lite.js"></script><script src="groupby_api_files/vega-embed-6.17.0/vega-embed.js"></script><script src="groupby_api_files/d3-6.7.0/d3.js"></script><script src="groupby_api_files/gemini-0.1.0/gemini.web.js"></script><script src="groupby_api_files/gifshot-0.0.1/gifshot.min.js"></script><script src="groupby_api_files/html2canvas-0.0.1/html2canvas.min.js"></script><script src="groupby_api_files/download2-0.0.1/download2.js"></script><script src="groupby_api_files/datamations-0.0.1/datamations.min.js"></script><link href="groupby_api_files/css-0.0.1/datamationSandDance.css" rel="stylesheet">
 <link href="groupby_api_files/fa-icons-0.0.1/fa-all.min.css" rel="stylesheet">
@@ -103,11 +103,14 @@
 
     
     
-<p>datamations allows the visualization of <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by</a></code> calls containing up to three variables.</p>
+<p>datamations allows the visualization of <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by</a></code>
+calls containing up to three variables.</p>
 <div class="section level2">
 <h2 id="group_by-api">group_by api<a class="anchor" aria-label="anchor" href="#group_by-api"></a>
 </h2>
-<p>The <code>datamations_sanddance</code> call can finish with a <code>group_by</code> call, displaying proportional data faceted by the grouping variables.</p>
+<p>The <code>datamations_sanddance</code> call can finish with a
+<code>group_by</code> call, displaying proportional data faceted by the
+grouping variables.</p>
 </div>
 <div class="section level2">
 <h2 id="single-grouping-variable">Single grouping variable<a class="anchor" aria-label="anchor" href="#single-grouping-variable"></a>
@@ -127,17 +130,17 @@
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Work, Degree)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-4bbb5b5278661a29c619" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-88677d0a204390a499f9" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget4bbb5b5278661a29c619.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget88677d0a204390a499f9.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget4bbb5b5278661a29c619.onSlide('htmlwidget4bbb5b5278661a29c619')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget88677d0a204390a499f9.onSlide('htmlwidget88677d0a204390a499f9')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget4bbb5b5278661a29c619.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget88677d0a204390a499f9.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -152,7 +155,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-4bbb5b5278661a29c619">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-88677d0a204390a499f9">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -335,17 +338,17 @@
 <span class="st">"penguins %&gt;%
   group_by(sex, island, species)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-59d30d9560e9120edb9a" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-fcc930d72d9e79e1c0a1" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget59d30d9560e9120edb9a.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgetfcc930d72d9e79e1c0a1.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget59d30d9560e9120edb9a.onSlide('htmlwidget59d30d9560e9120edb9a')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetfcc930d72d9e79e1c0a1.onSlide('htmlwidgetfcc930d72d9e79e1c0a1')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget59d30d9560e9120edb9a.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgetfcc930d72d9e79e1c0a1.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -360,7 +363,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-59d30d9560e9120edb9a">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-fcc930d72d9e79e1c0a1">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -726,7 +729,8 @@
 <div class="section level2">
 <h2 id="summarizing-and-filtering-by-group">summarizing and filtering by group<a class="anchor" aria-label="anchor" href="#summarizing-and-filtering-by-group"></a>
 </h2>
-<p>The <code>datamations_sanddance</code> call can also show the filtering and summarization of data based on group facets.</p>
+<p>The <code>datamations_sanddance</code> call can also show the
+filtering and summarization of data based on group facets.</p>
 <div class="section level3">
 <h3 id="group_by-into-filter">group_by into filter<a class="anchor" aria-label="anchor" href="#group_by-into-filter"></a>
 </h3>
@@ -735,17 +739,17 @@
   group_by(Degree) %&gt;%
   filter(Salary &gt; 90)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-237551987ce7458da383" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-a8bbc350d43cbf615b56" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget237551987ce7458da383.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgeta8bbc350d43cbf615b56.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget237551987ce7458da383.onSlide('htmlwidget237551987ce7458da383')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgeta8bbc350d43cbf615b56.onSlide('htmlwidgeta8bbc350d43cbf615b56')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget237551987ce7458da383.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgeta8bbc350d43cbf615b56.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -760,7 +764,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-237551987ce7458da383">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-a8bbc350d43cbf615b56">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -909,17 +913,17 @@
   group_by(Degree) %&gt;%
   summarize(mean = mean(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-e96eb63a3756d92b6b0c" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-cff9c6cb1efda5aa7015" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgete96eb63a3756d92b6b0c.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgetcff9c6cb1efda5aa7015.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgete96eb63a3756d92b6b0c.onSlide('htmlwidgete96eb63a3756d92b6b0c')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetcff9c6cb1efda5aa7015.onSlide('htmlwidgetcff9c6cb1efda5aa7015')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgete96eb63a3756d92b6b0c.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgetcff9c6cb1efda5aa7015.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -934,7 +938,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-e96eb63a3756d92b6b0c">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-cff9c6cb1efda5aa7015">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -4757,17 +4761,17 @@
   group_by(sex, island, species) %&gt;%
   summarize(mean = median(bill_length_mm))" %&gt;%
   datamation_sanddance()
-<div id="htmlwidget-376c9c3ee8e3f395af1c" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-93420cfbd3dbaa37300f" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget376c9c3ee8e3f395af1c.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget93420cfbd3dbaa37300f.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget376c9c3ee8e3f395af1c.onSlide('htmlwidget376c9c3ee8e3f395af1c')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget93420cfbd3dbaa37300f.onSlide('htmlwidget93420cfbd3dbaa37300f')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget376c9c3ee8e3f395af1c.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget93420cfbd3dbaa37300f.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -4782,7 +4786,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-376c9c3ee8e3f395af1c">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-93420cfbd3dbaa37300f">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -14695,7 +14699,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

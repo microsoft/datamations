@@ -50,10 +50,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Examples.html">Examples</a>
+      <a href="../articles/details.html">datamations steps and conventions</a>
     </li>
     <li>
-      <a href="../articles/details.html">datamations steps and conventions</a>
+      <a href="../articles/Examples.html">Examples</a>
     </li>
     <li>
       <a href="../articles/finer_control.html">Controlling appearance with ggplot2</a>
@@ -86,7 +86,7 @@
 
       
 
-      </header><script src="finer_control_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="finer_control_files/font-awesome-5.15.3/css/all.min.css" rel="stylesheet">
+      </header><link href="finer_control_files/font-awesome-5.15.3/css/all.min.css" rel="stylesheet">
 <link href="finer_control_files/font-awesome-5.15.3/css/v4-shims.min.css" rel="stylesheet">
 <script src="finer_control_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="finer_control_files/vega-5.20.2/vega.js"></script><script src="finer_control_files/vega-lite-5.1.0/vega-lite.js"></script><script src="finer_control_files/vega-embed-6.17.0/vega-embed.js"></script><script src="finer_control_files/d3-6.7.0/d3.js"></script><script src="finer_control_files/gemini-0.1.0/gemini.web.js"></script><script src="finer_control_files/gifshot-0.0.1/gifshot.min.js"></script><script src="finer_control_files/html2canvas-0.0.1/html2canvas.min.js"></script><script src="finer_control_files/download2-0.0.1/download2.js"></script><script src="finer_control_files/datamations-0.0.1/datamations.min.js"></script><link href="finer_control_files/css-0.0.1/datamationSandDance.css" rel="stylesheet">
 <link href="finer_control_files/fa-icons-0.0.1/fa-all.min.css" rel="stylesheet">
@@ -103,8 +103,10 @@
 
     
     
-<p>If you would like to change the default conventions, or to match an existing plot style, datamations can take ggplot2 code as input.</p>
-<p>For example, to match this plot, which has Work on the x-axis and Degree in row facets:</p>
+<p>If you would like to change the default conventions, or to match an
+existing plot style, datamations can take ggplot2 code as input.</p>
+<p>For example, to match this plot, which has Work on the x-axis and
+Degree in row facets:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datamations</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
@@ -117,7 +119,9 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span>rows <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">Degree</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="finer_control_files/figure-html/ggplot2-existing-plot-1.png" width="2187.5"></p>
-<p>Simply define the code and pass to <code><a href="../reference/datamation_sanddance.html">datamation_sanddance()</a></code>, which will produce an animation with desired plot layout.</p>
+<p>Simply define the code and pass to
+<code><a href="../reference/datamation_sanddance.html">datamation_sanddance()</a></code>, which will produce an animation
+with desired plot layout.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Work, Degree) %&gt;%
@@ -126,17 +130,17 @@
   geom_point() + 
   facet_grid(rows = vars(Degree))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-f97e366c7ac8d2a85e24" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-beca1a351c06d95aa394" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgetf97e366c7ac8d2a85e24.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgetbeca1a351c06d95aa394.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetf97e366c7ac8d2a85e24.onSlide('htmlwidgetf97e366c7ac8d2a85e24')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetbeca1a351c06d95aa394.onSlide('htmlwidgetbeca1a351c06d95aa394')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgetf97e366c7ac8d2a85e24.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgetbeca1a351c06d95aa394.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -151,7 +155,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-f97e366c7ac8d2a85e24">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-beca1a351c06d95aa394">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -4509,14 +4513,21 @@
       ]
     }
   }
-]},"evals":[],"jsHooks":[]}</script><p>When ggplot2 code is provided, the order of animation is not determined by the order in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>, but by the plot layout. Variables are first animated by what’s in the column facets, then the row facets, by the x-axis, and finally by color.</p>
+]},"evals":[],"jsHooks":[]}</script><p>When ggplot2 code is provided, the order of animation is not
+determined by the order in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>, but by the plot
+layout. Variables are first animated by what’s in the column facets,
+then the row facets, by the x-axis, and finally by color.</p>
 <p>Some limitations:</p>
 <ul>
 <li>
-<code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap()</a></code> is not supported - please use <code><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid()</a></code>
+<code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap()</a></code> is not supported - please use
+<code><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid()</a></code>
 </li>
-<li>datamations expects different variables in the column and row facets than in the x-axis. datamations generated that do not match this layout may look different than the final plot!</li>
-<li>Only <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code> is supported, e.g. specifying <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar()</a></code> will not produce a bar in the datamation.</li>
+<li>datamations expects different variables in the column and row facets
+than in the x-axis. datamations generated that do not match this layout
+may look different than the final plot!</li>
+<li>Only <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code> is supported, e.g. specifying
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar()</a></code> will not produce a bar in the datamation.</li>
 </ul>
 </div>
 
@@ -4535,7 +4546,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

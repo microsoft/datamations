@@ -1,4 +1,5 @@
-import { nodeResolve } from '@rollup/plugin-node-resolve';
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 import babel from '@rollup/plugin-babel';
 import pkg from './package.json';
@@ -10,7 +11,8 @@ export default [
     input,
     external: ["d3"], // saying that you requiring d3-array
     plugins: [
-      nodeResolve(),
+      resolve(),
+      commonjs(),
       babel({
         babelHelpers: 'bundled',
       }),
@@ -30,7 +32,7 @@ export default [
   {
     input,
     external: ["d3"],
-    plugins: [nodeResolve()],
+    plugins: [resolve(), commonjs()],
     output: [
       {
         dir: 'dist/esm',

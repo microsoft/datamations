@@ -113,6 +113,7 @@ export default function App(id, { specs, autoPlay = false, frameDur, frameDel })
     // load or set data
     if (specs) {
       vegaLiteSpecs = JSON.parse(JSON.stringify(specs));
+      console.log("vega specs:", vegaLiteSpecs);
     }
 
     // save raw specs to use for facet axes drawing

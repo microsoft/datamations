@@ -50,10 +50,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Examples.html">Examples</a>
+      <a href="../articles/details.html">datamations steps and conventions</a>
     </li>
     <li>
-      <a href="../articles/details.html">datamations steps and conventions</a>
+      <a href="../articles/Examples.html">Examples</a>
     </li>
     <li>
       <a href="../articles/finer_control.html">Controlling appearance with ggplot2</a>
@@ -86,7 +86,7 @@
 
       
 
-      </header><script src="variable_types_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="variable_types_files/font-awesome-5.15.3/css/all.min.css" rel="stylesheet">
+      </header><link href="variable_types_files/font-awesome-5.15.3/css/all.min.css" rel="stylesheet">
 <link href="variable_types_files/font-awesome-5.15.3/css/v4-shims.min.css" rel="stylesheet">
 <script src="variable_types_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="variable_types_files/vega-5.20.2/vega.js"></script><script src="variable_types_files/vega-lite-5.1.0/vega-lite.js"></script><script src="variable_types_files/vega-embed-6.17.0/vega-embed.js"></script><script src="variable_types_files/d3-6.7.0/d3.js"></script><script src="variable_types_files/gemini-0.1.0/gemini.web.js"></script><script src="variable_types_files/gifshot-0.0.1/gifshot.min.js"></script><script src="variable_types_files/html2canvas-0.0.1/html2canvas.min.js"></script><script src="variable_types_files/download2-0.0.1/download2.js"></script><script src="variable_types_files/datamations-0.0.1/datamations.min.js"></script><link href="variable_types_files/css-0.0.1/datamationSandDance.css" rel="stylesheet">
 <link href="variable_types_files/fa-icons-0.0.1/fa-all.min.css" rel="stylesheet">
@@ -103,7 +103,8 @@
 
     
     
-<p>{datamations} provides useful visual encodings to help visualize transformations that occur in various types of data:</p>
+<p>{datamations} provides useful visual encodings to help visualize
+transformations that occur in various types of data:</p>
 <ul>
 <li>numeric</li>
 <li>categorical</li>
@@ -112,8 +113,11 @@
 <div class="section level2">
 <h2 id="numeric-data">Numeric data<a class="anchor" aria-label="anchor" href="#numeric-data"></a>
 </h2>
-<p>{datamations} can accept calculations on numeric data and provides encodings on faceted numeric scales.</p>
-<p>Test out the functionality on the built in dataset <code>small_salary</code>, which includes synthetic salary data for different types of work and different degree qualifications.</p>
+<p>{datamations} can accept calculations on numeric data and provides
+encodings on faceted numeric scales.</p>
+<p>Test out the functionality on the built in dataset
+<code>small_salary</code>, which includes synthetic salary data for
+different types of work and different degree qualifications.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datamations</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></code></pre></div>
@@ -122,17 +126,17 @@
   group_by(Degree) %&gt;%
   summarize(mean = mean(Salary, trim=0.1))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-f904e6bf58a6ec0ead79" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-28c02d0438355016fcb1" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgetf904e6bf58a6ec0ead79.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget28c02d0438355016fcb1.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetf904e6bf58a6ec0ead79.onSlide('htmlwidgetf904e6bf58a6ec0ead79')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget28c02d0438355016fcb1.onSlide('htmlwidget28c02d0438355016fcb1')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgetf904e6bf58a6ec0ead79.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget28c02d0438355016fcb1.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -147,7 +151,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-f904e6bf58a6ec0ead79">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-28c02d0438355016fcb1">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -3969,7 +3973,9 @@
 <div class="section level2">
 <h2 id="categorical-data">Categorical data<a class="anchor" aria-label="anchor" href="#categorical-data"></a>
 </h2>
-<p>{datamations} generates shape encoding for categorical variables passed to <code>group_by</code> or in summary functions. A useful example is in the {palmerpenguins} <code>penguins</code> dataset.</p>
+<p>{datamations} generates shape encoding for categorical variables
+passed to <code>group_by</code> or in summary functions. A useful
+example is in the {palmerpenguins} <code>penguins</code> dataset.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a></span><span class="op">)</span>
 
@@ -3977,17 +3983,17 @@
   group_by(year, island) %&gt;%
   summarise(n = n_distinct(species))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
     <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-fd9d56f6dfbd7f9b01d0" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-e0835a410c1ec89c18a4" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgetfd9d56f6dfbd7f9b01d0.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgete0835a410c1ec89c18a4.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetfd9d56f6dfbd7f9b01d0.onSlide('htmlwidgetfd9d56f6dfbd7f9b01d0')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgete0835a410c1ec89c18a4.onSlide('htmlwidgete0835a410c1ec89c18a4')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgetfd9d56f6dfbd7f9b01d0.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgete0835a410c1ec89c18a4.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -4002,7 +4008,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-fd9d56f6dfbd7f9b01d0">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-e0835a410c1ec89c18a4">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -10043,7 +10049,13 @@
 <div class="section level2">
 <h2 id="binary-data">Binary data<a class="anchor" aria-label="anchor" href="#binary-data"></a>
 </h2>
-<p>{datamations} similarly can produce visualizations for binary outcomes, displaying variables encoded with opacity and stroke. Binary variables can be passed as a true binary class in R, e.g. <code>TRUE</code>/<code>FALSE</code>, or via a numeric variable encoded to <code>1</code>/<code>0</code>. This is examplified in the built in dataset <code>jeter_justice</code>, where outcome values are encoded as <code>1</code> and <code>0</code>.</p>
+<p>{datamations} similarly can produce visualizations for binary
+outcomes, displaying variables encoded with opacity and stroke. Binary
+variables can be passed as a true binary class in R,
+e.g. <code>TRUE</code>/<code>FALSE</code>, or via a numeric variable
+encoded to <code>1</code>/<code>0</code>. This is examplified in the
+built in dataset <code>jeter_justice</code>, where outcome values are
+encoded as <code>1</code> and <code>0</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">jeter_justice</span><span class="op">)</span>
 <span class="co">#&gt;        player year is_hit</span>
@@ -10057,17 +10069,17 @@
 <code class="sourceCode R"><span class="st">"jeter_justice %&gt;%
   group_by(year) %&gt;%
   summarise(mean = mean(is_hit))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-6639fa9d73b4a9d7726d" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-0a89bcd13b9d900f9b03" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget6639fa9d73b4a9d7726d.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget0a89bcd13b9d900f9b03.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget6639fa9d73b4a9d7726d.onSlide('htmlwidget6639fa9d73b4a9d7726d')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget0a89bcd13b9d900f9b03.onSlide('htmlwidget0a89bcd13b9d900f9b03')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget6639fa9d73b4a9d7726d.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget0a89bcd13b9d900f9b03.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -10082,7 +10094,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-6639fa9d73b4a9d7726d">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-0a89bcd13b9d900f9b03">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -30492,7 +30504,9 @@
       }
     ]
   }
-]},"evals":[],"jsHooks":[]}</script><p>The appearance of this encoding can also be controlled more finely with <a href="https://microsoft.github.io/datamations/articles/finer_control.html" class="external-link">ggplot aesthetics</a>.</p>
+]},"evals":[],"jsHooks":[]}</script><p>The appearance of this encoding can also be controlled more finely
+with <a href="https://microsoft.github.io/datamations/articles/finer_control.html" class="external-link">ggplot
+aesthetics</a>.</p>
 </div>
   </div>
 
@@ -30513,7 +30527,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>
