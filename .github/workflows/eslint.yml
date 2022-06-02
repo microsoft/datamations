@@ -9,14 +9,16 @@
 
 name: ESLint
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ main ]
-  schedule:
-    - cron: '29 11 * * 1'
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     # The branches below must be a subset of the branches above
+#     branches: [ main ]
+#   schedule:
+#     - cron: '29 11 * * 1'
+
+on: [push]
 
 jobs:
   eslint:
@@ -36,7 +38,7 @@ jobs:
 
       - name: Run ESLint
         run: npx eslint .
-          --config .eslintrc.js
+          --config inst/htmlwidgets/js/src/.eslintrc.js
           --ext .js,.jsx,.ts,.tsx
           --format @microsoft/eslint-formatter-sarif 
           --output-file eslint-results.sarif
