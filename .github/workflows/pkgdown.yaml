@@ -1,11 +1,11 @@
-on:
-  push:
-    branches:
-      - main
-      - master
-      - pkgdown_fix
-    tags:
-      -'*'
+# on:
+#   push:
+#     branches:
+#       - main
+#     tags:
+#       -'*'
+
+on: [push]
 
 name: pkgdown
 
