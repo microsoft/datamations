@@ -215,10 +215,15 @@
     "datamations": {
       "Package": "datamations",
       "Version": "0.0.0.9009",
-      "Source": "unknown",
-      "Remotes": "tidyverse/purrr",
-      "Hash": "999b44ef594ef211854378d7b6f6def7"
-    },
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "datamations",
+      "RemoteUsername": "microsoft",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "298fb122487fd53322d85d74f49783db5778402e",
+      "Hash": "1ebab83aa34f2a7c28aea42249cd09e2"
+    },  
     "desc": {
       "Package": "desc",
       "Version": "1.4.1",
