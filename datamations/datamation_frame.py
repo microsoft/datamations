@@ -1,12 +1,11 @@
 # Create a DatamationFrame
-#
 # Create a subclass from a pandas DataFrame.
-#
 import time
 import json
 import pandas as pd
 from IPython.display import display, Javascript
-from datamations import datamation_groupby, utils
+
+from . import datamation_groupby, utils
 
 
 # A class to return the final results
@@ -34,12 +33,11 @@ class DatamationFrame(pd.DataFrame):
         return cls(*args, **kwargs)
 
     def __init__(self, data, index=None, columns=None, dtype=None, copy=True):
-        super(DatamationFrame, self).__init__(data, index, columns, dtype)
-        self._data=data
-        self._index=index
-        self._columns=columns
-        self._dtype=dtype
-        self._copy=copy
+        super(DatamationFrame, self).__init__(data=data,
+                                      index=index,
+                                      columns=columns,
+                                      dtype=dtype,
+                                      copy=copy)
         self._states = []
         self._states.append(data)
         self._operations = []
