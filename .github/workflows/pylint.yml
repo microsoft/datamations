@@ -20,7 +20,7 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+
         disable=missing-module-docstring,
                 missing-final-newline,
                 trailing-whitespace,
@@ -44,6 +44,8 @@ jobs:
                 unused-variable,
                 redefined-outer-name,
                 invalid-name
+
+        pylint --disable $(git ls-files '*.py')
 
 
 
