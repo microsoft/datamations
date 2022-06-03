@@ -20,7 +20,7 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint ----generate-rcfile $(git ls-files '*.py')
+        pylint ----generate-rcfile > .pylintrc $(git ls-files '*.py')
 
 
 
