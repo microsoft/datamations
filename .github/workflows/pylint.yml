@@ -20,32 +20,31 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
+        text= missing-module-docstring,
+              missing-final-newline,
+              trailing-whitespace,
+              line-too-long,
+              import-error, 
+              missing-class-docstring,
+              too-few-public-methods,
+              too-many-instance-attributes,
+              too-many-arguments,
+              missing-function-docstring,
+              invalid-name,
+              super-with-arguments,
+              too-many-locals,
+              too-many-branches,
+              consider-using-f-string,
+              unused-argument,
+              protected-access,
+              redefined-builtin,
+              too-many-nested-blocks,
+              too-many-statements,
+              unused-variable,
+              redefined-outer-name,
+              invalid-name
 
-        disable=missing-module-docstring,
-                missing-final-newline,
-                trailing-whitespace,
-                line-too-long,
-                import-error, 
-                missing-class-docstring,
-                too-few-public-methods,
-                too-many-instance-attributes,
-                too-many-arguments,
-                missing-function-docstring,
-                invalid-name,
-                super-with-arguments,
-                too-many-locals,
-                too-many-branches,
-                consider-using-f-string,
-                unused-argument,
-                protected-access,
-                redefined-builtin,
-                too-many-nested-blocks,
-                too-many-statements,
-                unused-variable,
-                redefined-outer-name,
-                invalid-name
-
-        pylint --disable $(git ls-files '*.py')
+        pylint --disable=text $(git ls-files '*.py')
 
 
 
