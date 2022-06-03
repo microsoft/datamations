@@ -10,6 +10,7 @@ class utils():
     Y_RAW_FIELD_CHR = "datamations_y_raw"
     Y_TOOLTIP_FIELD_CHR = "datamations_y_tooltip"
 
+    @classmethod
     def generate_vega_specs(data, meta, spec_encoding, facet_encoding=None, facet_dims=None, errorbar=False, height=300, width=300):
         mark = {
                 "type": "point",
