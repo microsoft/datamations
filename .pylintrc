@@ -1,2 +1,2 @@
 [MESSAGES CONTROL]
-disable=C, W, R
+disable=C, W, R, import-error
