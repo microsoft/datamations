@@ -25,7 +25,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         return cls(*args, **kwargs)
 
     def __init__(self, obj, by, keys=None, axis=0, level=None):
-        self._by = [by] if isinstance(by) == str else by
+        self._by = [by] if isinstance(by, str) else by
         super(DatamationGroupBy, self).__init__(obj=obj, keys=self._by, dropna=False)
         self._states = list(obj.states)
         self._operations = list(obj.operations)

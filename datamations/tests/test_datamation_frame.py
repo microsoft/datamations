@@ -2,9 +2,10 @@
 # 
 import os
 import json
-from datamations import DatamationFrame
-from datamations import DatamationGroupBy
-from datamations import small_salary
+# from datamations import DatamationFrame
+# from datamations import DatamationGroupBy
+# from datamations import small_salary
+from datamations import *
 from palmerpenguins import load_penguins
 from pytest import approx
 

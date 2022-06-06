@@ -1,11 +1,13 @@
 # Create a DatamationFrame
+#
 # Create a subclass from a pandas DataFrame.
+#
 import time
 import json
 import pandas as pd
 from IPython.display import display, Javascript
 
-from . import datamation_groupby, utils
+from datamations import datamation_groupby, utils
 
 
 # A class to return the final results
@@ -52,7 +54,7 @@ class DatamationFrame(pd.DataFrame):
 
     # Override the 'groupby' function
     def groupby(self, by):
-        self._by = [by] if isinstance(by) == str else by
+        self._by = [by] if isinstance(by, str) else by
         self._operations.append('groupby')
         df = super(DatamationFrame, self).groupby(by=by, dropna=False)
         return datamation_groupby.DatamationGroupBy(self, by)
