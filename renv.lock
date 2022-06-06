@@ -129,24 +129,6 @@
       "Hash": "543776ae6848fde2f48ff3816d0628bc",
       "Requirements": []
     },
-    "bit": {
-      "Package": "bit",
-      "Version": "4.0.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "f36715f14d94678eea9933af927bc15d",
-      "Requirements": []
-    },
-    "bit64": {
-      "Package": "bit64",
-      "Version": "4.0.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "9fe98599ca456d6552421db0d6772d8f",
-      "Requirements": [
-        "bit"
-      ]
-    },
     "brew": {
       "Package": "brew",
       "Version": "1.0-7",
@@ -285,14 +267,14 @@
       "Package": "datamations",
       "Version": "0.0.0.9009",
       "Source": "GitHub",
-      "RemoteType": "github",
       "Remotes": "tidyverse/purrr",
+      "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "datamations",
       "RemoteUsername": "microsoft",
       "RemoteRef": "HEAD",
       "RemoteSha": "77ca4a33b53809ff42974fc94733163317926599",
-      "Hash": "03f0d7be2aa37828b5cc48b35b7b1dee",
+      "Hash": "83cb90ed567bc19a2cdebf0eecf02d74",
       "Requirements": [
         "dplyr",
         "forcats",
@@ -379,24 +361,6 @@
       "Repository": "CRAN",
       "Hash": "cf6b206a045a684728c3267ef7596190",
       "Requirements": []
-    },
-    "downlit": {
-      "Package": "downlit",
-      "Version": "0.4.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "ba63dc9ab5a31f3209892437e40c5f60",
-      "Requirements": [
-        "brio",
-        "desc",
-        "digest",
-        "evaluate",
-        "fansi",
-        "memoise",
-        "rlang",
-        "vctrs",
-        "yaml"
-      ]
     },
     "dplyr": {
       "Package": "dplyr",
@@ -915,40 +879,6 @@
       "Hash": "01f28d4278f15c76cddbea05899c5d6f",
       "Requirements": []
     },
-    "pkgdown": {
-      "Package": "pkgdown",
-      "Version": "2.0.3.9000",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "pkgdown",
-      "RemoteUsername": "r-lib",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "855eba1ad3f486bbda9fcbe43ec8eb88066f161a",
-      "Hash": "17c55d849285a70976487441c6195f76",
-      "Requirements": [
-        "bslib",
-        "callr",
-        "crayon",
-        "desc",
-        "digest",
-        "downlit",
-        "fs",
-        "httr",
-        "jsonlite",
-        "magrittr",
-        "memoise",
-        "purrr",
-        "ragg",
-        "rlang",
-        "rmarkdown",
-        "tibble",
-        "whisker",
-        "withr",
-        "xml2",
-        "yaml"
-      ]
-    },
     "pkgload": {
       "Package": "pkgload",
       "Version": "1.2.4",
@@ -1043,27 +973,16 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "purrr",
       "RemoteUsername": "tidyverse",
-      "RemoteRef": "HEAD",
+      "RemoteRepo": "purrr",
+      "RemoteRef": "main",
       "RemoteSha": "d4b7ad1e6f2ae5a8242f722d18c4f6770a989ef4",
-      "Hash": "59d944036afedd0370128799f311f1d9",
+      "Hash": "54f7d310c378f92ea3575ceaeb063ae4",
       "Requirements": [
         "lifecycle",
         "magrittr",
         "rlang",
         "vctrs"
-      ]
-    },
-    "ragg": {
-      "Package": "ragg",
-      "Version": "1.2.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "14932bb6f2739c771ca4ceaba6b4248e",
-      "Requirements": [
-        "systemfonts",
-        "textshaping"
       ]
     },
     "rappdirs": {
@@ -1119,26 +1038,6 @@
         "reactR"
       ]
     },
-    "readr": {
-      "Package": "readr",
-      "Version": "2.1.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "9c59de1357dc209868b5feb5c9f0fe2f",
-      "Requirements": [
-        "R6",
-        "cli",
-        "clipr",
-        "cpp11",
-        "crayon",
-        "hms",
-        "lifecycle",
-        "rlang",
-        "tibble",
-        "tzdb",
-        "vroom"
-      ]
-    },
     "rematch2": {
       "Package": "rematch2",
       "Version": "2.1.2",
@@ -1172,30 +1071,6 @@
       "Repository": "CRAN",
       "Hash": "04884d9a75d778aca22c7154b8333ec9",
       "Requirements": []
-    },
-    "rmarkdown": {
-      "Package": "rmarkdown",
-      "Version": "2.14.2",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "rmarkdown",
-      "RemoteUsername": "rstudio",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "f2bfeec501441abfa17b64fce12de7157bd75940",
-      "Hash": "397359b436ae91da17d554570dc88322",
-      "Requirements": [
-        "bslib",
-        "evaluate",
-        "htmltools",
-        "jquerylib",
-        "jsonlite",
-        "knitr",
-        "stringr",
-        "tinytex",
-        "xfun",
-        "yaml"
-      ]
     },
     "roxygen2": {
       "Package": "roxygen2",
@@ -1422,16 +1297,6 @@
       "Hash": "b227d13e29222b4574486cfcbde077fa",
       "Requirements": []
     },
-    "systemfonts": {
-      "Package": "systemfonts",
-      "Version": "1.0.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "90b28393209827327de889f49935140a",
-      "Requirements": [
-        "cpp11"
-      ]
-    },
     "testthat": {
       "Package": "testthat",
       "Version": "3.1.4",
@@ -1458,17 +1323,6 @@
         "rlang",
         "waldo",
         "withr"
-      ]
-    },
-    "textshaping": {
-      "Package": "textshaping",
-      "Version": "0.3.6",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "1ab6223d3670fac7143202cb6a2d43d5",
-      "Requirements": [
-        "cpp11",
-        "systemfonts"
       ]
     },
     "tibble": {
@@ -1502,16 +1356,6 @@
         "vctrs"
       ]
     },
-    "tinytex": {
-      "Package": "tinytex",
-      "Version": "0.39",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "29f67ab15405b390b90e56ff22198ead",
-      "Requirements": [
-        "xfun"
-      ]
-    },
     "tweenr": {
       "Package": "tweenr",
       "Version": "1.0.2",
@@ -1523,16 +1367,6 @@
         "farver",
         "magrittr",
         "rlang"
-      ]
-    },
-    "tzdb": {
-      "Package": "tzdb",
-      "Version": "0.3.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "b2e1cbce7c903eaf23ec05c58e59fb5e",
-      "Requirements": [
-        "cpp11"
       ]
     },
     "usethis": {
@@ -1607,29 +1441,6 @@
       "Repository": "CRAN",
       "Hash": "55e157e2aa88161bdb0754218470d204",
       "Requirements": []
-    },
-    "vroom": {
-      "Package": "vroom",
-      "Version": "1.5.7",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "976507b5a105bc3bdf6a5a5f29e0684f",
-      "Requirements": [
-        "bit64",
-        "cli",
-        "cpp11",
-        "crayon",
-        "glue",
-        "hms",
-        "lifecycle",
-        "progress",
-        "rlang",
-        "tibble",
-        "tidyselect",
-        "tzdb",
-        "vctrs",
-        "withr"
-      ]
     },
     "waldo": {
       "Package": "waldo",
