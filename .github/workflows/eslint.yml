@@ -11,7 +11,9 @@ name: ESLint
 
 on:
   push:
-    branches: [ main ]
+      branches:
+      - main
+      - eslint_fix
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ main ]
@@ -36,7 +38,7 @@ jobs:
 
       - name: Run ESLint
         run: npx eslint .
-          --config .eslintrc.js
+          --config inst/htmlwidgets/js/src/.eslintrc.js
           --ext .js,.jsx,.ts,.tsx
           --format @microsoft/eslint-formatter-sarif 
           --output-file eslint-results.sarif
