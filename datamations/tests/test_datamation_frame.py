@@ -2,10 +2,10 @@
 #
 import os
 import json
+from palmerpenguins import load_penguins
 from datamations import DatamationFrame
 from datamations import DatamationGroupBy
 from datamations import small_salary
-from palmerpenguins import load_penguins
 from pytest import approx
 
 def compare_specs_with_file(specs, specs_file):

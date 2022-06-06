@@ -1,10 +1,9 @@
 # Copyright (c) Microsoft Corporation
 #
-
+from pytest import approx
+from palmerpenguins import load_penguins
 from datamations import DatamationFrame
 from datamations import small_salary
-from palmerpenguins import load_penguins
-from pytest import approx
 
 def test_datamation_groupby():
     df = small_salary().df

@@ -4,7 +4,10 @@
 
 ; below is diabling each specific of each not needed error
 disable=too-many-branches, 
+        unspecified-encoding,
+        import-error,
         line-too-long, 
+        consider-using-f-string,
         missing-module-docstring, 
         missing-function-docstring,
         missing-class-docstring,
@@ -23,6 +26,8 @@ disable=too-many-branches,
         too-many-nested-blocks,
         arguments-renamed, ; warning of parameter changed after overridden
         too-many-ancestors,
-        no-self-use,
+        duplicate-code,
         no-self-argument,
-        redefined-outer-name
+        redefined-outer-name,
+        missing-final-newline,
+        cyclic-import ; Cyclic import (%s) Used when a cyclic import between two or more modules is detected
