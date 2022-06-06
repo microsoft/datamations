@@ -6,7 +6,6 @@ import time
 import json
 import pandas as pd
 from IPython.display import display, Javascript
-
 from datamations import datamation_groupby, utils
 
 
@@ -60,7 +59,7 @@ class DatamationFrame(pd.DataFrame):
         return datamation_groupby.DatamationGroupBy(self, by)
 
     # The second spec in the json to show initial points divided into groups.
-    def prep_specs_group_by(self):
+    def prep_specs_group_by(self, width=300, height=300):
         x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
         y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
 
@@ -319,7 +318,7 @@ class DatamationFrame(pd.DataFrame):
         return specs_list
 
     # The first spec in the json to layout all the points in one frame.
-    def prep_specs_data(self):
+    def prep_specs_data(self, width=300, height=300):
         x_encoding = { 'field': utils.X_FIELD_CHR, 'type':  "quantitative", 'axis': None }
         y_encoding = { 'field': utils.Y_FIELD_CHR, 'type': "quantitative", 'axis': None }
 

@@ -73,7 +73,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         return df
 
     # The specs to show summarized points on the chart
-    def prep_specs_summarize(self):
+    def prep_specs_summarize(self, width=300, height=300):
         x_axis = self.states[1].dtypes.axes[0].name if len(self._by) == 1 else self.states[1].dtypes.axes[0].names[0]
         y_axis = self._axis if self._axis else self.states[1].dtypes.axes[1].values[1] if len(self._by) == 1 else self.states[1].dtypes.axes[1].values[0]
 
