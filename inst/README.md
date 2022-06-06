@@ -89,7 +89,7 @@ Data format:
 
 ### Usage
 
-<a name="app" href="#app">#</a> <b>App</b>() · [Source](https://github.com/microsoft/datamations/blob/main/inst/htmlwidgets/js/app.js)
+<a name="app" href="#app">#</a> <b>App</b>() · [Source](https://github.com/microsoft/datamations/blob/main/inst/htmlwidgets/js/src/scripts/app.js)
 
 ```html
 <link rel="stylesheet" href="../css/fa-all.min.css">
