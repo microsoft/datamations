@@ -141,7 +141,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "field": field,
                 "type": "nominal"
             })
-        
+
         facet_encoding = {}
 
         if len(self._by) > 1:
@@ -176,14 +176,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 if col not in count:
                     count[col] = 0
                 count[col] = count[col] + len(self.states[1].groups[key])
-                
+
             facet_dims = {
                 "ncol": len(cols),
                 "nrow": 1
             }
 
         data = []
-        
+
         # Prepare the data by assigning different x-axis values to the groups
         # and showing the original values on the y-axis for each point.
         if len(self._by) > 1:
@@ -203,13 +203,13 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     }
                     if not pd.isna(self.states[0][y_axis][index]):
                         value["datamations_y"] = self.states[0][y_axis][index]
-                        value["datamations_y_tooltip"] = self.states[0][y_axis][index]   
+                        value["datamations_y_tooltip"] = self.states[0][y_axis][index]
 
                     if len(self._by) > 2:
-                        value[self._by[2]] = "NA" if pd.isna(self.states[0][self._by[2]][index]) else self.states[0][self._by[2]][index] 
+                        value[self._by[2]] = "NA" if pd.isna(self.states[0][self._by[2]][index]) else self.states[0][self._by[2]][index]
                     data.append(value)
                     i = i+1
-                        
+
             facet_dims = {
                 "ncol": len(cols),
                 "nrow": 1
@@ -248,7 +248,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 id = id + 1
 
         # Jitter plot
-        meta = { 
+        meta = {
             "parse": "jitter",
             "axes": len(self._by) > 1,
             "description": "Plot " + y_axis + " within each group",
@@ -256,7 +256,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         }
         if len(self._by) == 1:
             meta["xAxisLabels"] = groups
-        
+
         # Spec encoding for Vega along with the data and metadata.
         # Generate vega specs for the summarizing steps of the animaiton
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
@@ -265,7 +265,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
         specs_list.append(spec)
 
-        meta = { 
+        meta = {
             "axes": len(self._by) > 1,
             "description": "Plot " + self.operations[-1] + " " + y_axis + " of each group"
         }
@@ -286,17 +286,17 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "title": self.operations[-1] + "(" + y_axis + ")"
             }
         ]
-        
+
         for field in self._by:
             tooltip.append({
                 "field": field,
                 "type": "nominal"
             })
-        
+
         data = []
-        
+
         # Plot the final summarized value
-        # The y-axis value is the same for all 
+        # The y-axis value is the same for all
         if len(self._by) > 1:
             i = 1
             data = []
@@ -322,11 +322,11 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                             value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] if pd.isna(self.states[0][self._by[2]][index]) is False else "NA"
                     else:
                         value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
-                        value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]  
-                    
+                        value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+
                     data.append(value)
                     i = i+1
-                        
+
             facet_dims = {
                 "ncol": len(groups),
                 "nrow": len(groups) if len(self._by) > 2 else 1
@@ -390,7 +390,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 "field": field,
                 "type": "nominal"
             })
-        
+
         data = []
 
         # Show errror bars along with sumarized values
@@ -436,7 +436,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
                     data.append(value)
                     i = i+1
-                        
+
             facet_dims = {
                 "ncol": len(cols),
                 "nrow": len(groups) if len(self._by) > 2 else 1
@@ -473,7 +473,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 })
                 id = id + 1
 
-        meta = { 
+        meta = {
             "axes": len(self._by) > 1,
             "description": "Plot " + self.operations[-1] + " " + y_axis + " of each group, with errorbar"
         }
@@ -525,7 +525,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             }
         }
 
-        meta = { 
+        meta = {
             "axes": len(self._by) > 1,
             "description": "Plot " + self.operations[-1] + " " + y_axis + " of each group" + (", with errorbar" if self.operations[-1] == 'mean' else "") + ", zoomed in"
         }
@@ -534,5 +534,5 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
         spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, self.operations[-1] == 'mean')
         specs_list.append(spec)
-                
+
         return specs_list

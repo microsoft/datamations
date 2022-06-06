@@ -1,5 +1,5 @@
 # Copyright (c) Microsoft Corporation
-# 
+#
 
 from datamations import small_salary
 

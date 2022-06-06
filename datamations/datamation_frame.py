@@ -19,7 +19,7 @@ class Datamation:
     def __str__(self):
         return self.output.to_json()
 
-# The subclass of pandas DataFrame 
+# The subclass of pandas DataFrame
 class DatamationFrame(pd.DataFrame):
     @property
     def _constructor(self):
@@ -77,23 +77,31 @@ class DatamationFrame(pd.DataFrame):
             },
             "tooltip": tooltip
         }
-        
+
         facet_encoding = {}
 
         if len(self._by) > 1:
-            facet_encoding["column"] = { "field": self._by[0], "type": "ordinal", "title": self._by[0] }
+            facet_encoding["column"] = { "field": self._by[0],
+                                        "type": "ordinal",
+                                        "title": self._by[0]
+                                        }
 
         # if len(self._by) > 2:
-        #     facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
+        #     facet_encoding["row"] = { "field": self._by[1],
+        #                               "type": "ordinal",
+        #                               "title": self._by[1]
+        #                               }
 
         facet_dims = {
             "ncol": 1,
             "nrow": 1
         }
 
-        data = list(map(lambda key: { self._by[0]: key, 'n': len(self.states[1].groups[key])}, self.states[1].groups.keys()))
+        data = list(map(lambda key: {self._by[0]: key,
+                                    'n': len(self.states[1].groups[key])},
+                                    self.states[1].groups.keys()))
 
-        meta = { 
+        meta = {
                 'parse': "grid",
                 'description': "Group by " + self._by[-1],
                 "splitField": self._by[0],
@@ -102,7 +110,7 @@ class DatamationFrame(pd.DataFrame):
 
         specs_list = []
 
-        # The case of groupby multiple 
+        # The case of groupby multiple
         if len(self._by) > 1:
             cols = []
             count = {}
@@ -127,15 +135,18 @@ class DatamationFrame(pd.DataFrame):
                 "ncol": len(cols),
                 "nrow": 1
             }
-            data = list(map(lambda col: { self._by[0]: col, 'n': count[col], 'gemini_ids': list(range(start[col], start[col]+count[col], 1))}, cols))
-            meta = { 
+            data = list(map(lambda col: {self._by[0]: col, 'n': count[col],
+                                        'gemini_ids': list(range(start[col],
+                                        start[col]+count[col], 1))},
+                                        cols))
+            meta = {
                     'parse': "grid",
                     'description': "Group by " + self._by[0]
             }
 
             spec_encoding = {
                 'x': x_encoding,
-                'y': y_encoding ,
+                'y': y_encoding,
                 'tooltip': tooltip
             }
 
@@ -172,13 +183,18 @@ class DatamationFrame(pd.DataFrame):
                     start[key] = id
                 id = id + count[key]
 
-            data = list(map(lambda key: {self._by[0]: key.split(',')[0], self._by[1]: key.split(',')[1],'n': count[key], 'gemini_ids': list(range(start[key], start[key]+count[key], 1))}, data))
+            data = list(map(lambda key:
+                            {self._by[0]: key.split(',')[0],
+                            self._by[1]: key.split(',')[1],
+                            'n': count[key],
+                            'gemini_ids': list(range(start[key], start[key]+count[key], 1))},
+                            data))
 
             facet_dims = {
                 "ncol": len(cols),
                 "nrow": 1
             }
-            meta = { 
+            meta = {
                     'parse': "grid",
                     'description': "Group by " + ', '.join(self._by[0:2]),
                     "splitField": self._by[1],
@@ -217,8 +233,12 @@ class DatamationFrame(pd.DataFrame):
                 }
 
                 facet_encoding = {}
-                facet_encoding["column"] = { 'field': self._by[0], 'type': "ordinal", 'title': self._by[0] }
-                facet_encoding["row"] = { 'field': self._by[1], 'type': "ordinal", 'title': self._by[1] }
+                facet_encoding["column"] = { 'field': self._by[0],
+                                            'type': "ordinal",
+                                            'title': self._by[0] }
+                facet_encoding["row"] = { 'field': self._by[1],
+                                        'type': "ordinal",
+                                        'title': self._by[1] }
 
                 spec_encoding = {
                     'x': x_encoding,
@@ -230,7 +250,7 @@ class DatamationFrame(pd.DataFrame):
             specs_list.append(spec)
 
             if len(self._by) > 2:
-                meta = { 
+                meta = {
                     'parse': "grid",
                     'description': "Group by " + ', '.join(self._by),
                     "splitField": self._by[2],
@@ -269,7 +289,12 @@ class DatamationFrame(pd.DataFrame):
                         start[key] = id
                     id = id + count[key]
 
-                data = list(map(lambda key: {self._by[0]: key.split(',')[0], self._by[1]: key.split(',')[1], self._by[2]: key.split(',')[2], 'n': count[key], 'gemini_ids': start[key] if count[key] == 1 else list(range(start[key], start[key]+count[key], 1))}, data))
+                data = list(map(lambda key: {self._by[0]: key.split(',')[0],
+                                            self._by[1]: key.split(',')[1],
+                                            self._by[2]: key.split(',')[2],
+                                            'n': count[key],
+                                            'gemini_ids': start[key] if count[key] == 1 else list(range(start[key], start[key]+count[key], 1))},
+                                            data))
 
                 tooltip = []
                 for field in self._by:
@@ -293,7 +318,7 @@ class DatamationFrame(pd.DataFrame):
 
                 spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
                 specs_list.append(spec)
-        else:            
+        else:
             cols = []
             count = {}
             start = {}
@@ -304,13 +329,16 @@ class DatamationFrame(pd.DataFrame):
                 if col not in count:
                     count[col] = 0
                 count[col] = count[col] + len(self.states[1].groups[key])
-            
+
             id = 1
             for col in cols:
                 start[col] = id
                 id  = id + count[col]
 
-            data = list(map(lambda key: { self._by[0]: key, 'n': len(self.states[1].groups[key]), 'gemini_ids': list(range(start[key], start[key]+count[key], 1))}, self.states[1].groups.keys()))
+            data = list(map(lambda key: { self._by[0]: key,
+                                        'n': len(self.states[1].groups[key]),
+                                        'gemini_ids': list(range(start[key], start[key]+count[key], 1))},
+                                        self.states[1].groups.keys()))
 
             spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
             specs_list.append(spec)
@@ -328,10 +356,10 @@ class DatamationFrame(pd.DataFrame):
             "n": len(self.states[0]),
         }
         value["gemini_ids"] = list(range(1, len(self.states[0])+1, 1))
-        
+
         data = [value]
-        
-        meta =  { 
+
+        meta = {
             'parse': "grid",
             'description': "Initial data"
         }
@@ -343,7 +371,7 @@ class DatamationFrame(pd.DataFrame):
         return specs_list
 
     def specs(self):
-        specs = self.prep_specs_data() + self.prep_specs_group_by() 
+        specs = self.prep_specs_data() + self.prep_specs_group_by()
         return specs + self.states[1].prep_specs_summarize()
 
     def datamation_sanddance(self):
