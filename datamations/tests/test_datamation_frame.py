@@ -2,11 +2,11 @@
 #
 import os
 import json
+from pytest import approx
 from palmerpenguins import load_penguins
 from datamations import DatamationFrame
 from datamations import DatamationGroupBy
 from datamations import small_salary
-from pytest import approx
 
 def compare_specs_with_file(specs, specs_file):
     for i, spec in enumerate(json.load(specs_file)):
