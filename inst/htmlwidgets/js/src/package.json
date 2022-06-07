@@ -7,7 +7,8 @@
   "scripts": {
     "test": "mocha",
     "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "rollup -c -w",
+    "lint": "elint --fix --ext .js,.vue src"
   },
   "keywords": [],
   "author": "Giorgi Ghviniashvili",

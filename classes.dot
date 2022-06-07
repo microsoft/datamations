@@ -1,0 +1,15 @@
+digraph "classes" {
+charset="utf-8"
+rankdir=BT
+"0" [label="{Datamation|operations\loutput\lstates\l|}", shape="record"];
+"1" [label="{DatamationFrame|operations\lstates\l|datamation_sanddance()\lgroupby(by)\lprep_specs_data(width, height)\lprep_specs_group_by(width, height)\lspecs()\l}", shape="record"];
+"2" [label="{DatamationGroupBy|operations\lstates\l|mean(axis)\lmedian(axis)\lprep_specs_summarize(width, height)\l}", shape="record"];
+"3" [label="{IOHandles|\l|close(): \l}", shape="record"];
+"4" [label="{TextFileReader|chunksize\lengine : str\lhandles : NoneType\lnrows\loptions\lorig_options : dict\lsqueeze\l|close()\lget_chunk(size)\lread(nrows)\l}", shape="record"];
+"5" [label="{small_salary|df\l|}", shape="record"];
+"6" [label="{utils|X_FIELD_CHR : str\lY_FIELD_CHR : str\lY_RAW_FIELD_CHR : str\lY_TOOLTIP_FIELD_CHR : str\l|generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, errorbar, height, width)\l}", shape="record"];
+"1" -> "2" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="_output", style="solid"];
+"1" -> "2" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="_output", style="solid"];
+"3" -> "4" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="handles", style="solid"];
+"4" -> "5" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="_data", style="solid"];
+}
