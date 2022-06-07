@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - main
-      - pkgdown_fix
+      - master
     tags:
       -'*'
 
