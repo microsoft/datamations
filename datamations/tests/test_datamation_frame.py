@@ -124,4 +124,3 @@ def test_datamation_frame_datamation_sanddance():
     assert datamation.output.Salary.Industry == 91.48376118136609
 
     assert 'Salary' in str(datamation)
-    
