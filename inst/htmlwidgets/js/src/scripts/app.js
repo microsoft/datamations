@@ -1,8 +1,4 @@
-/* eslint-disable promise/param-names */
-/* eslint-disable n/no-callback-literal */
-/* eslint-disable camelcase */
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
+
 /**
  * Entry point of Datamations JavaScript code
  * Reads vega-lite specifications, converts to vega specs and animates them

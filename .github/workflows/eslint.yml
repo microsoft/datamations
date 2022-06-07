@@ -41,10 +41,10 @@ jobs:
           --config inst/htmlwidgets/js/.eslintrc.js
           --ext .js,.jsx,.ts,.tsx
           --output-file eslint-results.sarif
-        continue-on-error: true
+        continue-on-error: false
 
-      - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: eslint-results.sarif
-          wait-for-processing: true
+      # - name: Upload analysis results to GitHub
+      #   uses: github/codeql-action/upload-sarif@v2
+      #   with:
+      #     sarif_file: eslint-results.sarif
+      #     wait-for-processing: true
