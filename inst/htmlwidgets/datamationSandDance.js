@@ -1,18 +1,17 @@
-/* eslint-disable no-undef */
 HTMLWidgets.widget({
-  name: 'datamationSandDance',
+    name: "datamationSandDance",
 
-  type: 'output',
+    type: "output",
 
-  factory: function (el, width, height) {
-    return {
+    factory: function (el, width, height) {
+        return {
 
-      renderValue: function (x) {
-        el.id = el.id.replace(/-/g, '')
-        window['app' + el.id] = datamations.App(el.id, { specs: x.specs, autoPlay: true })
-      },
+            renderValue: function (x) {
+                el.id = el.id.replace(/-/g, "");
+                window['app' + el.id] = datamations.App(el.id, {specs: x.specs, autoPlay: true});
+            },
 
-      resize: function (width, height) { }
-    }
-  }
-})
+            resize: function (width, height) { },
+        };
+    },
+});
