@@ -487,15 +487,15 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       values: Array.from('x'.repeat(groups.length), (_, i) => 1 + i),
       labelExpr:
         groupby.length > 2
-          ? "round(datum.label) === 1 ? '" +
+          ? "round(datum.label) == 1 ? '" +
             l3groups[0] +
             "' : " +
-            "round(datum.label) === 2 ? '" +
+            "round(datum.label) == 2 ? '" +
             l3groups[1] +
             "' : '" +
             l3groups[2] +
             "'"
-          : "round(datum.label) === 1 ? '" + labels[0] + "' : '" + labels[1] + "'",
+          : "round(datum.label) == 1 ? '" + labels[0] + "' : '" + labels[1] + "'",
       labelAngle: -90
     },
     title: groupby.length > 1 ? groupby[groupby.length - 1] : x_axis,
