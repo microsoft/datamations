@@ -2,7 +2,7 @@
 local({
 
   # the requested version of renv
-  version <- "0.15.5"
+  version <- "0.13.2"
 
   # the project directory
   project <- getwd()
@@ -54,7 +54,7 @@ local({
   # mask 'utils' packages, will come first on the search path
   library(utils, lib.loc = .Library)
 
-  # unload renv if it's already been loaded
+  # unload renv if it's already been laoded
   if ("renv" %in% loadedNamespaces())
     unloadNamespace("renv")
 
@@ -314,17 +314,8 @@ local({
     }
   
     # bail if it doesn't exist
-    if (!file.exists(tarball)) {
-  
-      # let the user know we weren't able to honour their request
-      fmt <- "* RENV_BOOTSTRAP_TARBALL is set (%s) but does not exist."
-      msg <- sprintf(fmt, tarball)
-      warning(msg)
-  
-      # bail
+    if (!file.exists(tarball))
       return()
-  
-    }
   
     fmt <- "* Bootstrapping with tarball at path '%s'."
     msg <- sprintf(fmt, tarball)
@@ -809,7 +800,7 @@ local({
   
     # find strings in the JSON
     pattern <- '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
-    locs <- gregexpr(pattern, text, perl = TRUE)[[1]]
+    locs <- gregexpr(pattern, text)[[1]]
   
     # if any are found, replace them with placeholders
     replaced <- text
