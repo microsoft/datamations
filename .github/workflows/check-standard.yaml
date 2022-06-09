@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - main
-
+      - issue170_b
   pull_request:
     branches:
       - main
