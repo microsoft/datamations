@@ -22,11 +22,3 @@ module.exports = {
     "no-var" : ["off"]
   }
 }
-// app.js
-// /* eslint-disable  */
-// /* eslint-disable  */
-// /* eslint-disable  */
-// /* eslint-disable  */
-// /* eslint-disable  */
-//  
-// 
