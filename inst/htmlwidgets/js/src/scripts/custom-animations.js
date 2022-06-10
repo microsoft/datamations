@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable camelcase */
 /**
  * Custom animations generation script.
  * Supports:

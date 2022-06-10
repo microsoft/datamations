@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { IGNORE_FIELDS } from './config.js'
 
 /**

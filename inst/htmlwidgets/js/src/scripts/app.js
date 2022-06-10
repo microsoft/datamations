@@ -1,8 +1,3 @@
-/* eslint-disable promise/param-names */
-/* eslint-disable n/no-callback-literal */
-/* eslint-disable camelcase */
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
 /**
  * Entry point of Datamations JavaScript code
  * Reads vega-lite specifications, converts to vega specs and animates them
@@ -131,7 +126,6 @@ export default function App (id, { specs, autoPlay = false, frameDur, frameDel }
       }
     })
 
-    // eslint-disable-next-line no-undef
     d3.select(slider).property('max', vegaLiteSpecs.length - 1)
 
     // parse, jitter, layer splitting
@@ -173,10 +167,8 @@ export default function App (id, { specs, autoPlay = false, frameDur, frameDel }
         }
       })
 
-      // eslint-disable-next-line no-undef
       if (typeof HTMLWidgets !== 'undefined' && HTMLWidgets.shinyMode) {
         const prevIndex = frameIndex - 1
-        // eslint-disable-next-line no-undef
         Shiny.onInputChange('slider_state', prevIndex)
       }
     }
@@ -197,7 +189,6 @@ export default function App (id, { specs, autoPlay = false, frameDur, frameDel }
     if (!spec) return
 
     if (spec.custom) {
-      // eslint-disable-next-line no-undef
       spec = gemini.vl2vg4gemini(spec.sequence[spec.sequence.length - 1])
     }
 
@@ -255,7 +246,6 @@ export default function App (id, { specs, autoPlay = false, frameDur, frameDel }
     layers.innerHTML = ''
 
     if (Array.isArray(spec)) {
-      // eslint-disable-next-line promise/param-names
       return new Promise((res) => {
         spec.forEach((s, i) => {
           let target
@@ -590,7 +580,6 @@ export default function App (id, { specs, autoPlay = false, frameDur, frameDel }
         vegaLiteSpecs[i] = gridSpec
       } else if (parse === META_PARSE_VALUES.jitter) {
         vegaLiteSpecs[i] = await getJitterSpec(vlSpec)
-        // eslint-disable-next-line brace-style
       }
       // since gemini does not support multiple multiple axis transitions,
       // we must split the layers and draw as separate vega spec
