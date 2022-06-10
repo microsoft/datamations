@@ -37,7 +37,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
       )
 
     if(mutation_basis_on_variable) {
-      mutation_basis <- rlang::as_name(mutation_variables[1]) %>%
+      mutation_basis <- rlang::as_name(mutation_variables[[1]]) %>%
         rlang::parse_expr()
 
       mutation_basis_chr <- rlang::as_name(mutation_basis)
@@ -50,7 +50,7 @@ prep_specs_mutate <- function(.data, mapping, toJSON = TRUE, pretty = TRUE, heig
 
       if(length(mutation_variables)>1) {
 
-        mutation_basis_two <- rlang::as_name(mutation_variables[2]) %>%
+        mutation_basis_two <- rlang::as_name(mutation_variables[[2]]) %>%
           rlang::parse_expr()
 
         mutation_basis_two_chr <- rlang::as_name(mutation_basis_two)
