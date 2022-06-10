@@ -18,8 +18,8 @@ module.exports = {
     "no-undef" : ["off"],
     "no-unused-vars" : ["off"],
     "promise/param-names" : ["off"],
-    "brace-style" : ["off"]
-
+    "brace-style" : ["off"],
+    "no-var" : ["off"]
   }
 }
 // app.js
