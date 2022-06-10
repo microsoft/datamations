@@ -4,88 +4,25 @@
     <loc>/404.html</loc>
   </url>
   <url>
-    <loc>/articles/details.html</loc>
+    <loc>/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/articles/details_files/download2-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
+    <loc>/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/details_files/download2-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/details_files/gifshot-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/details_files/gifshot-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/details_files/html2canvas-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/details_files/html2canvas-0.0.1/src/node_modules/terser/tools/props.html</loc>
+    <loc>/SECURITY.html</loc>
   </url>
   <url>
     <loc>/articles/Examples.html</loc>
   </url>
   <url>
-    <loc>/articles/Examples_files/download2-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Examples_files/download2-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Examples_files/gifshot-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Examples_files/gifshot-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Examples_files/html2canvas-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Examples_files/html2canvas-0.0.1/src/node_modules/terser/tools/props.html</loc>
+    <loc>/articles/details.html</loc>
   </url>
   <url>
     <loc>/articles/finer_control.html</loc>
   </url>
   <url>
-    <loc>/articles/finer_control_files/download2-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/finer_control_files/download2-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/finer_control_files/gifshot-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/finer_control_files/gifshot-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/finer_control_files/html2canvas-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/finer_control_files/html2canvas-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
     <loc>/articles/groupby_api.html</loc>
-  </url>
-  <url>
-    <loc>/articles/groupby_api_files/download2-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/groupby_api_files/download2-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/groupby_api_files/gifshot-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/groupby_api_files/gifshot-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/groupby_api_files/html2canvas-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/groupby_api_files/html2canvas-0.0.1/src/node_modules/terser/tools/props.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
@@ -94,97 +31,19 @@
     <loc>/articles/mutations.html</loc>
   </url>
   <url>
-    <loc>/articles/mutations_files/download2-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/mutations_files/download2-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/mutations_files/gifshot-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/mutations_files/gifshot-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/mutations_files/html2canvas-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/mutations_files/html2canvas-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
     <loc>/articles/simpsons_paradox.html</loc>
-  </url>
-  <url>
-    <loc>/articles/simpsons_paradox_files/download2-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/simpsons_paradox_files/download2-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/simpsons_paradox_files/gifshot-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/simpsons_paradox_files/gifshot-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/simpsons_paradox_files/html2canvas-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/simpsons_paradox_files/html2canvas-0.0.1/src/node_modules/terser/tools/props.html</loc>
   </url>
   <url>
     <loc>/articles/summarizing.html</loc>
   </url>
   <url>
-    <loc>/articles/summarizing_files/download2-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/summarizing_files/download2-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/summarizing_files/gifshot-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/summarizing_files/gifshot-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/summarizing_files/html2canvas-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/summarizing_files/html2canvas-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
     <loc>/articles/variable_types.html</loc>
-  </url>
-  <url>
-    <loc>/articles/variable_types_files/download2-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/variable_types_files/download2-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/variable_types_files/gifshot-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/variable_types_files/gifshot-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/articles/variable_types_files/html2canvas-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/articles/variable_types_files/html2canvas-0.0.1/src/node_modules/terser/tools/props.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
   </url>
   <url>
     <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
   </url>
   <url>
     <loc>/reference/datamationSandDance-shiny.html</loc>
@@ -202,24 +61,6 @@
     <loc>/reference/jeter_justice.html</loc>
   </url>
   <url>
-    <loc>/reference/libs/download2-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/reference/libs/download2-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/reference/libs/gifshot-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/reference/libs/gifshot-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
-    <loc>/reference/libs/html2canvas-0.0.1/src/node_modules/mocha/lib/browser/template.html</loc>
-  </url>
-  <url>
-    <loc>/reference/libs/html2canvas-0.0.1/src/node_modules/terser/tools/props.html</loc>
-  </url>
-  <url>
     <loc>/reference/pipe.html</loc>
   </url>
   <url>
@@ -227,8 +68,5 @@
   </url>
   <url>
     <loc>/reference/small_salary.html</loc>
-  </url>
-  <url>
-    <loc>/SECURITY.html</loc>
   </url>
 </urlset>

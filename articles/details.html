@@ -50,10 +50,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/details.html">datamations steps and conventions</a>
+      <a href="../articles/Examples.html">Examples</a>
     </li>
     <li>
-      <a href="../articles/Examples.html">Examples</a>
+      <a href="../articles/details.html">datamations steps and conventions</a>
     </li>
     <li>
       <a href="../articles/finer_control.html">Controlling appearance with ggplot2</a>
@@ -86,7 +86,7 @@
 
       
 
-      </header><link href="details_files/font-awesome-5.15.3/css/all.min.css" rel="stylesheet">
+      </header><script src="details_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="details_files/font-awesome-5.15.3/css/all.min.css" rel="stylesheet">
 <link href="details_files/font-awesome-5.15.3/css/v4-shims.min.css" rel="stylesheet">
 <script src="details_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="details_files/vega-5.20.2/vega.js"></script><script src="details_files/vega-lite-5.1.0/vega-lite.js"></script><script src="details_files/vega-embed-6.17.0/vega-embed.js"></script><script src="details_files/d3-6.7.0/d3.js"></script><script src="details_files/gemini-0.1.0/gemini.web.js"></script><script src="details_files/gifshot-0.0.1/gifshot.min.js"></script><script src="details_files/html2canvas-0.0.1/html2canvas.min.js"></script><script src="details_files/download2-0.0.1/download2.js"></script><script src="details_files/datamations-0.0.1/datamations.min.js"></script><link href="details_files/css-0.0.1/datamationSandDance.css" rel="stylesheet">
 <link href="details_files/fa-icons-0.0.1/fa-all.min.css" rel="stylesheet">
@@ -103,8 +103,7 @@
 
     
     
-<p>datamations constructs one <em>or more</em> frames for each step of a
-pipeline. For example, in the following pipeline:</p>
+<p>datamations constructs one <em>or more</em> frames for each step of a pipeline. For example, in the following pipeline:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datamations</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
@@ -113,17 +112,17 @@ pipeline. For example, in the following pipeline:</p>
   group_by(Degree) %&gt;%
   summarize(mean = mean(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-86dcd646912e8a77ede2" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-e7d179502c2df7e7b019" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget86dcd646912e8a77ede2.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgete7d179502c2df7e7b019.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget86dcd646912e8a77ede2.onSlide('htmlwidget86dcd646912e8a77ede2')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgete7d179502c2df7e7b019.onSlide('htmlwidgete7d179502c2df7e7b019')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget86dcd646912e8a77ede2.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgete7d179502c2df7e7b019.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -138,7 +137,7 @@ pipeline. For example, in the following pipeline:</p>
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-86dcd646912e8a77ede2">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-e7d179502c2df7e7b019">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -3959,51 +3958,40 @@ pipeline. For example, in the following pipeline:</p>
 <ol style="list-style-type: decimal">
 <li>
 <p>The initial data (<code>small_salary</code>)</p>
-<p>An information grid is shown, laying out the number of points in the
-data set.</p>
+<p>An information grid is shown, laying out the number of points in the data set.</p>
 </li>
 <li>
 <p>The grouped data (grouped by <code>Degree</code>)</p>
-<p>The data is separated into groups, retaining the informaton grid
-structure.</p>
+<p>The data is separated into groups, retaining the informaton grid structure.</p>
 </li>
 <li>
 <p>The summarized data (mean of <code>Salary</code>)</p>
-<p>The distribution of <code>Salary</code> within the groups is shown,
-then the summary function (mean) is applied. Error bars are added to the
-mean and the final frame zooms in on the data.</p>
+<p>The distribution of <code>Salary</code> within the groups is shown, then the summary function (mean) is applied. Error bars are added to the mean and the final frame zooms in on the data.</p>
 </li>
 </ol>
 <div class="section level2">
 <h2 id="group_by-frames">
 <code>group_by()</code> frames<a class="anchor" aria-label="anchor" href="#group_by-frames"></a>
 </h2>
-<p>datamations supports <em>up to three</em> grouping variables, showing
-one frame per variable. The placement of the variables is as
-follows:</p>
+<p>datamations supports <em>up to three</em> grouping variables, showing one frame per variable. The placement of the variables is as follows:</p>
 <ul>
 <li>
 <strong>One variable</strong>: On the x-axis</li>
 <li>
-<strong>Two variables</strong>: The first variable in column facets,
-the second on the x-axis</li>
+<strong>Two variables</strong>: The first variable in column facets, the second on the x-axis</li>
 <li>
-<strong>Three variables</strong>: The first variable in column
-facets, the second in row facets, the third in on the x-axis</li>
+<strong>Three variables</strong>: The first variable in column facets, the second in row facets, the third in on the x-axis</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="summarize-frames">
 <code>summarize()</code> frames<a class="anchor" aria-label="anchor" href="#summarize-frames"></a>
 </h2>
-<p>datamations supports summarizing <em>one</em> variable. The
-<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> section of a pipeline will have the following
-frames:</p>
+<p>datamations supports summarizing <em>one</em> variable. The <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> section of a pipeline will have the following frames:</p>
 <ol style="list-style-type: decimal">
 <li>Distribution of the variable to be summarized</li>
 <li>Summarized variable</li>
-<li>Summarized variable with standard error (only if summary function is
-mean)</li>
+<li>Summarized variable with standard error (only if summary function is mean)</li>
 <li>Zoomed version of summarized variable</li>
 </ol>
 </div>
@@ -4011,17 +3999,13 @@ mean)</li>
 <h2 id="count-frames">
 <code>count()</code> frames<a class="anchor" aria-label="anchor" href="#count-frames"></a>
 </h2>
-<p>datamations treats <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> equivalently to
-<code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> + <code>summarize(n = n())</code>. It supports
-up to three “grouping” variables.</p>
+<p>datamations treats <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> equivalently to <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> + <code>summarize(n = n())</code>. It supports up to three “grouping” variables.</p>
 </div>
 <div class="section level2">
 <h2 id="filter-frames">
 <code>filter()</code> frames<a class="anchor" aria-label="anchor" href="#filter-frames"></a>
 </h2>
-<p>datamation supports <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code> at any point in the
-pipeline, whether it comes after the initial data, while the data is
-grouped, or after it has been summarized.</p>
+<p>datamation supports <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code> at any point in the pipeline, whether it comes after the initial data, while the data is grouped, or after it has been summarized.</p>
 </div>
   </div>
 

@@ -1,14 +1,14 @@
-pandoc: 2.17.1.1
+pandoc: 2.7.3
 pkgdown: 2.0.3
 pkgdown_sha: ~
 articles:
-  details: details.html
   Examples: Examples.html
+  details: details.html
   finer_control: finer_control.html
   groupby_api: groupby_api.html
   mutations: mutations.html
   simpsons_paradox: simpsons_paradox.html
   summarizing: summarizing.html
   variable_types: variable_types.html
-last_built: 2022-06-02T23:17Z
+last_built: 2022-06-10T14:50Z
 

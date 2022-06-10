@@ -50,10 +50,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/details.html">datamations steps and conventions</a>
+      <a href="../articles/Examples.html">Examples</a>
     </li>
     <li>
-      <a href="../articles/Examples.html">Examples</a>
+      <a href="../articles/details.html">datamations steps and conventions</a>
     </li>
     <li>
       <a href="../articles/finer_control.html">Controlling appearance with ggplot2</a>
@@ -86,7 +86,7 @@
 
       
 
-      </header><link href="summarizing_files/font-awesome-5.15.3/css/all.min.css" rel="stylesheet">
+      </header><script src="summarizing_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="summarizing_files/font-awesome-5.15.3/css/all.min.css" rel="stylesheet">
 <link href="summarizing_files/font-awesome-5.15.3/css/v4-shims.min.css" rel="stylesheet">
 <script src="summarizing_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="summarizing_files/vega-5.20.2/vega.js"></script><script src="summarizing_files/vega-lite-5.1.0/vega-lite.js"></script><script src="summarizing_files/vega-embed-6.17.0/vega-embed.js"></script><script src="summarizing_files/d3-6.7.0/d3.js"></script><script src="summarizing_files/gemini-0.1.0/gemini.web.js"></script><script src="summarizing_files/gifshot-0.0.1/gifshot.min.js"></script><script src="summarizing_files/html2canvas-0.0.1/html2canvas.min.js"></script><script src="summarizing_files/download2-0.0.1/download2.js"></script><script src="summarizing_files/datamations-0.0.1/datamations.min.js"></script><link href="summarizing_files/css-0.0.1/datamationSandDance.css" rel="stylesheet">
 <link href="summarizing_files/fa-icons-0.0.1/fa-all.min.css" rel="stylesheet">
@@ -103,16 +103,11 @@
 
     
     
-<p>The datamations API can visualize the summarization of variables with
-several dplyr verbs, like
-<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>/<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code>,
-and <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally()</a></code></p>
+<p>The datamations API can visualize the summarization of variables with several dplyr verbs, like <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>/<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code>, and <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally()</a></code></p>
 <div class="section level2">
 <h2 id="summary-functions">summary functions<a class="anchor" aria-label="anchor" href="#summary-functions"></a>
 </h2>
-<p><code>datamations_sanddance</code> has special animations to
-visualize certain common summary functions passed to
-<code>summarize</code>. These custom animations include:</p>
+<p><code>datamations_sanddance</code> has special animations to visualize certain common summary functions passed to <code>summarize</code>. These custom animations include:</p>
 <ul>
 <li><code>mean</code></li>
 <li><code>median</code></li>
@@ -132,17 +127,17 @@ visualize certain common summary functions passed to
   group_by(Work) %&gt;%
   summarise(mean_salary = mean(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-059faa73fbf78c4a7bc7" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-6ffafc58542b820b26ef" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget059faa73fbf78c4a7bc7.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget6ffafc58542b820b26ef.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget059faa73fbf78c4a7bc7.onSlide('htmlwidget059faa73fbf78c4a7bc7')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget6ffafc58542b820b26ef.onSlide('htmlwidget6ffafc58542b820b26ef')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget059faa73fbf78c4a7bc7.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget6ffafc58542b820b26ef.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -157,7 +152,7 @@ visualize certain common summary functions passed to
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-059faa73fbf78c4a7bc7">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-6ffafc58542b820b26ef">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -3984,17 +3979,17 @@ visualize certain common summary functions passed to
   group_by(Work) %&gt;%
   summarise(median_salary = median(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-f1d3f387b61a16d97fa4" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-19d76ba5c0d14c00afd8" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgetf1d3f387b61a16d97fa4.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget19d76ba5c0d14c00afd8.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetf1d3f387b61a16d97fa4.onSlide('htmlwidgetf1d3f387b61a16d97fa4')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget19d76ba5c0d14c00afd8.onSlide('htmlwidget19d76ba5c0d14c00afd8')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgetf1d3f387b61a16d97fa4.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget19d76ba5c0d14c00afd8.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -4009,7 +4004,7 @@ visualize certain common summary functions passed to
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-f1d3f387b61a16d97fa4">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-19d76ba5c0d14c00afd8">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -6362,17 +6357,17 @@ visualize certain common summary functions passed to
   group_by(Work) %&gt;%
   summarise(min_salary = min(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-fd98cc7f1696361cbeb7" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-b77fbf83da0454c73f2b" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgetfd98cc7f1696361cbeb7.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgetb77fbf83da0454c73f2b.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetfd98cc7f1696361cbeb7.onSlide('htmlwidgetfd98cc7f1696361cbeb7')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetb77fbf83da0454c73f2b.onSlide('htmlwidgetb77fbf83da0454c73f2b')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgetfd98cc7f1696361cbeb7.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgetb77fbf83da0454c73f2b.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -6387,7 +6382,7 @@ visualize certain common summary functions passed to
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-fd98cc7f1696361cbeb7">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-b77fbf83da0454c73f2b">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -8735,17 +8730,17 @@ visualize certain common summary functions passed to
   group_by(Work) %&gt;%
   summarise(max_salary = max(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-64b946ab528c432a4bdd" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-0c6dab0914144a25148c" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget64b946ab528c432a4bdd.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget0c6dab0914144a25148c.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget64b946ab528c432a4bdd.onSlide('htmlwidget64b946ab528c432a4bdd')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget0c6dab0914144a25148c.onSlide('htmlwidget0c6dab0914144a25148c')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget64b946ab528c432a4bdd.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget0c6dab0914144a25148c.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -8760,7 +8755,7 @@ visualize certain common summary functions passed to
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-64b946ab528c432a4bdd">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-0c6dab0914144a25148c">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -11108,26 +11103,23 @@ visualize certain common summary functions passed to
 <div class="section level3">
 <h3 id="quantile-function">quantile() function<a class="anchor" aria-label="anchor" href="#quantile-function"></a>
 </h3>
-<p>The summarize function includes the capacity to pass some
-parameterized functions that result in custom animations. Currently
-datamations supports the <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile()</a></code> function with the
-<code>probs</code> parameter as an example of this capability.</p>
+<p>The summarize function includes the capacity to pass some parameterized functions that result in custom animations. Currently datamations supports the <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile()</a></code> function with the <code>probs</code> parameter as an example of this capability.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Degree) %&gt;%
   summarise(quan = quantile(Salary, probs = 0.01))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-cce8e80ec5a41324e58a" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-fdbaad0478da9d19ae2f" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgetcce8e80ec5a41324e58a.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgetfdbaad0478da9d19ae2f.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetcce8e80ec5a41324e58a.onSlide('htmlwidgetcce8e80ec5a41324e58a')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetfdbaad0478da9d19ae2f.onSlide('htmlwidgetfdbaad0478da9d19ae2f')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgetcce8e80ec5a41324e58a.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgetfdbaad0478da9d19ae2f.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -11142,7 +11134,7 @@ datamations supports the <code><a href="https://rdrr.io/r/stats/quantile.html" c
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-cce8e80ec5a41324e58a">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-fdbaad0478da9d19ae2f">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -13494,8 +13486,7 @@ datamations supports the <code><a href="https://rdrr.io/r/stats/quantile.html" c
 <div class="section level2">
 <h2 id="other-summary-functions">Other summary functions<a class="anchor" aria-label="anchor" href="#other-summary-functions"></a>
 </h2>
-<p>Common summary functions may include count-like operations, like
-n_distinct.</p>
+<p>Common summary functions may include count-like operations, like n_distinct.</p>
 <div class="section level3">
 <h3 id="n_distinct">n_distinct()<a class="anchor" aria-label="anchor" href="#n_distinct"></a>
 </h3>
@@ -13506,17 +13497,17 @@ n_distinct.</p>
   group_by(island) %&gt;%
   summarise(n = n_distinct(species))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-6f2248e47048fbb2e07f" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-4a24da2b5d3ea3d7542a" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget6f2248e47048fbb2e07f.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget4a24da2b5d3ea3d7542a.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget6f2248e47048fbb2e07f.onSlide('htmlwidget6f2248e47048fbb2e07f')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget4a24da2b5d3ea3d7542a.onSlide('htmlwidget4a24da2b5d3ea3d7542a')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget6f2248e47048fbb2e07f.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget4a24da2b5d3ea3d7542a.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -13531,7 +13522,7 @@ n_distinct.</p>
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-6f2248e47048fbb2e07f">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-4a24da2b5d3ea3d7542a">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -18623,24 +18614,23 @@ n_distinct.</p>
       ]
     }
   }
-]},"evals":[],"jsHooks":[]}</script><p>You can find the API can support a large variety of mathematical
-functions and dplyr functions</p>
+]},"evals":[],"jsHooks":[]}</script><p>You can find the API can support a large variety of mathematical functions and dplyr functions</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Degree) %&gt;%
   summarize(floor_salary = trunc(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-3fc270ee2e5aad36ee8c" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-8cced5ea39ce53a54eac" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget3fc270ee2e5aad36ee8c.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget8cced5ea39ce53a54eac.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget3fc270ee2e5aad36ee8c.onSlide('htmlwidget3fc270ee2e5aad36ee8c')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget8cced5ea39ce53a54eac.onSlide('htmlwidget8cced5ea39ce53a54eac')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget3fc270ee2e5aad36ee8c.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget8cced5ea39ce53a54eac.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -18655,7 +18645,7 @@ functions and dplyr functions</p>
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-3fc270ee2e5aad36ee8c">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-8cced5ea39ce53a54eac">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -21002,17 +20992,17 @@ functions and dplyr functions</p>
   group_by(Degree) %&gt;%
   summarize(first_salary = first(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-1b3ab7af902efc4e9bda" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-1854fca0127c1c21b3e3" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget1b3ab7af902efc4e9bda.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget1854fca0127c1c21b3e3.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget1b3ab7af902efc4e9bda.onSlide('htmlwidget1b3ab7af902efc4e9bda')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget1854fca0127c1c21b3e3.onSlide('htmlwidget1854fca0127c1c21b3e3')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget1b3ab7af902efc4e9bda.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget1854fca0127c1c21b3e3.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -21027,7 +21017,7 @@ functions and dplyr functions</p>
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-1b3ab7af902efc4e9bda">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-1854fca0127c1c21b3e3">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -23374,17 +23364,17 @@ functions and dplyr functions</p>
   group_by(Degree) %&gt;%
   summarize(lagged_salary = lag(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-989a65005b35ec571f40" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-93ce942ff7942acfc0d1" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget989a65005b35ec571f40.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget93ce942ff7942acfc0d1.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget989a65005b35ec571f40.onSlide('htmlwidget989a65005b35ec571f40')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget93ce942ff7942acfc0d1.onSlide('htmlwidget93ce942ff7942acfc0d1')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget989a65005b35ec571f40.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget93ce942ff7942acfc0d1.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -23399,7 +23389,7 @@ functions and dplyr functions</p>
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-989a65005b35ec571f40">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-93ce942ff7942acfc0d1">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -25739,25 +25729,23 @@ functions and dplyr functions</p>
 <div class="section level2">
 <h2 id="count-and-tally">count() and tally()<a class="anchor" aria-label="anchor" href="#count-and-tally"></a>
 </h2>
-<p>datamations treats <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally()</a></code>
-calls equivalently to <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> +
-<code>summarize(n = n())</code>.</p>
+<p>datamations treats <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally()</a></code> calls equivalently to <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> + <code>summarize(n = n())</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="st">"small_salary %&gt;%
   group_by(Degree) %&gt;%
   count(Salary)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-61b644770124b5ecb204" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-e785c8bda2ce785329f8" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget61b644770124b5ecb204.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgete785c8bda2ce785329f8.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget61b644770124b5ecb204.onSlide('htmlwidget61b644770124b5ecb204')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgete785c8bda2ce785329f8.onSlide('htmlwidgete785c8bda2ce785329f8')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget61b644770124b5ecb204.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgete785c8bda2ce785329f8.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -25772,7 +25760,7 @@ calls equivalently to <code><a href="https://dplyr.tidyverse.org/reference/group
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-61b644770124b5ecb204">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-e785c8bda2ce785329f8">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
