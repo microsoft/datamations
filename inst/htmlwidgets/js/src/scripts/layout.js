@@ -1,7 +1,3 @@
-/* eslint-disable promise/param-names */
-/* eslint-disable camelcase */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
 /*
 * Layout generation functions for datamations.
 * Supports:

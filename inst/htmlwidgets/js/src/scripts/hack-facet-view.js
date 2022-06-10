@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable camelcase */
 /**
  * Hack faceted view since gemini.js does not support multi view animations
  * Finding coordinates of each circle and treat them as real values in the one axis view

@@ -1,6 +1,3 @@
-/* eslint-disable no-var */
-/* eslint-disable no-use-before-define */
-/* eslint-disable camelcase */
 import _ from 'lodash'
 
 const X_FIELD_CHR = 'datamations_x'
