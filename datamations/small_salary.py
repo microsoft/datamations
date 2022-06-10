@@ -4,7 +4,7 @@
 import os
 import pandas as pd
 
-class small_salary():
+class small_salary:
 
     def __init__(self):
         script_dir = os.path.dirname( __file__ )

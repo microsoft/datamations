@@ -1,0 +1,32 @@
+[MESSAGES CONTROL]
+; General diable of the convention, refactor, warning pylint error. Forporbable bugs and fatal--ifan error are enabled
+; disable=C, W, R, import-error 
+
+; below is diabling each specific of each not needed error
+disable=too-many-branches, 
+        unspecified-encoding,
+        import-error,
+        line-too-long, 
+        consider-using-f-string,
+        missing-module-docstring, 
+        missing-function-docstring,
+        missing-class-docstring,
+        too-few-public-methods, 
+        too-many-arguments, 
+        too-many-statements,
+        too-many-locals,
+        redefined-builtin,
+        arguments-differ, 
+        unused-variable, ; warning of unused variable diabled
+        invalid-name, ; warning of invalid name disabled
+        unused-argument, ; warning of unused argument diabled
+        super-with-arguments, ; warning of supper argument diabled
+        protected-access, 
+        arguments-renamed, ; overridden warning diabled
+        too-many-nested-blocks,
+        arguments-renamed, ; warning of parameter changed after overridden
+        too-many-ancestors,
+        duplicate-code,
+        no-self-argument,
+        redefined-outer-name,
+        cyclic-import ; Cyclic import (%s) Used when a cyclic import between two or more modules is detected
