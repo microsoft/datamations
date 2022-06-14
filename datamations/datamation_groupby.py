@@ -72,6 +72,42 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
         return df
 
+    # Override the 'sum' function
+    def sum(self, axis=None):
+        self._axis = axis
+        self._states.append(self)
+        self._operations.append('sum')
+        df = super(DatamationGroupBy, self).sum()
+        df = datamation_frame.DatamationFrame(df)
+        df._by = self.states[1]._by
+        df._states = self._states
+        df._operations = self._operations
+        self._output = df
+        self._axis = axis if axis else df.keys()[0]
+        self._error = super(DatamationGroupBy, self).std()
+        for i in range(len(self._error[self._axis])):
+            self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
+        return df
+
+    # Override the 'cumprod' function
+    # cumprod - Cumulative Product
+    def cumprod(self, axis=None):
+        self._axis = axis
+        self._states.append(self)
+        self._operations.append('cumprod')
+        df = super(DatamationGroupBy, self).cumprod()
+        df = datamation_frame.DatamationFrame(df)
+        df._by = self.states[1]._by
+        df._states = self._states
+        df._operations = self._operations
+        self._output = df
+        self._axis = axis if axis else df.keys()[0]
+        self._error = super(DatamationGroupBy, self).std()
+        for i in range(len(self._error[self._axis])):
+            self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
+        return df
+
+
     # The specs to show summarized points on the chart
     def prep_specs_summarize(self, width=300, height=300):
         x_axis = self.states[1].dtypes.axes[0].name if len(self._by) == 1 else self.states[1].dtypes.axes[0].names[0]
