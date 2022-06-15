@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable camelcase */
 import assert from 'assert'
 import * as d3 from 'd3'
 import { generateGrid } from '../scripts/layout.js'
@@ -17,7 +15,6 @@ let data = []
 let raw_spec = []
 let penguins = []
 let medians = []
-// eslint-disable-next-line no-unused-vars
 let products = []
 let groupby_degree_work = []
 
@@ -60,7 +57,6 @@ function compare_specs_with_file (specs, raw_spec) {
   for (let i = 0; i < specs.length; i++) {
     for (const key of Object.keys(specs[i])) {
       if (key === 'data') {
-        // eslint-disable-next-line no-var
         for (var j = 0; j < specs[i][key].values.length; j++) {
           for (const field of Object.keys(specs[i][key].values[j])) {
             if (field.startsWith('datamations_y') || field === 'Lower' || field === 'Upper') {
@@ -163,7 +159,6 @@ describe('products rating', function () {
   })
   context('group by two columns, mean', function () {
     it('should match', function () {
-      // eslint-disable-next-line no-unused-vars
       const specs = datamations.specs({ values: data }, ['Year', 'Category'], 'Average of Rating', {
         2015: {
           Accessories: 0.631666666666667,
@@ -287,6 +282,24 @@ describe('small salary', function () {
       const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Average of Salary', {
         Masters: { Academia: 84.029883, Industry: 91.225762 },
         PhD: { Academia: 85.557966, Industry: 93.083359 }
+      })
+      compare_specs_with_file(specs, groupby_degree_work)
+    })
+  })
+  context('group by single column', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Degree'], 'Sum of Salary', {
+        Masters: 6496.296048,
+        PhD: 2470.876972
+      })
+      compare_specs_with_file(specs, raw_spec)
+    })
+  })
+  context('group by two columns', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Sum of Salary', {
+        Masters: { Academia: 840.298832, Industry: 5655.997216 },
+        PhD: { Academia: 1540.043383, Industry: 930.8335886 }
       })
       compare_specs_with_file(specs, groupby_degree_work)
     })
