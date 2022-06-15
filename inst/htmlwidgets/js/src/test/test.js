@@ -265,7 +265,12 @@ describe('small salary', function () {
         fs.readFile('../../../../inst/specs/groupby_degree_work.json', 'utf8', function (err, fileContents) {
           if (err) throw err
           groupby_degree_work = JSON.parse(fileContents)
-          done()
+          fs.readFile('../../../../sandbox/custom_animations/custom-animations-min-R.json', 'utf8', function (err, fileContents) {
+            if (err) throw err
+            min_spec = JSON.parse(fileContents)
+            max_spec = JSON.parse(fileContents)
+            done()
+          })
         })
       })
     })
