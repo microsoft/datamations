@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable camelcase */
 import assert from 'assert'
 import * as d3 from 'd3'
 import { generateGrid } from '../scripts/layout.js'
@@ -15,9 +13,10 @@ const epsilon = 0.0001
 
 let data = []
 let raw_spec = []
+let min_spec = []
+let max_spec = []
 let penguins = []
 let medians = []
-// eslint-disable-next-line no-unused-vars
 let products = []
 let groupby_degree_work = []
 
@@ -60,7 +59,6 @@ function compare_specs_with_file (specs, raw_spec) {
   for (let i = 0; i < specs.length; i++) {
     for (const key of Object.keys(specs[i])) {
       if (key === 'data') {
-        // eslint-disable-next-line no-var
         for (var j = 0; j < specs[i][key].values.length; j++) {
           for (const field of Object.keys(specs[i][key].values[j])) {
             if (field.startsWith('datamations_y') || field === 'Lower' || field === 'Upper') {
@@ -163,7 +161,6 @@ describe('products rating', function () {
   })
   context('group by two columns, mean', function () {
     it('should match', function () {
-      // eslint-disable-next-line no-unused-vars
       const specs = datamations.specs({ values: data }, ['Year', 'Category'], 'Average of Rating', {
         2015: {
           Accessories: 0.631666666666667,
@@ -280,6 +277,24 @@ describe('small salary', function () {
         PhD: 88.24560613
       })
       compare_specs_with_file(specs, raw_spec)
+    })
+  })
+  context('group by single min', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Degree'], 'Min of Salary', {
+        Masters: 81.9445013836957,
+        PhD: 83.7531382157467
+      })
+      compare_specs_with_file(specs, min_spec)
+    })
+  })
+  context('group by single max', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Degree'], 'Max of Salary', {
+        Masters: 92.4685412924736,
+        PhD: 94.0215112566947
+      })
+      compare_specs_with_file(specs, max_spec)
     })
   })
   context('group by two columns', function () {
