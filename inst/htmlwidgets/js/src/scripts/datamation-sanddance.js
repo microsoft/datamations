@@ -451,8 +451,12 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     case 'median':
       operation = 'median'
       break
-    // case 'sum'
-    //   operation = 'sum'
+    case 'sum':
+      operation = 'sum'
+      break
+    case 'product':
+      operation = 'product'
+      break
   }
 
   if (groupby.length === 1) {
@@ -577,22 +581,22 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     }
   }
 
-  if (groupby.length > 1) {
-    var sort = groups
-    if (operation === 'sum') {
-      facet_encoding.column = { field: groupby[0], sort, type: 'ordinal', title: groupby[0] }
-    } else {
-      facet_encoding.column = { field: groupby[0], type: 'ordinal', title: groupby[0] }
-    }
-  }
-  if (groupby.length > 2) {
-    sort = subgroups
-    if (operation === 'sum') {
-      facet_encoding.row = { field: groupby[1], sort, type: 'ordinal', title: groupby[1] }
-    } else {
-      facet_encoding.row = { field: groupby[1], type: 'ordinal', title: groupby[1] }
-    }
-  }
+  // if (groupby.length > 1) {
+  //   sort = groups
+  //   if (operation === 'sum') {
+  //     facet_encoding.column = { field: groupby[0], sort, type: 'ordinal', title: groupby[0] }
+  //   } else {
+  //     facet_encoding.column = { field: groupby[0], type: 'ordinal', title: groupby[0] }
+  //   }
+  // }
+  // if (groupby.length > 2) {
+  //   sort = subgroups
+  //   if (operation === 'sum') {
+  //     facet_encoding.row = { field: groupby[1], sort, type: 'ordinal', title: groupby[1] }
+  //   } else {
+  //     facet_encoding.row = { field: groupby[1], type: 'ordinal', title: groupby[1] }
+  //   }
+  // }
 
   let facet_dims = {
     ncol: 1,
@@ -741,7 +745,6 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       domain: [_.round(min, 13), _.round(max, 13)]
     }
   }
-
 
   tooltip = [
     {
