@@ -263,7 +263,11 @@ describe('small salary', function () {
         fs.readFile('../../../../inst/specs/groupby_degree_work.json', 'utf8', function (err, fileContents) {
           if (err) throw err
           groupby_degree_work = JSON.parse(fileContents)
-          done()
+          fs.readFile('../../../../inst/specs/sum_specs.json', 'utf8', function (err, fileContents) {
+            if (err) throw err
+            sum_specs = JSON.parse(fileContents)
+            done()
+          })
         })
       })
     })
@@ -301,7 +305,7 @@ describe('small salary', function () {
         Masters: { Academia: 840.298832, Industry: 5655.997216 },
         PhD: { Academia: 1540.043383, Industry: 930.8335886 }
       })
-      compare_specs_with_file(specs, groupby_degree_work)
+      compare_specs_with_file(specs, sum_specs)
     })
   })
 })
