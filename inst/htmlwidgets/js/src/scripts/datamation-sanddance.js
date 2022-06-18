@@ -919,8 +919,10 @@ function prep_specs_summarize (states, groupby, summarize, output) {
         [x_axis]: states[0][i][x_axis],
         datamations_x: states[0][i][x_axis] === groups[0] ? 1 : 2,
         datamations_y: output[groups[0]],
-        datamations_y_tooltip: output[groups[0]],
-        datamations_y_raw: _.round(states[0][i][y_axis], 13)
+        datamations_y_tooltip: output[groups[0]]
+      }
+      if (operation === 'mean' || operation === 'median') {
+        value.datamations_y_raw = _.round(states[0][i][y_axis], 13)
       }
       if (operation === 'mean') {
         value.Lower = output[groups[0]] - _error[groups[0]]
@@ -939,8 +941,10 @@ function prep_specs_summarize (states, groupby, summarize, output) {
         [x_axis]: states[0][i][x_axis],
         datamations_x: states[0][i][x_axis] === groups[0] ? 1 : 2,
         datamations_y: output[groups[1]],
-        datamations_y_tooltip: output[groups[1]],
-        datamations_y_raw: _.round(states[0][i][y_axis], 13)
+        datamations_y_tooltip: output[groups[1]]
+      }
+      if (operation === 'mean' || operation === 'median') {
+        value.datamations_y_raw = _.round(states[0][i][y_axis], 13)
       }
       if (operation === 'mean') {
         value.Lower = output[groups[1]] - _error[groups[1]]
