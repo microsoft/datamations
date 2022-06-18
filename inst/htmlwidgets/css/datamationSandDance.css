@@ -36,6 +36,11 @@
   display: none;
 }
 
+.vega-vis-wrapper .chart-wrapper { 
+  width: 125% !important;
+  height: 100%;
+}
+
 .control-bar {
   width: 100%;
   display: flex;
@@ -58,11 +63,6 @@ details {
 
 .vega-embed.has-actions {
   padding-right: 0px !important;
-}
-
-.vega-embed .chart-wrapper { 
-  width: 125% !important;
-  height: 100%;
 }
 
 .description {
