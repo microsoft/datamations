@@ -149,9 +149,16 @@ function prep_specs_data (states) {
   return specs_list
 }
 
-function prep_specs_groupby (states, groupby) {
+function prep_specs_groupby (states, groupby, summarize) {
   const x_encoding = { field: X_FIELD_CHR, type: 'quantitative', axis: null }
   const y_encoding = { field: Y_FIELD_CHR, type: 'quantitative', axis: null }
+
+  let operation = summarize.split(' ')[0].toLowerCase()
+  switch (operation) {
+    case 'average':
+      operation = 'mean'
+      break
+  }
 
   let tooltip = [
     {
@@ -163,11 +170,14 @@ function prep_specs_groupby (states, groupby) {
   let spec_encoding = {
     x: x_encoding,
     y: y_encoding,
-    color: {
+    tooltip
+  }
+
+  if (operation === 'mean') {
+    spec_encoding.color = {
       field: null,
       type: 'nominal'
-    },
-    tooltip
+    }
   }
 
   let facet_encoding = {}
@@ -715,7 +725,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   y_encoding = {
     field: 'datamations_y',
     type: 'quantitative',
-    title: operation === 'median' ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    title: ['median', 'sum'].includes(operation) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
     scale: {
       domain: [_.round(min, 13), _.round(max, 13)]
     }
@@ -806,7 +816,9 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     }
   }
 
-  meta.custom_animation = operation
+  if (['mean', 'median', 'min', 'max'].includes(operation)) {
+    meta.custom_animation = operation
+  }
 
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
   if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
@@ -1037,7 +1049,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   y_encoding = {
     field: 'datamations_y',
     type: 'quantitative',
-    title: operation === 'median' ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    title: ['median', 'sum'].includes(operation) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
     scale: {
       domain
     }
@@ -1100,6 +1112,6 @@ export function specs (data, groupby, summarize, output) {
   const states = [values, { groups: group_by(values, groupby) }, summarize]
 
   return prep_specs_data(states).concat(
-    prep_specs_groupby(states, groupby).concat(prep_specs_summarize(states, groupby, summarize, output))
+    prep_specs_groupby(states, groupby, summarize).concat(prep_specs_summarize(states, groupby, summarize, output))
   )
 }
