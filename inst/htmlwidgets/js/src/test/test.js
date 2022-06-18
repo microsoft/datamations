@@ -302,7 +302,7 @@ describe('small salary', function () {
         Masters: 6496.296048,
         PhD: 2470.876972
       })
-      compare_specs_with_file(specs, raw_spec)
+      compare_specs_with_file(specs, sum_specs)
     })
   })
   context('group by two columns and summarize by sum', function () {

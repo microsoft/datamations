@@ -449,9 +449,6 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     case 'average':
       operation = 'mean'
       break
-    case 'median':
-      operation = 'median'
-      break
   }
 
   if (groupby.length === 1) {
@@ -485,13 +482,13 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       labelExpr:
         groupby.length > 2
           ? "round(datum.label) == 1 ? '" +
-            l3groups[0] +
-            "' : " +
-            "round(datum.label) == 2 ? '" +
-            l3groups[1] +
-            "' : '" +
-            l3groups[2] +
-            "'"
+          l3groups[0] +
+          "' : " +
+          "round(datum.label) == 2 ? '" +
+          l3groups[1] +
+          "' : '" +
+          l3groups[2] +
+          "'"
           : "round(datum.label) == 1 ? '" + labels[0] + "' : '" + labels[1] + "'",
       labelAngle: -90
     },
