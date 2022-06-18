@@ -36,9 +36,9 @@
   display: none;
 }
 
-.vega-vis-wrapper .chart-wrapper { 
+.vega-vis-wrapper { 
   width: 125% !important;
-  height: 100%;
+  background-color: white !important;
 }
 
 .control-bar {
