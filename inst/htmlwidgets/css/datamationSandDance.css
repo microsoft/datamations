@@ -61,7 +61,7 @@ details {
 }
 
 .vega-embed .chart-wrapper { 
-  width: 125%;
+  width: 125% !important;
   height: 100%;
 }
 
