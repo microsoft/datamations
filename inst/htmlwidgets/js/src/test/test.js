@@ -16,6 +16,7 @@ const epsilon = 0.0001
 let data = []
 let raw_spec = []
 let sum_specs = []
+let sum_specs_two_columns = []
 let penguins = []
 let medians = []
 // eslint-disable-next-line no-unused-vars
@@ -119,6 +120,16 @@ function compare_specs_with_file (specs, raw_spec) {
               .to.be.approximately(raw_spec[i][key].y.scale.domain[1], epsilon)
 
             specs[i][key].y.scale.domain = raw_spec[i][key].y.scale.domain
+          }
+          else if (key === 'spec' && specs[i][key].encoding.y.scale) {
+            chai
+              .expect(specs[i][key].encoding.y.scale.domain[0])
+              .to.be.approximately(raw_spec[i][key].encoding.y.scale.domain[0], epsilon)
+            chai
+              .expect(specs[i][key].encoding.y.scale.domain[1])
+              .to.be.approximately(raw_spec[i][key].encoding.y.scale.domain[1], epsilon)
+
+            specs[i][key].encoding.y.scale.domain = raw_spec[i][key].encoding.y.scale.domain
           }
           chai.expect(specs[i][key]).to.deep.equal(raw_spec[i][key], 'failed spec#' + i + ', key=' + key)
         }
@@ -282,7 +293,11 @@ describe('small salary', function () {
           fs.readFile('../../../../inst/specs/sum_specs.json', 'utf8', function (err, fileContents) {
             if (err) throw err
             sum_specs = JSON.parse(fileContents)
-            done()
+            fs.readFile('../../../../inst/specs/sum_specs_two_columns.json', 'utf8', function (err, fileContents) {
+              if (err) throw err
+              sum_specs_two_columns = JSON.parse(fileContents)
+              done()
+            })
           })
         })
       })
@@ -321,7 +336,7 @@ describe('small salary', function () {
         Masters: { Academia: 840.298832, Industry: 5655.997216 },
         PhD: { Academia: 1540.043383, Industry: 930.8335886 }
       })
-      // compare_specs_with_file(specs, sum_specs)
+      compare_specs_with_file(specs, sum_specs_two_columns)
     })
   })
 })
