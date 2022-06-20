@@ -312,7 +312,7 @@ describe('small salary', function () {
   //     compare_specs_with_file(specs, groupby_degree_work)
   //   })
   // })
-  context('group by single column', function () {
+  context('group by single column and summarize by sum', function () {
     it('should match', function () {
       const specs = datamations.specs({ values: data }, ['Degree'], 'Sum of Salary', {
         Masters: 6496.296048,
@@ -321,13 +321,13 @@ describe('small salary', function () {
       compare_specs_with_file(specs, sum_specs)
     })
   })
-  context('group by two columns', function () {
+  context('group by two columns and summarize by sum', function () {
     it('should match', function () {
       const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Sum of Salary', {
         Masters: { Academia: 840.298832, Industry: 5655.997216 },
         PhD: { Academia: 1540.043383, Industry: 930.8335886 }
       })
-      compare_specs_with_file(specs, sum_specs)
+      compare_specs_with_file(specs, sum_specs_two_columns)
     })
   })
 })
