@@ -148,9 +148,16 @@ function prep_specs_data (states) {
   return specs_list
 }
 
-function prep_specs_groupby (states, groupby) {
+function prep_specs_groupby (states, groupby, summarize) {
   const x_encoding = { field: X_FIELD_CHR, type: 'quantitative', axis: null }
   const y_encoding = { field: Y_FIELD_CHR, type: 'quantitative', axis: null }
+
+  let operation = summarize.split(' ')[0].toLowerCase()
+  switch (operation) {
+    case 'average':
+      operation = 'mean'
+      break
+  }
 
   let tooltip = [
     {
@@ -162,13 +169,14 @@ function prep_specs_groupby (states, groupby) {
   let spec_encoding = {
     x: x_encoding,
     y: y_encoding,
-    color: {
-      field: null,
-      type: 'nominal'
-    },
     tooltip
   }
-
+  if (operation === 'mean') {
+    spec_encoding.color = {
+      field: null,
+      type: 'nominal'
+    }
+  }
   let facet_encoding = {}
 
   if (groupby.length > 1) facet_encoding.column = { field: groupby[0], type: 'ordinal', title: groupby[0] }
@@ -454,9 +462,9 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     case 'sum':
       operation = 'sum'
       break
-    case 'product':
-      operation = 'product'
-      break
+    // case 'product':
+    //   operation = 'product'
+    //   break
   }
 
   if (groupby.length === 1) {
@@ -580,23 +588,6 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       facet_encoding.row = { field: groupby[1], type: 'ordinal', title: groupby[1] }
     }
   }
-
-  // if (groupby.length > 1) {
-  //   sort = groups
-  //   if (operation === 'sum') {
-  //     facet_encoding.column = { field: groupby[0], sort, type: 'ordinal', title: groupby[0] }
-  //   } else {
-  //     facet_encoding.column = { field: groupby[0], type: 'ordinal', title: groupby[0] }
-  //   }
-  // }
-  // if (groupby.length > 2) {
-  //   sort = subgroups
-  //   if (operation === 'sum') {
-  //     facet_encoding.row = { field: groupby[1], sort, type: 'ordinal', title: groupby[1] }
-  //   } else {
-  //     facet_encoding.row = { field: groupby[1], type: 'ordinal', title: groupby[1] }
-  //   }
-  // }
 
   let facet_dims = {
     ncol: 1,
@@ -740,7 +731,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   y_encoding = {
     field: 'datamations_y',
     type: 'quantitative',
-    title: operation === 'median' ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    title: ['median', 'sum'].includes(operation) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
     scale: {
       domain: [_.round(min, 13), _.round(max, 13)]
     }
@@ -831,7 +822,9 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     }
   }
 
-  meta.custom_animation = operation
+  if (['mean', 'median', 'min', 'max'].includes(operation)) {
+    meta.custom_animation = operation
+  }
 
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
   if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
@@ -926,7 +919,9 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   } else {
     id = 1
     for (i = 0; i < states[0].length; i++) {
-      if (states[0][i][x_axis] === groups[1]) continue
+      if (states[0][i][x_axis] === groups[1]) {
+        continue
+      }
       value = {
         gemini_id: id,
         [x_axis]: states[0][i][x_axis],
@@ -1125,6 +1120,6 @@ export function specs (data, groupby, summarize, output) {
   const states = [values, { groups: group_by(values, groupby) }, summarize]
 
   return prep_specs_data(states).concat(
-    prep_specs_groupby(states, groupby).concat(prep_specs_summarize(states, groupby, summarize, output))
+    prep_specs_groupby(states, groupby, summarize).concat(prep_specs_summarize(states, groupby, summarize, output))
   )
 }
