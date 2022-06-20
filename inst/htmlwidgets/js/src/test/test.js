@@ -107,6 +107,26 @@ function compare_specs_with_file (specs, raw_spec) {
           }
           chai.expect(specs[i][key]).to.deep.equal(raw_spec[i][key], 'failed spec#' + i)
         } else {
+          if (key === 'encoding' && specs[i][key].y.scale) {
+            chai
+              .expect(specs[i][key].y.scale.domain[0])
+              .to.be.approximately(raw_spec[i][key].y.scale.domain[0], epsilon)
+            chai
+              .expect(specs[i][key].y.scale.domain[1])
+              .to.be.approximately(raw_spec[i][key].y.scale.domain[1], epsilon)
+
+            specs[i][key].y.scale.domain = raw_spec[i][key].y.scale.domain
+          }
+          else if (key === 'spec' && specs[i][key].encoding.y.scale) {
+            chai
+              .expect(specs[i][key].encoding.y.scale.domain[0])
+              .to.be.approximately(raw_spec[i][key].encoding.y.scale.domain[0], epsilon)
+            chai
+              .expect(specs[i][key].encoding.y.scale.domain[1])
+              .to.be.approximately(raw_spec[i][key].encoding.y.scale.domain[1], epsilon)
+
+            specs[i][key].encoding.y.scale.domain = raw_spec[i][key].encoding.y.scale.domain
+          }
           chai.expect(specs[i][key]).to.deep.equal(raw_spec[i][key], 'failed spec#' + i + ', key=' + key)
         }
       }
@@ -268,8 +288,11 @@ describe('small salary', function () {
           fs.readFile('../../../../sandbox/custom_animations/custom-animations-min-R.json', 'utf8', function (err, fileContents) {
             if (err) throw err
             min_spec = JSON.parse(fileContents)
-            max_spec = JSON.parse(fileContents)
-            done()
+            fs.readFile('../../../../sandbox/custom_animations/custom-animations-max-R.json', 'utf8', function (err, fileContents) {
+              if (err) throw err
+              max_spec = JSON.parse(fileContents)
+              done()
+            })
           })
         })
       })
@@ -300,6 +323,24 @@ describe('small salary', function () {
         PhD: 94.0215112566947
       })
       compare_specs_with_file(specs, max_spec)
+    })
+  })
+  context('group by two columns min', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Min of Salary', {
+        Masters: { Academia: 81.9445013836957, Industry: 89.5807276440318 },
+        PhD: { Academia: 83.7531382157467, Industry: 91.4052118111867 }
+      })
+      // compare_specs_with_file(specs, min_spec)
+    })
+  })
+  context('group by two columns max', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Max of Salary', {
+        Masters: { Academia: 85.4951418309938, Industry: 92.4685412924736 },
+        PhD: { Academia: 87.439179474255, Industry: 94.0215112566947 }
+      })
+      // compare_specs_with_file(specs, max_spec)
     })
   })
   context('group by two columns', function () {
