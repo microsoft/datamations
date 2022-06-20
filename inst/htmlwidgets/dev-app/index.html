@@ -31,11 +31,12 @@
                 type="range"
                 min="0"
                 value="0"
+                aria-label="animation"
                 onchange="app.onSlide()"
               />
             </div>
             <div class="button-wrap">
-              <button class="export-btn" onclick="app.exportGif(true)">
+              <button class="export-btn" aria-label="download" onclick="app.exportGif(true)">
                 <i class="fas fa-download"></i>
               </button>
             </div>

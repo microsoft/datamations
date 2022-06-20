@@ -36,11 +36,6 @@
   display: none;
 }
 
-.vega-vis-wrapper { 
-  width: 125% !important;
-  background-color: white !important;
-}
-
 .control-bar {
   width: 100%;
   display: flex;
