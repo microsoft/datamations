@@ -134,138 +134,138 @@ function compare_specs_with_file (specs, raw_spec) {
   }
 }
 
-// describe('Layout Functions', function () {
-//   describe('#generateGrid()', function () {
-//     const { gridValues } = generateGrid(gridSpecInput)
+describe('Layout Functions', function () {
+  describe('#generateGrid()', function () {
+    const { gridValues } = generateGrid(gridSpecInput)
 
-//     it('should return correct number of points', function () {
-//       assert.equal(gridSpecInput.data.values[0].n, gridValues.length)
-//     })
+    it('should return correct number of points', function () {
+      assert.equal(gridSpecInput.data.values[0].n, gridValues.length)
+    })
 
-//     it('should correctly set gemini id', function () {
-//       const gemini_id_not_matched = gridValues.filter((d, i) => {
-//         return gridSpecInput.data.values[0].gemini_ids[i] !== d.gemini_id
-//       })
-//       assert.equal(gemini_id_not_matched.length, 0)
-//     })
+    it('should correctly set gemini id', function () {
+      const gemini_id_not_matched = gridValues.filter((d, i) => {
+        return gridSpecInput.data.values[0].gemini_ids[i] !== d.gemini_id
+      })
+      assert.equal(gemini_id_not_matched.length, 0)
+    })
 
-//     it('should have datamations_x, datamations_y, gemini_id', function () {
-//       const invalid = gridValues.filter((d) => {
-//         return d.datamations_x === undefined || d.datamations_x === null ||
-//                d.datamations_y === undefined || d.datamations_y === null ||
-//                d.gemini_id === undefined || d.gemini_id === null
-//       })
-//       assert.equal(invalid.length, 0)
-//     })
-//   })
-// })
+    it('should have datamations_x, datamations_y, gemini_id', function () {
+      const invalid = gridValues.filter((d) => {
+        return d.datamations_x === undefined || d.datamations_x === null ||
+               d.datamations_y === undefined || d.datamations_y === null ||
+               d.gemini_id === undefined || d.gemini_id === null
+      })
+      assert.equal(invalid.length, 0)
+    })
+  })
+})
 
-// describe('products rating', function () {
-//   before(function (done) {
-//     fs.readFile('../../../../data-raw/products.csv', 'utf8', function (err, fileContents) {
-//       if (err) throw err
-//       const lines = fileContents.split(/\r?\n/)
-//       data = []
-//       for (const line of lines) {
-//         if (line.trim()) {
-//           const parts = line.split(',')
-//           data.push(parts)
-//         }
-//       }
-//       fs.readFile('../../../../sandbox/products_mean_rating.json', 'utf8', function (err, fileContents) {
-//         if (err) throw err
-//         products = JSON.parse(fileContents)
-//         done()
-//       })
-//     })
-//   })
-//   context('group by two columns, mean', function () {
-//     it('should match', function () {
-//       const specs = datamations.specs({ values: data }, ['Year', 'Category'], 'Average of Rating', {
-//         2015: {
-//           Accessories: 0.631666666666667,
-//           Bikes: 0.3875,
-//           Clothing: 0.34625,
-//           Components: 0.495714285714286
-//         },
-//         2016: {
-//           Accessories: 0.875,
-//           Bikes: 0.3675,
-//           Clothing: 0.48375,
-//           Components: 0.424285714285714
-//         },
-//         2017: {
-//           Accessories: 0.936666666666667,
-//           Bikes: 0.4825,
-//           Clothing: 0.56,
-//           Components: 0.501428571428571
-//         }
-//       })
-//       compare_specs_with_file(specs, products)
-//     })
-//   })
-// })
+describe('products rating', function () {
+  before(function (done) {
+    fs.readFile('../../../../data-raw/products.csv', 'utf8', function (err, fileContents) {
+      if (err) throw err
+      const lines = fileContents.split(/\r?\n/)
+      data = []
+      for (const line of lines) {
+        if (line.trim()) {
+          const parts = line.split(',')
+          data.push(parts)
+        }
+      }
+      fs.readFile('../../../../sandbox/products_mean_rating.json', 'utf8', function (err, fileContents) {
+        if (err) throw err
+        products = JSON.parse(fileContents)
+        done()
+      })
+    })
+  })
+  context('group by two columns, mean', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Year', 'Category'], 'Average of Rating', {
+        2015: {
+          Accessories: 0.631666666666667,
+          Bikes: 0.3875,
+          Clothing: 0.34625,
+          Components: 0.495714285714286
+        },
+        2016: {
+          Accessories: 0.875,
+          Bikes: 0.3675,
+          Clothing: 0.48375,
+          Components: 0.424285714285714
+        },
+        2017: {
+          Accessories: 0.936666666666667,
+          Bikes: 0.4825,
+          Clothing: 0.56,
+          Components: 0.501428571428571
+        }
+      })
+      compare_specs_with_file(specs, products)
+    })
+  })
+})
 
-// describe('palmer penguins', function () {
-//   before(function (done) {
-//     fs.readFile('../../../../data-raw/penguins.csv', 'utf8', function (err, fileContents) {
-//       if (err) throw err
-//       const lines = fileContents.split(/\r?\n/)
-//       data = []
-//       for (const line of lines) {
-//         if (line.trim()) {
-//           const parts = line.split(',')
-//           data.push(parts)
-//         }
-//       }
-//       fs.readFile('../../../../sandbox/penguins_three_groups.json', 'utf8', function (err, fileContents) {
-//         if (err) throw err
-//         penguins = JSON.parse(fileContents)
-//         fs.readFile('../../../../sandbox/penguins_median_specs.json', 'utf8', function (err, fileContents) {
-//           if (err) throw err
-//           medians = JSON.parse(fileContents)
-//           done()
-//         })
-//       })
-//     })
-//   })
-//   context('group by three columns, mean', function () {
-//     it('should match', function () {
-//       const specs = datamations.specs({ values: data }, ['species', 'island', 'sex'], 'Average of bill_length_mm', {
-//         Adelie: {
-//           Biscoe: { female: 37.35909091, male: 40.59090909 },
-//           Dream: { female: 36.91111111, male: 40.07142857, NA: 37.5 },
-//           Torgersen: { female: 37.55416667, male: 40.58695652, NA: 37.925 }
-//         },
-//         Chinstrap: {
-//           Dream: { female: 46.57352941, male: 51.09411765 }
-//         },
-//         Gentoo: {
-//           Biscoe: { female: 45.5637931, male: 49.47377049, NA: 45.625 }
-//         }
-//       })
-//       compare_specs_with_file(specs, penguins)
-//     })
-//   })
-//   context('group by three columns, median', function () {
-//     it('should match', function () {
-//       const specs = datamations.specs({ values: data }, ['species', 'island', 'sex'], 'Median of bill_depth_mm', {
-//         Adelie: {
-//           Biscoe: { female: 17.7, male: 18.9 },
-//           Dream: { female: 17.8, male: 18.65, NA: 18.9 },
-//           Torgersen: { female: 17.45, male: 19.2, NA: 17.7 }
-//         },
-//         Chinstrap: {
-//           Dream: { female: 17.65, male: 19.3 }
-//         },
-//         Gentoo: {
-//           Biscoe: { female: 14.25, male: 15.7, NA: 14.35 }
-//         }
-//       })
-//       compare_specs_with_file(specs, medians)
-//     })
-//   })
-// })
+describe('palmer penguins', function () {
+  before(function (done) {
+    fs.readFile('../../../../data-raw/penguins.csv', 'utf8', function (err, fileContents) {
+      if (err) throw err
+      const lines = fileContents.split(/\r?\n/)
+      data = []
+      for (const line of lines) {
+        if (line.trim()) {
+          const parts = line.split(',')
+          data.push(parts)
+        }
+      }
+      fs.readFile('../../../../sandbox/penguins_three_groups.json', 'utf8', function (err, fileContents) {
+        if (err) throw err
+        penguins = JSON.parse(fileContents)
+        fs.readFile('../../../../sandbox/penguins_median_specs.json', 'utf8', function (err, fileContents) {
+          if (err) throw err
+          medians = JSON.parse(fileContents)
+          done()
+        })
+      })
+    })
+  })
+  context('group by three columns, mean', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['species', 'island', 'sex'], 'Average of bill_length_mm', {
+        Adelie: {
+          Biscoe: { female: 37.35909091, male: 40.59090909 },
+          Dream: { female: 36.91111111, male: 40.07142857, NA: 37.5 },
+          Torgersen: { female: 37.55416667, male: 40.58695652, NA: 37.925 }
+        },
+        Chinstrap: {
+          Dream: { female: 46.57352941, male: 51.09411765 }
+        },
+        Gentoo: {
+          Biscoe: { female: 45.5637931, male: 49.47377049, NA: 45.625 }
+        }
+      })
+      compare_specs_with_file(specs, penguins)
+    })
+  })
+  context('group by three columns, median', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['species', 'island', 'sex'], 'Median of bill_depth_mm', {
+        Adelie: {
+          Biscoe: { female: 17.7, male: 18.9 },
+          Dream: { female: 17.8, male: 18.65, NA: 18.9 },
+          Torgersen: { female: 17.45, male: 19.2, NA: 17.7 }
+        },
+        Chinstrap: {
+          Dream: { female: 17.65, male: 19.3 }
+        },
+        Gentoo: {
+          Biscoe: { female: 14.25, male: 15.7, NA: 14.35 }
+        }
+      })
+      compare_specs_with_file(specs, medians)
+    })
+  })
+})
 
 describe('small salary', function () {
   before(function (done) {
@@ -294,24 +294,24 @@ describe('small salary', function () {
       })
     })
   })
-  // context('group by single column', function () {
-  //   it('should match', function () {
-  //     const specs = datamations.specs({ values: data }, ['Degree'], 'Average of Salary', {
-  //       Masters: 90.22633401,
-  //       PhD: 88.24560613
-  //     })
-  //     compare_specs_with_file(specs, raw_spec)
-  //   })
-  // })
-  // context('group by two columns', function () {
-  //   it('should match', function () {
-  //     const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Average of Salary', {
-  //       Masters: { Academia: 84.029883, Industry: 91.225762 },
-  //       PhD: { Academia: 85.557966, Industry: 93.083359 }
-  //     })
-  //     compare_specs_with_file(specs, groupby_degree_work)
-  //   })
-  // })
+  context('group by single column', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Degree'], 'Average of Salary', {
+        Masters: 90.22633401,
+        PhD: 88.24560613
+      })
+      compare_specs_with_file(specs, raw_spec)
+    })
+  })
+  context('group by two columns', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Average of Salary', {
+        Masters: { Academia: 84.029883, Industry: 91.225762 },
+        PhD: { Academia: 85.557966, Industry: 93.083359 }
+      })
+      compare_specs_with_file(specs, groupby_degree_work)
+    })
+  })
   context('group by single column and summarize by sum', function () {
     it('should match', function () {
       const specs = datamations.specs({ values: data }, ['Degree'], 'Sum of Salary', {
