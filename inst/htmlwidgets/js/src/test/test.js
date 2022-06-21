@@ -20,6 +20,7 @@ let medians = []
 // eslint-disable-next-line no-unused-vars
 let products = []
 let groupby_degree_work = []
+let count_spec = []
 
 const gridSpecInput = {
   height: 300,
@@ -268,7 +269,11 @@ describe('small salary', function () {
         fs.readFile('../../../../inst/specs/groupby_degree_work.json', 'utf8', function (err, fileContents) {
           if (err) throw err
           groupby_degree_work = JSON.parse(fileContents)
-          done()
+          fs.readFile('../../../../sandbox/custom_animations/custom-animations-count-manual.json', 'utf8', function (err, fileContents) {
+            if (err) throw err
+            count_spec = JSON.parse(fileContents)
+            done()
+          })
         })
       })
     })
@@ -287,6 +292,27 @@ describe('small salary', function () {
       const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Average of Salary', {
         Masters: { Academia: 84.029883, Industry: 91.225762 },
         PhD: { Academia: 85.557966, Industry: 93.083359 }
+      })
+      compare_specs_with_file(specs, groupby_degree_work)
+    })
+  })
+
+  //Testing count
+  context('group by single column', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Degree'], 'Count of Salary', {
+        Masters: 72,
+        PhD: 28
+      })
+      let x = specs.length
+      compare_specs_with_file(specs, count_spec)
+    })
+  })
+  context('group by two columns', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Count of Salary', {
+        Masters: { Academia: 10, Industry: 62 },
+        PhD: { Academia: 18, Industry: 10 }
       })
       compare_specs_with_file(specs, groupby_degree_work)
     })
