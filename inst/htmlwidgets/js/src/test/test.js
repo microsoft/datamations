@@ -15,6 +15,8 @@ let data = []
 let raw_spec = []
 let min_spec = []
 let max_spec = []
+let min_spec_two_column = []
+let max_spec_two_column = []
 let penguins = []
 let medians = []
 let products = []
@@ -291,7 +293,15 @@ describe('small salary', function () {
             fs.readFile('../../../../sandbox/custom_animations/custom-animations-max-R.json', 'utf8', function (err, fileContents) {
               if (err) throw err
               max_spec = JSON.parse(fileContents)
-              done()
+              fs.readFile('../../../../inst/specs/min_specs_two_columns.json', 'utf8', function (err, fileContents) {
+                if (err) throw err
+                min_spec_two_column = JSON.parse(fileContents)
+                fs.readFile('../../../../inst/specs/max_specs_two_columns.json', 'utf8', function (err, fileContents) {
+                  if (err) throw err
+                  max_spec_two_column = JSON.parse(fileContents)
+                  done()
+                })
+              })
             })
           })
         })
@@ -305,6 +315,15 @@ describe('small salary', function () {
         PhD: 88.24560613
       })
       compare_specs_with_file(specs, raw_spec)
+    })
+  })
+  context('group by two columns', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Average of Salary', {
+        Masters: { Academia: 84.029883, Industry: 91.225762 },
+        PhD: { Academia: 85.557966, Industry: 93.083359 }
+      })
+      compare_specs_with_file(specs, groupby_degree_work)
     })
   })
   context('group by single min', function () {
@@ -331,7 +350,7 @@ describe('small salary', function () {
         Masters: { Academia: 81.9445013836957, Industry: 89.5807276440318 },
         PhD: { Academia: 83.7531382157467, Industry: 91.4052118111867 }
       })
-      // compare_specs_with_file(specs, min_spec)
+      compare_specs_with_file(specs, min_spec_two_column)
     })
   })
   context('group by two columns max', function () {
@@ -340,16 +359,7 @@ describe('small salary', function () {
         Masters: { Academia: 85.4951418309938, Industry: 92.4685412924736 },
         PhD: { Academia: 87.439179474255, Industry: 94.0215112566947 }
       })
-      // compare_specs_with_file(specs, max_spec)
-    })
-  })
-  context('group by two columns', function () {
-    it('should match', function () {
-      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Average of Salary', {
-        Masters: { Academia: 84.029883, Industry: 91.225762 },
-        PhD: { Academia: 85.557966, Industry: 93.083359 }
-      })
-      compare_specs_with_file(specs, groupby_degree_work)
+      compare_specs_with_file(specs, max_spec_two_column)
     })
   })
 })
