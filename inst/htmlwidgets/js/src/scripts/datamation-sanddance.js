@@ -725,7 +725,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   y_encoding = {
     field: 'datamations_y',
     type: 'quantitative',
-    title: ['median', 'sum'].includes(operation) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    title: ['median', 'sum', 'prod'].includes(operation) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
     scale: {
       domain: [_.round(min, 13), _.round(max, 13)]
     }
@@ -1053,7 +1053,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   y_encoding = {
     field: 'datamations_y',
     type: 'quantitative',
-    title: ['median', 'sum'].includes(operation) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    title: ['median', 'sum', 'prod'].includes(operation) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
     scale: {
       domain
     }
