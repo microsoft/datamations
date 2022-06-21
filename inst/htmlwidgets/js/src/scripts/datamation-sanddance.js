@@ -148,16 +148,9 @@ function prep_specs_data (states) {
   return specs_list
 }
 
-function prep_specs_groupby (states, groupby, summarize) {
+function prep_specs_groupby (states, groupby) {
   const x_encoding = { field: X_FIELD_CHR, type: 'quantitative', axis: null }
   const y_encoding = { field: Y_FIELD_CHR, type: 'quantitative', axis: null }
-
-  let operation = summarize.split(' ')[0].toLowerCase()
-  switch (operation) {
-    case 'average':
-      operation = 'mean'
-      break
-  }
 
   let tooltip = [
     {
@@ -169,14 +162,13 @@ function prep_specs_groupby (states, groupby, summarize) {
   let spec_encoding = {
     x: x_encoding,
     y: y_encoding,
-    tooltip
-  }
-  if (operation === 'mean') {
-    spec_encoding.color = {
+    color: {
       field: null,
       type: 'nominal'
-    }
+    },
+    tooltip
   }
+
   let facet_encoding = {}
 
   if (groupby.length > 1) facet_encoding.column = { field: groupby[0], type: 'ordinal', title: groupby[0] }
@@ -459,12 +451,6 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     case 'median':
       operation = 'median'
       break
-    case 'sum':
-      operation = 'sum'
-      break
-    // case 'product':
-    //   operation = 'product'
-    //   break
   }
 
   if (groupby.length === 1) {
@@ -731,7 +717,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   y_encoding = {
     field: 'datamations_y',
     type: 'quantitative',
-    title: ['median', 'sum'].includes(operation) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    title: operation === 'median' ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
     scale: {
       domain: [_.round(min, 13), _.round(max, 13)]
     }
@@ -822,9 +808,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     }
   }
 
-  if (['mean', 'median', 'min', 'max'].includes(operation)) {
-    meta.custom_animation = operation
-  }
+  meta.custom_animation = operation
 
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
   if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
@@ -919,21 +903,15 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   } else {
     id = 1
     for (i = 0; i < states[0].length; i++) {
-      if (states[0][i][x_axis] === groups[1]) {
-        continue
-      }
+      if (states[0][i][x_axis] === groups[1]) continue
       value = {
         gemini_id: id,
         [x_axis]: states[0][i][x_axis],
         datamations_x: states[0][i][x_axis] === groups[0] ? 1 : 2,
         datamations_y: output[groups[0]],
-        datamations_y_tooltip: output[groups[0]]
+        datamations_y_tooltip: output[groups[0]],
+        datamations_y_raw: _.round(states[0][i][y_axis], 13)
       }
-
-      if (operation === 'mean' || operation === 'median') {
-        value.datamations_y_raw = _.round(states[0][i][y_axis], 13)
-      }
-
       if (operation === 'mean') {
         value.Lower = output[groups[0]] - _error[groups[0]]
         value.Upper = output[groups[0]] + _error[groups[0]]
@@ -951,10 +929,8 @@ function prep_specs_summarize (states, groupby, summarize, output) {
         [x_axis]: states[0][i][x_axis],
         datamations_x: states[0][i][x_axis] === groups[0] ? 1 : 2,
         datamations_y: output[groups[1]],
-        datamations_y_tooltip: output[groups[1]]
-      }
-      if (operation === 'mean' || operation === 'median') {
-        value.datamations_y_raw = _.round(states[0][i][y_axis], 13)
+        datamations_y_tooltip: output[groups[1]],
+        datamations_y_raw: _.round(states[0][i][y_axis], 13)
       }
       if (operation === 'mean') {
         value.Lower = output[groups[1]] - _error[groups[1]]
@@ -1126,6 +1102,6 @@ export function specs (data, groupby, summarize, output) {
   const states = [values, { groups: group_by(values, groupby) }, summarize]
 
   return prep_specs_data(states).concat(
-    prep_specs_groupby(states, groupby, summarize).concat(prep_specs_summarize(states, groupby, summarize, output))
+    prep_specs_groupby(states, groupby).concat(prep_specs_summarize(states, groupby, summarize, output))
   )
 }
