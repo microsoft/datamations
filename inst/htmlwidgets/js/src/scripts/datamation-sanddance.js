@@ -192,7 +192,7 @@ function prep_specs_groupby (states, groupby) {
       type: 'ordinal', 
       title: groupby[0] 
     }
-  } 
+  }
 
   let facet_dims = {
     ncol: 1,
@@ -377,7 +377,7 @@ function prep_specs_groupby (states, groupby) {
       facet_encoding = {}
       facet_encoding.column = { field: groupby[0], type: 'ordinal', title: groupby[0] }
       facet_encoding.row = { field: groupby[1], type: 'ordinal', title: groupby[1] }
-
+      if (operation === 'count'){ facet_encoding.column.sort = groups}
       rows = []
       data = []
       count = {}
@@ -715,9 +715,9 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   if (groupby.length > 1) {
     spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
   }
-  if(operation === 'count' && groupby.length > 1){
-    facet_encoding.column.sort = sort
-  }
+  // if(operation === 'count' && groupby.length > 1){
+  //   facet_encoding.column.sort = sort
+  // }
   let spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
   if(operation != 'count' || groupby.length > 1){
     specs_list.push(spec)
@@ -747,17 +747,16 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   
   meta = {
     axes: groupby.length > 1,
-    description: (operation != 'count') ? 'Plot ' + operation + ' ' + y_axis + ' of each group': 'Plot ' + operation + ' of each group'
+    description: (operation != 'count' || groupby.length > 1) ? 'Plot ' + operation + ' ' + y_axis + ' of each group': 'Plot ' + operation + ' of each group'
   }
   
-  if(operation != 'count'){
+  if(operation != 'count' || (operation === 'count' && groupby.length > 1)){
     y_encoding = {
       field: 'datamations_y',
       type: 'quantitative',
-      title: operation === 'median' ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+      title: operation === 'median' || operation === 'count' ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
       scale: {
-        domain: (operation != 'count') ? [_.round(min, 13), _.round(max, 13)] :
-        output[groups[0]] > output[groups[1]] ? [output[groups[1]], output[groups[0]]] : [output[groups[0]], output[groups[1]]] 
+        domain: [_.round(min, 13), _.round(max, 13)] 
       }
     }
   }else{
@@ -857,6 +856,10 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   }
 
   meta.custom_animation = operation
+
+  if(operation ==='count' && groupby.length > 1){
+    delete meta.custom_animation
+  }
 
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
   if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
@@ -1157,6 +1160,7 @@ export function specs (data, groupby, summarize, output) {
   let specs = prep_specs_data(states).concat(
     prep_specs_groupby(states, groupby).concat(prep_specs_summarize(states, groupby, summarize, output))
   )
+  
   let op = summarize.split(' ')[0].toLowerCase()
   if(op === 'count' && groupby.length == 1){
     for(let x = 0; x < specs.length; x++){

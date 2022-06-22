@@ -21,6 +21,7 @@ let medians = []
 let products = []
 let groupby_degree_work = []
 let count_spec = []
+let count_twoColumn_spec = []
 
 const gridSpecInput = {
   height: 300,
@@ -272,7 +273,11 @@ describe('small salary', function () {
           fs.readFile('../../../../sandbox/custom_animations/custom-animations-count-manual.json', 'utf8', function (err, fileContents) {
             if (err) throw err
             count_spec = JSON.parse(fileContents)
-            done()
+            fs.readFile('../../../../inst/specs/count_specs_two_columns.json', 'utf8', function (err, fileContents) {
+              if (err) throw err
+              count_twoColumn_spec = JSON.parse(fileContents)
+              done()
+            })
           })
         })
       })
@@ -297,7 +302,7 @@ describe('small salary', function () {
     })
   })
 
-  //Testing count
+  // Testing count
   context('group by single column', function () {
     it('should match', function () {
       const specs = datamations.specs({ values: data }, ['Degree'], 'Count of Salary', {
@@ -314,7 +319,7 @@ describe('small salary', function () {
         Masters: { Academia: 10, Industry: 62 },
         PhD: { Academia: 18, Industry: 10 }
       })
-      compare_specs_with_file(specs, groupby_degree_work)
+      compare_specs_with_file(specs, count_twoColumn_spec)
     })
   })
 })
