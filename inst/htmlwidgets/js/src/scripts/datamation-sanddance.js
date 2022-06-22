@@ -165,7 +165,7 @@ function prep_specs_groupby (states, groupby) {
     case 'count':
       operation = 'count'
       break
-  } 
+  }
 
   let tooltip = [
     {
@@ -186,11 +186,11 @@ function prep_specs_groupby (states, groupby) {
 
   let facet_encoding = {}
 
-  if (groupby.length > 1){
-    facet_encoding.column = { 
-      field: groupby[0], 
-      type: 'ordinal', 
-      title: groupby[0] 
+  if (groupby.length > 1) {
+    facet_encoding.column = {
+      field: groupby[0],
+      type: 'ordinal',
+      title: groupby[0]
     }
   }
 
@@ -377,7 +377,7 @@ function prep_specs_groupby (states, groupby) {
       facet_encoding = {}
       facet_encoding.column = { field: groupby[0], type: 'ordinal', title: groupby[0] }
       facet_encoding.row = { field: groupby[1], type: 'ordinal', title: groupby[1] }
-      if (operation === 'count'){ facet_encoding.column.sort = groups}
+      if (operation === 'count') { facet_encoding.column.sort = groups }
       rows = []
       data = []
       count = {}
@@ -701,8 +701,8 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   if (groupby.length === 1) {
     meta.xAxisLabels = groups
   }
-  if(operation === 'count' && groupby.length == 1){
-    meta ={
+  if (operation === 'count' && groupby.length === 1) {
+    meta = {
       axes: groupby.length > 1,
       description: 'Plot' + operation + 'of each group',
       custom_animation: operation
@@ -719,7 +719,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   //   facet_encoding.column.sort = sort
   // }
   let spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
-  if(operation != 'count' || groupby.length > 1){
+  if (operation !== 'count' || groupby.length > 1) {
     specs_list.push(spec)
   }
 
@@ -744,28 +744,29 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     .reduce((prev, current) => {
       return Math.max(prev, current)
     })
-  
+
   meta = {
     axes: groupby.length > 1,
-    description: (operation != 'count' || groupby.length > 1) ? 'Plot ' + operation + ' ' + y_axis + ' of each group': 'Plot ' + operation + ' of each group'
+    description: (operation !== 'count' || groupby.length > 1) ? 'Plot ' + operation + ' ' + y_axis + ' of each group' : 'Plot ' + operation + ' of each group'
   }
-  
-  if(operation != 'count' || (operation === 'count' && groupby.length > 1)){
+
+  if (operation !== 'count' || (operation === 'count' && groupby.length > 1)) {
     y_encoding = {
       field: 'datamations_y',
       type: 'quantitative',
       title: operation === 'median' || operation === 'count' ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
       scale: {
-        domain: [_.round(min, 13), _.round(max, 13)] 
+        domain: [_.round(min, 13), _.round(max, 13)]
       }
     }
-  }else{
+  } else {
     y_encoding = {
       field: 'datamations_y',
       type: 'quantitative',
       scale: {
-        domain: (operation != 'count') ? [_.round(min, 13), _.round(max, 13)] :
-        output[groups[0]] > output[groups[1]] ? [output[groups[1]], output[groups[0]]] : [output[groups[0]], output[groups[1]]] 
+        domain: (operation !== 'count')
+          ? [_.round(min, 13), _.round(max, 13)]
+          : output[groups[0]] > output[groups[1]] ? [output[groups[1]], output[groups[0]]] : [output[groups[0]], output[groups[1]]]
       }
     }
   }
@@ -857,7 +858,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
 
   meta.custom_animation = operation
 
-  if(operation ==='count' && groupby.length > 1){
+  if (operation === 'count' && groupby.length > 1) {
     delete meta.custom_animation
   }
 
@@ -866,7 +867,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
   specs_list.push(spec)
 
-  if(operation === 'mean'){
+  if (operation === 'mean') {
     tooltip = [
       {
         field: 'datamations_y_tooltip',
@@ -874,7 +875,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
         title: operation + '(' + y_axis + ')'
       }
     ]
-  
+
     if (operation === 'mean') {
       tooltip.push({
         field: 'Upper',
@@ -887,23 +888,23 @@ function prep_specs_summarize (states, groupby, summarize, output) {
         title: operation + '(' + y_axis + ') - standard error'
       })
     }
-  
+
     for (field of groupby) {
       tooltip.push({
         field,
         type: 'nominal'
       })
     }
-  
+
     data = []
-  
+
     const _error = {}
     for (group in states[1].groups) {
       _error[group] =
         standardDeviation(states[1].groups[group].map((x) => parseFloat(x[y_axis]))) /
         Math.sqrt(states[1].groups[group].length)
     }
-  
+
     // Show errror bars along with sumarized values
     if (groupby.length > 1) {
       i = 1
@@ -947,7 +948,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
           i = i + 1
         }
       }
-  
+
       facet_dims = {
         ncol: groups.length,
         nrow: groupby.length > 2 ? groups.length : 1
@@ -971,7 +972,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
         data.push(value)
         id = id + 1
       }
-  
+
       for (i = 0; i < states[0].length; i++) {
         if (states[0][i][x_axis] === groups[0]) {
           continue
@@ -992,19 +993,19 @@ function prep_specs_summarize (states, groupby, summarize, output) {
         id = id + 1
       }
     }
-  
+
     meta = {
       axes: groupby.length > 1,
       description: 'Plot ' + operation + ' ' + y_axis + ' of each group, with errorbar'
     }
-  
+
     if (operation === 'mean') {
       spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
       if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
       spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, true)
       specs_list.push(spec)
     }
-  
+
     // Show the summarized values along with error bars, zoomed in
     let min_array = []
     let max_array = []
@@ -1089,7 +1090,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     }
   }
 
-  if(!operation === 'count'){
+  if (!operation === 'count') {
     y_encoding = {
       field: 'datamations_y',
       type: 'quantitative',
@@ -1098,17 +1099,16 @@ function prep_specs_summarize (states, groupby, summarize, output) {
         domain
       }
     }
-  
+
     meta = {
       axes: groupby.length > 1,
       description: 'Plot ' + operation + ' ' + y_axis + ' of each group, ' + (operation === 'mean' ? 'with errorbar, ' : '') + 'zoomed in'
     }
-  
+
     spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
     if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
     spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, operation === 'mean')
     specs_list.push(spec)
-
   }
 
   return specs_list
@@ -1157,19 +1157,19 @@ export function specs (data, groupby, summarize, output) {
 
   const states = [values, { groups: group_by(values, groupby) }, summarize]
 
-  let specs = prep_specs_data(states).concat(
+  const specs = prep_specs_data(states).concat(
     prep_specs_groupby(states, groupby).concat(prep_specs_summarize(states, groupby, summarize, output))
   )
-  
-  let op = summarize.split(' ')[0].toLowerCase()
-  if(op === 'count' && groupby.length == 1){
-    for(let x = 0; x < specs.length; x++){
-        delete specs[x].mark.strokeWidth
-        specs[x].mark.size = 20
-        delete specs[x].encoding.color
-        delete specs[x].encoding.tooltip
-      }
+
+  const op = summarize.split(' ')[0].toLowerCase()
+  if (op === 'count' && groupby.length === 1) {
+    for (let x = 0; x < specs.length; x++) {
+      delete specs[x].mark.strokeWidth
+      specs[x].mark.size = 20
+      delete specs[x].encoding.color
+      delete specs[x].encoding.tooltip
     }
+  }
 
   return specs
 }

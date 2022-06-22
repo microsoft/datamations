@@ -309,7 +309,7 @@ describe('small salary', function () {
         Masters: 72,
         PhD: 28
       })
-      let x = specs.length
+      const x = specs.length
       compare_specs_with_file(specs, count_spec)
     })
   })
