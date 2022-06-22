@@ -348,7 +348,7 @@ describe('small salary', function () {
   })
   context('group by single column and summarize by product', function () {
     it('should match', function () {
-      const specs = datamations.specs({ values: data }, ['Degree'], 'Prod of Salary', {
+      const specs = datamations.specs({ values: data }, ['Degree'], 'Product of Salary', {
         Masters: 5.89224682818428e+140,
         PhD: 2.94265906927814e+54
       })
@@ -357,7 +357,7 @@ describe('small salary', function () {
   })
   context('group by two columns and summarize by product', function () {
     it('should match', function () {
-      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Prod of Salary', {
+      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Product of Salary', {
         Masters: { Academia: 17535325577809800000, Industry: 3.36021524210573e+121 },
         PhD: { Academia: 6.02776193570217e+34, Industry: 48818435443657800000 }
       })

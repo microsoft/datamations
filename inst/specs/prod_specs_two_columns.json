@@ -1048,7 +1048,7 @@
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "axes": true,
-      "description": "Plot prod Salary of each group"
+      "description": "Plot product Salary of each group"
     },
     "data": {
       "values": [
@@ -1886,7 +1886,7 @@
         "y": {
           "field": "datamations_y",
           "type": "quantitative",
-          "title": ["prod of", "Salary"],
+          "title": ["product of", "Salary"],
           "scale": {
             "domain": [81.9445013836958, 94.0215112566948]
           }
@@ -1902,7 +1902,7 @@
           {
             "field": "datamations_y_tooltip",
             "type": "quantitative",
-            "title": "prod(Salary)"
+            "title": "product(Salary)"
           },
           {
             "field": "Degree",
@@ -1920,7 +1920,7 @@
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "meta": {
       "axes": true,
-      "description": "Plot prod Salary of each group, zoomed in"
+      "description": "Plot product Salary of each group, zoomed in"
     },
     "data": {
       "values": [
@@ -2758,7 +2758,7 @@
         "y": {
           "field": "datamations_y",
           "type": "quantitative",
-          "title": ["prod of", "Salary"],
+          "title": ["product of", "Salary"],
           "scale": {
             "domain": [1.75353255778098e+19, 3.36021524210573e+121]
           }
@@ -2774,7 +2774,7 @@
           {
             "field": "datamations_y_tooltip",
             "type": "quantitative",
-            "title": "prod(Salary)"
+            "title": "product(Salary)"
           },
           {
             "field": "Degree",
