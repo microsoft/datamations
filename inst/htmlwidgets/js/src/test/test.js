@@ -391,7 +391,7 @@ describe('small salary', function () {
                 if (err) throw err
                 groupby_degree_work = JSON.parse(fileContents)
                 fs.readFile(
-                  '../../../../sandbox/custom_animations/custom-animations-count-manual.json',
+                  '../../../../inst/specs/count_specs_one_column.json',
                   'utf8',
                   function (err, fileContents) {
                     if (err) throw err
@@ -520,7 +520,7 @@ describe('small salary', function () {
   })
 
   // Testing count
-  context('group by single column', function () {
+  context('group by single column count', function () {
     it('should match', function () {
       const specs = datamations.specs({ values: data }, ['Degree'], 'Count of Salary', {
         Masters: 72,
@@ -530,7 +530,7 @@ describe('small salary', function () {
       compare_specs_with_file(specs, count_spec)
     })
   })
-  context('group by two columns', function () {
+  context('group by two columns count', function () {
     it('should match', function () {
       const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Count of Salary', {
         Masters: { Academia: 10, Industry: 62 },
@@ -539,7 +539,7 @@ describe('small salary', function () {
       compare_specs_with_file(specs, count_twoColumn_spec)
     })
   })
-  context('group by single column', function () {
+  context('group by single column count', function () {
     it('should match', function () {
       const specs = datamations.specs(
         { values: data },
@@ -554,7 +554,7 @@ describe('small salary', function () {
       compare_specs_with_file(specs, count_spec)
     })
   })
-  context('group by two columns', function () {
+  context('group by two columns count', function () {
     it('should match', function () {
       const specs = datamations.specs(
         { values: data },
