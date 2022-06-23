@@ -34,7 +34,8 @@ function generate_vega_specs (
   facet_dims = null,
   errorbar = false,
   height = 300,
-  width = 300
+  width = 300,
+  operation = null
 ) {
   const mark = {
     type: 'point',
@@ -42,6 +43,7 @@ function generate_vega_specs (
     strokeWidth: 1
     // size : 20
   }
+  if(operation)
 
   if (!errorbar) {
     if (facet_encoding && Object.keys(facet_encoding).length > 0) {
@@ -73,7 +75,6 @@ function generate_vega_specs (
       }
     }
   } else {
-    // eslint-disable-next-line no-undef
     const errorbar_spec_encoding = JSON.parse(JSON.stringify(spec_encoding))
     errorbar_spec_encoding.y.field = Y_RAW_FIELD_CHR
 
@@ -150,20 +151,14 @@ function prep_specs_data (states) {
   return specs_list
 }
 
-function prep_specs_groupby (states, groupby) {
+function prep_specs_groupby (states, groupby, summarize) {
   const x_encoding = { field: X_FIELD_CHR, type: 'quantitative', axis: null }
   const y_encoding = { field: Y_FIELD_CHR, type: 'quantitative', axis: null }
 
-  let operation = states[2].split(' ')[0].toLowerCase()
+  let operation = summarize.split(' ')[0].toLowerCase()
   switch (operation) {
     case 'average':
       operation = 'mean'
-      break
-    case 'median':
-      operation = 'median'
-      break
-    case 'count':
-      operation = 'count'
       break
   }
 
@@ -177,11 +172,14 @@ function prep_specs_groupby (states, groupby) {
   let spec_encoding = {
     x: x_encoding,
     y: y_encoding,
-    color: {
+    tooltip
+  }
+
+  if (operation === 'mean') {
+    spec_encoding.color = {
       field: null,
       type: 'nominal'
-    },
-    tooltip
+    }
   }
 
   let facet_encoding = {}
@@ -469,12 +467,6 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     case 'average':
       operation = 'mean'
       break
-    case 'median':
-      operation = 'median'
-      break
-    case 'count':
-      operation = 'count'
-      break
   }
 
   if (groupby.length === 1) {
@@ -508,13 +500,13 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       labelExpr:
         groupby.length > 2
           ? "round(datum.label) == 1 ? '" +
-            l3groups[0] +
-            "' : " +
-            "round(datum.label) == 2 ? '" +
-            l3groups[1] +
-            "' : '" +
-            l3groups[2] +
-            "'"
+          l3groups[0] +
+          "' : " +
+          "round(datum.label) == 2 ? '" +
+          l3groups[1] +
+          "' : '" +
+          l3groups[2] +
+          "'"
           : "round(datum.label) == 1 ? '" + labels[0] + "' : '" + labels[1] + "'",
       labelAngle: -90
     },
@@ -750,24 +742,12 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     description: (operation !== 'count' || groupby.length > 1) ? 'Plot ' + operation + ' ' + y_axis + ' of each group' : 'Plot ' + operation + ' of each group'
   }
 
-  if (operation !== 'count' || (operation === 'count' && groupby.length > 1)) {
-    y_encoding = {
-      field: 'datamations_y',
-      type: 'quantitative',
-      title: operation === 'median' || operation === 'count' ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
-      scale: {
-        domain: [_.round(min, 13), _.round(max, 13)]
-      }
-    }
-  } else {
-    y_encoding = {
-      field: 'datamations_y',
-      type: 'quantitative',
-      scale: {
-        domain: (operation !== 'count')
-          ? [_.round(min, 13), _.round(max, 13)]
-          : output[groups[0]] > output[groups[1]] ? [output[groups[1]], output[groups[0]]] : [output[groups[0]], output[groups[1]]]
-      }
+  y_encoding = {
+    field: 'datamations_y',
+    type: 'quantitative',
+    title: ['median', 'sum', 'product', 'count'].includes(operation) ? [operation + ' of', y_axis] : (['min', 'max'].includes(operation) && groupby.length > 1) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    scale: {
+      domain: [_.round(min, 13), _.round(max, 13)]
     }
   }
 
@@ -856,7 +836,9 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     }
   }
 
-  meta.custom_animation = operation
+  if (['mean', 'median', 'min', 'max'].includes(operation)) {
+    meta.custom_animation = operation
+  }
 
   if (operation === 'count' && groupby.length > 1) {
     delete meta.custom_animation
@@ -1157,19 +1139,7 @@ export function specs (data, groupby, summarize, output) {
 
   const states = [values, { groups: group_by(values, groupby) }, summarize]
 
-  const specs = prep_specs_data(states).concat(
-    prep_specs_groupby(states, groupby).concat(prep_specs_summarize(states, groupby, summarize, output))
+  return prep_specs_data(states).concat(
+    prep_specs_groupby(states, groupby, summarize).concat(prep_specs_summarize(states, groupby, summarize, output))
   )
-
-  const op = summarize.split(' ')[0].toLowerCase()
-  if (op === 'count' && groupby.length === 1) {
-    for (let x = 0; x < specs.length; x++) {
-      delete specs[x].mark.strokeWidth
-      specs[x].mark.size = 20
-      delete specs[x].encoding.color
-      delete specs[x].encoding.tooltip
-    }
-  }
-
-  return specs
 }
