@@ -42,7 +42,7 @@ function generate_vega_specs (
     filled: true,
     strokeWidth: 1
   }
-  if(includeSize){
+  if (includeSize) {
     delete mark.strokeWidth
     mark.size = 20
   }
@@ -145,13 +145,13 @@ function prep_specs_data (states, groupby) {
     parse: 'grid',
     description: 'Initial data'
   }
-  let operation = states[2].split(' ')[0].toLowerCase()
- 
+  const operation = states[2].split(' ')[0].toLowerCase()
+
   let spec = []
 
-  if(operation === 'count' && groupby.length == 1){
+  if (operation === 'count' && groupby.length === 1) {
     spec = generate_vega_specs(data, meta, spec_encoding, null, null, false, 300, 300, true)
-  }else{
+  } else {
     spec = generate_vega_specs(data, meta, spec_encoding)
   }
 
@@ -464,10 +464,10 @@ function prep_specs_groupby (states, groupby, summarize) {
 
     // spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
 
-    if(operation === 'count'){
+    if (operation === 'count') {
       delete spec_encoding.tooltip
       spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, false, 300, 300, true)
-    }else{
+    } else {
       spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
     }
     specs_list.push(spec)
@@ -771,7 +771,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       domain: [_.round(min, 13), _.round(max, 13)]
     }
   }
-  if(operation === 'count' && groupby.length == 1){
+  if (operation === 'count' && groupby.length === 1) {
     y_encoding.scale.domain = (output[groups[0]] > output[groups[1]]) ? [output[groups[1]], output[groups[0]]] : [output[groups[0]], output[groups[1]]]
   }
 
@@ -790,7 +790,6 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     })
   }
 
-  
   data = []
 
   // Plot the final summarized value
@@ -871,11 +870,11 @@ function prep_specs_summarize (states, groupby, summarize, output) {
 
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
   if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
-  if(operation === 'count' && groupby.length == 1){
+  if (operation === 'count' && groupby.length === 1) {
     delete spec_encoding.tooltip
     delete spec_encoding.y.title
     spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, false, 300, 300, true)
-  }else{
+  } else {
     spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
   }
   specs_list.push(spec)
