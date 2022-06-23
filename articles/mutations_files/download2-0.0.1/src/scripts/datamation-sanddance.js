@@ -72,7 +72,6 @@ function generate_vega_specs (
       }
     }
   } else {
-    // eslint-disable-next-line no-undef
     const errorbar_spec_encoding = JSON.parse(JSON.stringify(spec_encoding))
     errorbar_spec_encoding.y.field = Y_RAW_FIELD_CHR
 
@@ -725,7 +724,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   y_encoding = {
     field: 'datamations_y',
     type: 'quantitative',
-    title: ['median', 'sum', 'product'].includes(operation) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    title: ['median', 'sum', 'product'].includes(operation) ? [operation + ' of', y_axis] : (['min', 'max'].includes(operation) && groupby.length > 1) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
     scale: {
       domain: [_.round(min, 13), _.round(max, 13)]
     }
@@ -1053,7 +1052,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   y_encoding = {
     field: 'datamations_y',
     type: 'quantitative',
-    title: ['median', 'sum', 'product'].includes(operation) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    title: ['median', 'sum', 'product'].includes(operation) ? [operation + ' of', y_axis] : (['min', 'max'].includes(operation) && groupby.length > 1) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
     scale: {
       domain
     }

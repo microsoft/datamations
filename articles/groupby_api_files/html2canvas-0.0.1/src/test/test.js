@@ -13,6 +13,10 @@ const epsilon = 0.0001
 
 let data = []
 let raw_spec = []
+let min_spec = []
+let max_spec = []
+let min_spec_two_column = []
+let max_spec_two_column = []
 let sum_specs = []
 let sum_specs_two_columns = []
 let penguins = []
@@ -61,7 +65,6 @@ function compare_specs_with_file (specs, raw_spec) {
   for (let i = 0; i < specs.length; i++) {
     for (const key of Object.keys(specs[i])) {
       if (key === 'data') {
-        // eslint-disable-next-line no-var
         for (var j = 0; j < specs[i][key].values.length; j++) {
           for (const field of Object.keys(specs[i][key].values[j])) {
             if (field.startsWith('datamations_y') || field === 'Lower' || field === 'Upper') {
@@ -184,7 +187,6 @@ describe('products rating', function () {
   })
   context('group by two columns, mean', function () {
     it('should match', function () {
-      // eslint-disable-next-line no-unused-vars
       const specs = datamations.specs({ values: data }, ['Year', 'Category'], 'Average of Rating', {
         2015: {
           Accessories: 0.631666666666667,
@@ -289,19 +291,35 @@ describe('small salary', function () {
         fs.readFile('../../../../inst/specs/groupby_degree_work.json', 'utf8', function (err, fileContents) {
           if (err) throw err
           groupby_degree_work = JSON.parse(fileContents)
-          fs.readFile('../../../../inst/specs/sum_specs.json', 'utf8', function (err, fileContents) {
+          fs.readFile('../../../../sandbox/custom_animations/custom-animations-min-R.json', 'utf8', function (err, fileContents) {
             if (err) throw err
-            sum_specs = JSON.parse(fileContents)
-            fs.readFile('../../../../inst/specs/sum_specs_two_columns.json', 'utf8', function (err, fileContents) {
+            min_spec = JSON.parse(fileContents)
+            fs.readFile('../../../../sandbox/custom_animations/custom-animations-max-R.json', 'utf8', function (err, fileContents) {
               if (err) throw err
-              sum_specs_two_columns = JSON.parse(fileContents)
-              fs.readFile('../../../../inst/specs/prod_specs.json', 'utf8', function (err, fileContents) {
+              max_spec = JSON.parse(fileContents)
+              fs.readFile('../../../../inst/specs/min_specs_two_columns.json', 'utf8', function (err, fileContents) {
                 if (err) throw err
-                prod_specs = JSON.parse(fileContents)
-                fs.readFile('../../../../inst/specs/prod_specs_two_columns.json', 'utf8', function (err, fileContents) {
+                min_spec_two_column = JSON.parse(fileContents)
+                fs.readFile('../../../../inst/specs/max_specs_two_columns.json', 'utf8', function (err, fileContents) {
                   if (err) throw err
-                  prod_specs_two_columns = JSON.parse(fileContents)
-                  done()
+                  max_spec_two_column = JSON.parse(fileContents)
+                  fs.readFile('../../../../inst/specs/sum_specs.json', 'utf8', function (err, fileContents) {
+                    if (err) throw err
+                    sum_specs = JSON.parse(fileContents)
+                    fs.readFile('../../../../inst/specs/sum_specs_two_columns.json', 'utf8', function (err, fileContents) {
+                      if (err) throw err
+                      sum_specs_two_columns = JSON.parse(fileContents)
+                      fs.readFile('../../../../inst/specs/prod_specs.json', 'utf8', function (err, fileContents) {
+                        if (err) throw err
+                        prod_specs = JSON.parse(fileContents)
+                        fs.readFile('../../../../inst/specs/prod_specs_two_columns.json', 'utf8', function (err, fileContents) {
+                          if (err) throw err
+                          prod_specs_two_columns = JSON.parse(fileContents)
+                          done()
+                        })
+                      })
+                    })
+                  })
                 })
               })
             })
@@ -310,6 +328,7 @@ describe('small salary', function () {
       })
     })
   })
+
   context('group by single column', function () {
     it('should match', function () {
       const specs = datamations.specs({ values: data }, ['Degree'], 'Average of Salary', {
@@ -328,40 +347,76 @@ describe('small salary', function () {
       compare_specs_with_file(specs, groupby_degree_work)
     })
   })
-  context('group by single column and summarize by sum', function () {
+  context('group by single min', function () {
     it('should match', function () {
-      const specs = datamations.specs({ values: data }, ['Degree'], 'Sum of Salary', {
-        Masters: 6496.296048,
-        PhD: 2470.876972
+      const specs = datamations.specs({ values: data }, ['Degree'], 'Min of Salary', {
+        Masters: 81.9445013836957,
+        PhD: 83.7531382157467
       })
-      compare_specs_with_file(specs, sum_specs)
+      compare_specs_with_file(specs, min_spec)
     })
   })
-  context('group by two columns and summarize by sum', function () {
+  context('group by single max', function () {
     it('should match', function () {
-      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Sum of Salary', {
-        Masters: { Academia: 840.298832, Industry: 5655.997216 },
-        PhD: { Academia: 1540.043383, Industry: 930.8335886 }
+      const specs = datamations.specs({ values: data }, ['Degree'], 'Max of Salary', {
+        Masters: 92.4685412924736,
+        PhD: 94.0215112566947
       })
-      compare_specs_with_file(specs, sum_specs_two_columns)
+      compare_specs_with_file(specs, max_spec)
     })
   })
-  context('group by single column and summarize by product', function () {
+  context('group by two columns min', function () {
     it('should match', function () {
-      const specs = datamations.specs({ values: data }, ['Degree'], 'Product of Salary', {
-        Masters: 5.89224682818428e+140,
-        PhD: 2.94265906927814e+54
+      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Min of Salary', {
+        Masters: { Academia: 81.9445013836957, Industry: 89.5807276440318 },
+        PhD: { Academia: 83.7531382157467, Industry: 91.4052118111867 }
       })
-      compare_specs_with_file(specs, prod_specs)
+      compare_specs_with_file(specs, min_spec_two_column)
     })
   })
-  context('group by two columns and summarize by product', function () {
+  context('group by two columns max', function () {
     it('should match', function () {
-      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Product of Salary', {
-        Masters: { Academia: 17535325577809800000, Industry: 3.36021524210573e+121 },
-        PhD: { Academia: 6.02776193570217e+34, Industry: 48818435443657800000 }
+      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Max of Salary', {
+        Masters: { Academia: 85.4951418309938, Industry: 92.4685412924736 },
+        PhD: { Academia: 87.439179474255, Industry: 94.0215112566947 }
       })
-      compare_specs_with_file(specs, prod_specs_two_columns)
+      compare_specs_with_file(specs, max_spec_two_column)
+    })
+    context('group by single column and summarize by sum', function () {
+      it('should match', function () {
+        const specs = datamations.specs({ values: data }, ['Degree'], 'Sum of Salary', {
+          Masters: 6496.296048,
+          PhD: 2470.876972
+        })
+        compare_specs_with_file(specs, sum_specs)
+      })
+    })
+    context('group by two columns and summarize by sum', function () {
+      it('should match', function () {
+        const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Sum of Salary', {
+          Masters: { Academia: 840.298832, Industry: 5655.997216 },
+          PhD: { Academia: 1540.043383, Industry: 930.8335886 }
+        })
+        compare_specs_with_file(specs, sum_specs_two_columns)
+      })
+    })
+    context('group by single column and summarize by product', function () {
+      it('should match', function () {
+        const specs = datamations.specs({ values: data }, ['Degree'], 'Product of Salary', {
+          Masters: 5.89224682818428e+140,
+          PhD: 2.94265906927814e+54
+        })
+        compare_specs_with_file(specs, prod_specs)
+      })
+    })
+    context('group by two columns and summarize by product', function () {
+      it('should match', function () {
+        const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Product of Salary', {
+          Masters: { Academia: 17535325577809800000, Industry: 3.36021524210573e+121 },
+          PhD: { Academia: 6.02776193570217e+34, Industry: 48818435443657800000 }
+        })
+        compare_specs_with_file(specs, prod_specs_two_columns)
+      })
     })
   })
 })
