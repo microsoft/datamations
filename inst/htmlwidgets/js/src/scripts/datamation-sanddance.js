@@ -35,15 +35,17 @@ function generate_vega_specs (
   errorbar = false,
   height = 300,
   width = 300,
-  operation = null
+  includeSize = false
 ) {
   const mark = {
     type: 'point',
     filled: true,
     strokeWidth: 1
-    // size : 20
   }
-  if(operation)
+  if(includeSize){
+    delete mark.strokeWidth
+    mark.size = 20
+  }
 
   if (!errorbar) {
     if (facet_encoding && Object.keys(facet_encoding).length > 0) {
@@ -126,7 +128,7 @@ function generate_vega_specs (
   return spec
 }
 
-function prep_specs_data (states) {
+function prep_specs_data (states, groupby) {
   const x_encoding = { field: X_FIELD_CHR, type: 'quantitative', axis: null }
   const y_encoding = { field: Y_FIELD_CHR, type: 'quantitative', axis: null }
 
@@ -143,9 +145,17 @@ function prep_specs_data (states) {
     parse: 'grid',
     description: 'Initial data'
   }
+  let operation = states[2].split(' ')[0].toLowerCase()
+ 
+  let spec = []
+
+  if(operation === 'count' && groupby.length == 1){
+    spec = generate_vega_specs(data, meta, spec_encoding, null, null, false, 300, 300, true)
+  }else{
+    spec = generate_vega_specs(data, meta, spec_encoding)
+  }
 
   const specs_list = []
-  const spec = generate_vega_specs(data, meta, spec_encoding)
 
   specs_list.push(spec)
   return specs_list
@@ -452,7 +462,14 @@ function prep_specs_groupby (states, groupby, summarize) {
       id = id + count[col]
     }
 
-    spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+    // spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+
+    if(operation === 'count'){
+      delete spec_encoding.tooltip
+      spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, false, 300, 300, true)
+    }else{
+      spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+    }
     specs_list.push(spec)
   }
   return specs_list
@@ -742,6 +759,10 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     description: (operation !== 'count' || groupby.length > 1) ? 'Plot ' + operation + ' ' + y_axis + ' of each group' : 'Plot ' + operation + ' of each group'
   }
 
+  // if(operation === 'count' && groupby.length == 1){
+  //   meta.custom_animation = operation
+  // }
+
   y_encoding = {
     field: 'datamations_y',
     type: 'quantitative',
@@ -749,6 +770,9 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     scale: {
       domain: [_.round(min, 13), _.round(max, 13)]
     }
+  }
+  if(operation === 'count' && groupby.length == 1){
+    y_encoding.scale.domain = (output[groups[0]] > output[groups[1]]) ? [output[groups[1]], output[groups[0]]] : [output[groups[0]], output[groups[1]]]
   }
 
   tooltip = [
@@ -766,6 +790,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     })
   }
 
+  
   data = []
 
   // Plot the final summarized value
@@ -836,7 +861,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     }
   }
 
-  if (['mean', 'median', 'min', 'max'].includes(operation)) {
+  if (['mean', 'median', 'min', 'max', 'count'].includes(operation)) {
     meta.custom_animation = operation
   }
 
@@ -846,7 +871,13 @@ function prep_specs_summarize (states, groupby, summarize, output) {
 
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
   if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
-  spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+  if(operation === 'count' && groupby.length == 1){
+    delete spec_encoding.tooltip
+    delete spec_encoding.y.title
+    spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, false, 300, 300, true)
+  }else{
+    spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
+  }
   specs_list.push(spec)
 
   if (operation === 'mean') {
@@ -1139,7 +1170,7 @@ export function specs (data, groupby, summarize, output) {
 
   const states = [values, { groups: group_by(values, groupby) }, summarize]
 
-  return prep_specs_data(states).concat(
+  return prep_specs_data(states, groupby).concat(
     prep_specs_groupby(states, groupby, summarize).concat(prep_specs_summarize(states, groupby, summarize, output))
   )
 }
