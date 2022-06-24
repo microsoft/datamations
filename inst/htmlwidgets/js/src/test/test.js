@@ -87,11 +87,11 @@ function compare_specs_with_file (specs, raw_spec) {
                   raw_spec[i][key].values[j][field],
                   epsilon,
                   'spec#' +
-                    i +
-                    ', gemini_id: ' +
-                    specs[i][key].values[j].gemini_id +
-                    ', approx field: ' +
-                    field
+                  i +
+                  ', gemini_id: ' +
+                  specs[i][key].values[j].gemini_id +
+                  ', approx field: ' +
+                  field
                 )
             } else {
               chai
@@ -99,11 +99,11 @@ function compare_specs_with_file (specs, raw_spec) {
                 .to.deep.equal(
                   raw_spec[i][key].values[j][field],
                   'spec#' +
-                    i +
-                    ', gemini_id: ' +
-                    raw_spec[i][key].values[j].gemini_id +
-                    ', failed data: ' +
-                    field
+                  i +
+                  ', gemini_id: ' +
+                  raw_spec[i][key].values[j].gemini_id +
+                  ', failed data: ' +
+                  field
                 )
             }
           }
@@ -490,7 +490,7 @@ describe('small salary', function () {
     )
   })
 
-  context('group by single column', function () {
+  context('group by single column, mean', function () {
     it('should match', function () {
       const specs = datamations.specs(
         { values: data },
@@ -504,7 +504,7 @@ describe('small salary', function () {
       compare_specs_with_file(specs, raw_spec)
     })
   })
-  context('group by two columns', function () {
+  context('group by two columns, mean', function () {
     it('should match', function () {
       const specs = datamations.specs(
         { values: data },
@@ -520,26 +520,7 @@ describe('small salary', function () {
   })
 
   // Testing count
-  context('group by single column count', function () {
-    it('should match', function () {
-      const specs = datamations.specs({ values: data }, ['Degree'], 'Count of Salary', {
-        Masters: 72,
-        PhD: 28
-      })
-      const x = specs.length
-      compare_specs_with_file(specs, count_spec)
-    })
-  })
-  context('group by two columns count', function () {
-    it('should match', function () {
-      const specs = datamations.specs({ values: data }, ['Degree', 'Work'], 'Count of Salary', {
-        Masters: { Academia: 10, Industry: 62 },
-        PhD: { Academia: 18, Industry: 10 }
-      })
-      compare_specs_with_file(specs, count_twoColumn_spec)
-    })
-  })
-  context('group by single column count', function () {
+  context('group by single column, count', function () {
     it('should match', function () {
       const specs = datamations.specs(
         { values: data },
@@ -554,7 +535,7 @@ describe('small salary', function () {
       compare_specs_with_file(specs, count_spec)
     })
   })
-  context('group by two columns count', function () {
+  context('group by two columns, count', function () {
     it('should match', function () {
       const specs = datamations.specs(
         { values: data },
