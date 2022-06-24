@@ -368,7 +368,6 @@ describe('small salary', function () {
           PhD: 28
         }
       )
-      const x = specs.length
       compare_specs_with_file(specs, count_spec)
     })
   })
