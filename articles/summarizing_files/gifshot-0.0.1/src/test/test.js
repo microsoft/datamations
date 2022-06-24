@@ -23,6 +23,8 @@ let penguins = []
 let medians = []
 let products = []
 let groupby_degree_work = []
+let count_spec = []
+let count_twoColumn_spec = []
 let prod_specs = []
 let prod_specs_two_columns = []
 
@@ -315,7 +317,15 @@ describe('small salary', function () {
                         fs.readFile('../../../../inst/specs/prod_specs_two_columns.json', 'utf8', function (err, fileContents) {
                           if (err) throw err
                           prod_specs_two_columns = JSON.parse(fileContents)
-                          done()
+                          fs.readFile('../../../../inst/specs/count_specs_one_column.json', 'utf8', function (err, fileContents) {
+                            if (err) throw err
+                            count_spec = JSON.parse(fileContents)
+                            fs.readFile('../../../../inst/specs/count_specs_two_columns.json', 'utf8', function (err, fileContents) {
+                              if (err) throw err
+                              count_twoColumn_spec = JSON.parse(fileContents)
+                              done()
+                            })
+                          })
                         })
                       })
                     })
@@ -345,6 +355,34 @@ describe('small salary', function () {
         PhD: { Academia: 85.557966, Industry: 93.083359 }
       })
       compare_specs_with_file(specs, groupby_degree_work)
+    })
+  })
+  context('group by single column, count', function () {
+    it('should match', function () {
+      const specs = datamations.specs(
+        { values: data },
+        ['Degree'],
+        'Count of Salary',
+        {
+          Masters: 72,
+          PhD: 28
+        }
+      )
+      compare_specs_with_file(specs, count_spec)
+    })
+  })
+  context('group by two columns, count', function () {
+    it('should match', function () {
+      const specs = datamations.specs(
+        { values: data },
+        ['Degree', 'Work'],
+        'Count of Salary',
+        {
+          Masters: { Academia: 10, Industry: 62 },
+          PhD: { Academia: 18, Industry: 10 }
+        }
+      )
+      compare_specs_with_file(specs, count_twoColumn_spec)
     })
   })
   context('group by single min', function () {

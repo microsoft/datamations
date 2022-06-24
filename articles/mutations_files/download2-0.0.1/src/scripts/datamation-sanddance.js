@@ -818,6 +818,9 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   if (['mean', 'median', 'min', 'max'].includes(operation)) {
     meta.custom_animation = operation
   }
+  else if (operation === 'count') {
+    y_encoding.title = [operation + ' of', y_axis]
+  }
 
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
   if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
@@ -1052,7 +1055,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   y_encoding = {
     field: 'datamations_y',
     type: 'quantitative',
-    title: ['median', 'sum', 'product'].includes(operation) ? [operation + ' of', y_axis] : (['min', 'max'].includes(operation) && groupby.length > 1) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    title: ['median', 'sum', 'product', 'count'].includes(operation) ? [operation + ' of', y_axis] : (['min', 'max'].includes(operation) && groupby.length > 1) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
     scale: {
       domain
     }
