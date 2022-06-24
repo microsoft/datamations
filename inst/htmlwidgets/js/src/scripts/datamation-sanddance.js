@@ -123,7 +123,7 @@ function generate_vega_specs (
   return spec
 }
 
-function prep_specs_data (states, groupby) {
+function prep_specs_data (states) {
   const x_encoding = { field: X_FIELD_CHR, type: 'quantitative', axis: null }
   const y_encoding = { field: Y_FIELD_CHR, type: 'quantitative', axis: null }
 
@@ -140,17 +140,9 @@ function prep_specs_data (states, groupby) {
     parse: 'grid',
     description: 'Initial data'
   }
-  const operation = states[2].split(' ')[0].toLowerCase()
-
-  let spec = []
-
-  if (operation === 'count' && groupby.length === 1) {
-    spec = generate_vega_specs(data, meta, spec_encoding, null, null, false, 300, 300, true)
-  } else {
-    spec = generate_vega_specs(data, meta, spec_encoding)
-  }
 
   const specs_list = []
+  const spec = generate_vega_specs(data, meta, spec_encoding)
 
   specs_list.push(spec)
   return specs_list
@@ -380,7 +372,6 @@ function prep_specs_groupby (states, groupby, summarize) {
       facet_encoding = {}
       facet_encoding.column = { field: groupby[0], type: 'ordinal', title: groupby[0] }
       facet_encoding.row = { field: groupby[1], type: 'ordinal', title: groupby[1] }
-      if (operation === 'count') { facet_encoding.column.sort = groups }
       rows = []
       data = []
       count = {}
@@ -738,7 +729,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   y_encoding = {
     field: 'datamations_y',
     type: 'quantitative',
-    title: ['median', 'sum', 'product', 'count'].includes(operation) ? [operation + ' of', y_axis] : (['min', 'max'].includes(operation) && groupby.length > 1) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    title: ['median', 'sum', 'product'].includes(operation) ? [operation + ' of', y_axis] : (['min', 'max'].includes(operation) && groupby.length > 1) ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
     scale: {
       domain: [_.round(min, 13), _.round(max, 13)]
     }
@@ -1061,26 +1052,24 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     }
   }
 
-  if (!operation === 'count') {
-    y_encoding = {
-      field: 'datamations_y',
-      type: 'quantitative',
-      title: operation === 'median' ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
-      scale: {
-        domain
-      }
+  y_encoding = {
+    field: 'datamations_y',
+    type: 'quantitative',
+    title: (operation === 'median' || operation === 'count') ? [operation + ' of', y_axis] : operation + '(' + y_axis + ')',
+    scale: {
+      domain
     }
-
-    meta = {
-      axes: groupby.length > 1,
-      description: 'Plot ' + operation + ' ' + y_axis + ' of each group, ' + (operation === 'mean' ? 'with errorbar, ' : '') + 'zoomed in'
-    }
-
-    spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
-    if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
-    spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, operation === 'mean')
-    specs_list.push(spec)
   }
+
+  meta = {
+    axes: groupby.length > 1,
+    description: 'Plot ' + operation + ' ' + y_axis + ' of each group, ' + (operation === 'mean' ? 'with errorbar, ' : '') + 'zoomed in'
+  }
+
+  spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
+  if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
+  spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, operation === 'mean')
+  specs_list.push(spec)
 
   return specs_list
 }
@@ -1128,7 +1117,7 @@ export function specs (data, groupby, summarize, output) {
 
   const states = [values, { groups: group_by(values, groupby) }, summarize]
 
-  return prep_specs_data(states, groupby).concat(
+  return prep_specs_data(states).concat(
     prep_specs_groupby(states, groupby, summarize).concat(prep_specs_summarize(states, groupby, summarize, output))
   )
 }
