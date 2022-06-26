@@ -446,7 +446,7 @@ function prep_specs_groupby (states, groupby, summarize) {
     spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
     specs_list.push(spec)
 
-    if (operation === 'count' && groupby.length === 1) {
+    if ((operation === 'count' || operation === 'sum') && groupby.length === 1) {
       specs_list.push(spec)
     }
   }
@@ -696,7 +696,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
   }
   let spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
-  if (!(operation === 'count' && groupby.length === 1)) {
+  if (!((operation === 'count' || operation === 'sum') && groupby.length === 1)) {
     specs_list.push(spec)
   }
 
@@ -724,7 +724,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
 
   meta = {
     axes: groupby.length > 1,
-    description: 'Plot ' + operation + (operation === 'count' && groupby.length === 1 ? '' : ' ' + y_axis) + ' of each group'
+    description: 'Plot ' + operation + ((operation === 'count' || operation === 'sum') && groupby.length === 1 ? '' : ' ' + y_axis) + ' of each group'
   }
 
   y_encoding = {
@@ -824,7 +824,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   if (['mean', 'median', 'min', 'max'].includes(operation)) {
     meta.custom_animation = operation
   }
-  else if (operation === 'count') {
+  else if (operation === 'count' || operation === 'sum') {
     if (groupby.length === 1) {
       min = data.map((item) => { return item.datamations_y }).reduce((prev, current) => {
         return Math.min(prev, current)
@@ -1089,7 +1089,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
   if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
   spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, operation === 'mean')
-  if (!(operation === 'count' && groupby.length === 1)) {
+  if (!((operation === 'count' || operation === 'sum') && groupby.length === 1)) {
     specs_list.push(spec)
   }
 

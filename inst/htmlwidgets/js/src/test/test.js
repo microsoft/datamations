@@ -305,7 +305,7 @@ describe('small salary', function () {
                 fs.readFile('../../../../inst/specs/max_specs_two_columns.json', 'utf8', function (err, fileContents) {
                   if (err) throw err
                   max_spec_two_column = JSON.parse(fileContents)
-                  fs.readFile('../../../../inst/specs/sum_specs.json', 'utf8', function (err, fileContents) {
+                  fs.readFile('../../../../sandbox/custom_animations/custom-animations-sum-manual.json', 'utf8', function (err, fileContents) {
                     if (err) throw err
                     sum_specs = JSON.parse(fileContents)
                     fs.readFile('../../../../inst/specs/sum_specs_two_columns.json', 'utf8', function (err, fileContents) {

@@ -67,16 +67,16 @@
     <script src="../js/src/dist/datamations.min.js"></script>
 
     <script>
-      const animationType = "mean";
+      const animationType = "sum";
       const base = "../../../sandbox/custom_animations/";
       let app = null;
 
       d3.json(
-        `${base}/custom-animations-${animationType}-R.json`
+        `${base}/custom-animations-${animationType}-manual.json`
         // 'https://raw.githubusercontent.com/microsoft/datamations/specs_mutate/sandbox/mutations/mutation_specs_multiple_variables-R.json'
       ).then(
         (specs) => {
-          app = datamations.App("app", { specs, frameDur: 3000 });
+          app = datamations.App("app", { specs, frameDur: 3000, autoPlay: true});
         }
       );
     </script>
