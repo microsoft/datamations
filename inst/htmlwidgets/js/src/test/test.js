@@ -317,7 +317,7 @@ describe('small salary', function () {
                         fs.readFile('../../../../inst/specs/prod_specs_two_columns.json', 'utf8', function (err, fileContents) {
                           if (err) throw err
                           prod_specs_two_columns = JSON.parse(fileContents)
-                          fs.readFile('../../../../inst/specs/count_specs_one_column.json', 'utf8', function (err, fileContents) {
+                          fs.readFile('../../../../sandbox/custom_animations/custom-animations-count-R.json', 'utf8', function (err, fileContents) {
                             if (err) throw err
                             count_spec = JSON.parse(fileContents)
                             fs.readFile('../../../../inst/specs/count_specs_two_columns.json', 'utf8', function (err, fileContents) {

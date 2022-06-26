@@ -445,6 +445,10 @@ function prep_specs_groupby (states, groupby, summarize) {
 
     spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
     specs_list.push(spec)
+
+    if (operation === 'count' && groupby.length === 1) {
+      specs_list.push(spec)
+    }
   }
   return specs_list
 }
@@ -692,7 +696,9 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
   }
   let spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
-  specs_list.push(spec)
+  if (!(operation === 'count' && groupby.length === 1)) {
+    specs_list.push(spec)
+  }
 
   min = states[0]
     .map((item) => {
@@ -718,7 +724,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
 
   meta = {
     axes: groupby.length > 1,
-    description: 'Plot ' + operation + ' ' + y_axis + ' of each group'
+    description: 'Plot ' + operation + (operation === 'count' && groupby.length === 1 ? '' : ' ' + y_axis) + ' of each group'
   }
 
   y_encoding = {
@@ -819,7 +825,15 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     meta.custom_animation = operation
   }
   else if (operation === 'count') {
-    y_encoding.title = [operation + ' of', y_axis]
+    if (groupby.length === 1) {
+      meta.custom_animation = operation
+      y_encoding.scale.domain = [28, 72]
+      delete tooltip[0].title
+      delete y_encoding.title
+    }
+    else {
+      y_encoding.title = [operation + ' of', y_axis]
+    }
   }
 
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
@@ -1069,7 +1083,9 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   spec_encoding = { x: x_encoding, y: y_encoding, tooltip }
   if (groupby.length > 1) spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
   spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, operation === 'mean')
-  specs_list.push(spec)
+  if (!(operation === 'count' && groupby.length === 1)) {
+    specs_list.push(spec)
+  }
 
   return specs_list
 }
