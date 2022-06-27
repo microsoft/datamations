@@ -108,7 +108,8 @@ export function generateGrid (spec, rows = 10, stacked = false) {
     specWidth = specWidth / grouped.length
   }
 
-  const maxCols = Math.ceil(d3.max(specValues, d => d.n) / rows)
+  const maxCols = specValues[0].n ? Math.ceil(d3.max(specValues, d => d.n) / rows) : 10
+
   let splitOptions = []
 
   if (splitField) {
@@ -118,6 +119,7 @@ export function generateGrid (spec, rows = 10, stacked = false) {
   }
 
   let counter = 1
+  var sum = {}
 
   const reduce = (v) => {
     const arr = []
@@ -165,6 +167,26 @@ export function generateGrid (spec, rows = 10, stacked = false) {
           [CONF.Y_FIELD]: stacked ? i + 1 : y
         })
 
+        counter++
+      }
+
+      if (!d.n) {
+        const x = d[CONF.X_FIELD]
+        const y = d[CONF.Y_FIELD]
+        if (sum[x]) {
+          sum[x] = sum[x] + y
+        }
+        else {
+          sum[x] = y
+        }
+        arr.push({
+          ...datum,
+          // ...colorFieldObj,
+          gemini_id: d.gemini_ids ? d.gemini_ids[i] : counter,
+          [CONF.X_FIELD]: stacked ? xCenter : x,
+          [CONF.Y_FIELD]: stacked ? sum[x] : y,
+          [CONF.Y_FIELD + '_tooltip']: stacked ? sum[x] : y
+        })
         counter++
       }
     })

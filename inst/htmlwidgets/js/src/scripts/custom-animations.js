@@ -103,7 +103,7 @@ export const getSumStep = (source, target, shrink = false) => {
         y: {
           field: CONF.Y_FIELD,
           type: 'quantitative',
-          aggregate: 'count'
+          aggregate: 'sum'
           // axis: null,
         }
       }

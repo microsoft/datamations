@@ -446,7 +446,7 @@ function prep_specs_groupby (states, groupby, summarize) {
     spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
     specs_list.push(spec)
 
-    if ((operation === 'count' || operation === 'sum') && groupby.length === 1) {
+    if ((operation === 'count') && groupby.length === 1) {
       specs_list.push(spec)
     }
   }
@@ -696,7 +696,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     spec_encoding = { x: x_encoding, y: y_encoding, color, tooltip }
   }
   let spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
-  if (!((operation === 'count' || operation === 'sum') && groupby.length === 1)) {
+  if (!((operation === 'count') && groupby.length === 1)) {
     specs_list.push(spec)
   }
 
