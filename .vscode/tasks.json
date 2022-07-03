@@ -21,6 +21,19 @@
 			"problemMatcher": [],
 			"label": "npm: test - inst/htmlwidgets/js/src",
 			"detail": "mocha"
+		},
+		{
+			"type": "npm",
+			"script": "dev",
+			"path": "inst/htmlwidgets/js/src",
+			"problemMatcher": [],
+			"label": "npm: dev - inst/htmlwidgets/js/src",
+			"detail": "rollup -c -w",
+			"presentation": {
+				"clear": true,
+				"panel": "dedicated"
+			},
+			"runOptions": { "runOn": "folderOpen" }
 		}
 	]
 }
