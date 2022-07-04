@@ -108,7 +108,7 @@ export function generateGrid (spec, rows = 10, stacked = false) {
     specWidth = specWidth / grouped.length
   }
 
-  const maxCols = specValues[0].n ? Math.ceil(d3.max(specValues, d => d.n) / rows) : 10
+  const maxCols = specValues[0].n ? Math.ceil(d3.max(specValues, d => d.n) / rows) : specValues.length / rows
 
   let splitOptions = []
 
@@ -170,6 +170,7 @@ export function generateGrid (spec, rows = 10, stacked = false) {
         counter++
       }
 
+      // use sum as the y value
       if (!d.n) {
         const x = d[CONF.X_FIELD]
         const y = d[CONF.Y_FIELD]
