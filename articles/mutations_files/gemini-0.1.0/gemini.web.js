@@ -18741,7 +18741,7 @@
           const newData = step.nextData.tick;
           const joinKey = joinKeyGen("tick");
           const timings = computeTiming(
-            currData,
+            ticks.data(),
             newData,
             step.timing,
             joinKey,
@@ -18925,7 +18925,7 @@
           const newData = step.nextData.label;
           const joinKey = joinKeyGen("label");
           const timings = computeTiming(
-            currData,
+            labels.data(),
             newData,
             step.timing,
             joinKey,
@@ -19132,7 +19132,7 @@
           const newData = step.nextData.grid;
           const joinKey = joinKeyGen("grid");
           const timings = computeTiming(
-            currData,
+            grids.data(),
             newData,
             step.timing,
             joinKey,

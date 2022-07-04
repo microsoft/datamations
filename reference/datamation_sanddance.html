@@ -75,14 +75,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">datamation_sanddance</span><span class="op">(</span>
-  <span class="va">pipeline</span>,
-  envir <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/search_envs.html" class="external-link">global_env</a></span><span class="op">(</span><span class="op">)</span>,
-  pretty <span class="op">=</span> <span class="cn">TRUE</span>,
-  elementId <span class="op">=</span> <span class="cn">NULL</span>,
-  height <span class="op">=</span> <span class="fl">300</span>,
-  width <span class="op">=</span> <span class="fl">300</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">datamation_sanddance</span><span class="op">(</span></span>
+<span>  <span class="va">pipeline</span>,</span>
+<span>  envir <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/search_envs.html" class="external-link">global_env</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  pretty <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  elementId <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  height <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>  width <span class="op">=</span> <span class="fl">300</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -114,24 +114,24 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="op">{</span></span>
-<span class="r-in">  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="st">"small_salary %&gt;%</span>
-<span class="r-in">  group_by(Degree) %&gt;%</span>
-<span class="r-in">  summarize(mean = mean(Salary))"</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu">datamation_sanddance</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="st">"small_salary %&gt;%</span>
-<span class="r-in">  group_by(Work, Degree) %&gt;%</span>
-<span class="r-in">  summarize(mean_salary = mean(Salary)) %&gt;%</span>
-<span class="r-in">  ggplot(aes(x = Work, y = mean_salary)) +</span>
-<span class="r-in">  geom_point() +</span>
-<span class="r-in">  facet_grid(rows = vars(Degree))"</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu">datamation_sanddance</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="st">"small_salary %&gt;%</span></span></span>
+<span class="r-in"><span><span class="st">  group_by(Degree) %&gt;%</span></span></span>
+<span class="r-in"><span><span class="st">  summarize(mean = mean(Salary))"</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>    <span class="fu">datamation_sanddance</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="st">"small_salary %&gt;%</span></span></span>
+<span class="r-in"><span><span class="st">  group_by(Work, Degree) %&gt;%</span></span></span>
+<span class="r-in"><span><span class="st">  summarize(mean_salary = mean(Salary)) %&gt;%</span></span></span>
+<span class="r-in"><span><span class="st">  ggplot(aes(x = Work, y = mean_salary)) +</span></span></span>
+<span class="r-in"><span><span class="st">  geom_point() +</span></span></span>
+<span class="r-in"><span><span class="st">  facet_grid(rows = vars(Degree))"</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>    <span class="fu">datamation_sanddance</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
@@ -140,16 +140,16 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
-<div id="htmlwidget-dcb7f9c706ab0fa81e40" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-854d39e6db99e1c7963d" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
   <div class="controls-wrapper">
     <div class="control-bar">
       <div class="button-wrapper">
-        <button class="replay-btn" onclick="window.apphtmlwidgetdcb7f9c706ab0fa81e40.play('')">Replay</button>
+        <button class="replay-btn" onclick="window.apphtmlwidget854d39e6db99e1c7963d.play('')">Replay</button>
       </div>
       <div class="slider-wrapper">
-        <input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetdcb7f9c706ab0fa81e40.onSlide('htmlwidgetdcb7f9c706ab0fa81e40')"></div>
+        <input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget854d39e6db99e1c7963d.onSlide('htmlwidget854d39e6db99e1c7963d')"></div>
       <div class="button-wrapper">
-        <button class="export-btn" onclick="window.apphtmlwidgetdcb7f9c706ab0fa81e40.exportGif('1')">
+        <button class="export-btn" onclick="window.apphtmlwidget854d39e6db99e1c7963d.exportGif('1')">
           <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
         </button>
       </div>
@@ -164,7 +164,7 @@
     </div>
   </div>
 </div>
-<script type="application/json" data-for="htmlwidget-dcb7f9c706ab0fa81e40">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-854d39e6db99e1c7963d">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -4536,7 +4536,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

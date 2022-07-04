@@ -7,7 +7,7 @@
   "scripts": {
     "test": "mocha",
     "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "serve ../../../../ | rollup -c -w"
   },
   "keywords": [],
   "author": "Giorgi Ghviniashvili",
@@ -33,7 +33,8 @@
     "rollup": "^2.70.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "serve": "^13.0.2"
   },
   "files": [
     "dist"

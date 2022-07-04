@@ -147,25 +147,25 @@
 <p>We can use datamations to visualize each step of these binary data. {datamations} includes a built in dataset called <code>jeter_justice</code> to explore this phenomenon. Call <code><a href="../reference/jeter_justice.html">?jeter_justice</a></code> for documentation on this dataset.</p>
 <p>When we just group by individual player, Jeter overall has a higher batting average.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datamations</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datamations</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="st">'jeter_justice %&gt;%
-  group_by(player) %&gt;%
-  summarize(batting_average = mean(is_hit),
-            se = sqrt(batting_average * (1 - batting_average) / n()) )'</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-c642cdb5591d112deabc" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<code class="sourceCode R"><span><span class="st">'jeter_justice %&gt;%</span></span>
+<span><span class="st">  group_by(player) %&gt;%</span></span>
+<span><span class="st">  summarize(batting_average = mean(is_hit),</span></span>
+<span><span class="st">            se = sqrt(batting_average * (1 - batting_average) / n()) )'</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-bd88b4b001117da47247" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgetc642cdb5591d112deabc.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgetbd88b4b001117da47247.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetc642cdb5591d112deabc.onSlide('htmlwidgetc642cdb5591d112deabc')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetbd88b4b001117da47247.onSlide('htmlwidgetbd88b4b001117da47247')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgetc642cdb5591d112deabc.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgetbd88b4b001117da47247.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -180,7 +180,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-c642cdb5591d112deabc">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-bd88b4b001117da47247">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -20595,22 +20595,22 @@
 </div>
 <p>Grouping by both year and player though, we can see Justice has a higher batting average than Jeter within each year.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="st">'jeter_justice %&gt;%
-  group_by(player, year) %&gt;%
-  summarize(batting_average = mean(is_hit),
-            se = sqrt(batting_average * (1 - batting_average) / n()) )'</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-a3f609a73bf228050024" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<code class="sourceCode R"><span><span class="st">'jeter_justice %&gt;%</span></span>
+<span><span class="st">  group_by(player, year) %&gt;%</span></span>
+<span><span class="st">  summarize(batting_average = mean(is_hit),</span></span>
+<span><span class="st">            se = sqrt(batting_average * (1 - batting_average) / n()) )'</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-72ce6354003d1e573f37" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgeta3f609a73bf228050024.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget72ce6354003d1e573f37.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgeta3f609a73bf228050024.onSlide('htmlwidgeta3f609a73bf228050024')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget72ce6354003d1e573f37.onSlide('htmlwidget72ce6354003d1e573f37')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgeta3f609a73bf228050024.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget72ce6354003d1e573f37.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -20625,7 +20625,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-a3f609a73bf228050024">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-72ce6354003d1e573f37">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -43624,7 +43624,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>

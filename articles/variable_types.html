@@ -115,24 +115,24 @@
 <p>{datamations} can accept calculations on numeric data and provides encodings on faceted numeric scales.</p>
 <p>Test out the functionality on the built in dataset <code>small_salary</code>, which includes synthetic salary data for different types of work and different degree qualifications.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datamations</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datamations</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="st">"small_salary %&gt;%
-  group_by(Degree) %&gt;%
-  summarize(mean = mean(Salary, trim=0.1))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-089ff934c8e113b8675e" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<code class="sourceCode R"><span><span class="st">"small_salary %&gt;%</span></span>
+<span><span class="st">  group_by(Degree) %&gt;%</span></span>
+<span><span class="st">  summarize(mean = mean(Salary, trim=0.1))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-5c846fc0d8b8fbb68c0f" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget089ff934c8e113b8675e.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget5c846fc0d8b8fbb68c0f.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget089ff934c8e113b8675e.onSlide('htmlwidget089ff934c8e113b8675e')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget5c846fc0d8b8fbb68c0f.onSlide('htmlwidget5c846fc0d8b8fbb68c0f')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget089ff934c8e113b8675e.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget5c846fc0d8b8fbb68c0f.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -147,7 +147,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-089ff934c8e113b8675e">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-5c846fc0d8b8fbb68c0f">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -3971,23 +3971,23 @@
 </h2>
 <p>{datamations} generates shape encoding for categorical variables passed to <code>group_by</code> or in summary functions. A useful example is in the {palmerpenguins} <code>penguins</code> dataset.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a></span><span class="op">)</span>
-
-<span class="st">"penguins %&gt;%
-  group_by(year, island) %&gt;%
-  summarise(n = n_distinct(species))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-    <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-b20b3acd36ebbc19e0c0" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="st">"penguins %&gt;%</span></span>
+<span><span class="st">  group_by(year, island) %&gt;%</span></span>
+<span><span class="st">  summarise(n = n_distinct(species))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-c2c1adc3c6b7523c55de" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgetb20b3acd36ebbc19e0c0.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgetc2c1adc3c6b7523c55de.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetb20b3acd36ebbc19e0c0.onSlide('htmlwidgetb20b3acd36ebbc19e0c0')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetc2c1adc3c6b7523c55de.onSlide('htmlwidgetc2c1adc3c6b7523c55de')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgetb20b3acd36ebbc19e0c0.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgetc2c1adc3c6b7523c55de.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -4002,7 +4002,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-b20b3acd36ebbc19e0c0">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-c2c1adc3c6b7523c55de">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -10045,29 +10045,29 @@
 </h2>
 <p>{datamations} similarly can produce visualizations for binary outcomes, displaying variables encoded with opacity and stroke. Binary variables can be passed as a true binary class in R, e.g. <code>TRUE</code>/<code>FALSE</code>, or via a numeric variable encoded to <code>1</code>/<code>0</code>. This is examplified in the built in dataset <code>jeter_justice</code>, where outcome values are encoded as <code>1</code> and <code>0</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">jeter_justice</span><span class="op">)</span>
-<span class="co">#&gt;        player year is_hit</span>
-<span class="co">#&gt; 1 Derek Jeter 1995      1</span>
-<span class="co">#&gt; 2 Derek Jeter 1995      1</span>
-<span class="co">#&gt; 3 Derek Jeter 1995      1</span>
-<span class="co">#&gt; 4 Derek Jeter 1995      1</span>
-<span class="co">#&gt; 5 Derek Jeter 1995      1</span>
-<span class="co">#&gt; 6 Derek Jeter 1995      1</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">jeter_justice</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        player year is_hit</span></span>
+<span><span class="co">#&gt; 1 Derek Jeter 1995      1</span></span>
+<span><span class="co">#&gt; 2 Derek Jeter 1995      1</span></span>
+<span><span class="co">#&gt; 3 Derek Jeter 1995      1</span></span>
+<span><span class="co">#&gt; 4 Derek Jeter 1995      1</span></span>
+<span><span class="co">#&gt; 5 Derek Jeter 1995      1</span></span>
+<span><span class="co">#&gt; 6 Derek Jeter 1995      1</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="st">"jeter_justice %&gt;%
-  group_by(year) %&gt;%
-  summarise(mean = mean(is_hit))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-769a1c61a8469c5b8095" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<code class="sourceCode R"><span><span class="st">"jeter_justice %&gt;%</span></span>
+<span><span class="st">  group_by(year) %&gt;%</span></span>
+<span><span class="st">  summarise(mean = mean(is_hit))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-b9c8dbcbebd620cc0585" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget769a1c61a8469c5b8095.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgetb9c8dbcbebd620cc0585.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget769a1c61a8469c5b8095.onSlide('htmlwidget769a1c61a8469c5b8095')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetb9c8dbcbebd620cc0585.onSlide('htmlwidgetb9c8dbcbebd620cc0585')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget769a1c61a8469c5b8095.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgetb9c8dbcbebd620cc0585.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -10082,7 +10082,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-769a1c61a8469c5b8095">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-b9c8dbcbebd620cc0585">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -30513,7 +30513,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>

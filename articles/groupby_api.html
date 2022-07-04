@@ -113,31 +113,31 @@
 <h2 id="single-grouping-variable">Single grouping variable<a class="anchor" aria-label="anchor" href="#single-grouping-variable"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datamations</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-
-<span class="st">"small_salary %&gt;%
-  group_by(Work, Degree)"</span>
-<span class="co">#&gt; [1] "small_salary %&gt;%\n  group_by(Work, Degree)"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">datamations</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="st">"small_salary %&gt;%</span></span>
+<span><span class="st">  group_by(Work, Degree)"</span></span>
+<span><span class="co">#&gt; [1] "small_salary %&gt;%\n  group_by(Work, Degree)"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="two-grouping-variables">Two grouping variables<a class="anchor" aria-label="anchor" href="#two-grouping-variables"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="st">"small_salary %&gt;%
-  group_by(Work, Degree)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-abf20b2166646fc23eb4" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<code class="sourceCode R"><span><span class="st">"small_salary %&gt;%</span></span>
+<span><span class="st">  group_by(Work, Degree)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-a2b5d70a03a6875a36e4" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgetabf20b2166646fc23eb4.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgeta2b5d70a03a6875a36e4.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetabf20b2166646fc23eb4.onSlide('htmlwidgetabf20b2166646fc23eb4')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgeta2b5d70a03a6875a36e4.onSlide('htmlwidgeta2b5d70a03a6875a36e4')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgetabf20b2166646fc23eb4.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgeta2b5d70a03a6875a36e4.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -152,7 +152,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-abf20b2166646fc23eb4">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-a2b5d70a03a6875a36e4">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -330,22 +330,22 @@
 <h2 id="three-grouping-variables">Three grouping variables<a class="anchor" aria-label="anchor" href="#three-grouping-variables"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a></span><span class="op">)</span>
-
-<span class="st">"penguins %&gt;%
-  group_by(sex, island, species)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-3c5fca6d908619c60465" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="st">"penguins %&gt;%</span></span>
+<span><span class="st">  group_by(sex, island, species)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-d81320b7c4e632d63cbf" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget3c5fca6d908619c60465.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgetd81320b7c4e632d63cbf.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget3c5fca6d908619c60465.onSlide('htmlwidget3c5fca6d908619c60465')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgetd81320b7c4e632d63cbf.onSlide('htmlwidgetd81320b7c4e632d63cbf')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget3c5fca6d908619c60465.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgetd81320b7c4e632d63cbf.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -360,7 +360,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-3c5fca6d908619c60465">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-d81320b7c4e632d63cbf">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -731,21 +731,21 @@
 <h3 id="group_by-into-filter">group_by into filter<a class="anchor" aria-label="anchor" href="#group_by-into-filter"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="st">"small_salary %&gt;%
-  group_by(Degree) %&gt;%
-  filter(Salary &gt; 90)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-e97d48b021e6a5ff43e1" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<code class="sourceCode R"><span><span class="st">"small_salary %&gt;%</span></span>
+<span><span class="st">  group_by(Degree) %&gt;%</span></span>
+<span><span class="st">  filter(Salary &gt; 90)"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-6a80791b9520c2909dcd" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidgete97d48b021e6a5ff43e1.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget6a80791b9520c2909dcd.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgete97d48b021e6a5ff43e1.onSlide('htmlwidgete97d48b021e6a5ff43e1')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget6a80791b9520c2909dcd.onSlide('htmlwidget6a80791b9520c2909dcd')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidgete97d48b021e6a5ff43e1.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget6a80791b9520c2909dcd.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -760,7 +760,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-e97d48b021e6a5ff43e1">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-6a80791b9520c2909dcd">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -905,21 +905,21 @@
 <h3 id="group_by-into-summarize">group_by into summarize<a class="anchor" aria-label="anchor" href="#group_by-into-summarize"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="st">"small_salary %&gt;%
-  group_by(Degree) %&gt;%
-  summarize(mean = mean(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-7da22092779985f7b481" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<code class="sourceCode R"><span><span class="st">"small_salary %&gt;%</span></span>
+<span><span class="st">  group_by(Degree) %&gt;%</span></span>
+<span><span class="st">  summarize(mean = mean(Salary))"</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-34459afe70f2b97bf17e" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget7da22092779985f7b481.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget34459afe70f2b97bf17e.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget7da22092779985f7b481.onSlide('htmlwidget7da22092779985f7b481')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget34459afe70f2b97bf17e.onSlide('htmlwidget34459afe70f2b97bf17e')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget7da22092779985f7b481.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget34459afe70f2b97bf17e.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -934,7 +934,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-7da22092779985f7b481">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-34459afe70f2b97bf17e">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -4757,17 +4757,17 @@
   group_by(sex, island, species) %&gt;%
   summarize(mean = median(bill_length_mm))" %&gt;%
   datamation_sanddance()
-<div id="htmlwidget-19689ceac6b3f17da039" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div id="htmlwidget-19a26cfefd2b35e97369" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget19689ceac6b3f17da039.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget19a26cfefd2b35e97369.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget19689ceac6b3f17da039.onSlide('htmlwidget19689ceac6b3f17da039')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget19a26cfefd2b35e97369.onSlide('htmlwidget19a26cfefd2b35e97369')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget19689ceac6b3f17da039.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget19a26cfefd2b35e97369.exportGif('1')">
 <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -4782,7 +4782,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-19689ceac6b3f17da039">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-19a26cfefd2b35e97369">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -14695,7 +14695,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>
