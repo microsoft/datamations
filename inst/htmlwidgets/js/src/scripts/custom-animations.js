@@ -738,8 +738,37 @@ export const CustomAnimations = {
     const stacks = await getGridSpec(rawSource, 10, true)
     delete stacks.encoding.y.axis
     const rules = getSumStep(rawSource, target, false)
+    
+    const step_1 = getSumStep(rawSource, target, false)
+
+    const barWidth = 2
+
+    const step_2 = {
+      ...step_1,
+      layer: [
+        {
+          name: 'main',
+          mark: { type: 'tick', orient: 'horizontal', width: barWidth },
+          encoding: {
+            y: {
+              ...rawSource.encoding.y
+            },
+            x: {
+              ...rawSource.encoding.x,
+              field: CONF.X_FIELD + '_pos_start'
+            },
+            x2: {
+              field: CONF.X_FIELD + '_pos_end'
+            },
+            color: rawSource.encoding.color
+          }
+        },
+        ...step_1.layer.slice(1)
+      ]
+    }
+
     const pullUp = getSumStep(rawSource, target, true)
-    return [stacks, rules, pullUp, target]
+    return [stacks, rules, step_2, pullUp, target]
   },
   /**
     * min animation steps:
