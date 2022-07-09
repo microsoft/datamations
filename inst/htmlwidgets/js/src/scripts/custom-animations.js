@@ -110,6 +110,16 @@ export const getSumStep = (source, target, shrink = false) => {
     }
   })
 
+  values = values.map((d, i) => {
+    return {
+      ...d,
+      [CONF.X_FIELD + '_pos_start']: d[CONF.X_FIELD],
+      [CONF.X_FIELD + '_pos_end']: d[CONF.X_FIELD] + 0.1,
+      [CONF.Y_FIELD + '_pos_start']: d[CONF.Y_FIELD],
+      [CONF.Y_FIELD + '_pos_end']: d[CONF.Y_FIELD] + 1000
+    } 
+  })
+
   if (shrink) {
     values = values.map((d, i) => {
       const y = target.data.values[i][CONF.Y_FIELD]
@@ -740,27 +750,26 @@ export const CustomAnimations = {
     const rules = getSumStep(rawSource, target, false)
     
     const step_1 = getSumStep(rawSource, target, false)
-
+    
     const barWidth = 2
-
+    
     const step_2 = {
       ...step_1,
       layer: [
         {
           name: 'main',
-          mark: { type: 'tick', orient: 'horizontal', width: barWidth },
+            mark: { type: 'bar', orient: 'horizontal', width: barWidth },
           encoding: {
             y: {
-              ...rawSource.encoding.y
+              ...stacks.encoding.y
             },
             x: {
-              ...rawSource.encoding.x,
+              ...stacks.encoding.x,
               field: CONF.X_FIELD + '_pos_start'
             },
             x2: {
               field: CONF.X_FIELD + '_pos_end'
-            },
-            color: rawSource.encoding.color
+            }
           }
         },
         ...step_1.layer.slice(1)
