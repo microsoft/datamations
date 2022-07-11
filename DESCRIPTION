@@ -8,6 +8,7 @@ Authors@R: c(
     person("Sharla", "Gelfand", role = c("aut")),
     person("Giorgi", "Ghviniashvili", role = c("aut")),
     person("Will", "Bonnell", role = c("aut")),
+    person("Dan", "Goldstein", email = "dgg@microsoft.com", role = c("aut")))
     person("Jake", "Hofman", email = "jmh@microsoft.com", role = c("cre", "aut")))
 Description: Generates animations that explain plots and tables from tidyverse pipelines.
 License: MIT + file LICENSE
