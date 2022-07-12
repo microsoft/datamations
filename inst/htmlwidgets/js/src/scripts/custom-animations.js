@@ -113,10 +113,20 @@ export const getSumStep = (source, target, shrink = false) => {
   values = values.map((d, i) => {
     return {
       ...d,
-      [CONF.X_FIELD + '_pos_start']: d[CONF.X_FIELD],
-      [CONF.X_FIELD + '_pos_end']: d[CONF.X_FIELD] + 0.1,
       [CONF.Y_FIELD + '_pos_start']: d[CONF.Y_FIELD],
-      [CONF.Y_FIELD + '_pos_end']: d[CONF.Y_FIELD] + 1000
+      [CONF.Y_FIELD + '_pos_end']: 0
+    } 
+  }).sort(function(a, b) {
+    return a[CONF.Y_FIELD + '_pos_start'] - b[CONF.Y_FIELD + '_pos_start']
+  });
+
+  const count = values.length;
+
+  values = values.map((d, i) => {
+    return {
+      ...d,
+      [CONF.X_FIELD + '_pos_start']: d[CONF.X_FIELD],
+      [CONF.X_FIELD + '_pos_end']: d[CONF.X_FIELD] - 0.25 + 0.5 * (i / count)
     } 
   })
 
@@ -746,10 +756,9 @@ export const CustomAnimations = {
     */
   sum: async (rawSource, target) => {
     const stacks = await getGridSpec(rawSource, 10, true)
-    delete stacks.encoding.y.axis
-    const rules = getSumStep(rawSource, target, false)
-    
-    const step_1 = getSumStep(rawSource, target, false)
+    // delete stacks.encoding.y.axis
+    // const rules = getSumStep(rawSource, target, false)
+    const step_1 = getSumStep(rawSource, target)
     
     const barWidth = 2
     
@@ -760,15 +769,16 @@ export const CustomAnimations = {
           name: 'main',
             mark: { type: 'bar', orient: 'horizontal', width: barWidth },
           encoding: {
-            y: {
-              ...stacks.encoding.y
-            },
             x: {
               ...stacks.encoding.x,
-              field: CONF.X_FIELD + '_pos_start'
-            },
-            x2: {
               field: CONF.X_FIELD + '_pos_end'
+            },
+            y: {
+              ...stacks.encoding.y,
+              field: CONF.Y_FIELD + '_pos_start'
+            },
+            y2: {
+              field: CONF.Y_FIELD + '_pos_end'
             }
           }
         },
@@ -777,7 +787,8 @@ export const CustomAnimations = {
     }
 
     const pullUp = getSumStep(rawSource, target, true)
-    return [stacks, rules, step_2, pullUp, target]
+    return [rawSource, step_1, step_2, target]
+    // return [stacks, rules, step_2, pullUp, target]
   },
   /**
     * min animation steps:
