@@ -109,10 +109,14 @@ export const getSumStep = (source, target, shrink = false) => {
       }
     }
   })
-
+  
+  const count = values.length;
+  
   values = values.map((d, i) => {
     return {
       ...d,
+      [CONF.X_FIELD + '_pos_start']: d[CONF.X_FIELD],
+      [CONF.X_FIELD + '_pos_end']: d[CONF.X_FIELD] - 0.25 + 0.5 * (i / count),
       [CONF.Y_FIELD + '_pos_start']: d[CONF.Y_FIELD],
       [CONF.Y_FIELD + '_pos_end']: 0
     } 
@@ -120,25 +124,34 @@ export const getSumStep = (source, target, shrink = false) => {
     return a[CONF.Y_FIELD + '_pos_start'] - b[CONF.Y_FIELD + '_pos_start']
   });
 
-  const count = values.length;
-
-  values = values.map((d, i) => {
-    return {
-      ...d,
-      [CONF.X_FIELD + '_pos_start']: d[CONF.X_FIELD],
-      [CONF.X_FIELD + '_pos_end']: d[CONF.X_FIELD] - 0.25 + 0.5 * (i / count)
-    } 
-  })
-
+  let add = {};
   if (shrink) {
     values = values.map((d, i) => {
-      const y = target.data.values[i][CONF.Y_FIELD]
+      const x = d[CONF.X_FIELD]
+      const y = d[CONF.Y_FIELD]
+      if (add[x]) {
+        add[x] = add[x] + y
+      }
+      else {
+        add[x] = y
+      }
       return {
         ...d,
-        [CONF.Y_FIELD]: y
+        [CONF.Y_FIELD]: add[x]
       }
     })
   }
+
+  let encoding =  {
+    x: target.encoding.x,
+    y: {
+      ...target.encoding.y,
+      scale: [0, target.encoding.y.scale[1]]
+    },
+    tooltip: target.encoding.tooltip
+  }
+
+  console.log("encoding", encoding);
 
   return {
     $schema: CONF.SCHEME,
@@ -152,7 +165,7 @@ export const getSumStep = (source, target, shrink = false) => {
       {
         name: 'main',
         mark: source.mark,
-        encoding: source.encoding
+        encoding: shrink ? encoding : source.encoding
       },
       ...rules
     ]
@@ -765,7 +778,7 @@ export const CustomAnimations = {
       ...sorted,
       layer: [
         {
-          name: 'main',
+          name: 'bars',
             mark: { type: 'bar', orient: 'horizontal', width: barWidth },
           encoding: {
             x: {
@@ -781,16 +794,20 @@ export const CustomAnimations = {
             }
           }
         },
-        ...sorted.layer.slice(1)
+        ...sorted.layer
       ]
     }
   
-    const pullUp = getSumStep(rawSource, target)//, true)
+    sorted.layer[0].encoding = bars.layer[0].encoding;
+
+    const pullUp = getSumStep(rawSource, target, true)
+    
     console.log("stacks", stacks)
     console.log("sorted", sorted)
     console.log("bars", bars)
     console.log("pullUp", pullUp)
     console.log("target", target)
+    
     return [stacks, sorted, bars, pullUp, target]
   },
   /**
