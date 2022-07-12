@@ -109,9 +109,9 @@ export const getSumStep = (source, target, shrink = false) => {
       }
     }
   })
-  
-  const count = values.length;
-  
+
+  const count = values.length
+
   values = values.map((d, i) => {
     return {
       ...d,
@@ -119,12 +119,12 @@ export const getSumStep = (source, target, shrink = false) => {
       [CONF.X_FIELD + '_pos_end']: d[CONF.X_FIELD] - 0.25 + 0.5 * (i / count),
       [CONF.Y_FIELD + '_pos_start']: d[CONF.Y_FIELD],
       [CONF.Y_FIELD + '_pos_end']: 0
-    } 
-  }).sort(function(a, b) {
+    }
+  }).sort(function (a, b) {
     return a[CONF.Y_FIELD + '_pos_start'] - b[CONF.Y_FIELD + '_pos_start']
-  });
+  })
 
-  let add = {};
+  const add = {}
   if (shrink) {
     values = values.map((d, i) => {
       const x = d[CONF.X_FIELD]
@@ -142,7 +142,7 @@ export const getSumStep = (source, target, shrink = false) => {
     })
   }
 
-  let encoding =  {
+  const encoding = {
     x: target.encoding.x,
     y: {
       ...target.encoding.y,
@@ -151,7 +151,7 @@ export const getSumStep = (source, target, shrink = false) => {
     tooltip: target.encoding.tooltip
   }
 
-  console.log("encoding", encoding);
+  console.log('encoding', encoding)
 
   return {
     $schema: CONF.SCHEME,
@@ -771,15 +771,15 @@ export const CustomAnimations = {
     const stacks = await getGridSpec(rawSource, 10, true)
     delete stacks.encoding.y.axis
     const sorted = getSumStep(rawSource, target, false)
-    
+
     const barWidth = 2
-    
+
     const bars = {
       ...sorted,
       layer: [
         {
           name: 'bars',
-            mark: { type: 'bar', orient: 'horizontal', width: barWidth },
+          mark: { type: 'bar', orient: 'horizontal', width: barWidth },
           encoding: {
             x: {
               ...stacks.encoding.x,
@@ -797,17 +797,17 @@ export const CustomAnimations = {
         ...sorted.layer
       ]
     }
-  
-    sorted.layer[0].encoding = bars.layer[0].encoding;
+
+    sorted.layer[0].encoding = bars.layer[0].encoding
 
     const pullUp = getSumStep(rawSource, target, true)
-    
-    console.log("stacks", stacks)
-    console.log("sorted", sorted)
-    console.log("bars", bars)
-    console.log("pullUp", pullUp)
-    console.log("target", target)
-    
+
+    console.log('stacks', stacks)
+    console.log('sorted', sorted)
+    console.log('bars', bars)
+    console.log('pullUp', pullUp)
+    console.log('target', target)
+
     return [stacks, sorted, bars, pullUp, target]
   },
   /**
