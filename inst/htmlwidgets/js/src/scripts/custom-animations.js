@@ -151,8 +151,6 @@ export const getSumStep = (source, target, shrink = false) => {
     tooltip: target.encoding.tooltip
   }
 
-  console.log('encoding', encoding)
-
   return {
     $schema: CONF.SCHEME,
     width,
@@ -770,9 +768,33 @@ export const CustomAnimations = {
   sum: async (rawSource, target) => {
     const stacks = await getGridSpec(rawSource, 10, true)
     delete stacks.encoding.y.axis
-    const sorted = getSumStep(rawSource, target, false)
+
+    const step = getSumStep(rawSource, target, false)
 
     const barWidth = 2
+
+    const sorted = {
+      ...step,
+      layer: [
+        {
+          name: 'main',
+          mark: rawSource.mark,
+          encoding: {
+            x: {
+              ...stacks.encoding.x,
+              field: CONF.X_FIELD + '_pos_end'
+            },
+            y: {
+              ...stacks.encoding.y,
+              field: CONF.Y_FIELD + '_pos_start'
+            }
+          }
+        },
+        ...step.layer.slice(1)
+      ]
+    }
+
+    console.log('sorted', sorted)
 
     const bars = {
       ...sorted,
@@ -797,8 +819,6 @@ export const CustomAnimations = {
         ...sorted.layer
       ]
     }
-
-    sorted.layer[0].encoding = bars.layer[0].encoding
 
     const pullUp = getSumStep(rawSource, target, true)
 
