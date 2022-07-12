@@ -756,14 +756,13 @@ export const CustomAnimations = {
     */
   sum: async (rawSource, target) => {
     const stacks = await getGridSpec(rawSource, 10, true)
-    // delete stacks.encoding.y.axis
-    // const rules = getSumStep(rawSource, target, false)
-    const step_1 = getSumStep(rawSource, target)
+    delete stacks.encoding.y.axis
+    const sorted = getSumStep(rawSource, target, false)
     
     const barWidth = 2
     
-    const step_2 = {
-      ...step_1,
+    const bars = {
+      ...sorted,
       layer: [
         {
           name: 'main',
@@ -782,13 +781,17 @@ export const CustomAnimations = {
             }
           }
         },
-        ...step_1.layer.slice(1)
+        ...sorted.layer.slice(1)
       ]
     }
-
-    const pullUp = getSumStep(rawSource, target, true)
-    return [rawSource, step_1, step_2, target]
-    // return [stacks, rules, step_2, pullUp, target]
+  
+    const pullUp = getSumStep(rawSource, target)//, true)
+    console.log("stacks", stacks)
+    console.log("sorted", sorted)
+    console.log("bars", bars)
+    console.log("pullUp", pullUp)
+    console.log("target", target)
+    return [stacks, sorted, bars, pullUp, target]
   },
   /**
     * min animation steps:
