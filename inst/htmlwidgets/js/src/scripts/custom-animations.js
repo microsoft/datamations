@@ -110,13 +110,27 @@ export const getSumStep = (source, target, shrink = false) => {
     }
   })
 
-  const count = values.length
-
+  const total = {}
+  const counter = {}
+  values.forEach((d, i) => {
+    if (total[d[CONF.X_FIELD]]) {
+      total[d[CONF.X_FIELD]] += 1
+    }
+    else {
+      total[d[CONF.X_FIELD]] = 1
+    }
+  })
   values = values.map((d, i) => {
+    if (counter[d[CONF.X_FIELD]]) {
+      counter[d[CONF.X_FIELD]] += 1
+    }
+    else {
+      counter[d[CONF.X_FIELD]] = 1
+    }
     return {
       ...d,
       [CONF.X_FIELD + '_pos_start']: d[CONF.X_FIELD],
-      [CONF.X_FIELD + '_pos_end']: d[CONF.X_FIELD] - 0.25 + 0.5 * (i / count),
+      [CONF.X_FIELD + '_pos_end']: d[CONF.X_FIELD] - 0.25 + 0.5 * (counter[d[CONF.X_FIELD]] / total[d[CONF.X_FIELD]]),
       [CONF.Y_FIELD + '_pos_start']: d[CONF.Y_FIELD],
       [CONF.Y_FIELD + '_pos_end']: 0
     }
@@ -146,7 +160,10 @@ export const getSumStep = (source, target, shrink = false) => {
     x: target.encoding.x,
     y: {
       ...target.encoding.y,
-      scale: [0, target.encoding.y.scale[1]]
+      scale: {
+        type: 'linear',
+        domain: [0, target.encoding.y.scale.domain[1]]
+      }
     },
     tooltip: target.encoding.tooltip
   }
@@ -771,7 +788,7 @@ export const CustomAnimations = {
 
     const step = getSumStep(rawSource, target, false)
 
-    const barWidth = 2
+    const barWidth = 0.25
 
     const sorted = {
       ...step,
@@ -820,15 +837,59 @@ export const CustomAnimations = {
       ]
     }
 
+    const resized = {
+      ...bars,
+      layer: [
+        {
+          name: 'main',
+          mark: rawSource.mark,
+          encoding: {
+            x: {
+              ...stacks.encoding.x,
+              field: CONF.X_FIELD + '_pos_end'
+            },
+            y: {
+              ...stacks.encoding.y,
+              scale: {
+                domain: [0, target.encoding.y.scale.domain[1]]
+              }
+            }
+          }
+        },
+        {
+          name: 'bars',
+          mark: { type: 'bar', orient: 'horizontal', width: barWidth },
+          encoding: {
+            x: {
+              ...stacks.encoding.x,
+              field: CONF.X_FIELD + '_pos_end'
+            },
+            y: {
+              ...stacks.encoding.y,
+              field: CONF.Y_FIELD + '_pos_start',
+              scale: {
+                domain: [0, target.encoding.y.scale.domain[1]]
+              }
+            },
+            y2: {
+              field: CONF.Y_FIELD + '_pos_end'
+            }
+          }
+        },
+        ...bars.layer.slice(2)
+      ]
+    }
+
     const pullUp = getSumStep(rawSource, target, true)
 
     console.log('stacks', stacks)
     console.log('sorted', sorted)
     console.log('bars', bars)
+    console.log('resized', resized)
     console.log('pullUp', pullUp)
     console.log('target', target)
 
-    return [stacks, sorted, bars, pullUp, target]
+    return [stacks, sorted, bars, resized, pullUp, target]
   },
   /**
     * min animation steps:
