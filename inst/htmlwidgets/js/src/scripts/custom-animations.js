@@ -80,10 +80,11 @@ export const getCountStep = (source, target, shrink = false) => {
   * Generates a spec for sum animation
   * @param {Object} source source spec
   * @param {Object} target target spec
+  * @param {Object} added if truthy, circles will be added up
   * @param {Object} shrink if truthy, circles will be pulled up
   * @returns a vega lite spec
   */
-export const getSumStep = (source, target, shrink = false) => {
+export const getSumStep = (source, target, added = false, shrink = false) => {
   const { width, height } = target.spec || target
   let values = source.data.values.slice()
   const sourceMeta = source.meta
@@ -139,7 +140,7 @@ export const getSumStep = (source, target, shrink = false) => {
   })
 
   const add = {}
-  if (shrink) {
+  if (added) {
     values = values.map((d, i) => {
       const x = d[CONF.X_FIELD]
       const y = d[CONF.Y_FIELD]
@@ -149,9 +150,20 @@ export const getSumStep = (source, target, shrink = false) => {
       else {
         add[x] = y
       }
-      return {
-        ...d,
-        [CONF.Y_FIELD]: add[x]
+      if (shrink) {
+        const result = target.data.values.filter((t) => {
+          return t[CONF.X_FIELD] === x
+        })
+        return {
+          ...d,
+          [CONF.Y_FIELD]: result[0][CONF.Y_FIELD]
+        }
+      }
+      else {
+        return {
+          ...d,
+          [CONF.Y_FIELD]: add[x]
+        }
       }
     })
   }
@@ -180,7 +192,7 @@ export const getSumStep = (source, target, shrink = false) => {
       {
         name: 'main',
         mark: source.mark,
-        encoding: shrink ? encoding : source.encoding
+        encoding: added ? encoding : source.encoding
       },
       ...rules
     ]
@@ -880,16 +892,19 @@ export const CustomAnimations = {
       ]
     }
 
-    const pullUp = getSumStep(rawSource, target, true)
+    const added = getSumStep(rawSource, target, true)
+
+    const pullUp = getSumStep(rawSource, target, true, true)
 
     console.log('stacks', stacks)
     console.log('sorted', sorted)
     console.log('bars', bars)
     console.log('resized', resized)
+    console.log('added', pullUp)
     console.log('pullUp', pullUp)
     console.log('target', target)
 
-    return [stacks, sorted, bars, resized, pullUp, target]
+    return [stacks, sorted, bars, resized, added, pullUp, target]
   },
   /**
     * min animation steps:
