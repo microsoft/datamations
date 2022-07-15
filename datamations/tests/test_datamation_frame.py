@@ -88,9 +88,9 @@ def test_datamation_frame_specs():
         compare_specs_with_file(specs, specs_file)
 
     # Group by Degree Min
-    specs = df.groupby('Degree').min().specs()
+    specs = df.groupby('Degree').min('Salary').specs()
     script_dir = os.path.dirname( __file__ )
-    with open(os.path.join(script_dir, '../../../../sandbox/custom_animations/custom-animations-min-R.json'), 'r') as specs_file:
+    with open(os.path.join(script_dir, '../../sandbox/custom_animations/custom-animations-min-R.json'), 'r') as specs_file:
         compare_specs_with_file(specs, specs_file)
 
     # # Group by Work Min
@@ -99,17 +99,17 @@ def test_datamation_frame_specs():
     # with open(os.path.join(script_dir, '../../inst/specs/groupby_work.json'), 'r') as specs_file:
     #     compare_specs_with_file(specs, specs_file)
 
-    # # Group by Degree, Work Min
-    # specs = df.groupby(['Degree', 'Work']).min().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../../../inst/specs/min_specs_two_columns.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
+    # Group by Degree, Work Min
+    specs = df.groupby(['Degree', 'Work']).min('Salary').specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/min_specs_two_columns.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
 
-    # # Group by Degree Max
-    # specs = df.groupby('Degree').max().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../../../sandbox/custom_animations/custom-animations-max-R.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
+    # Group by Degree Max
+    specs = df.groupby('Degree').max('Salary').specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../sandbox/custom_animations/custom-animations-max-R.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
 
     # # Group by Work Max
     # specs = df.groupby('Work').max().specs()
@@ -117,11 +117,11 @@ def test_datamation_frame_specs():
     # with open(os.path.join(script_dir, '../../inst/specs/groupby_work.json'), 'r') as specs_file:
     #     compare_specs_with_file(specs, specs_file)
 
-    # # Group by Degree, Work Max
-    # specs = df.groupby(['Degree', 'Work']).max().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../../../inst/specs/max_specs_two_columns.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
+    # Group by Degree, Work Max
+    specs = df.groupby(['Degree', 'Work']).max('Salary').specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/max_specs_two_columns.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
 
 
 def test_three_variables_frame_specs():

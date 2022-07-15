@@ -78,6 +78,9 @@ class DatamationFrame(pd.DataFrame):
             "tooltip": tooltip
         }
 
+        if any(element in ['min', 'max'] for element in self.operations):
+            del spec_encoding["color"]
+
         facet_encoding = {}
 
         if len(self._by) > 1:
