@@ -13,6 +13,8 @@ def compare_specs_with_file(specs, specs_file):
         for key in spec:
             if key == 'data':
                 for j, val in enumerate(spec['data']['values']):
+                    print("val: ", val)
+                    print("approx(specs[i]['data']['values'][j]:", specs[i]['data']['values'][j])
                     assert val == approx(specs[i]['data']['values'][j])
             else:
                 if  key == 'layer':
@@ -20,6 +22,8 @@ def compare_specs_with_file(specs, specs_file):
                         for field in encoding:
                             if field == 'encoding':
                                 for val in encoding[field]:
+                                    print("###encoding[field][val]", encoding[field][val])
+                                    print("###specs[i][key][j][field][val]", specs[i][key][j][field][val])
                                     assert encoding[field][val] == specs[i][key][j][field][val]
                             else:
                                 assert encoding[field] == specs[i][key][j][field]
@@ -27,26 +31,41 @@ def compare_specs_with_file(specs, specs_file):
                     for item in spec[key]:
                         if item == 'layer':
                             for j, encoding in enumerate(spec[key]["layer"]):
+                                print("!!!!!!!!!!!!!!!!!!!!!!!")
                                 for field in encoding:
+                                    print("!!!!!!!!!!!!!!!!!!!!!!!!field", field)
                                     if field == 'encoding':
                                         for val in encoding[field]:
+                                            print("!!!!!!!!!!!!!!!!!!!!!!val", val)
                                             if val == "y":
                                                 for y_key in encoding[field][val]:
+                                                    print("!!!!!!!!!!!!!!!!!!!!!!!y_key", y_key)
                                                     if y_key == "scale":
                                                         for scale_key in encoding[field][val][y_key]:
+                                                            print("scale_key!!!!!!!!!!!!!!!!", scale_key)
                                                             if scale_key == "domain":
                                                                 assert encoding[field][val][y_key][scale_key] == approx(specs[i][key][item][j][field][val][y_key][scale_key])
                                                             else:
+                                                                print("1*******************")
                                                                 assert encoding[field][val][y_key][scale_key] == specs[i][key][item][j][field][val][y_key][scale_key]
                                                     else:
+                                                        print("2*******************")
                                                         assert encoding[field][val][y_key] == specs[i][key][item][j][field][val][y_key]
                                             else:
+                                                print("3*******************")
                                                 assert encoding[field][val] == specs[i][key][item][j][field][val]
                                     else:
+                                        print("4*******************")
                                         assert encoding[field] == specs[i][key][item][j][field]
                         else:
+                            print("5*******************")
+                            print("spec[key][item]", spec[key][item])
+                            print("specs[i][key][item]", specs[i][key][item])
                             assert spec[key][item] == specs[i][key][item]
                 else:
+                    print("6*******************")
+                    print("spec[key]", spec[key])
+                    print("specs[i][key]", specs[i][key])
                     assert spec[key] == specs[i][key]
 
 def test_datamation_frame_groupby():
@@ -63,29 +82,60 @@ def test_datamation_frame_specs():
     df = small_salary().df
     df = DatamationFrame(df)
 
-    # Group by Degree
-    specs = df.groupby('Degree').mean().specs()
+    # # Group by Degree
+    # specs = df.groupby('Degree').mean().specs()
+    # script_dir = os.path.dirname( __file__ )
+    # with open(os.path.join(script_dir, '../../inst/specs/raw_spec.json'), 'r') as specs_file:
+    #     compare_specs_with_file(specs, specs_file)
+
+    # # sum of group by degree
+    # specs = df.groupby('Degree').sum().specs()
+    # script_dir = os.path.dirname( __file__ )
+    # with open(os.path.join(script_dir, '../../inst/specs/sum_specs.json'), 'r') as specs_file:
+    #     compare_specs_with_file(specs, specs_file)
+    
+    # not done!
+    # specs = df.groupby('Degree').cumprod().specs()
+    # script_dir = os.path.dirname( __file__ )
+    # with open(os.path.join(script_dir, '../../inst/specs/prod_specs.json'), 'r') as specs_file:
+    #     compare_specs_with_file(specs, specs_file)
+
+    # # Group by Work
+    # specs = df.groupby('Work').mean().specs()
+    # script_dir = os.path.dirname( __file__ )
+    # with open(os.path.join(script_dir, '../../inst/specs/groupby_work.json'), 'r') as specs_file:
+    #     compare_specs_with_file(specs, specs_file)
+
+    # # Group by Degree, Work
+    # specs = df.groupby(['Degree', 'Work']).mean().specs()
+    # script_dir = os.path.dirname( __file__ )
+    # with open(os.path.join(script_dir, '../../inst/specs/groupby_degree_work.json'), 'r') as specs_file:
+    #     compare_specs_with_file(specs, specs_file)
+
+
+    # # sum of group by degree
+    # specs = df.groupby('Degree').sum().specs()
+    # script_dir = os.path.dirname( __file__ )
+    # with open(os.path.join(script_dir, '../../inst/specs/sum_specs.json'), 'r') as specs_file:
+    #     compare_specs_with_file(specs, specs_file)
+
+
+    specs = df.groupby(['Degree', 'Work']).sum().specs()
     script_dir = os.path.dirname( __file__ )
-    with open(os.path.join(script_dir, '../../inst/specs/raw_spec.json'), 'r') as specs_file:
+    with open(os.path.join(script_dir, '../../inst/specs/sum_specs_two_columns.json'), 'r') as specs_file:
         compare_specs_with_file(specs, specs_file)
 
-    # Group by Work
-    specs = df.groupby('Work').mean().specs()
-    script_dir = os.path.dirname( __file__ )
-    with open(os.path.join(script_dir, '../../inst/specs/groupby_work.json'), 'r') as specs_file:
-        compare_specs_with_file(specs, specs_file)
+    # specs = df.groupby(['Degree', 'Work']).cumprod().specs()
+    # script_dir = os.path.dirname( __file__ )
+    # with open(os.path.join(script_dir, '../../inst/specs/prod_specs_two_columns.json'), 'r') as specs_file:
+    #     compare_specs_with_file(specs, specs_file)
 
-    # Group by Degree, Work
-    specs = df.groupby(['Degree', 'Work']).mean().specs()
-    script_dir = os.path.dirname( __file__ )
-    with open(os.path.join(script_dir, '../../inst/specs/groupby_degree_work.json'), 'r') as specs_file:
-        compare_specs_with_file(specs, specs_file)
 
-    # Group by Work, Degree
-    specs = df.groupby(['Work', 'Degree']).mean().specs()
-    script_dir = os.path.dirname( __file__ )
-    with open(os.path.join(script_dir, '../../inst/specs/groupby_work_degree.json'), 'r') as specs_file:
-        compare_specs_with_file(specs, specs_file)
+    # # Group by Work, Degree
+    # specs = df.groupby(['Work', 'Degree']).mean().specs()
+    # script_dir = os.path.dirname( __file__ )
+    # with open(os.path.join(script_dir, '../../inst/specs/groupby_work_degree.json'), 'r') as specs_file:
+    #     compare_specs_with_file(specs, specs_file)
 
 
 def test_three_variables_frame_specs():
@@ -124,3 +174,4 @@ def test_datamation_frame_datamation_sanddance():
     assert datamation.output.Salary.Industry == 91.48376118136609
 
     assert 'Salary' in str(datamation)
+test_datamation_frame_specs()
