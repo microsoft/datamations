@@ -17,7 +17,6 @@ def test_datamation_groupby():
 
     assert len(mean.states) == 2
     assert df.equals(mean.states[0])
-    x = mean.states[0]
 
     assert mean.Salary.Masters == 90.22633400617633
     assert mean.Salary.PhD == 88.24560612632195
