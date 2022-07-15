@@ -85,6 +85,23 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         self._axis = axis if axis else df.keys()[0]
         return df
 
+    def quantile(self, axis=None, probs=None):
+        self._axis = axis
+        self._probs = probs
+        self._states.append(self)
+        self._operations.append('quantile')
+        df = super(DatamationGroupBy, self).quantile(self._probs)
+        df = datamation_frame.DatamationFrame(df)
+        df._by = self.states[1]._by
+        df._states = self._states
+        df._operations = self._operations
+        self._output = df
+        self._axis = axis if axis else df.keys()[0]
+        # self._error = super(DatamationGroupBy, self).std()
+        # for i in range(len(self._error[self._axis])):
+        #     self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
+        return df
+
     # The specs to show summarized points on the chart
     def prep_specs_summarize(self, width=300, height=300):
         x_axis = self.states[1].dtypes.axes[0].name if len(self._by) == 1 else self.states[1].dtypes.axes[0].names[0]
@@ -166,7 +183,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         if len(self._by) > 2:
             sort = subgroups
-            if self.operations[-1] == "median":
+            if any(element in ['count', 'median'] for element in self.operations):
                 facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
             else:
                 facet_encoding["row"] = { "field": self._by[1], "sort": sort, "type": "ordinal", "title": self._by[1] }
@@ -278,6 +295,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
         specs_list.append(spec)
 
+        #here
         meta = {
             "axes": len(self._by) > 1,
             "description": "Plot " + self.operations[-1] + " " + y_axis + " of each group"
@@ -373,7 +391,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 id = id + 1
 
         if 'count' not in self.operations:
-            meta['custom_animation'] = self.operations[-1]
+            if 'quantile' in self.operations:
+                meta['custom_animation'] = [self.operations[-1], self._probs]
+            else:
+                meta['custom_animation'] = self.operations[-1]
             
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
@@ -551,10 +572,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "axes": len(self._by) > 1,
             "description": "Plot " + self.operations[-1] + " " + y_axis + " of each group" + (", with errorbar" if self.operations[-1] == 'mean' else "") + ", zoomed in"
         }
-        # meta["description"] = 'Plot ' + self.operations[-1] + ' ' + y_axis + ' of each group, zoomed in'
-        # meta["description"] = 'HERE'
         
-        if 'count' in self.operations:
+        if any(element in ['count', 'quantile'] for element in self.operations):
             left = self._output[y_axis][groups[0]].max()
             right = self._output[y_axis][groups[1]].max()
             if (left > right):
@@ -575,6 +594,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "domain": [self._output[y_axis][groups[0]].min(), right]
                     }
                 }
+            if 'quantile' in self.operations:
+                y_encoding["title"] = self.operations[-1] + "(" + y_axis + ")"
+                y_encoding["scale"]["domain"][0] = round(y_encoding["scale"]["domain"][0], 13)
+                y_encoding["scale"]["domain"][1] = round(y_encoding["scale"]["domain"][1], 13)
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
