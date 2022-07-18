@@ -596,7 +596,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 y_encoding["scale"]["domain"][1] = round(y_encoding["scale"]["domain"][1], 13)
                 if 'quantile' in self.operations and len(self._by) == 1:
                     y_encoding["title"] = self.operations[-1] + "(" + y_axis + ")"
-                
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
