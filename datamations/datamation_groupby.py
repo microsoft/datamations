@@ -575,7 +575,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     round(min(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13),
                     round(max(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13)
                 ]
-                
+
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",

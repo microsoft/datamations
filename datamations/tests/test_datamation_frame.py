@@ -44,6 +44,14 @@ def compare_specs_with_file(specs, specs_file):
                                                 assert encoding[field][val] == specs[i][key][item][j][field][val]
                                     else:
                                         assert encoding[field] == specs[i][key][item][j][field]
+                        elif item == 'encoding':
+                            for xxx in spec[key]:
+                                if xxx == 'y':
+                                    for y_key in spec[key][item]:
+                                        if y_key == "scale":
+                                            for scale_key in spec[key][item][y_key]:
+                                                if scale_key == "domain":
+                                                    assert spec[key][item][y_key][scale_key][0] == approx(specs[i][key][item][y_key][scale_key][0])                
                         else:
                             assert spec[key][item] == specs[i][key][item]
                 else:
@@ -93,12 +101,6 @@ def test_datamation_frame_specs():
     with open(os.path.join(script_dir, '../../sandbox/custom_animations/custom-animations-min-R.json'), 'r') as specs_file:
         compare_specs_with_file(specs, specs_file)
 
-    # # Group by Work Min
-    # specs = df.groupby('Work').min().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../inst/specs/groupby_work.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
-
     # Group by Degree, Work Min
     specs = df.groupby(['Degree', 'Work']).min('Salary').specs()
     script_dir = os.path.dirname( __file__ )
@@ -110,12 +112,6 @@ def test_datamation_frame_specs():
     script_dir = os.path.dirname( __file__ )
     with open(os.path.join(script_dir, '../../sandbox/custom_animations/custom-animations-max-R.json'), 'r') as specs_file:
         compare_specs_with_file(specs, specs_file)
-
-    # # Group by Work Max
-    # specs = df.groupby('Work').max().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../inst/specs/groupby_work.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
 
     # Group by Degree, Work Max
     specs = df.groupby(['Degree', 'Work']).max('Salary').specs()
