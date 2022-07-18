@@ -45,13 +45,13 @@ def compare_specs_with_file(specs, specs_file):
                                     else:
                                         assert encoding[field] == specs[i][key][item][j][field]
                         elif item == 'encoding':
-                            for xxx in spec[key]:
-                                if xxx == 'y':
+                            for value in spec[key]:
+                                if value == 'y':
                                     for y_key in spec[key][item]:
                                         if y_key == "scale":
                                             for scale_key in spec[key][item][y_key]:
                                                 if scale_key == "domain":
-                                                    assert spec[key][item][y_key][scale_key][0] == approx(specs[i][key][item][y_key][scale_key][0])                
+                                                    assert spec[key][item][y_key][scale_key][0] == approx(specs[i][key][item][y_key][scale_key][0])
                         else:
                             assert spec[key][item] == specs[i][key][item]
                 else:
