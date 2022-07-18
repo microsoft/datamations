@@ -174,14 +174,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         if len(self._by) > 1:
             sort = groups
-            if any(element in ['count', 'median'] for element in self.operations):
+            if any(element in ['count', 'median', 'quantile'] for element in self.operations):
                 facet_encoding["column"] = { "field": self._by[0], "type": "ordinal", "title": self._by[0] }
             else:
                 facet_encoding["column"] = { "field": self._by[0], "sort": sort, "type": "ordinal", "title": self._by[0] }
 
         if len(self._by) > 2:
             sort = subgroups
-            if any(element in ['count', 'median'] for element in self.operations):
+            if any(element in ['count', 'median', 'quantile'] for element in self.operations):
                 facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
             else:
                 facet_encoding["row"] = { "field": self._by[1], "sort": sort, "type": "ordinal", "title": self._by[1] }
@@ -307,7 +307,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
             }
         }
-
+        if 'quantile' in self.operations and len(self._by) > 1:
+            y_encoding["title"] = [self.operations[-1] + " of", y_axis]
         tooltip = [
             {
                 "field": "datamations_y_tooltip",
@@ -591,10 +592,11 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     }
                 }
             if 'quantile' in self.operations:
-                y_encoding["title"] = self.operations[-1] + "(" + y_axis + ")"
                 y_encoding["scale"]["domain"][0] = round(y_encoding["scale"]["domain"][0], 13)
                 y_encoding["scale"]["domain"][1] = round(y_encoding["scale"]["domain"][1], 13)
-
+                if 'quantile' in self.operations and len(self._by) == 1:
+                    y_encoding["title"] = self.operations[-1] + "(" + y_axis + ")"
+                
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
