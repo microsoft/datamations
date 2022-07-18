@@ -14,48 +14,47 @@ def compare_specs_with_file(specs, specs_file):
             if key == 'data':
                 for j, val in enumerate(spec['data']['values']):
                     assert val == approx(specs[i]['data']['values'][j])
-            else:
-                if  key == 'layer':
-                    for j, encoding in enumerate(spec["layer"]):
-                        for field in encoding:
-                            if field == 'encoding':
-                                for val in encoding[field]:
-                                    assert encoding[field][val] == specs[i][key][j][field][val]
-                            else:
-                                assert encoding[field] == specs[i][key][j][field]
-                elif key == "spec":
-                    for item in spec[key]:
-                        if item == 'layer':
-                            for j, encoding in enumerate(spec[key]["layer"]):
-                                for field in encoding:
-                                    if field == 'encoding':
-                                        for val in encoding[field]:
-                                            if val == "y":
-                                                for y_key in encoding[field][val]:
-                                                    if y_key == "scale":
-                                                        for scale_key in encoding[field][val][y_key]:
-                                                            if scale_key == "domain":
-                                                                assert encoding[field][val][y_key][scale_key] == approx(specs[i][key][item][j][field][val][y_key][scale_key])
-                                                            else:
-                                                                assert encoding[field][val][y_key][scale_key] == specs[i][key][item][j][field][val][y_key][scale_key]
-                                                    else:
-                                                        assert encoding[field][val][y_key] == specs[i][key][item][j][field][val][y_key]
-                                            else:
-                                                assert encoding[field][val] == specs[i][key][item][j][field][val]
-                                    else:
-                                        assert encoding[field] == specs[i][key][item][j][field]
-                        elif item == 'encoding':
-                            for value in spec[key]:
-                                if value == 'y':
-                                    for y_key in spec[key][item]:
-                                        if y_key == "scale":
-                                            for scale_key in spec[key][item][y_key]:
-                                                if scale_key == "domain":
-                                                    assert spec[key][item][y_key][scale_key][0] == approx(specs[i][key][item][y_key][scale_key][0])
+            elif  key == 'layer':
+                for j, encoding in enumerate(spec["layer"]):
+                    for field in encoding:
+                        if field == 'encoding':
+                            for val in encoding[field]:
+                                assert encoding[field][val] == specs[i][key][j][field][val]
                         else:
-                            assert spec[key][item] == specs[i][key][item]
-                else:
-                    assert spec[key] == specs[i][key]
+                            assert encoding[field] == specs[i][key][j][field]
+            elif key == "spec":
+                for item in spec[key]:
+                    if item == 'layer':
+                        for j, encoding in enumerate(spec[key]["layer"]):
+                            for field in encoding:
+                                if field == 'encoding':
+                                    for val in encoding[field]:
+                                        if val == "y":
+                                            for y_key in encoding[field][val]:
+                                                if y_key == "scale":
+                                                    for scale_key in encoding[field][val][y_key]:
+                                                        if scale_key == "domain":
+                                                            assert encoding[field][val][y_key][scale_key] == approx(specs[i][key][item][j][field][val][y_key][scale_key])
+                                                        else:
+                                                            assert encoding[field][val][y_key][scale_key] == specs[i][key][item][j][field][val][y_key][scale_key]
+                                                else:
+                                                    assert encoding[field][val][y_key] == specs[i][key][item][j][field][val][y_key]
+                                        else:
+                                            assert encoding[field][val] == specs[i][key][item][j][field][val]
+                                else:
+                                    assert encoding[field] == specs[i][key][item][j][field]
+                    elif item == 'encoding':
+                        for value in spec[key]:
+                            if value == 'y':
+                                for y_key in spec[key][item]:
+                                    if y_key == "scale":
+                                        for scale_key in spec[key][item][y_key]:
+                                            if scale_key == "domain":
+                                                assert spec[key][item][y_key][scale_key][0] == approx(specs[i][key][item][y_key][scale_key][0])
+                    else:
+                        assert spec[key][item] == specs[i][key][item]
+            else:
+                assert spec[key] == specs[i][key]
 
 def test_datamation_frame_groupby():
     df = small_salary().df
