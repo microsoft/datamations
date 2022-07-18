@@ -556,47 +556,59 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             specs_list.append(spec)
 
         # Show the summarized values along with error bars, zoomed in
-        if len(self._by) > 2:
-            min_array = []
-            max_array = []
-            for group in groups:
-                for subgroup in subgroups:
-                    for l3group in l3groups:
-                        if l3group == "NA":
-                            l3group = float("nan")
-                        if subgroup in self._output[y_axis][group] and l3group in self._output[y_axis][group][subgroup]:
-                            if self.operations[-1] == "mean":
-                                min_array.append(self._output[y_axis][group][subgroup][l3group] - self._error[y_axis][group][subgroup][l3group])
-                            else:
-                                min_array.append(self._output[y_axis][group][subgroup][l3group])
-                        if subgroup in self._output[y_axis][group] and l3group in self._output[y_axis][group][subgroup]:
-                            if self.operations[-1] == "mean":
-                                max_array.append(self._output[y_axis][group][subgroup][l3group] + self._error[y_axis][group][subgroup][l3group])
-                            else:
-                                max_array.append(self._output[y_axis][group][subgroup][l3group])
-            domain = [round(min(min_array), 13), round(max(max_array), 13)]
-        elif len(self._by) > 1:
-            if self.operations[-1] == 'mean':
+        if self.operations[-1] != "sum":
+            if len(self._by) > 2:
+                min_array = []
+                max_array = []
+                for group in groups:
+                    for subgroup in subgroups:
+                        for l3group in l3groups:
+                            if l3group == "NA":
+                                l3group = float("nan")
+                            if subgroup in self._output[y_axis][group] and l3group in self._output[y_axis][group][subgroup]:
+                                if self.operations[-1] == "mean":
+                                    min_array.append(self._output[y_axis][group][subgroup][l3group] - self._error[y_axis][group][subgroup][l3group])
+                                else:
+                                    min_array.append(self._output[y_axis][group][subgroup][l3group])
+                            if subgroup in self._output[y_axis][group] and l3group in self._output[y_axis][group][subgroup]:
+                                if self.operations[-1] == "mean":
+                                    max_array.append(self._output[y_axis][group][subgroup][l3group] + self._error[y_axis][group][subgroup][l3group])
+                                else:
+                                    max_array.append(self._output[y_axis][group][subgroup][l3group])
+                domain = [round(min(min_array), 13), round(max(max_array), 13)]
+            elif len(self._by) > 1:
                 domain = [
                     round(min(self._output[y_axis][groups[0]][subgroups[0]] - self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] - self._error[y_axis][groups[0]][subgroups[0]]),13),
                     round(max(self._output[y_axis][groups[1]][subgroups[0]] + self._error[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] + self._error[y_axis][groups[1]][subgroups[1]]),13),
                 ]
+                    
             else:
-                domain = [
-                    round(min(self._output[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
-                    round(max(self._output[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
-                ]
-        else:
-            if self.operations[-1] == 'mean':
                 domain = [
                     round(min(self._output[y_axis][groups[0]]-self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
                     round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13),
                 ]
+
+        if self.operations[-1] == "sum":
+            if len(self._by) > 1:
+                domain = [round(self._output[y_axis].min(),13), round(self._output[y_axis].max(),13)]
+                # domain = [
+                #         round(min(self._output[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13), # check d
+                #         round(max(self._output[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
+                #     ]
+                # print("domain max", max(self._output[y_axis][groups[0]][subgroups[1]], self._output[y_axis][groups[1]][subgroups[1]])) # error is here! not the right max
+                # print("##1")
+                # print(self._by)
+                # print("domain", domain)
+                # print("self._output[y_axis]##1", self._output[y_axis])
+                # print("testing domain", [round(self._output[y_axis].min(),13), round(self._output[y_axis].max(),13)])
             else:
                 domain = [
-                    round(min(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13),
-                    round(max(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13),
-                ]
+                        round(min(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13), # check d
+                        round(max(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13),
+                    ]
+                # print("##2")
+                # print("self._output[y_axis]##2", self._output[y_axis])
+                # print("domain", domain)
 
         y_encoding = {
             "field": "datamations_y",
