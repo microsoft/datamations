@@ -393,7 +393,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 meta['custom_animation'] = [self.operations[-1], self._probs]
             else:
                 meta['custom_animation'] = self.operations[-1]
-            
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
@@ -570,7 +569,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "axes": len(self._by) > 1,
             "description": "Plot " + self.operations[-1] + " " + y_axis + " of each group" + (", with errorbar" if self.operations[-1] == 'mean' else "") + ", zoomed in"
         }
-        
         if any(element in ['count', 'quantile'] for element in self.operations):
             left = self._output[y_axis][groups[0]].max()
             right = self._output[y_axis][groups[1]].max()
@@ -599,7 +597,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
-                spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
+            spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
         spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, self.operations[-1] == 'mean')
         specs_list.append(spec)
         return specs_list
