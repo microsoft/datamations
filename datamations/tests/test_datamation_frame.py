@@ -114,7 +114,6 @@ def test_datamation_frame_specs():
 
 
 def test_three_variables_frame_specs():
-    
     # three-variable grouping
     df = DatamationFrame(load_penguins())
     script_dir = os.path.dirname( __file__ )

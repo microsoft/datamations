@@ -19,6 +19,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
     _error = {}
     _states = []
     _operations = []
+    _probs = None
 
     @classmethod
     def _internal_ctor(cls, *args, **kwargs):
@@ -97,9 +98,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         df._operations = self._operations
         self._output = df
         self._axis = axis if axis else df.keys()[0]
-        # self._error = super(DatamationGroupBy, self).std()
-        # for i in range(len(self._error[self._axis])):
-        #     self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
         return df
 
     # The specs to show summarized points on the chart
@@ -576,7 +574,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         if any(element in ['count', 'quantile'] for element in self.operations):
             left = self._output[y_axis][groups[0]].max()
             right = self._output[y_axis][groups[1]].max()
-            if (left > right):
+            if left > right:
                 y_encoding = {
                     "field": "datamations_y",
                     "type": "quantitative",
@@ -604,5 +602,4 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
         spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims, self.operations[-1] == 'mean')
         specs_list.append(spec)
-
         return specs_list
