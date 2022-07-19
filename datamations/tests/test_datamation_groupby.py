@@ -21,17 +21,17 @@ def test_datamation_groupby():
     assert mean.Salary.Masters == 90.22633400617633
     assert mean.Salary.PhD == 88.24560612632195
 
-    # # median
-    # median = df.groupby('Degree').mean()
+    # median
+    median = df.groupby('Degree').median()
 
-    # assert "groupby" in median.operations
-    # assert "mean" in median.operations
+    assert "groupby" in median.operations
+    assert "median" in median.operations
 
-    # assert len(median.states) == 2
-    # assert df.equals(median.states[0])
+    assert len(median.states) == 2
+    assert df.equals(median.states[0])
 
-    # assert median.Salary.Masters == 91.13211765
-    # assert median.Salary.PhD == 86.40630846
+    assert median.Salary.Masters == 91.13211765489541
+    assert median.Salary.PhD == 86.40630845562555
 
     # sum
     sum = df.groupby('Degree').sum()
@@ -45,18 +45,17 @@ def test_datamation_groupby():
     assert sum.Salary.Masters == 6496.296048444696
     assert sum.Salary.PhD == 2470.8769715370145
 
-    # cumprod
-    # cumprod = df.groupby('Degree').cumprod()
+    # product
+    product = df.groupby('Degree').prod()
 
-    # assert "groupby" in cumprod.operations
-    # assert "cumprod" in cumprod.operations
+    assert "groupby" in product.operations
+    assert "product" in product.operations
 
-    # assert len(cumprod.states) == 2
-    # assert df.equals(cumprod.states[0])
+    assert len(product.states) == 2
+    assert df.equals(product.states[0])
 
-    # assert cumprod.Salary.PhD == 5.89224682818428e+140 # 2.94265906927814e+54
-    # assert cumprod.Salary.Masters == 2.942659e+54
-    # # 5.89224682818428e+140
+    assert product.Salary.PhD == 2.9426590692781414e+54
+    assert product.Salary.Masters == 5.892246828184284e+140
 
     # Group by Work
     mean = df.groupby('Work').mean()
@@ -89,33 +88,33 @@ def test_datamation_groupby_multiple():
     assert mean.Salary.PhD.Academia == 85.55796571969728
     assert mean.Salary.PhD.Industry == 93.08335885824636
 
-    # # sum
-    # sum = df.groupby(['Degree', 'Work']).sum()
+    # sum
+    sum = df.groupby(['Degree', 'Work']).sum()
 
-    # assert "groupby" in sum.operations
-    # assert "sum" in sum.operations
+    assert "groupby" in sum.operations
+    assert "sum" in sum.operations
 
-    # assert len(sum.states) == 2
-    # assert df.equals(sum.states[0])
+    assert len(sum.states) == 2
+    assert df.equals(sum.states[0])
 
-    # assert sum.Salary.Masters.Academia == 840.298832
-    # assert sum.Salary.Masters.Industry == 5655.997216
-    # assert sum.Salary.PhD.Academia == 1540.043383
-    # assert sum.Salary.PhD.Industry == 930.8335886
+    assert sum.Salary.Masters.Academia == 840.2988319688011
+    assert sum.Salary.Masters.Industry == 5655.997216475895
+    assert sum.Salary.PhD.Academia == 1540.043382954551
+    assert sum.Salary.PhD.Industry == 930.8335885824636
 
-    # # product
-    # product = df.groupby(['Degree', 'Work']).product()
+    # product
+    product = df.groupby(['Degree', 'Work']).prod()
 
-    # assert "groupby" in product.operations
-    # assert "product" in product.operations
+    assert "groupby" in product.operations
+    assert "product" in product.operations
 
-    # assert len(product.states) == 2
-    # assert df.equals(product.states[0])
+    assert len(product.states) == 2
+    assert df.equals(product.states[0])
 
-    # assert product.Salary.Masters.Academia == 17535325577809800000
-    # assert product.Salary.Masters.Industry == 3.36021524210573e+121
-    # assert product.Salary.PhD.Academia == 6.02776193570217e+34
-    # assert product.Salary.PhD.Industry == 48818435443657800000
+    assert product.Salary.Masters.Academia == 1.753532557780977e+19
+    assert product.Salary.Masters.Industry == 3.3602152421057308e+121
+    assert product.Salary.PhD.Academia == 6.027761935702164e+34
+    assert product.Salary.PhD.Industry == 4.8818435443657834e+19
 
     # Group by species, island, sex
     df = DatamationFrame(load_penguins())

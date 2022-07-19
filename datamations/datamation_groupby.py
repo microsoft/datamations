@@ -86,12 +86,12 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         self._axis = axis if axis else df.keys()[0]
         return df
 
-    # Override the 'cumprod' function
-    def cumprod(self, axis=None):
+    # Override the 'prod' function
+    def prod(self, axis=None):
         self._axis = axis
         self._states.append(self)
         self._operations.append('product')
-        df = super(DatamationGroupBy, self).cumprod()
+        df = super(DatamationGroupBy, self).prod()
         df = datamation_frame.DatamationFrame(df)
         df._by = self.states[1]._by
         df._states = self._states
@@ -349,14 +349,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                             value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]]
                             value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] if pd.isna(self.states[0][self._by[2]][index]) is False else "NA"
                     else:
-                        # raise KeyError(key)
-                        if self.operations[-1] != "product": # error is here!!!
-                            value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
-                            value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                        value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                        value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
 
                     data.append(value)
-                    if i == 1:
-                        print(value)
                     i = i+1
 
             facet_dims = {
@@ -375,7 +371,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "datamations_y": self._output[y_axis][groups[0]], # raise KeyError(key)
                     "datamations_y_tooltip": self._output[y_axis][groups[0]]
                 }
-                print("datamations_y", self._output[y_axis][groups])
                 data.append(value)
                 id = id + 1
 
@@ -462,12 +457,9 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                             if (self.operations[-1] == "mean" and pd.isna(self.states[0][y_axis][index]) is False):
                                 value["datamations_y_raw"] = self.states[0][y_axis][index]
                     else:
-                        # raise KeyError(key)
-                        # ## if self.operations[-1] != "product": why this part is keyerror!!!
                         value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
                         value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
-                        # print("value['datamations_y']", self._output[y_axis][self.states[0][self._by[0]]])
-                        if self.operations[-1] != "sum": # or self.operations[-1] != "product":
+                        if self.operations[-1] != "sum" and self.operations[-1] != "product":
                             value["datamations_y_raw"] = self.states[0][y_axis][index]
                         if self.operations[-1] == "mean":
                             value["Lower"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] - self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
@@ -547,7 +539,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "datamations_y_raw": self.states[0][y_axis][i]
                     })
                 id = id + 1
-                print("data", data)
 
         meta = {
             "axes": len(self._by) > 1,

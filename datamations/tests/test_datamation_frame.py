@@ -12,10 +12,7 @@ def compare_specs_with_file(specs, specs_file):
     for i, spec in enumerate(json.load(specs_file)):
         for key in spec:
             if key == 'data':
-                # pass
                 for j, val in enumerate(spec['data']['values']):
-                    # print("###1", val)
-                    # print("###2", specs[i]['data']['values'][j])
                     assert val == approx(specs[i]['data']['values'][j])
             elif  key == 'layer':
                 for j, encoding in enumerate(spec["layer"]):
@@ -55,8 +52,6 @@ def compare_specs_with_file(specs, specs_file):
                                             if scale_key == "domain":
                                                 assert spec[key][item][y_key][scale_key][0] == approx(specs[i][key][item][y_key][scale_key][0])
                     else:
-                        # print("spec[key][item]", spec[key][item])
-                        # print("specs[i][key][item]", specs[i][key][item])
                         assert spec[key][item] == specs[i][key][item]
             elif key == 'encoding':
                 for item in spec[key]:
@@ -67,8 +62,6 @@ def compare_specs_with_file(specs, specs_file):
                                     if scale_key == "domain":
                                         assert spec[key][item][y_key][scale_key][0] == approx(specs[i][key][item][y_key][scale_key][0])
             else:
-                # print("spec[key]", spec[key])
-                # print("specs[i][key]", specs[i][key])
                 assert spec[key] == specs[i][key]
 
 
@@ -86,60 +79,56 @@ def test_datamation_frame_specs():
     df = small_salary().df
     df = DatamationFrame(df)
 
-    # # Mean
-    # # Group by Degree
-    # specs = df.groupby('Degree').mean().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../inst/specs/raw_spec.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
+    # Mean
+    # Group by Degree
+    specs = df.groupby('Degree').mean().specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/raw_spec.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
 
-    # # Group by Work
-    # specs = df.groupby('Work').mean().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../inst/specs/groupby_work.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
+    # Group by Work
+    specs = df.groupby('Work').mean().specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/groupby_work.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
 
-    # # Group by Degree, Work
-    # specs = df.groupby(['Degree', 'Work']).mean().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../inst/specs/groupby_degree_work.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
+    # Group by Degree, Work
+    specs = df.groupby(['Degree', 'Work']).mean().specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/groupby_degree_work.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
 
-    # # Group by Work, Degree
-    # specs = df.groupby(['Work', 'Degree']).mean().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../inst/specs/groupby_work_degree.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
+    # Group by Work, Degree
+    specs = df.groupby(['Work', 'Degree']).mean().specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/groupby_work_degree.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
 
+    # Sum
+    # Sum of Group by Degree
+    specs = df.groupby('Degree').sum().specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/sum_specs.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
 
-    # # Sum
-    # # Sum of Group by Degree
-    # specs = df.groupby('Degree').sum().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../inst/specs/sum_specs.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
-
-    # # Sum of Group by Degree, Work
-    # specs = df.groupby(['Degree', 'Work']).sum().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../inst/specs/sum_specs_two_columns.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
-
+    # Sum of Group by Degree, Work
+    specs = df.groupby(['Degree', 'Work']).sum().specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/sum_specs_two_columns.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
 
     # Product
-    # not done!
     # Product of Group by Degree
-    specs = df.groupby('Degree').cumprod().specs()
+    specs = df.groupby('Degree').prod().specs()
     script_dir = os.path.dirname( __file__ )
     with open(os.path.join(script_dir, '../../inst/specs/prod_specs.json'), 'r') as specs_file:
         compare_specs_with_file(specs, specs_file)
 
-    # # not done
-    # # Product of Group by Degree, Work
-    # specs = df.groupby(['Degree', 'Work']).cumprod().specs()
-    # script_dir = os.path.dirname( __file__ )
-    # with open(os.path.join(script_dir, '../../inst/specs/prod_specs_two_columns.json'), 'r') as specs_file:
-    #     compare_specs_with_file(specs, specs_file)
+    # Product of Group by Degree, Work
+    specs = df.groupby(['Degree', 'Work']).prod().specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/prod_specs_two_columns.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
 
 
 def test_three_variables_frame_specs():
@@ -178,4 +167,3 @@ def test_datamation_frame_datamation_sanddance():
     assert datamation.output.Salary.Industry == 91.48376118136609
 
     assert 'Salary' in str(datamation)
-# test_datamation_frame_specs()
