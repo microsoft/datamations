@@ -125,6 +125,8 @@ def test_datamation_frame_specs():
     # with open(os.path.join(script_dir, '../../inst/specs/sum_specs_two_columns.json'), 'r') as specs_file:
     #     compare_specs_with_file(specs, specs_file)
 
+
+    # Product
     # not done!
     # Product of Group by Degree
     specs = df.groupby('Degree').cumprod().specs()
@@ -176,4 +178,4 @@ def test_datamation_frame_datamation_sanddance():
     assert datamation.output.Salary.Industry == 91.48376118136609
 
     assert 'Salary' in str(datamation)
-test_datamation_frame_specs()
+# test_datamation_frame_specs()

@@ -98,9 +98,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         df._operations = self._operations
         self._output = df
         self._axis = axis if axis else df.keys()[0]
-        # self._error = super(DatamationGroupBy, self).std()
-        # for i in range(len(self._error[self._axis])):
-        #     self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
         return df
 
     # The specs to show summarized points on the chart
@@ -188,7 +185,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
             else:
                 facet_encoding["row"] = { "field": self._by[1], "sort": sort, "type": "ordinal", "title": self._by[1] }
-            # need to change?
+
         facet_dims = {
                 "ncol": 1,
                 "nrow": 1
@@ -375,8 +372,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "gemini_id": id,
                     x_axis: self.states[0][x_axis][i],
                     "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                    # "datamations_y": self._output[y_axis][groups[0]], # raise KeyError(key)
-                    # "datamations_y_tooltip": self._output[y_axis][groups[0]]
+                    "datamations_y": self._output[y_axis][groups[0]], # raise KeyError(key)
+                    "datamations_y_tooltip": self._output[y_axis][groups[0]]
                 }
                 print("datamations_y", self._output[y_axis][groups])
                 data.append(value)
@@ -467,10 +464,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     else:
                         # raise KeyError(key)
                         # ## if self.operations[-1] != "product": why this part is keyerror!!!
-                        # value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
-                        # value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
-                        value["datamations_y"] = 123
-                        value["datamations_y_tooltip"] = 123
+                        value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                        value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
                         # print("value['datamations_y']", self._output[y_axis][self.states[0][self._by[0]]])
                         if self.operations[-1] != "sum": # or self.operations[-1] != "product":
                             value["datamations_y_raw"] = self.states[0][y_axis][index]
@@ -592,7 +587,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     round(min(self._output[y_axis][groups[0]][subgroups[0]] - self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] - self._error[y_axis][groups[0]][subgroups[0]]),13),
                     round(max(self._output[y_axis][groups[1]][subgroups[0]] + self._error[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] + self._error[y_axis][groups[1]][subgroups[1]]),13),
                 ]
-
             else:
                 domain = [
                     round(min(self._output[y_axis][groups[0]]-self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
@@ -602,24 +596,11 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         if self.operations[-1] == "sum" or self.operations[-1] == "product":
             if len(self._by) > 1:
                 domain = [round(self._output[y_axis].min(),13), round(self._output[y_axis].max(),13)]
-                # domain = [
-                #         round(min(self._output[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13), # check d
-                #         round(max(self._output[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
-                #     ]
-                # print("domain max", max(self._output[y_axis][groups[0]][subgroups[1]], self._output[y_axis][groups[1]][subgroups[1]]))
-                # print("##1")
-                # print(self._by)
-                # print("domain", domain)
-                # print("self._output[y_axis]##1", self._output[y_axis])
-                # print("testing domain", [round(self._output[y_axis].min(),13), round(self._output[y_axis].max(),13)])
             else:
                 domain = [
                         round(min(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13), # check d
                         round(max(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13),
                     ]
-                # print("##2")
-                # print("self._output[y_axis]##2", self._output[y_axis])
-                # print("domain", domain)
 
         y_encoding = {
             "field": "datamations_y",
