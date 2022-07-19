@@ -143,7 +143,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "type": "quantitative",
             "title": y_axis,
             "scale": {
-            "domain": [round(self.states[0][y_axis].min(),13), round(self.states[0][y_axis].max(),13)]
+            "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
             }
         }
 
@@ -303,7 +303,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             "type": "quantitative",
             "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" or self.operations[-1] == "sum" or self.operations[-1] == "product" else self.operations[-1] + "(" + y_axis + ")",
             "scale": {
-            "domain": [round(self.states[0][y_axis].min(),13), round(self.states[0][y_axis].max(),13)]
+            "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
             }
         }
 
@@ -368,7 +368,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "gemini_id": id,
                     x_axis: self.states[0][x_axis][i],
                     "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                    "datamations_y": self._output[y_axis][groups[0]], # raise KeyError(key)
+                    "datamations_y": self._output[y_axis][groups[0]],
                     "datamations_y_tooltip": self._output[y_axis][groups[0]]
                 }
                 data.append(value)
