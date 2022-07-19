@@ -93,4 +93,3 @@ class utils():
                     ]
                 }
         return spec
-        

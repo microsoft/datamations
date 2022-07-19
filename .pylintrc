@@ -29,4 +29,5 @@ disable=too-many-branches,
         duplicate-code,
         no-self-argument,
         redefined-outer-name,
+        overridden-final-method,
         cyclic-import ; Cyclic import (%s) Used when a cyclic import between two or more modules is detected

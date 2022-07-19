@@ -45,7 +45,7 @@ def test_datamation_groupby():
     assert sum.Salary.Masters == 6496.296048444696
     assert sum.Salary.PhD == 2470.8769715370145
 
-    # cumprod 
+    # cumprod
     # cumprod = df.groupby('Degree').cumprod()
 
     # assert "groupby" in cumprod.operations
@@ -57,7 +57,7 @@ def test_datamation_groupby():
     # assert cumprod.Salary.PhD == 5.89224682818428e+140 # 2.94265906927814e+54
     # assert cumprod.Salary.Masters == 2.942659e+54
     # # 5.89224682818428e+140
-    
+
     # Group by Work
     mean = df.groupby('Work').mean()
 

@@ -71,7 +71,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         for i in range(len(self._error[self._axis])):
             self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
         return df
-    
+
     # Override the 'sum' function
     def sum(self, axis=None):
         self._axis = axis
@@ -90,7 +90,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
     def cumprod(self, axis=None):
         self._axis = axis
         self._states.append(self)
-        self._operations.append('cumprod')
+        self._operations.append('product')
         df = super(DatamationGroupBy, self).cumprod()
         df = datamation_frame.DatamationFrame(df)
         df._by = self.states[1]._by
@@ -177,14 +177,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         if len(self._by) > 1:
             sort = groups
-            if self.operations[-1] == "median" or self.operations[-1] == "sum":
+            if self.operations[-1] == "median" or self.operations[-1] == "sum" or self.operations[-1] == "product":
                 facet_encoding["column"] = { "field": self._by[0], "type": "ordinal", "title": self._by[0] }
             else:
                 facet_encoding["column"] = { "field": self._by[0], "sort": sort, "type": "ordinal", "title": self._by[0] }
 
         if len(self._by) > 2:
             sort = subgroups
-            if self.operations[-1] == "median" or self.operations[-1] == "sum":
+            if self.operations[-1] == "median" or self.operations[-1] == "sum" or self.operations[-1] == "product":
                 facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
             else:
                 facet_encoding["row"] = { "field": self._by[1], "sort": sort, "type": "ordinal", "title": self._by[1] }
@@ -304,7 +304,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
-            "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" or self.operations[-1] == "sum" else self.operations[-1] + "(" + y_axis + ")",
+            "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" or self.operations[-1] == "sum" or self.operations[-1] == "product" else self.operations[-1] + "(" + y_axis + ")",
             "scale": {
             "domain": [round(self.states[0][y_axis].min(),13), round(self.states[0][y_axis].max(),13)]
             }
@@ -314,7 +314,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             {
                 "field": "datamations_y_tooltip",
                 "type": "quantitative",
-                "title": self.operations[-1] + "(" + y_axis + ")" 
+                "title": self.operations[-1] + "(" + y_axis + ")"
             }
         ]
 
@@ -352,10 +352,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                             value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]]
                             value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]][self.states[0][self._by[2]][index]] if pd.isna(self.states[0][self._by[2]][index]) is False else "NA"
                     else:
-                        value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
-                        value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                        # raise KeyError(key)
+                        if self.operations[-1] != "product": # error is here!!!
+                            value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                            value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
 
                     data.append(value)
+                    if i == 1:
+                        print(value)
                     i = i+1
 
             facet_dims = {
@@ -371,9 +375,10 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     "gemini_id": id,
                     x_axis: self.states[0][x_axis][i],
                     "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                    "datamations_y": self._output[y_axis][groups[0]],
-                    "datamations_y_tooltip": self._output[y_axis][groups[0]]
+                    # "datamations_y": self._output[y_axis][groups[0]], # raise KeyError(key)
+                    # "datamations_y_tooltip": self._output[y_axis][groups[0]]
                 }
+                print("datamations_y", self._output[y_axis][groups])
                 data.append(value)
                 id = id + 1
 
@@ -389,7 +394,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 }
                 data.append(value)
                 id = id + 1
-        if self.operations[-1] !='sum':
+        if self.operations[-1] !='sum' and self.operations[-1] !='product':
             meta['custom_animation'] = self.operations[-1]
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
@@ -460,9 +465,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                             if (self.operations[-1] == "mean" and pd.isna(self.states[0][y_axis][index]) is False):
                                 value["datamations_y_raw"] = self.states[0][y_axis][index]
                     else:
-                        value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
-                        value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
-                        if self.operations[-1] != "sum":
+                        # raise KeyError(key)
+                        # ## if self.operations[-1] != "product": why this part is keyerror!!!
+                        # value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                        # value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                        value["datamations_y"] = 123
+                        value["datamations_y_tooltip"] = 123
+                        # print("value['datamations_y']", self._output[y_axis][self.states[0][self._by[0]]])
+                        if self.operations[-1] != "sum": # or self.operations[-1] != "product":
                             value["datamations_y_raw"] = self.states[0][y_axis][index]
                         if self.operations[-1] == "mean":
                             value["Lower"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] - self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
@@ -491,7 +501,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "Lower": self._output[y_axis][groups[0]] - self._error[y_axis][groups[0]],
                         "Upper": self._output[y_axis][groups[0]] + self._error[y_axis][groups[0]]
                     })
-                elif self.operations[-1] == 'sum':
+                elif self.operations[-1] == 'sum' or self.operations[-1] == "product":
                     data.append({
                     "gemini_id": id,
                     x_axis: self.states[0][x_axis][i],
@@ -524,7 +534,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "Lower": self._output[y_axis][groups[1]] - self._error[y_axis][groups[1]],
                         "Upper": self._output[y_axis][groups[1]] + self._error[y_axis][groups[1]]
                     })
-                elif self.operations[-1] == "sum":
+                elif self.operations[-1] == "sum" or self.operations[-1] == "product":
                     data.append({
                         "gemini_id": id,
                         x_axis: self.states[0][x_axis][i],
@@ -532,7 +542,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "datamations_y": self._output[y_axis][groups[1]],
                         "datamations_y_tooltip": self._output[y_axis][groups[1]]
                     })
-                else: 
+                else:
                     data.append({
                         "gemini_id": id,
                         x_axis: self.states[0][x_axis][i],
@@ -542,6 +552,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         "datamations_y_raw": self.states[0][y_axis][i]
                     })
                 id = id + 1
+                print("data", data)
 
         meta = {
             "axes": len(self._by) > 1,
@@ -556,7 +567,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             specs_list.append(spec)
 
         # Show the summarized values along with error bars, zoomed in
-        if self.operations[-1] != "sum":
+        if self.operations[-1] != "sum" and self.operations[-1] != "product":
             if len(self._by) > 2:
                 min_array = []
                 max_array = []
@@ -581,21 +592,21 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     round(min(self._output[y_axis][groups[0]][subgroups[0]] - self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] - self._error[y_axis][groups[0]][subgroups[0]]),13),
                     round(max(self._output[y_axis][groups[1]][subgroups[0]] + self._error[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] + self._error[y_axis][groups[1]][subgroups[1]]),13),
                 ]
-                    
+
             else:
                 domain = [
                     round(min(self._output[y_axis][groups[0]]-self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
                     round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13),
                 ]
 
-        if self.operations[-1] == "sum":
+        if self.operations[-1] == "sum" or self.operations[-1] == "product":
             if len(self._by) > 1:
                 domain = [round(self._output[y_axis].min(),13), round(self._output[y_axis].max(),13)]
                 # domain = [
                 #         round(min(self._output[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13), # check d
                 #         round(max(self._output[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
                 #     ]
-                # print("domain max", max(self._output[y_axis][groups[0]][subgroups[1]], self._output[y_axis][groups[1]][subgroups[1]])) # error is here! not the right max
+                # print("domain max", max(self._output[y_axis][groups[0]][subgroups[1]], self._output[y_axis][groups[1]][subgroups[1]]))
                 # print("##1")
                 # print(self._by)
                 # print("domain", domain)
@@ -613,7 +624,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
-            "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" or self.operations[-1] == "sum" else self.operations[-1] + "(" + y_axis + ")",
+            "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" or self.operations[-1] == "sum" or self.operations[-1] == "product" else self.operations[-1] + "(" + y_axis + ")",
             "scale": {
             "domain": domain
             }
