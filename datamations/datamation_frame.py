@@ -78,7 +78,7 @@ class DatamationFrame(pd.DataFrame):
             "tooltip": tooltip
         }
 
-        if any(element in ['sum'] for element in self.operations):
+        if 'sum' in self.operations:
             del spec_encoding["color"]
 
         facet_encoding = {}

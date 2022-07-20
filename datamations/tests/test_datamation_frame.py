@@ -44,13 +44,19 @@ def compare_specs_with_file(specs, specs_file):
                                 else:
                                     assert encoding[field] == specs[i][key][item][j][field]
                     elif item == 'encoding':
-                        for val in spec[key]:
+                        for val in spec[key][item]:
                             if val == 'y':
-                                for y_key in spec[key][item]:
+                                for y_key in spec[key][item][val]:
                                     if y_key == "scale":
-                                        for scale_key in spec[key][item][y_key]:
+                                        for scale_key in spec[key][item][val][y_key]:
                                             if scale_key == "domain":
-                                                assert spec[key][item][y_key][scale_key][0] == approx(specs[i][key][item][y_key][scale_key][0])
+                                                assert spec[key][item][val][y_key][scale_key] == approx(specs[i][key][item][val][y_key][scale_key])
+                                            else:
+                                                assert spec[key][item][val][y_key][scale_key] == specs[i][key][item][val][y_key][scale_key]
+                                    else:
+                                        assert spec[key][item][val][y_key] == specs[i][key][item][val][y_key]
+                            else:
+                                assert spec[key][item][val] == specs[i][key][item][val]
                     else:
                         assert spec[key][item] == specs[i][key][item]
             elif key == 'encoding':
@@ -60,7 +66,13 @@ def compare_specs_with_file(specs, specs_file):
                             if y_key == "scale":
                                 for scale_key in spec[key][item][y_key]:
                                     if scale_key == "domain":
-                                        assert spec[key][item][y_key][scale_key][0] == approx(specs[i][key][item][y_key][scale_key][0])
+                                        assert spec[key][item][y_key][scale_key]== approx(specs[i][key][item][y_key][scale_key])
+                                    else:
+                                        assert encoding[field][val][y_key][scale_key] == specs[i][key][item][j][field][val][y_key][scale_key]
+                            else:
+                                assert spec[key][item][y_key] == specs[i][key][item][y_key]
+                    else:
+                        assert spec[key][item] == specs[i][key][item]
             else:
                 assert spec[key] == specs[i][key]
 
