@@ -301,7 +301,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
-            "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" or any(element in ['min', 'max'] for element in self.operations) and len(self._by) > 1 else self.operations[-1] + "(" + y_axis + ")",
+            "title": [self.operations[-1] + " of", y_axis] if any(element in ['median', 'min', 'max'] for element in self.operations) and len(self._by) > 1 else self.operations[-1] + "(" + y_axis + ")",
             "scale": {
             "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
             }
