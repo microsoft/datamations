@@ -72,6 +72,34 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
         return df
 
+    # Override the 'sum' function
+    def sum(self, axis=None):
+        self._axis = axis
+        self._states.append(self)
+        self._operations.append('sum')
+        df = super(DatamationGroupBy, self).sum()
+        df = datamation_frame.DatamationFrame(df)
+        df._by = self.states[1]._by
+        df._states = self._states
+        df._operations = self._operations
+        self._output = df
+        self._axis = axis if axis else df.keys()[0]
+        return df
+
+    # Override the 'prod' function
+    def prod(self, axis=None):
+        self._axis = axis
+        self._states.append(self)
+        self._operations.append('product')
+        df = super(DatamationGroupBy, self).prod()
+        df = datamation_frame.DatamationFrame(df)
+        df._by = self.states[1]._by
+        df._states = self._states
+        df._operations = self._operations
+        self._output = df
+        self._axis = axis if axis else df.keys()[0]
+        return df
+
     # The specs to show summarized points on the chart
     def prep_specs_summarize(self, width=300, height=300):
         x_axis = self.states[1].dtypes.axes[0].name if len(self._by) == 1 else self.states[1].dtypes.axes[0].names[0]
@@ -146,14 +174,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         if len(self._by) > 1:
             sort = groups
-            if self.operations[-1] == "median":
+            if self.operations[-1] == "median" or self.operations[-1] == "sum" or self.operations[-1] == "product":
                 facet_encoding["column"] = { "field": self._by[0], "type": "ordinal", "title": self._by[0] }
             else:
                 facet_encoding["column"] = { "field": self._by[0], "sort": sort, "type": "ordinal", "title": self._by[0] }
 
         if len(self._by) > 2:
             sort = subgroups
-            if self.operations[-1] == "median":
+            if self.operations[-1] == "median" or self.operations[-1] == "sum" or self.operations[-1] == "product":
                 facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
             else:
                 facet_encoding["row"] = { "field": self._by[1], "sort": sort, "type": "ordinal", "title": self._by[1] }
@@ -273,7 +301,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
-            "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" else self.operations[-1] + "(" + y_axis + ")",
+            "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" or self.operations[-1] == "sum" or self.operations[-1] == "product" else self.operations[-1] + "(" + y_axis + ")",
             "scale": {
             "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
             }
@@ -358,7 +386,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 }
                 data.append(value)
                 id = id + 1
-        meta['custom_animation'] = self.operations[-1]
+        if self.operations[-1] =='mean' or self.operations[-1] =='median':
+            meta['custom_animation'] = self.operations[-1]
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
@@ -430,9 +459,11 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     else:
                         value["datamations_y"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
                         value["datamations_y_tooltip"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
-                        value["datamations_y_raw"] = self.states[0][y_axis][index]
-                        value["Lower"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] - self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
-                        value["Upper"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] + self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                        if self.operations[-1] != "sum" and self.operations[-1] != "product":
+                            value["datamations_y_raw"] = self.states[0][y_axis][index]
+                        if self.operations[-1] == "mean":
+                            value["Lower"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] - self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
+                            value["Upper"] = self._output[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]] + self._error[y_axis][self.states[0][self._by[0]][index]][self.states[0][self._by[1]][index]]
 
                     data.append(value)
                     i = i+1
@@ -446,31 +477,67 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             for i in range(len(self.states[0])):
                 if self.states[0][x_axis][i] == groups[1]:
                     continue
-                data.append({
+                if self.operations[-1] == "mean":
+                    data.append({
+                        "gemini_id": id,
+                        x_axis: self.states[0][x_axis][i],
+                        "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                        "datamations_y": self._output[y_axis][groups[0]],
+                        "datamations_y_tooltip": self._output[y_axis][groups[0]],
+                        "datamations_y_raw": self.states[0][y_axis][i],
+                        "Lower": self._output[y_axis][groups[0]] - self._error[y_axis][groups[0]],
+                        "Upper": self._output[y_axis][groups[0]] + self._error[y_axis][groups[0]]
+                    })
+                elif self.operations[-1] == 'sum' or self.operations[-1] == "product":
+                    data.append({
+                    "gemini_id": id,
+                    x_axis: self.states[0][x_axis][i],
+                    "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                    "datamations_y": self._output[y_axis][groups[0]],
+                    "datamations_y_tooltip": self._output[y_axis][groups[0]]
+                    })
+                else:
+                    data.append({
                     "gemini_id": id,
                     x_axis: self.states[0][x_axis][i],
                     "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
                     "datamations_y": self._output[y_axis][groups[0]],
                     "datamations_y_tooltip": self._output[y_axis][groups[0]],
-                    "datamations_y_raw": self.states[0][y_axis][i],
-                    "Lower": self._output[y_axis][groups[0]] - self._error[y_axis][groups[0]],
-                    "Upper": self._output[y_axis][groups[0]] + self._error[y_axis][groups[0]]
-                })
+                    "datamations_y_raw": self.states[0][y_axis][i]
+                    })
                 id = id + 1
 
             for i in range(len(self.states[0])):
                 if self.states[0][x_axis][i] == groups[0]:
                     continue
-                data.append({
-                    "gemini_id": id,
-                    x_axis: self.states[0][x_axis][i],
-                    "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
-                    "datamations_y": self._output[y_axis][groups[1]],
-                    "datamations_y_tooltip": self._output[y_axis][groups[1]],
-                    "datamations_y_raw": self.states[0][y_axis][i],
-                    "Lower": self._output[y_axis][groups[1]] - self._error[y_axis][groups[1]],
-                    "Upper": self._output[y_axis][groups[1]] + self._error[y_axis][groups[1]]
-                })
+                if self.operations[-1] == "mean":
+                    data.append({
+                        "gemini_id": id,
+                        x_axis: self.states[0][x_axis][i],
+                        "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                        "datamations_y": self._output[y_axis][groups[1]],
+                        "datamations_y_tooltip": self._output[y_axis][groups[1]],
+                        "datamations_y_raw": self.states[0][y_axis][i],
+                        "Lower": self._output[y_axis][groups[1]] - self._error[y_axis][groups[1]],
+                        "Upper": self._output[y_axis][groups[1]] + self._error[y_axis][groups[1]]
+                    })
+                elif self.operations[-1] == "sum" or self.operations[-1] == "product":
+                    data.append({
+                        "gemini_id": id,
+                        x_axis: self.states[0][x_axis][i],
+                        "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                        "datamations_y": self._output[y_axis][groups[1]],
+                        "datamations_y_tooltip": self._output[y_axis][groups[1]]
+                    })
+                else:
+                    data.append({
+                        "gemini_id": id,
+                        x_axis: self.states[0][x_axis][i],
+                        "datamations_x": 1 if self.states[0][x_axis][i] == groups[0]  else 2,
+                        "datamations_y": self._output[y_axis][groups[1]],
+                        "datamations_y_tooltip": self._output[y_axis][groups[1]],
+                        "datamations_y_raw": self.states[0][y_axis][i]
+                    })
                 id = id + 1
 
         meta = {
@@ -506,20 +573,29 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                                 max_array.append(self._output[y_axis][group][subgroup][l3group])
             domain = [round(min(min_array), 13), round(max(max_array), 13)]
         elif len(self._by) > 1:
-            domain = [
-                round(min(self._output[y_axis][groups[0]][subgroups[0]] - self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] - self._error[y_axis][groups[0]][subgroups[0]]),13),
-                round(max(self._output[y_axis][groups[1]][subgroups[0]] + self._error[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] + self._error[y_axis][groups[1]][subgroups[1]]),13),
-              ]
+            if self.operations[-1] == "sum" or self.operations[-1] == "product":
+                domain = [round(self._output[y_axis].min(),13), round(self._output[y_axis].max(),13)]
+            else:
+                domain = [
+                    round(min(self._output[y_axis][groups[0]][subgroups[0]] - self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] - self._error[y_axis][groups[0]][subgroups[0]]),13),
+                    round(max(self._output[y_axis][groups[1]][subgroups[0]] + self._error[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] + self._error[y_axis][groups[1]][subgroups[1]]),13),
+                ]
         else:
-            domain = [
-                round(min(self._output[y_axis][groups[0]]-self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
-                round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13)
-            ]
+            if self.operations[-1] == "sum" or self.operations[-1] == "product":
+                domain = [
+                        round(min(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13),
+                        round(max(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13),
+                    ]
+            else:
+                domain = [
+                    round(min(self._output[y_axis][groups[0]]-self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
+                    round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13),
+                ]
 
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
-            "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" else self.operations[-1] + "(" + y_axis + ")",
+            "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" or self.operations[-1] == "sum" or self.operations[-1] == "product" else self.operations[-1] + "(" + y_axis + ")",
             "scale": {
             "domain": domain
             }
