@@ -548,7 +548,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         elif len(self._by) > 1:
             if any(element in ['quantile', 'sum', 'product'] for element in self.operations):
                 domain = [round(self._output[y_axis].min(),13), round(self._output[y_axis].max(),13)]
-            elif('count' in self.operations):
+            elif 'count' in self.operations:
                 domain = [self._output[y_axis].min(), self._output[y_axis].max()]
             else:
                 domain = [
@@ -561,7 +561,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                         round(min(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13),
                         round(max(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13),
                     ]
-            elif('count' in self.operations):
+            elif 'count' in self.operations:
                 domain = [self._output[y_axis].min(), self._output[y_axis].max()]
             else:
                 domain = [
