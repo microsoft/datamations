@@ -293,7 +293,6 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         spec = utils.generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
         specs_list.append(spec)
 
-        #here
         meta = {
             "axes": len(self._by) > 1,
             "description": "Plot " + self.operations[-1] + " " + y_axis + " of each group"
@@ -526,8 +525,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
             specs_list.append(spec)
 
         # Show the summarized values along with error bars, zoomed in
-        if any(element in ['mean', 'median'] for element in self.operations):
-            if len(self._by) > 2:
+        if len(self._by) > 2:
+            if any(element in ['mean', 'median'] for element in self.operations):
                 min_array = []
                 max_array = []
                 for group in groups:
@@ -546,56 +545,44 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                                 else:
                                     max_array.append(self._output[y_axis][group][subgroup][l3group])
                 domain = [round(min(min_array), 13), round(max(max_array), 13)]
-            elif len(self._by) > 1:
+        elif len(self._by) > 1:
+            if any(element in ['quantile', 'sum', 'product'] for element in self.operations):
+                domain = [round(self._output[y_axis].min(),13), round(self._output[y_axis].max(),13)]
+            elif('count' in self.operations):
+                domain = [self._output[y_axis].min(), self._output[y_axis].max()]
+            else:
                 domain = [
                     round(min(self._output[y_axis][groups[0]][subgroups[0]] - self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] - self._error[y_axis][groups[0]][subgroups[0]]),13),
                     round(max(self._output[y_axis][groups[1]][subgroups[0]] + self._error[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] + self._error[y_axis][groups[1]][subgroups[1]]),13),
                 ]
+        else:
+            if any(element in ['quantile', 'sum', 'product'] for element in self.operations):
+                domain = [
+                        round(min(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13),
+                        round(max(self._output[y_axis][groups[0]], self._output[y_axis][groups[1]]),13),
+                    ]
+            elif('count' in self.operations):
+                domain = [self._output[y_axis].min(), self._output[y_axis].max()]
             else:
                 domain = [
                     round(min(self._output[y_axis][groups[0]]-self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]-self._error[y_axis][groups[1]]),13),
-                    round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13)
+                    round(max(self._output[y_axis][groups[0]]+self._error[y_axis][groups[0]], self._output[y_axis][groups[1]]+self._error[y_axis][groups[1]]),13),
                 ]
 
-            y_encoding = {
-                "field": "datamations_y",
-                "type": "quantitative",
-                "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" else self.operations[-1] + "(" + y_axis + ")",
-                "scale": {
-                "domain": domain
-                }
+        y_encoding = {
+            "field": "datamations_y",
+            "type": "quantitative",
+            "title": [self.operations[-1] + " of", y_axis] if any(element in ['count', 'median'] for element in self.operations) or ('quantile' in self.operations and len(self._by) != 1) else self.operations[-1] + "(" + y_axis + ")",
+            "scale": {
+            "domain": domain
             }
+        }
 
         meta = {
             "axes": len(self._by) > 1,
             "description": "Plot " + self.operations[-1] + " " + y_axis + " of each group" + (", with errorbar" if self.operations[-1] == 'mean' else "") + ", zoomed in"
         }
-        if any(element in ['count', 'quantile'] for element in self.operations):
-            left = self._output[y_axis][groups[0]].max()
-            right = self._output[y_axis][groups[1]].max()
-            if left > right:
-                y_encoding = {
-                    "field": "datamations_y",
-                    "type": "quantitative",
-                    "title": [self.operations[-1] + " of", y_axis],
-                    "scale": {
-                    "domain": [self._output[y_axis][groups[1]].min(), left]
-                    }
-                }
-            else:
-                y_encoding = {
-                    "field": "datamations_y",
-                    "type": "quantitative",
-                    "title": [self.operations[-1] + " of", y_axis],
-                    "scale": {
-                    "domain": [self._output[y_axis][groups[0]].min(), right]
-                    }
-                }
-            if 'quantile' in self.operations:
-                y_encoding["scale"]["domain"][0] = round(y_encoding["scale"]["domain"][0], 13)
-                y_encoding["scale"]["domain"][1] = round(y_encoding["scale"]["domain"][1], 13)
-                if 'quantile' in self.operations and len(self._by) == 1:
-                    y_encoding["title"] = self.operations[-1] + "(" + y_axis + ")"
+
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
