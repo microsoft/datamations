@@ -76,7 +76,6 @@ def compare_specs_with_file(specs, specs_file):
             else:
                 assert spec[key] == specs[i][key]
 
-
 def test_datamation_frame_groupby():
     df = small_salary().df
     df = DatamationFrame(df)
@@ -114,6 +113,32 @@ def test_datamation_frame_specs():
     specs = df.groupby(['Work', 'Degree']).mean().specs()
     script_dir = os.path.dirname( __file__ )
     with open(os.path.join(script_dir, '../../inst/specs/groupby_work_degree.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
+
+    #Min
+    # Group by Degree Min
+    specs = df.groupby('Degree').min('Salary').specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../sandbox/custom_animations/custom-animations-min-R.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
+
+    # Group by Degree, Work Min
+    specs = df.groupby(['Degree', 'Work']).min('Salary').specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/min_specs_two_columns.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
+
+    #Max
+    # Group by Degree Max
+    specs = df.groupby('Degree').max('Salary').specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../sandbox/custom_animations/custom-animations-max-R.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
+
+    # Group by Degree, Work Max
+    specs = df.groupby(['Degree', 'Work']).max('Salary').specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/max_specs_two_columns.json'), 'r') as specs_file:
         compare_specs_with_file(specs, specs_file)
 
     # Sum
