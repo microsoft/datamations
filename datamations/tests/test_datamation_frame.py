@@ -167,6 +167,29 @@ def test_datamation_frame_specs():
     with open(os.path.join(script_dir, '../../inst/specs/prod_specs_two_columns.json'), 'r') as specs_file:
         compare_specs_with_file(specs, specs_file)
 
+    #Count group by Degree
+    count_spec = df.groupby('Degree').count('Salary').specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/count_specs_one_column.json'), 'r') as specs_file:
+        compare_specs_with_file(count_spec, specs_file)
+
+    #Count group by Degree, Work
+    count_spec = df.groupby(['Degree', 'Work']).count('Salary').specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/count_specs_two_columns.json'), 'r') as specs_file:
+        compare_specs_with_file(count_spec, specs_file)
+
+    #Quantile group by Degree
+    quant_spec = df.groupby('Degree').quantile('Salary', 0.01).specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../sandbox/custom_animations/custom-animations-quantile-R.json'), 'r') as specs_file:
+        compare_specs_with_file(quant_spec, specs_file)
+
+    #Quantile group by Degree, Work
+    quant_spec = df.groupby(['Degree', 'Work']).quantile('Salary', 0.01).specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/quantile_specs_two_columns.json'), 'r') as specs_file:
+        compare_specs_with_file(quant_spec, specs_file)
 
 def test_three_variables_frame_specs():
     # three-variable grouping
