@@ -114,7 +114,7 @@ def test_datamation_frame_specs():
     script_dir = os.path.dirname( __file__ )
     with open(os.path.join(script_dir, '../../inst/specs/groupby_work_degree.json'), 'r') as specs_file:
         compare_specs_with_file(specs, specs_file)
-        
+
     #Min
     # Group by Degree Min
     specs = df.groupby('Degree').min('Salary').specs()
