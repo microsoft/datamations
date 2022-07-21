@@ -1,5 +1,5 @@
 pandoc: 2.7.3
-pkgdown: 2.0.5
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   Examples: Examples.html
@@ -10,5 +10,5 @@ articles:
   simpsons_paradox: simpsons_paradox.html
   summarizing: summarizing.html
   variable_types: variable_types.html
-last_built: 2022-07-04T03:45Z
+last_built: 2022-07-21T14:23Z
 
