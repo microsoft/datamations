@@ -90,6 +90,7 @@ def test_datamation_frame_specs():
     df = small_salary().df
     df = DatamationFrame(df)
 
+    # Mean
     # Group by Degree
     specs = df.groupby('Degree').mean().specs()
     script_dir = os.path.dirname( __file__ )
@@ -113,7 +114,8 @@ def test_datamation_frame_specs():
     script_dir = os.path.dirname( __file__ )
     with open(os.path.join(script_dir, '../../inst/specs/groupby_work_degree.json'), 'r') as specs_file:
         compare_specs_with_file(specs, specs_file)
-
+        
+    #Min
     # Group by Degree Min
     specs = df.groupby('Degree').min('Salary').specs()
     script_dir = os.path.dirname( __file__ )
@@ -126,6 +128,7 @@ def test_datamation_frame_specs():
     with open(os.path.join(script_dir, '../../inst/specs/min_specs_two_columns.json'), 'r') as specs_file:
         compare_specs_with_file(specs, specs_file)
 
+    #Max
     # Group by Degree Max
     specs = df.groupby('Degree').max('Salary').specs()
     script_dir = os.path.dirname( __file__ )
@@ -136,6 +139,32 @@ def test_datamation_frame_specs():
     specs = df.groupby(['Degree', 'Work']).max('Salary').specs()
     script_dir = os.path.dirname( __file__ )
     with open(os.path.join(script_dir, '../../inst/specs/max_specs_two_columns.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
+
+    # Sum
+    # Sum of Group by Degree
+    specs = df.groupby('Degree').sum().specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/sum_specs.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
+
+    # Sum of Group by Degree, Work
+    specs = df.groupby(['Degree', 'Work']).sum().specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/sum_specs_two_columns.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
+
+    # Product
+    # Product of Group by Degree
+    specs = df.groupby('Degree').prod().specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/prod_specs.json'), 'r') as specs_file:
+        compare_specs_with_file(specs, specs_file)
+
+    # Product of Group by Degree, Work
+    specs = df.groupby(['Degree', 'Work']).prod().specs()
+    script_dir = os.path.dirname( __file__ )
+    with open(os.path.join(script_dir, '../../inst/specs/prod_specs_two_columns.json'), 'r') as specs_file:
         compare_specs_with_file(specs, specs_file)
 
 

@@ -100,6 +100,34 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         self._axis = axis if axis else df.keys()[0]
         return df
 
+    # Override the 'sum' function
+    def sum(self, axis=None):
+        self._axis = axis
+        self._states.append(self)
+        self._operations.append('sum')
+        df = super(DatamationGroupBy, self).sum()
+        df = datamation_frame.DatamationFrame(df)
+        df._by = self.states[1]._by
+        df._states = self._states
+        df._operations = self._operations
+        self._output = df
+        self._axis = axis if axis else df.keys()[0]
+        return df
+
+    # Override the 'prod' function
+    def prod(self, axis=None):
+        self._axis = axis
+        self._states.append(self)
+        self._operations.append('product')
+        df = super(DatamationGroupBy, self).prod()
+        df = datamation_frame.DatamationFrame(df)
+        df._by = self.states[1]._by
+        df._states = self._states
+        df._operations = self._operations
+        self._output = df
+        self._axis = axis if axis else df.keys()[0]
+        return df
+
     # The specs to show summarized points on the chart
     def prep_specs_summarize(self, width=300, height=300):
         x_axis = self.states[1].dtypes.axes[0].name if len(self._by) == 1 else self.states[1].dtypes.axes[0].names[0]
@@ -174,14 +202,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
 
         if len(self._by) > 1:
             sort = groups
-            if any(element in ['median', 'min', 'max'] for element in self.operations):
+            if any(element in ['median', 'min', 'max', 'sum', 'product'] for element in self.operations):
                 facet_encoding["column"] = { "field": self._by[0], "type": "ordinal", "title": self._by[0] }
             else:
                 facet_encoding["column"] = { "field": self._by[0], "sort": sort, "type": "ordinal", "title": self._by[0] }
 
         if len(self._by) > 2:
             sort = subgroups
-            if self.operations[-1] == "median":
+            if any(element in ['median', 'sum', 'product'] for element in self.operations):
                 facet_encoding["row"] = { "field": self._by[1], "type": "ordinal", "title": self._by[1] }
             else:
                 facet_encoding["row"] = { "field": self._by[1], "sort": sort, "type": "ordinal", "title": self._by[1] }
@@ -301,7 +329,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
-            "title": [self.operations[-1] + " of", y_axis] if any(element in ['median', 'min', 'max'] for element in self.operations) and len(self._by) > 1 else self.operations[-1] + "(" + y_axis + ")",
+            "title": [self.operations[-1] + " of", y_axis] if any(element in ['sum', 'product'] for element in self.operations) or any(element in ['median', 'min', 'max'] for element in self.operations) and len(self._by) > 1 else self.operations[-1] + "(" + y_axis + ")",
             "scale": {
             "domain": [round(self.states[0][y_axis].min(),13), self.states[0][y_axis].max()]
             }
@@ -386,7 +414,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                 }
                 data.append(value)
                 id = id + 1
-        meta['custom_animation'] = self.operations[-1]
+        if any(element in ['mean', 'median', 'min', 'max'] for element in self.operations):
+            meta['custom_animation'] = self.operations[-1]
         spec_encoding = { 'x': x_encoding, 'y': y_encoding, 'tooltip': tooltip }
         if len(self._by) > 1:
             spec_encoding = { 'x': x_encoding, 'y': y_encoding, "color": color, 'tooltip': tooltip }
@@ -559,6 +588,8 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
                     round(min(self._output[y_axis][groups[0]][subgroups[0]] - self._error[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] - self._error[y_axis][groups[0]][subgroups[0]]),13),
                     round(max(self._output[y_axis][groups[1]][subgroups[0]] + self._error[y_axis][groups[1]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]] + self._error[y_axis][groups[1]][subgroups[1]]),13),
                 ]
+            elif any(element in ['sum', 'product'] for element in self.operations):
+                domain = [round(self._output[y_axis].min(),13), round(self._output[y_axis].max(),13)]
             else:
                 domain = [
                     round(min(self._output[y_axis][groups[0]][subgroups[0]], self._output[y_axis][groups[1]][subgroups[1]]),13),
@@ -579,7 +610,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         y_encoding = {
             "field": "datamations_y",
             "type": "quantitative",
-            "title": [self.operations[-1] + " of", y_axis] if self.operations[-1] == "median" or any(element in ['min', 'max'] for element in self.operations) and len(self._by) > 1 else self.operations[-1] + "(" + y_axis + ")",
+            "title": [self.operations[-1] + " of", y_axis] if any(element in ['sum', 'product'] for element in self.operations) or any(element in ['min', 'max', 'median'] for element in self.operations) and len(self._by) > 1 else self.operations[-1] + "(" + y_axis + ")",
             "scale": {
             "domain": domain
             }
