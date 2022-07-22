@@ -801,6 +801,7 @@ export const CustomAnimations = {
     const step = getSumStep(rawSource, target, false)
 
     const barWidth = 0.25
+    const barColor = '#aaaaaa'
 
     const sorted = {
       ...step,
@@ -842,7 +843,8 @@ export const CustomAnimations = {
             },
             y2: {
               field: CONF.Y_FIELD + '_pos_end'
-            }
+            },
+            color: { value: barColor }
           }
         },
         ...sorted.layer
@@ -885,7 +887,8 @@ export const CustomAnimations = {
             },
             y2: {
               field: CONF.Y_FIELD + '_pos_end'
-            }
+            },
+            color: { value: barColor }
           }
         },
         ...bars.layer.slice(2)
@@ -894,17 +897,105 @@ export const CustomAnimations = {
 
     const added = getSumStep(rawSource, target, true)
 
-    const pullUp = getSumStep(rawSource, target, true, true)
+    const addedUp = {
+      ...added,
+      layer: [
+        {
+          name: 'main',
+          mark: rawSource.mark,
+          encoding: {
+            x: {
+              ...stacks.encoding.x,
+              field: CONF.X_FIELD + '_pos_start'
+            },
+            y: {
+              ...stacks.encoding.y,
+              scale: {
+                domain: [0, target.encoding.y.scale.domain[1]]
+              }
+            }
+          }
+        },
+        {
+          name: 'bars',
+          mark: { type: 'bar', orient: 'horizontal', width: barWidth },
+          encoding: {
+            x: {
+              ...stacks.encoding.x,
+              field: CONF.X_FIELD + '_pos_start'
+            },
+            y: {
+              ...stacks.encoding.y,
+              field: CONF.Y_FIELD + '_pos_start',
+              scale: {
+                domain: [0, target.encoding.y.scale.domain[1]]
+              }
+            },
+            y2: {
+              field: CONF.Y_FIELD + '_pos_end'
+            },
+            color: { value: barColor }
+          }
+        },
+        ...added.layer.slice(1)
+      ]
+    }
+
+    const pull = getSumStep(rawSource, target, true, true)
+
+    const pulledUp = {
+      ...pull,
+      layer: [
+        {
+          name: 'main',
+          mark: rawSource.mark,
+          encoding: {
+            x: {
+              ...stacks.encoding.x,
+              field: CONF.X_FIELD + '_pos_start'
+            },
+            y: {
+              ...stacks.encoding.y,
+              scale: {
+                domain: [0, target.encoding.y.scale.domain[1]]
+              }
+            }
+          }
+        },
+        {
+          name: 'bars',
+          mark: { type: 'bar', orient: 'horizontal', width: 0.1 },
+          encoding: {
+            x: {
+              ...stacks.encoding.x,
+              field: CONF.X_FIELD + '_pos_start'
+            },
+            y: {
+              ...stacks.encoding.y,
+              field: CONF.Y_FIELD,
+              scale: {
+                domain: [0, target.encoding.y.scale.domain[1]]
+              }
+            },
+            y2: {
+              field: CONF.Y_FIELD + '_pos_end'
+            },
+            color: { value: barColor }
+          }
+        },
+        ...pull.layer.slice(1)
+      ]
+    }
 
     console.log('stacks', stacks)
     console.log('sorted', sorted)
     console.log('bars', bars)
     console.log('resized', resized)
-    console.log('added', pullUp)
-    console.log('pullUp', pullUp)
+    console.log('addedUp', addedUp)
+    console.log('pulledUp', pulledUp)
     console.log('target', target)
 
-    return [stacks, sorted, bars, resized, added, pullUp, target]
+    return [stacks, sorted, bars, resized, addedUp, pulledUp, target]
   },
   /**
     * min animation steps:
