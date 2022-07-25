@@ -995,7 +995,7 @@ export const CustomAnimations = {
     console.log('pulledUp', pulledUp)
     console.log('target', target)
 
-    return [stacks, sorted, bars, resized, addedUp, pulledUp, target]
+    return [stacks, sorted, bars, addedUp, pulledUp, target]
   },
   /**
     * min animation steps:
