@@ -185,7 +185,7 @@ export function generateGrid (spec, rows = 10, stacked = false) {
           // ...colorFieldObj,
           gemini_id: d.gemini_ids ? d.gemini_ids[i] : counter,
           [CONF.X_FIELD]: stacked ? xCenter : x,
-          [CONF.Y_FIELD]: stacked ? y : y,
+          [CONF.Y_FIELD]: stacked ? y : y
           // [CONF.Y_FIELD + '_tooltip']: stacked ? sum[x] : y
         })
         counter++
