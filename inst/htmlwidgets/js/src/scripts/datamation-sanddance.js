@@ -222,13 +222,19 @@ function prep_specs_groupby (states, groupby, summarize) {
     var cols = []
     var count = {}
     var start = {}
-    for (key of Object.keys(states[1].groups)) {
-      var parts = key.split(',')
-      col = parts[0]
-      row = parts[1]
-      if (!cols.includes(col)) cols.push(col)
-      if (!Object.keys(count).includes(col)) count[col] = 0
-      count[col] = count[col] + states[1].groups[key].length
+    for (var col of Object.keys(states[1].groups)) {
+      for (var row of Object.keys(states[1].groups[col])) {
+        if (!cols.includes(col)) cols.push(col)
+        if (!Object.keys(count).includes(col)) count[col] = 0
+        if (groupby.length > 2) {
+          for (var l3group of Object.keys(states[1].groups[col][row])) {
+            count[col] = count[col] + states[1].groups[col][row][l3group].length
+          }
+        }
+        else {
+          count[col] = count[col] + states[1].groups[col][row].length
+        }
+      }
     }
 
     var id = 1
@@ -262,45 +268,44 @@ function prep_specs_groupby (states, groupby, summarize) {
     var spec = generate_vega_specs(data, meta, spec_encoding, facet_encoding, facet_dims)
     specs_list.push(spec)
 
+    id = 1
     data = []
     cols = []
     let rows = []
     count = {}
     start = {}
-    for (var key of Object.keys(states[1].groups).sort()) {
-      parts = key.split(',')
-      col = parts[0]
-      var row = parts[1]
-      if (!cols.includes(col)) {
-        cols.push(col)
+    for (col of Object.keys(states[1].groups).sort()) {
+      for (row of Object.keys(states[1].groups[col]).sort()) {
+        if (!cols.includes(col)) {
+          cols.push(col)
+        }
+        if (!rows.includes(row)) rows.push(row)
+        if (!Object.keys(count).includes(col)) count[col] = {}
+        if (!Object.keys(count[col]).includes(row)) count[col][row] = 0
+        if (!Object.keys(start).includes(col)) start[col] = {}
+        if (!Object.keys(start[col]).includes(row)) start[col][row] = 0
+        start[col][row] = id
+        if (groupby.length > 2) {
+          for (l3group of Object.keys(states[1].groups[col][row]).sort()) {
+            count[col][row] = count[col][row] + states[1].groups[col][row][l3group].length
+          }
+        }
+        else {
+          count[col][row] = count[col][row] + states[1].groups[col][row].length
+        }
+        id = id + count[col][row]
+        data.push({
+          [groupby[0]]: col,
+          [groupby[1]]: row,
+          n: count[col][row],
+          gemini_ids: Array.from('x'.repeat(count[col][row]), (_, i) => start[col][row] + i)
+        })
       }
-      if (!rows.includes(row)) rows.push(row)
-      const k = parts[0] + ',' + parts[1]
-      if (!Object.keys(count).includes(k)) count[k] = 0
-      count[k] = count[k] + states[1].groups[key].length
-      data.push(k)
     }
     facet_dims = {
       ncol: groups.length,
       nrow: 1
     }
-
-    id = 1
-    data = _.uniq(data)
-    for (key of data) {
-      if (!start[key]) start[key] = id
-      id = id + count[key]
-    }
-
-    data = data.map((key) => {
-      parts = key.split(',')
-      return {
-        [groupby[0]]: parts[0],
-        [groupby[1]]: parts[1],
-        n: count[key],
-        gemini_ids: Array.from('x'.repeat(count[key]), (_, i) => start[key] + i)
-      }
-    })
 
     meta = {
       parse: 'grid',
@@ -367,40 +372,38 @@ function prep_specs_groupby (states, groupby, summarize) {
       facet_encoding.column = { field: groupby[0], type: 'ordinal', title: groupby[0] }
       facet_encoding.row = { field: groupby[1], type: 'ordinal', title: groupby[1] }
 
+      id = 1
       rows = []
       data = []
       count = {}
       start = {}
 
-      for (key of Object.keys(states[1].groups).sort(compare_ignore_case)) {
-        parts = key.split(',')
-        col = parts[0]
-        row = parts[2]
-        if (!cols.includes(col)) {
-          cols.push(col)
+      for (col of Object.keys(states[1].groups).sort(compare_ignore_case)) {
+        for (row of Object.keys(states[1].groups[col]).sort(compare_ignore_case)) {
+          for (l3group of Object.keys(states[1].groups[col][row]).sort(compare_ignore_case)) {
+            if (!cols.includes(col)) {
+              cols.push(col)
+            }
+            if (!rows.includes(l3group)) rows.push(l3group)
+            if (!Object.keys(count).includes(col)) count[col] = {}
+            if (!Object.keys(start).includes(col)) start[col] = {}
+            if (!Object.keys(count[col]).includes(row)) count[col][row] = {}
+            if (!Object.keys(start[col]).includes(row)) start[col][row] = {}
+            if (!Object.keys(count[col][row]).includes(l3group)) count[col][row][l3group] = 0
+            if (!Object.keys(start[col][row]).includes(l3group)) start[col][row][l3group] = 0
+            count[col][row][l3group] = count[col][row][l3group] + states[1].groups[col][row][l3group].length
+            if (!start[col][row][l3group]) start[col][row][l3group] = id
+            data.push({
+              [groupby[0]]: col,
+              [groupby[1]]: row,
+              [groupby[2]]: l3group,
+              n: count[col][row][l3group],
+              gemini_ids: count[col][row][l3group] < 2 ? start[col][row][l3group] : Array.from('x'.repeat(count[col][row][l3group]), (_, i) => start[col][row][l3group] + i)
+            })
+            id = id + count[col][row][l3group]
+          }
         }
-        if (!rows.includes(row)) rows.push(row)
-        if (!Object.keys(count).includes(key)) count[key] = 0
-        count[key] = count[key] + states[1].groups[key].length
-        data.push(key)
       }
-
-      id = 1
-      for (key of data) {
-        if (!start[key]) start[key] = id
-        id = id + count[key]
-      }
-
-      data = data.map((key) => {
-        parts = key.split(',')
-        return {
-          [groupby[0]]: parts[0],
-          [groupby[1]]: parts[1],
-          [groupby[2]]: parts[2],
-          n: count[key],
-          gemini_ids: count[key] < 2 ? start[key] : Array.from('x'.repeat(count[key]), (_, i) => start[key] + i)
-        }
-      })
 
       tooltip = []
       for (field of groupby.slice(0, 3)) {
@@ -430,7 +433,7 @@ function prep_specs_groupby (states, groupby, summarize) {
     cols = []
     count = {}
     start = {}
-    for (key of Object.keys(states[1].groups)) {
+    for (var key of Object.keys(states[1].groups)) {
       col = key
       if (cols.includes(col)) cols.push(col)
       if (Object.keys(count).includes(col)) count[col] = 0
@@ -438,7 +441,7 @@ function prep_specs_groupby (states, groupby, summarize) {
     }
 
     id = 1
-    for (var col in cols) {
+    for (col in cols) {
       start[col] = id
       id = id + count[col]
     }
@@ -455,7 +458,7 @@ function prep_specs_groupby (states, groupby, summarize) {
 
 function prep_specs_summarize (states, groupby, summarize, output) {
   const x_axis = groupby.length === 1 ? groupby[0] : groupby[0]
-  const y_axis = groupby.length === 1 ? summarize.split(' ')[2] : summarize.split(' ')[2]
+  const y_axis = summarize.split(' ').slice(2).join(' ')
 
   let operation = summarize.split(' ')[0].toLowerCase()
   switch (operation) {
@@ -467,9 +470,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   if (groupby.length === 1) {
     var groups = Object.keys(states[1].groups)
   } else {
-    groups = Object.keys(states[1].groups).map((item) => {
-      return item.split(',')[0]
-    })
+    groups = Object.keys(states[1].groups)
     groups = _.uniq(groups.sort())
     var subgroups = Object.keys(output[Object.keys(output)[0]])
     if (groupby.length === 3) {
@@ -610,40 +611,68 @@ function prep_specs_summarize (states, groupby, summarize, output) {
 
   // Prepare the data by assigning different x-axis values to the groups
   // and showing the original values on the y-axis for each point.
-  if (groupby.length > 1) {
+  if (groupby.length > 2) {
     var i = 1
     data = []
     for (group of Object.keys(states[1].groups).sort(compare_ignore_case)) {
-      for (var item of states[1].groups[group]) {
-        var value = {
-          gemini_id: i,
-          [groupby[0]]: item[groupby[0]],
-          [groupby[1]]: item[groupby[1]],
-          datamations_x:
+      for (subgroup of Object.keys(states[1].groups[group]).sort(compare_ignore_case)) {
+        for (l3group of Object.keys(states[1].groups[group][subgroup]).sort(compare_ignore_case)) {
+          for (var item of states[1].groups[group][subgroup][l3group]) {
+            var value = {
+              gemini_id: i,
+              [groupby[0]]: item[groupby[0]],
+              [groupby[1]]: item[groupby[1]],
+              datamations_x:
             groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2
+            }
+            if (!isNaN(item[y_axis])) {
+              value.datamations_y = _.round(item[y_axis], 13)
+              value.datamations_y_tooltip = _.round(item[y_axis], 13)
+            }
+            if (groupby.length > 2) {
+              value[groupby[2]] = item[groupby[2]]
+            }
+            data.push(value)
+            i = i + 1
+          }
         }
-        if (!isNaN(item[y_axis])) {
-          value.datamations_y = _.round(item[y_axis], 13)
-          value.datamations_y_tooltip = _.round(item[y_axis], 13)
+      }
+    }
+
+    facet_dims = {
+      ncol: groups.length,
+      nrow: subgroups.length
+    }
+  }
+  else if (groupby.length > 1) {
+    i = 1
+    data = []
+    for (group of Object.keys(states[1].groups).sort(compare_ignore_case)) {
+      for (subgroup of Object.keys(states[1].groups[group]).sort(compare_ignore_case)) {
+        for (item of states[1].groups[group][subgroup]) {
+          value = {
+            gemini_id: i,
+            [groupby[0]]: item[groupby[0]],
+            [groupby[1]]: item[groupby[1]],
+            datamations_x:
+            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2
+          }
+          if (!isNaN(item[y_axis])) {
+            value.datamations_y = _.round(item[y_axis], 13)
+            value.datamations_y_tooltip = _.round(item[y_axis], 13)
+          }
+          if (groupby.length > 2) {
+            value[groupby[2]] = item[groupby[2]]
+          }
+          data.push(value)
+          i = i + 1
         }
-        if (groupby.length > 2) {
-          value[groupby[2]] = item[groupby[2]]
-        }
-        data.push(value)
-        i = i + 1
       }
     }
 
     facet_dims = {
       ncol: groups.length,
       nrow: 1
-    }
-
-    if (groupby.length > 2) {
-      facet_dims = {
-        ncol: groups.length,
-        nrow: subgroups.length
-      }
     }
   } else {
     var id = 1
@@ -755,7 +784,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
 
   // Plot the final summarized value
   // The y-axis value is the same for all
-  if (groupby.length > 1) {
+  if (groupby.length > 2) {
     i = 1
     data = []
     for (group of Object.keys(states[1].groups).sort(compare_ignore_case)) {
@@ -764,25 +793,61 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       } else {
         col = group
       }
-      for (item of states[1].groups[group]) {
-        value = {
-          gemini_id: i,
-          [x_axis]: item[x_axis],
-          [groupby[1]]: item[groupby[1]],
-          [groupby[2]]: item[groupby[2]],
-          datamations_x:
+      for (subgroup of Object.keys(states[1].groups[group]).sort(compare_ignore_case)) {
+        for (var l3group of Object.keys(states[1].groups[group][subgroup]).sort(compare_ignore_case)) {
+          for (item of states[1].groups[group][subgroup][l3group]) {
+            value = {
+              gemini_id: i,
+              [x_axis]: item[x_axis],
+              [groupby[1]]: item[groupby[1]],
+              [groupby[2]]: item[groupby[2]],
+              datamations_x:
             groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2,
-          datamations_y:
+              datamations_y:
             groupby.length > 2
               ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
               : output[item[groupby[0]]][item[groupby[1]]],
-          datamations_y_tooltip:
+              datamations_y_tooltip:
+              groupby.length > 2
+                ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
+                : output[item[groupby[0]]][item[groupby[1]]]
+            }
+            data.push(value)
+            i = i + 1
+          }
+        }
+      }
+    }
+
+    facet_dims = {
+      ncol: groups.length,
+      nrow: groupby.length > 2 ? groups.length : 1
+    }
+  } else if (groupby.length > 1) {
+    i = 1
+    data = []
+    for (group of Object.keys(states[1].groups).sort(compare_ignore_case)) {
+      for (subgroup of Object.keys(states[1].groups[group])) {
+        for (item of states[1].groups[group][subgroup]) {
+          value = {
+            gemini_id: i,
+            [x_axis]: item[x_axis],
+            [groupby[0]]: item[groupby[0]],
+            [groupby[1]]: item[groupby[1]],
+            datamations_x:
+            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2,
+            datamations_y:
+            groupby.length > 2
+              ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
+              : output[item[groupby[0]]][item[groupby[1]]],
+            datamations_y_tooltip:
             groupby.length > 2
               ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
               : output[item[groupby[0]]][item[groupby[1]]]
+          }
+          data.push(value)
+          i = i + 1
         }
-        data.push(value)
-        i = i + 1
       }
     }
 
@@ -879,13 +944,33 @@ function prep_specs_summarize (states, groupby, summarize, output) {
 
   const _error = {}
   for (group in states[1].groups) {
-    _error[group] =
-      standardDeviation(states[1].groups[group].map((x) => parseFloat(x[y_axis]))) /
-      Math.sqrt(states[1].groups[group].length)
+    if (!_error[group]) _error[group] = {}
+    if (groupby.length > 1) {
+      for (subgroup in states[1].groups[group]) {
+        if (!_error[group][subgroup]) _error[group][subgroup] = {}
+        if (groupby.length > 2) {
+          for (l3group in states[1].groups[group][subgroup]) {
+            _error[group][subgroup][l3group] =
+              standardDeviation(states[1].groups[group][subgroup][l3group].map((x) => parseFloat(x[y_axis]))) /
+              Math.sqrt(Object.keys(states[1].groups[group][subgroup][l3group]).length)
+          }
+        }
+        else {
+          _error[group][subgroup] =
+            standardDeviation(states[1].groups[group][subgroup].map((x) => parseFloat(x[y_axis]))) /
+            Math.sqrt(Object.keys(states[1].groups[group][subgroup]).length)
+        }
+      }
+    }
+    else {
+      _error[group] =
+        standardDeviation(states[1].groups[group].map((x) => parseFloat(x[y_axis]))) /
+        Math.sqrt(Object.keys(states[1].groups[group]).length)
+    }
   }
 
   // Show errror bars along with sumarized values
-  if (groupby.length > 1) {
+  if (groupby.length > 2) {
     i = 1
     data = []
     for (group of Object.keys(states[1].groups).sort(compare_ignore_case)) {
@@ -894,37 +979,86 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       } else {
         col = group
       }
-      for (item of states[1].groups[group]) {
-        value = {
-          gemini_id: i,
-          [x_axis]: item[x_axis],
-          [groupby[1]]: item[groupby[1]],
-          datamations_x:
+      for (subgroup of Object.keys(states[1].groups[group]).sort(compare_ignore_case)) {
+        for (l3group of Object.keys(states[1].groups[group][subgroup]).sort(compare_ignore_case)) {
+          for (item of states[1].groups[group][subgroup][l3group]) {
+            value = {
+              gemini_id: i,
+              [x_axis]: item[x_axis],
+              [groupby[1]]: item[groupby[1]],
+              datamations_x:
+              groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2,
+              datamations_y:
+              groupby.length > 2
+                ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
+                : output[item[groupby[0]]][item[groupby[1]]],
+              datamations_y_tooltip:
+              groupby.length > 2
+                ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
+                : output[item[groupby[0]]][item[groupby[1]]]
+            }
+            if (operation === 'mean') {
+              value.Lower = groupby.length > 2
+                ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]] -
+              _error[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
+                : output[item[groupby[0]]][item[groupby[1]]] - _error[item[groupby[0]]][item[groupby[1]]]
+              value.Upper = groupby.length > 2
+                ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]] +
+              _error[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
+                : output[item[groupby[0]]][item[groupby[1]]] + _error[item[groupby[0]]][item[groupby[1]]]
+            }
+            if (operation === 'mean' && !isNaN(item[y_axis])) {
+              value.datamations_y_raw = _.round(item[y_axis], 13)
+            }
+            data.push(value)
+            i = i + 1
+          }
+        }
+      }
+    }
+
+    facet_dims = {
+      ncol: groups.length,
+      nrow: groupby.length > 2 ? groups.length : 1
+    }
+  }
+  else if (groupby.length > 1) {
+    i = 1
+    data = []
+    for (group of Object.keys(states[1].groups).sort(compare_ignore_case)) {
+      for (subgroup of Object.keys(states[1].groups[group])) {
+        for (item of states[1].groups[group][subgroup]) {
+          value = {
+            gemini_id: i,
+            [x_axis]: item[x_axis],
+            [groupby[1]]: item[groupby[1]],
+            datamations_x:
             groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2,
-          datamations_y:
+            datamations_y:
             groupby.length > 2
               ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
               : output[item[groupby[0]]][item[groupby[1]]],
-          datamations_y_tooltip:
+            datamations_y_tooltip:
             groupby.length > 2
               ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
               : output[item[groupby[0]]][item[groupby[1]]]
+          }
+          if (operation === 'mean') {
+            value.Lower = groupby.length > 2
+              ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]] -
+            _error[item[groupby[0]][item[groupby[1]]][item[groupby[2]]]]
+              : output[item[groupby[0]]][item[groupby[1]]] - _error[item[groupby[0]]][item[groupby[1]]]
+            value.Upper = groupby.length > 2
+              ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]] +
+            _error[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
+              : output[item[groupby[0]]][item[groupby[1]]] + _error[item[groupby[0]]][item[groupby[1]]]
+          }
+          if (operation === 'mean' && !isNaN(item[y_axis])) {
+            value.datamations_y_raw = _.round(item[y_axis], 13)
+          }
+          data.push(value)
+          i = i + 1
         }
-        if (operation === 'mean') {
-          value.Lower = groupby.length > 2
-            ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]] -
-            _error[[item[groupby[0]], item[groupby[1]], item[groupby[2]]].join(',')]
-            : output[item[groupby[0]]][item[groupby[1]]] - _error[[item[groupby[0]], item[groupby[1]]].join(',')]
-          value.Upper = groupby.length > 2
-            ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]] +
-            _error[[item[groupby[0]], item[groupby[1]], item[groupby[2]]].join(',')]
-            : output[item[groupby[0]]][item[groupby[1]]] + _error[[item[groupby[0]], item[groupby[1]]].join(',')]
-        }
-        if (operation === 'mean' && !isNaN(item[y_axis])) {
-          value.datamations_y_raw = _.round(item[y_axis], 13)
-        }
-        data.push(value)
-        i = i + 1
       }
     }
 
@@ -998,14 +1132,14 @@ function prep_specs_summarize (states, groupby, summarize, output) {
         for (const l3group of l3groups) {
           if (output[group][subgroup] && !isNaN(output[group][subgroup][l3group])) {
             if (operation === 'mean') {
-              min_array.push(output[group][subgroup][l3group] - _error[[group, subgroup, l3group].join(',')])
+              min_array.push(output[group][subgroup][l3group] - _error[group][subgroup][l3group])
             } else {
               min_array.push(output[group][subgroup][l3group])
             }
           }
           if (output[group][subgroup] && !isNaN(output[group][subgroup][l3group])) {
             if (operation === 'mean') {
-              max_array.push(output[group][subgroup][l3group] + _error[[group, subgroup, l3group].join(',')])
+              max_array.push(output[group][subgroup][l3group] + _error[group][subgroup][l3group])
             } else {
               max_array.push(output[group][subgroup][l3group])
             }
@@ -1025,14 +1159,14 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       for (subgroup of subgroups) {
         if (output[group][subgroup] && !isNaN(output[group][subgroup])) {
           if (operation === 'mean') {
-            min_array.push(output[group][subgroup] - _error[[group, subgroup].join(',')])
+            min_array.push(output[group][subgroup] - _error[group][subgroup])
           } else {
             min_array.push(output[group][subgroup])
           }
         }
         if (output[group][subgroup] && !isNaN(output[group][subgroup])) {
           if (operation === 'mean') {
-            max_array.push(output[group][subgroup] + _error[[group, subgroup].join(',')])
+            max_array.push(output[group][subgroup] + _error[group][subgroup])
           } else {
             max_array.push(output[group][subgroup])
           }
@@ -1106,8 +1240,13 @@ function group_by (data, by) {
       for (const l2group of Object.keys(l2groups)) {
         const l3groups = _.groupBy(l2groups[l2group], by[2])
         for (const l3group of Object.keys(l3groups)) {
-          var key = [group, l2group, l3group].join(',')
-          results[key] = l3groups[l3group]
+          if (!results[group]) {
+            results[group] = {}
+          }
+          if (!results[group][l2group]) {
+            results[group][l2group] = {}
+          }
+          results[group][l2group][l3group] = l3groups[l3group]
         }
       }
     }
@@ -1118,8 +1257,10 @@ function group_by (data, by) {
     for (group of Object.keys(groups)) {
       subgroups = _.groupBy(groups[group], by[1])
       for (const subgroup of Object.keys(subgroups)) {
-        key = [group, subgroup].join(',')
-        results[key] = subgroups[subgroup]
+        if (!results[group]) {
+          results[group] = {}
+        }
+        results[group][subgroup] = subgroups[subgroup]
       }
     }
     return results
