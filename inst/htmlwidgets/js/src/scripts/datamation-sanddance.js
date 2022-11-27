@@ -298,7 +298,7 @@ function prep_specs_groupby (states, groupby, summarize) {
           [groupby[0]]: col,
           [groupby[1]]: row,
           n: count[col][row],
-          gemini_ids: Array.from('x'.repeat(count[col][row]), (_, i) => start[col][row] + i)
+          gemini_ids: count[col][row] < 2 ? start[col][row] : Array.from('x'.repeat(count[col][row]), (_, i) => start[col][row] + i)
         })
       }
     }
@@ -486,29 +486,20 @@ function prep_specs_summarize (states, groupby, summarize, output) {
 
   const specs_list = []
 
-  const labels = [groupby.length > 1 ? subgroups[0] : groups[0], groupby.length > 1 ? subgroups[1] : groups[1]]
+  const labels = groupby.length > 2 ? [...l3groups] : groupby.length > 1 ? [...subgroups] : [...groups]
+  const labelExpr = labels.reverse().reduce((prev, curr, index) => { return 'round(datum.label) == ' + (labels.length - index) + ' ? \'' + curr + '\' : ' + (prev === labels[0] ? '\'' + prev + '\'' : prev) })
 
   const x_encoding = {
     field: 'datamations_x',
     type: 'quantitative',
     axis: {
-      values: Array.from('x'.repeat(groups.length), (_, i) => 1 + i),
-      labelExpr:
-        groupby.length > 2
-          ? "round(datum.label) == 1 ? '" +
-          l3groups[0] +
-          "' : " +
-          "round(datum.label) == 2 ? '" +
-          l3groups[1] +
-          "' : '" +
-          l3groups[2] +
-          "'"
-          : "round(datum.label) == 1 ? '" + labels[0] + "' : '" + labels[1] + "'",
+      values: Array.from('x'.repeat(labels.length), (_, i) => 1 + i),
+      labelExpr,
       labelAngle: -90
     },
     title: groupby.length > 1 ? groupby[groupby.length - 1] : x_axis,
     scale: {
-      domain: [0, groupby.length > 2 ? 3 : 3]
+      domain: [0, groupby.length > 2 ? labels.length : 1 + labels.length]
     }
   }
 
@@ -623,7 +614,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
               [groupby[0]]: item[groupby[0]],
               [groupby[1]]: item[groupby[1]],
               datamations_x:
-            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2
+            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : 1 + subgroups.indexOf(item[groupby[1]])
             }
             if (!isNaN(item[y_axis])) {
               value.datamations_y = _.round(item[y_axis], 13)
@@ -655,7 +646,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
             [groupby[0]]: item[groupby[0]],
             [groupby[1]]: item[groupby[1]],
             datamations_x:
-            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2
+            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : 1 + subgroups.indexOf(item[groupby[1]])
           }
           if (!isNaN(item[y_axis])) {
             value.datamations_y = _.round(item[y_axis], 13)
@@ -683,7 +674,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       value = {
         gemini_id: id,
         [x_axis]: states[0][i][x_axis],
-        datamations_x: states[0][i][x_axis] === groups[0] ? 1 : 2,
+        datamations_x: 1 + groups.indexOf(states[0][i][x_axis]),
         datamations_y: _.round(states[0][i][y_axis], 13),
         datamations_y_tooltip: _.round(states[0][i][y_axis], 13)
       }
@@ -698,7 +689,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       value = {
         gemini_id: id,
         [x_axis]: states[0][i][x_axis],
-        datamations_x: states[0][i][x_axis] === groups[0] ? 1 : 2,
+        datamations_x: 1 + groups.indexOf(states[0][i][x_axis]),
         datamations_y: _.round(states[0][i][y_axis], 13),
         datamations_y_tooltip: _.round(states[0][i][y_axis], 13)
       }
@@ -802,7 +793,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
               [groupby[1]]: item[groupby[1]],
               [groupby[2]]: item[groupby[2]],
               datamations_x:
-            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2,
+            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : 1 + subgroups.indexOf(item[groupby[1]]),
               datamations_y:
             groupby.length > 2
               ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
@@ -827,7 +818,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     i = 1
     data = []
     for (group of Object.keys(states[1].groups).sort(compare_ignore_case)) {
-      for (subgroup of Object.keys(states[1].groups[group])) {
+      for (subgroup of Object.keys(states[1].groups[group]).sort(compare_ignore_case)) {
         for (item of states[1].groups[group][subgroup]) {
           value = {
             gemini_id: i,
@@ -835,7 +826,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
             [groupby[0]]: item[groupby[0]],
             [groupby[1]]: item[groupby[1]],
             datamations_x:
-            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2,
+            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : 1 + subgroups.indexOf(item[groupby[1]]),
             datamations_y:
             groupby.length > 2
               ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
@@ -862,7 +853,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       value = {
         gemini_id: id,
         [x_axis]: states[0][i][x_axis],
-        datamations_x: states[0][i][x_axis] === groups[0] ? 1 : 2,
+        datamations_x: 1 + groups.indexOf(states[0][i][x_axis]),
         datamations_y: output[groups[0]],
         datamations_y_tooltip: output[groups[0]]
       }
@@ -877,7 +868,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       value = {
         gemini_id: id,
         [x_axis]: states[0][i][x_axis],
-        datamations_x: states[0][i][x_axis] === groups[0] ? 1 : 2,
+        datamations_x: 1 + groups.indexOf(states[0][i][x_axis]),
         datamations_y: output[groups[1]],
         datamations_y_tooltip: output[groups[1]]
       }
@@ -987,7 +978,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
               [x_axis]: item[x_axis],
               [groupby[1]]: item[groupby[1]],
               datamations_x:
-              groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2,
+              groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : 1 + subgroups.indexOf(item[groupby[1]]),
               datamations_y:
               groupby.length > 2
                 ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
@@ -1026,14 +1017,14 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     i = 1
     data = []
     for (group of Object.keys(states[1].groups).sort(compare_ignore_case)) {
-      for (subgroup of Object.keys(states[1].groups[group])) {
+      for (subgroup of Object.keys(states[1].groups[group]).sort(compare_ignore_case)) {
         for (item of states[1].groups[group][subgroup]) {
           value = {
             gemini_id: i,
             [x_axis]: item[x_axis],
             [groupby[1]]: item[groupby[1]],
             datamations_x:
-            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : item[groupby[1]] === subgroups[0] ? 1 : 2,
+            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : 1 + subgroups.indexOf(item[groupby[1]]),
             datamations_y:
             groupby.length > 2
               ? output[item[groupby[0]]][item[groupby[1]]][item[groupby[2]]]
@@ -1073,7 +1064,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       value = {
         gemini_id: id,
         [x_axis]: states[0][i][x_axis],
-        datamations_x: states[0][i][x_axis] === groups[0] ? 1 : 2,
+        datamations_x: 1 + groups.indexOf(states[0][i][x_axis]),
         datamations_y: output[groups[0]],
         datamations_y_tooltip: output[groups[0]]
       }
@@ -1095,7 +1086,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       value = {
         gemini_id: id,
         [x_axis]: states[0][i][x_axis],
-        datamations_x: states[0][i][x_axis] === groups[0] ? 1 : 2,
+        datamations_x: 1 + groups.indexOf(states[0][i][x_axis]),
         datamations_y: output[groups[1]],
         datamations_y_tooltip: output[groups[1]]
       }
