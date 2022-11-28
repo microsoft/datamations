@@ -1,0 +1,1001 @@
+Account Name,Product Name,Start Date,End Date,Cost Before Tax,Tax Amount,Total Cost,Billing Month
+Application #14,AWS Key Management Service,1/1/2023,1/31/2023,50.7437979,6.59669373,57.3404917,January
+Application #9,Amazon Simple Notification Service,6/1/2022,6/30/2022,35.4758855,4.61186511,40.0877506,June
+Application #13,Amazon Simple Notification Service,8/1/2022,8/31/2022,9.07555985,1.17982278,10.2553826,August
+Application #4,AWS Data Transfer,6/1/2022,6/30/2022,33.8869779,4.40530712,38.292285,June
+Application #10,AWS Data Transfer,2/1/2023,2/28/2023,27.4075452,3.56298088,30.9705261,February
+Application #10,Amazon Elastic Compute Cloud,6/1/2022,6/30/2022,26.9988743,3.50985366,30.508728,June
+Application #12,AWS Data Transfer,1/1/2023,1/31/2023,3.47017242,0.45112241,3.92129483,January
+Application #14,AWS Data Transfer,7/1/2022,7/31/2022,2.57622004,0.33490861,2.91112865,July
+Application #10,AWS Global Accelerator,3/1/2023,3/31/2023,17.5280171,2.27864222,19.8066593,March
+Application #5,AWS Data Transfer,12/1/2022,12/31/2022,34.9315532,4.54110192,39.4726551,December
+Application #12,Amazon Simple Queue Service,3/1/2023,3/31/2023,13.2133715,1.7177383,14.9311098,March
+Application #9,AWS Lambda,10/1/2022,10/31/2022,47.0284682,6.11370087,53.1421691,October
+Application #4,Amazon GuardDuty,7/1/2022,7/31/2022,21.7218802,2.82384443,24.5457247,July
+Application #12,Amazon Route 53,1/1/2023,1/31/2023,38.8347101,5.04851231,43.8832224,January
+Application #12,Amazon GuardDuty,2/1/2023,2/28/2023,39.6171786,5.15023322,44.7674118,February
+Application #9,AWS Data Transfer,7/1/2022,7/31/2022,29.2706262,3.80518141,33.0758076,July
+Application #9,Amazon Simple Notification Service,8/1/2022,8/31/2022,26.9074949,3.49797434,30.4054693,August
+Application #10,AWS Data Transfer,6/1/2022,6/30/2022,8.58843337,1.11649634,9.70492971,June
+Application #3,Amazon CloudFront,1/1/2023,1/31/2023,44.7240587,5.81412763,50.5381864,January
+Application #3,Amazon Simple Storage Service,11/1/2022,11/30/2022,8.93883906,1.16204908,10.1008881,November
+Application #1,AWS Data Transfer,4/1/2022,4/30/2022,5.91829646,0.76937854,6.687675,April
+Application #1,Amazon Route 53,7/1/2022,7/31/2022,39.1865622,5.09425309,44.2808153,July
+Application #11,Amazon Simple Queue Service,2/1/2023,2/28/2023,29.6461778,3.85400312,33.5001809,February
+Application #10,AWS Config,5/1/2022,5/31/2022,9.75791727,1.26852925,11.0264465,May
+Application #12,Amazon Elastic Compute Cloud,9/1/2022,9/30/2022,32.3021974,4.19928566,36.5014831,September
+Application #1,AWS Data Transfer,4/1/2022,4/30/2022,29.7371766,3.86583296,33.6030096,April
+Application #12,Amazon Elastic Compute Cloud,1/1/2023,1/31/2023,25.9194735,3.36953156,29.2890051,January
+Application #12,AmazonCloudWatch,3/1/2023,3/31/2023,16.7794999,2.18133498,18.9608348,March
+Application #3,Amazon Simple Storage Service,8/1/2022,8/31/2022,33.9349454,4.4115429,38.3464882,August
+Application #6,Amazon GuardDuty,11/1/2022,11/30/2022,14.8321337,1.92817738,16.7603111,November
+Application #1,AmazonCloudWatch,4/1/2022,4/30/2022,23.495412,3.05440356,26.5498156,April
+Application #10,AWS Lambda,12/1/2022,12/31/2022,21.4830026,2.79279034,24.275793,December
+Application #4,AWS Data Transfer,2/1/2023,2/28/2023,44.6126693,5.79964701,50.4123163,February
+Application #12,Amazon Elastic Compute Cloud,10/1/2022,10/31/2022,12.2946912,1.59830986,13.8930011,October
+Application #12,AWS Data Transfer,11/1/2022,11/30/2022,22.1073607,2.8739569,24.9813176,November
+Application #4,AWS Data Transfer,3/1/2023,3/31/2023,46.1676889,6.00179955,52.1694884,March
+Application #8,Amazon AppStream,11/1/2022,11/30/2022,7.20626616,0.9368146,8.14308077,November
+Application #8,AWS Key Management Service,3/1/2023,3/31/2023,24.4168212,3.17418676,27.591008,March
+Application #2,Amazon GuardDuty,3/1/2023,3/31/2023,35.7988233,4.65384703,40.4526703,March
+Application #3,AWS Key Management Service,6/1/2022,6/30/2022,3.76397384,0.4893166,4.25329044,June
+Application #14,AWS Config,3/1/2023,3/31/2023,52.0032411,6.76042134,58.7636624,March
+Application #8,Amazon Simple Queue Service,5/1/2022,5/31/2022,8.24622804,1.07200965,9.31823769,May
+Application #12,Amazon Elastic Compute Cloud,6/1/2022,6/30/2022,0.56741862,0.07376442,0.64118305,June
+Application #3,Amazon GuardDuty,10/1/2022,10/31/2022,38.4253753,4.99529878,43.420674,October
+Application #8,AmazonCloudWatch,11/1/2022,11/30/2022,54.9372097,7.14183726,62.079047,November
+Application #8,AWS Data Transfer,4/1/2022,4/30/2022,42.2042595,5.48655373,47.6908132,April
+Application #8,AWS Data Transfer,2/1/2023,2/28/2023,13.4268826,1.74549473,15.1723773,February
+Application #11,AWS Key Management Service,7/1/2022,7/31/2022,23.8015779,3.09420513,26.895783,July
+Application #6,Amazon Elastic Compute Cloud,7/1/2022,7/31/2022,42.545896,5.53096648,48.0768625,July
+Application #2,AWS Data Transfer,10/1/2022,10/31/2022,18.6505914,2.42457688,21.0751683,October
+Application #8,Amazon Route 53,7/1/2022,7/31/2022,37.4606445,4.86988378,42.3305283,July
+Application #13,AWS Data Transfer,11/1/2022,11/30/2022,43.3979339,5.6417314,49.0396653,November
+Application #3,Amazon Simple Queue Service,1/1/2023,1/31/2023,19.6003329,2.54804328,22.1483762,January
+Application #9,AmazonCloudWatch,6/1/2022,6/30/2022,8.02053255,1.04266923,9.06320178,June
+Application #5,AWS Data Transfer,3/1/2023,3/31/2023,39.6185564,5.15041234,44.7689688,March
+Application #14,AWS Config,8/1/2022,8/31/2022,8.78366833,1.14187688,9.92554521,August
+Application #7,Amazon Simple Notification Service,9/1/2022,9/30/2022,17.6775338,2.29807939,19.9756131,September
+Application #7,AWS Data Transfer,6/1/2022,6/30/2022,35.0890536,4.56157696,39.6506305,June
+Application #1,AWS Data Transfer,5/1/2022,5/31/2022,30.1604723,3.9208614,34.0813337,May
+Application #3,AmazonCloudWatch,6/1/2022,6/30/2022,26.3139843,3.42081795,29.7348022,June
+Application #13,AWS Data Transfer,1/1/2023,1/31/2023,32.1269277,4.17650061,36.3034283,January
+Application #7,AWS Config,12/1/2022,12/31/2022,41.4533808,5.3889395,46.8423203,December
+Application #7,AWS Data Transfer,12/1/2022,12/31/2022,39.256157,5.10330041,44.3594574,December
+Application #4,AWS Data Transfer,1/1/2023,1/31/2023,11.6089081,1.50915805,13.1180661,January
+Application #14,AWS Data Transfer,8/1/2022,8/31/2022,29.5726544,3.84444508,33.4170995,August
+Application #3,AWS Config,5/1/2022,5/31/2022,34.6328084,4.50226509,39.1350735,May
+Application #11,Amazon Simple Queue Service,10/1/2022,10/31/2022,43.8490267,5.70037348,49.5494002,October
+Application #4,AWS Key Management Service,7/1/2022,7/31/2022,6.44825867,0.83827363,7.28653229,July
+Application #8,AWS CloudTrail,7/1/2022,7/31/2022,28.0159754,3.6420768,31.6580522,July
+Application #10,AWS CloudTrail,8/1/2022,8/31/2022,33.6618732,4.37604351,38.0379167,August
+Application #1,AWS Lambda,7/1/2022,7/31/2022,26.3765923,3.428957,29.8055493,July
+Application #5,AWS Data Transfer,4/1/2022,4/30/2022,34.5728972,4.49447664,39.0673738,April
+Application #2,Amazon GuardDuty,12/1/2022,12/31/2022,37.4022637,4.86229428,42.264558,December
+Application #11,AWS Key Management Service,2/1/2023,2/28/2023,23.9129065,3.10867784,27.0215843,February
+Application #1,AWS Data Transfer,8/1/2022,8/31/2022,26.7831935,3.48181516,30.2650087,August
+Application #3,Amazon Elastic Compute Cloud,1/1/2023,1/31/2023,44.3975304,5.77167895,50.1692093,January
+Application #12,AmazonCloudWatch,6/1/2022,6/30/2022,40.504779,5.26562126,45.7704002,June
+Application #9,Amazon Simple Queue Service,7/1/2022,7/31/2022,12.2765634,1.59595324,13.8725166,July
+Application #3,AWS Key Management Service,2/1/2023,2/28/2023,3.74839694,0.4872916,4.23568854,February
+Application #5,AWS Data Transfer,2/1/2023,2/28/2023,32.0103267,4.16134247,36.1716692,February
+Application #12,AWS Data Transfer,3/1/2023,3/31/2023,32.3918163,4.21093612,36.6027524,March
+Application #6,AWS Data Transfer,6/1/2022,6/30/2022,18.6033464,2.41843504,21.0217815,June
+Application #9,Amazon Relational Database Service,6/1/2022,6/30/2022,25.0117271,3.25152453,28.2632517,June
+Application #13,AWS Data Transfer,7/1/2022,7/31/2022,36.5024021,4.74531228,41.2477144,July
+Application #9,Amazon Elastic Compute Cloud,6/1/2022,6/30/2022,35.4197286,4.60456472,40.0242933,June
+Application #7,AWS Data Transfer,10/1/2022,10/31/2022,53.3393348,6.93411352,60.2734483,October
+Application #10,AWS Data Transfer,11/1/2022,11/30/2022,3.37499994,0.43874999,3.81374993,November
+Application #1,AWS CloudTrail,11/1/2022,11/30/2022,22.2719319,2.89535115,25.1672831,November
+Application #14,AWS Data Transfer,4/1/2022,4/30/2022,32.1016842,4.17321895,36.2749031,April
+Application #4,AWS Data Transfer,7/1/2022,7/31/2022,31.6415603,4.11340283,35.7549631,July
+Application #6,AWS Data Transfer,4/1/2022,4/30/2022,18.7608432,2.43890961,21.1997528,April
+Application #9,Amazon Simple Notification Service,4/1/2022,4/30/2022,7.01439777,0.91187171,7.92626948,April
+Application #6,AWS Data Transfer,11/1/2022,11/30/2022,30.7212341,3.99376043,34.7149945,November
+Application #10,AWS CloudTrail,5/1/2022,5/31/2022,15.064872,1.95843336,17.0233054,May
+Application #8,AWS Lambda,3/1/2023,3/31/2023,50.8214969,6.60679459,57.4282915,March
+Application #9,AWS CloudTrail,4/1/2022,4/30/2022,30.9351498,4.02156947,34.9567192,April
+Application #8,AWS Data Transfer,12/1/2022,12/31/2022,7.95834335,1.03458464,8.99292798,December
+Application #4,Amazon Simple Storage Service,10/1/2022,10/31/2022,39.2009989,5.09612986,44.2971288,October
+Application #1,Amazon Simple Notification Service,7/1/2022,7/31/2022,12.6374304,1.64286595,14.2802964,July
+Application #13,Amazon Simple Notification Service,9/1/2022,9/30/2022,34.1473527,4.43915586,38.5865086,September
+Application #12,AWS Data Transfer,5/1/2022,5/31/2022,27.9617782,3.63503117,31.5968094,May
+Application #8,AWS Key Management Service,11/1/2022,11/30/2022,22.9188626,2.97945213,25.8983147,November
+Application #6,Amazon Simple Storage Service,9/1/2022,9/30/2022,0.72142373,0.09378509,0.81520882,September
+Application #1,AmazonCloudWatch,4/1/2022,4/30/2022,3.14636977,0.40902807,3.55539784,April
+Application #10,AWS Data Transfer,11/1/2022,11/30/2022,51.847182,6.74013366,58.5873157,November
+Application #3,Amazon Elastic Compute Cloud,1/1/2023,1/31/2023,29.1445727,3.78879446,32.9333672,January
+Application #2,Amazon Simple Notification Service,10/1/2022,10/31/2022,14.97821,1.9471673,16.9253773,October
+Application #9,AWS Support (Business),9/1/2022,9/30/2022,39.1246758,5.08620785,44.2108836,September
+Application #11,AWS Data Transfer,5/1/2022,5/31/2022,21.5116567,2.79651537,24.3081721,May
+Application #13,Amazon Simple Queue Service,10/1/2022,10/31/2022,5.94430282,0.77275937,6.71706219,October
+Application #12,AWS CloudTrail,4/1/2022,4/30/2022,30.1162158,3.91510806,34.0313239,April
+Application #3,AWS Data Transfer,11/1/2022,11/30/2022,20.3973117,2.65165053,23.0489623,November
+Application #1,AWS Data Transfer,3/1/2023,3/31/2023,18.7744421,2.44067748,21.2151196,March
+Application #3,Amazon CloudFront,7/1/2022,7/31/2022,42.973926,5.58661037,48.5605363,July
+Application #2,Amazon Simple Notification Service,1/1/2023,1/31/2023,28.4393997,3.69712196,32.1365216,January
+Application #14,AmazonCloudWatch,12/1/2022,12/31/2022,2.78608319,0.36219082,3.148274,December
+Application #2,AWS CloudTrail,3/1/2023,3/31/2023,46.6236687,6.06107693,52.6847456,March
+Application #8,Amazon GuardDuty,9/1/2022,9/30/2022,0.62896214,0.08176508,0.71072722,September
+Application #3,AWS Data Transfer,10/1/2022,10/31/2022,46.0316969,5.9841206,52.0158175,October
+Application #5,NA,5/1/2022,5/31/2022,32.2351876,4.19057438,36.4257619,May
+Application #2,Amazon Simple Queue Service,6/1/2022,6/30/2022,24.1446722,3.13880739,27.2834796,June
+Application #14,AWS Data Transfer,12/1/2022,12/31/2022,2.30958718,0.30024633,2.60983351,December
+Application #6,AWS Data Transfer,9/1/2022,9/30/2022,19.0666368,2.47866278,21.5452995,September
+Application #10,AWS Global Accelerator,5/1/2022,5/31/2022,17.0841833,2.22094383,19.3051271,May
+Application #1,AWS Lambda,2/1/2023,2/28/2023,16.0914887,2.09189353,18.1833822,February
+Application #6,Amazon FSx,8/1/2022,8/31/2022,10.8466688,1.41006694,12.2567357,August
+Application #6,AWS Application #7 Hub,1/1/2023,1/31/2023,28.6797531,3.7283679,32.408121,January
+Application #7,AWS Key Management Service,5/1/2022,5/31/2022,44.7296319,5.81485215,50.5444841,May
+Application #12,Amazon Simple Notification Service,1/1/2023,1/31/2023,14.7125249,1.91262824,16.6251532,January
+Application #1,AWS CloudTrail,12/1/2022,12/31/2022,27.7180368,3.60334478,31.3213816,December
+Application #2,Amazon GuardDuty,6/1/2022,6/30/2022,29.2156913,3.79803987,33.0137312,June
+Application #2,Amazon Simple Notification Service,9/1/2022,9/30/2022,15.0793295,1.96031283,17.0396423,September
+Application #6,AWS Data Transfer,11/1/2022,11/30/2022,16.7608945,2.17891628,18.9398108,November
+Application #2,AWS Application #7 Hub,3/1/2023,3/31/2023,52.9545483,6.88409128,59.8386396,March
+Application #14,AWS Systems Manager,6/1/2022,6/30/2022,9.21370945,1.19778223,10.4114917,June
+Application #3,Amazon CloudFront,5/1/2022,5/31/2022,11.2596756,1.46375783,12.7234335,May
+Application #4,AWS Data Transfer,1/1/2023,1/31/2023,1.78056397,0.23147332,2.01203729,January
+Application #6,AWS Config,5/1/2022,5/31/2022,1.36032359,0.17684207,1.53716565,May
+Application #8,AWS Application #7 Hub,10/1/2022,10/31/2022,18.9623778,2.46510911,21.4274869,October
+Application #12,AWS Data Transfer,1/1/2023,1/31/2023,1.34409544,0.17473241,1.51882784,January
+Application #6,AWS Data Transfer,2/1/2023,2/28/2023,33.023544,4.29306071,37.3166047,February
+Application #9,AmazonCloudWatch,5/1/2022,5/31/2022,17.4816228,2.27261096,19.7542338,May
+Application #5,Elastic Load Balancing,4/1/2022,4/30/2022,13.2910859,1.72784116,15.018927,April
+Application #5,Amazon GuardDuty,8/1/2022,8/31/2022,1.87589544,0.24386641,2.11976184,August
+Application #4,AWS Secrets Manager,1/1/2023,1/31/2023,54.835789,7.12865257,61.9644416,January
+Application #13,AWS Data Transfer,12/1/2022,12/31/2022,49.5179723,6.4373364,55.9553087,December
+Application #3,AWS Secrets Manager,5/1/2022,5/31/2022,37.8240901,4.91713172,42.7412219,May
+Application #9,AWS Data Transfer,11/1/2022,11/30/2022,22.624282,2.94115666,25.5654387,November
+Application #13,AWS Key Management Service,9/1/2022,9/30/2022,2.85325768,0.3709235,3.22418118,September
+Application #8,Amazon GuardDuty,5/1/2022,5/31/2022,10.2347226,1.33051394,11.5652365,May
+Application #6,AWS Data Transfer,5/1/2022,5/31/2022,15.0548625,1.95713213,17.0119947,May
+Application #9,AWS Config,7/1/2022,7/31/2022,22.9678484,2.98582029,25.9536687,July
+Application #1,AWS CloudTrail,4/1/2022,4/30/2022,42.6203744,5.54064868,48.1610231,April
+Application #13,AmazonCloudWatch,12/1/2022,12/31/2022,31.6342825,4.11245673,35.7467392,December
+Application #1,AWS Data Transfer,3/1/2023,3/31/2023,34.3373922,4.46386099,38.8012532,March
+Application #8,Elastic Load Balancing,6/1/2022,6/30/2022,8.85871887,1.15163345,10.0103523,June
+Application #9,AWS CloudTrail,12/1/2022,12/31/2022,39.1084474,5.08409816,44.1925456,December
+Application #11,AWS Data Transfer,8/1/2022,8/31/2022,35.3657163,4.59754311,39.9632594,August
+Application #14,AmazonCloudWatch,4/1/2022,4/30/2022,20.2724413,2.63541737,22.9078587,April
+Application #4,AWS Data Transfer,1/1/2023,1/31/2023,44.1486124,5.73931962,49.8879321,January
+Application #14,Amazon GuardDuty,11/1/2022,11/30/2022,16.4915118,2.14389654,18.6354084,November
+Application #8,AmazonCloudWatch,7/1/2022,7/31/2022,18.4391804,2.39709345,20.8362739,July
+Application #12,AWS Data Transfer,9/1/2022,9/30/2022,12.5420562,1.63046731,14.1725235,September
+Application #9,AWS Key Management Service,4/1/2022,4/30/2022,13.439429,1.74712577,15.1865547,April
+Application #6,Amazon Elastic Compute Cloud,7/1/2022,7/31/2022,10.2750391,1.33575508,11.6107942,July
+Application #12,AmazonCloudWatch,6/1/2022,6/30/2022,10.0607677,1.3078998,11.3686675,June
+Application #12,Amazon Simple Notification Service,8/1/2022,8/31/2022,38.0149927,4.94194905,42.9569418,August
+Application #12,Amazon Elastic Compute Cloud,9/1/2022,9/30/2022,4.88931488,0.63561093,5.52492581,September
+Application #6,Amazon Simple Storage Service,10/1/2022,10/31/2022,26.9660832,3.50559081,30.471674,October
+Application #2,AWS Data Transfer,9/1/2022,9/30/2022,5.45322328,0.70891903,6.16214231,September
+Application #1,AWS Key Management Service,3/1/2023,3/31/2023,38.5695613,5.01404297,43.5836043,March
+Application #6,Amazon Elastic Compute Cloud,6/1/2022,6/30/2022,23.0680444,2.99884577,26.0668902,June
+Application #2,AWS Data Transfer,9/1/2022,9/30/2022,7.96415358,1.03533997,8.99949355,September
+Application #6,AWS Data Transfer,8/1/2022,8/31/2022,19.8440746,2.5797297,22.4238043,August
+Application #12,Amazon Simple Storage Service,5/1/2022,5/31/2022,14.0577489,1.82750736,15.8852563,May
+Application #3,Amazon Simple Queue Service,2/1/2023,2/28/2023,17.2196145,2.23854988,19.4581643,February
+Application #2,AWS Key Management Service,8/1/2022,8/31/2022,25.755243,3.3481816,29.1034246,August
+Application #5,Amazon Simple Notification Service,7/1/2022,7/31/2022,15.7564235,2.04833506,17.8047586,July
+Application #5,AWS Data Transfer,8/1/2022,8/31/2022,36.8637423,4.7922865,41.6560288,August
+Application #2,Amazon Simple Storage Service,10/1/2022,10/31/2022,23.9271832,3.11053382,27.0377171,October
+Application #12,AWS Data Transfer,7/1/2022,7/31/2022,11.9081031,1.54805341,13.4561565,July
+Application #9,Amazon Simple Queue Service,6/1/2022,6/30/2022,4.50506151,0.585658,5.0907195,June
+Application #11,AWS Data Transfer,5/1/2022,5/31/2022,34.6750052,4.50775067,39.1827559,May
+Application #5,AWS Data Transfer,9/1/2022,9/30/2022,43.8372814,5.69884659,49.536128,September
+Application #14,AWS Data Transfer,7/1/2022,7/31/2022,11.2764383,1.46593698,12.7423753,July
+Application #11,AWS Config,4/1/2022,4/30/2022,8.2358352,1.07065858,9.30649378,April
+Application #10,AWS Global Accelerator,10/1/2022,10/31/2022,15.5410777,2.0203401,17.5614178,October
+Application #12,AWS Data Transfer,8/1/2022,8/31/2022,11.6970529,1.52061687,13.2176697,August
+Application #13,AWS CloudTrail,7/1/2022,7/31/2022,33.53692,4.3597996,37.8967196,July
+Application #1,Amazon Elastic Compute Cloud,4/1/2022,4/30/2022,9.50629994,1.23581899,10.7421189,April
+Application #8,AmazonCloudWatch,4/1/2022,4/30/2022,34.2661946,4.4546053,38.7208,April
+Application #13,AWS Key Management Service,2/1/2023,2/28/2023,13.6718749,1.77734374,15.4492186,February
+Application #3,AWS Data Transfer,1/1/2023,1/31/2023,24.6874936,3.20937416,27.8968677,January
+Application #5,AmazonCloudWatch,1/1/2023,1/31/2023,6.23735785,0.81085652,7.04821437,January
+Application #8,AWS Data Transfer,10/1/2022,10/31/2022,53.6365022,6.97274528,60.6092475,October
+Application #11,AWS CloudTrail,12/1/2022,12/31/2022,26.4145027,3.43388535,29.8483881,December
+Application #6,AWS CloudTrail,9/1/2022,9/30/2022,17.6024641,2.28832033,19.8907844,September
+Application #12,AWS Support (Business),9/1/2022,9/30/2022,26.9461112,3.50299446,30.4491057,September
+Application #2,AWS Key Management Service,1/1/2023,1/31/2023,21.2367082,2.76077206,23.9974802,January
+Application #2,AWS Config,7/1/2022,7/31/2022,19.8162231,2.576109,22.3923321,July
+Application #14,AWS Config,1/1/2023,1/31/2023,25.2677923,3.284813,28.5526053,January
+Application #1,Amazon Simple Queue Service,2/1/2023,2/28/2023,23.8163822,3.09612968,26.9125118,February
+Application #10,AWS Data Transfer,10/1/2022,10/31/2022,29.2168878,3.79819542,33.0150832,October
+Application #14,AWS Config,7/1/2022,7/31/2022,33.4231963,4.34501552,37.7682118,July
+Application #3,AWS Key Management Service,10/1/2022,10/31/2022,22.4264039,2.91543251,25.3418364,October
+Application #3,Amazon CloudFront,3/1/2023,3/31/2023,42.0134932,5.46175412,47.4752474,March
+Application #3,AWS Config,12/1/2022,12/31/2022,35.5338672,4.61940274,40.15327,December
+Application #2,Amazon Simple Queue Service,1/1/2023,1/31/2023,6.77838372,0.88118988,7.65957361,January
+Application #9,AWS Key Management Service,8/1/2022,8/31/2022,21.2497601,2.76246881,24.0122289,August
+Application #9,AWS Data Transfer,8/1/2022,8/31/2022,23.5215039,3.05779551,26.5792994,August
+Application #14,AWS Systems Manager,1/1/2023,1/31/2023,23.0027791,2.99036128,25.9931404,January
+Application #4,AWS Data Transfer,6/1/2022,6/30/2022,40.0524127,5.20681366,45.2592264,June
+Application #11,AWS Support (Business),10/1/2022,10/31/2022,22.4763823,2.9219297,25.398312,October
+Application #3,AWS CloudTrail,1/1/2023,1/31/2023,1.08290612,0.1407778,1.22368391,January
+Application #14,Amazon GuardDuty,5/1/2022,5/31/2022,34.2048488,4.44663035,38.6514792,May
+Application #14,AWS Support (Business),9/1/2022,9/30/2022,16.9529682,2.20388586,19.156854,September
+Application #2,AWS Data Transfer,12/1/2022,12/31/2022,15.530647,2.01898411,17.5496311,December
+Application #7,AmazonCloudWatch,9/1/2022,9/30/2022,35.0076717,4.55099733,39.5586691,September
+Application #8,AWS Data Transfer,11/1/2022,11/30/2022,52.9518464,6.88374003,59.8355864,November
+Application #8,AWS Data Transfer,6/1/2022,6/30/2022,28.1490552,3.65937717,31.8084323,June
+Application #4,Amazon GuardDuty,9/1/2022,9/30/2022,38.5681172,5.01385523,43.5819724,September
+Application #3,Amazon Simple Queue Service,11/1/2022,11/30/2022,4.22179214,0.54883298,4.77062512,November
+Application #6,AWS Data Transfer,6/1/2022,6/30/2022,25.2416014,3.28140818,28.5230095,June
+Application #7,AWS CloudTrail,2/1/2023,2/28/2023,34.9889556,4.54856423,39.5375198,February
+Application #6,Amazon GuardDuty,6/1/2022,6/30/2022,30.7099648,3.99229542,34.7022602,June
+Application #10,AWS Config,12/1/2022,12/31/2022,39.5248826,5.13823474,44.6631174,December
+Application #10,Amazon Simple Notification Service,1/1/2023,1/31/2023,13.1455484,1.70892129,14.8544697,January
+Application #10,Amazon Simple Queue Service,9/1/2022,9/30/2022,32.5149868,4.22694829,36.7419351,September
+Application #14,AWS Key Management Service,2/1/2023,2/28/2023,54.6383601,7.10298681,61.7413469,February
+Application #10,AWS Global Accelerator,9/1/2022,9/30/2022,40.9153901,5.31900071,46.2343908,September
+Application #3,Amazon Elastic Compute Cloud,11/1/2022,11/30/2022,41.2395305,5.36113897,46.6006695,November
+Application #6,AWS Data Transfer,12/1/2022,12/31/2022,9.20954378,1.19724069,10.4067845,December
+Application #8,Amazon GuardDuty,3/1/2023,3/31/2023,35.5176506,4.61729458,40.1349452,March
+Application #2,Amazon Simple Notification Service,1/1/2023,1/31/2023,11.9978347,1.55971851,13.5575532,January
+Application #14,AWS Data Transfer,2/1/2023,2/28/2023,49.3481821,6.41526367,55.7634458,February
+Application #12,AWS Data Transfer,11/1/2022,11/30/2022,3.03564847,0.3946343,3.43028277,November
+Application #4,AWS Config,11/1/2022,11/30/2022,32.5966208,4.2375607,36.8341815,November
+Application #10,Amazon Simple Storage Service,5/1/2022,5/31/2022,7.26037712,0.94384903,8.20422615,May
+Application #7,AWS Data Transfer,7/1/2022,7/31/2022,28.0539257,3.64701034,31.700936,July
+Application #13,AWS Data Transfer,8/1/2022,8/31/2022,43.4526308,5.64884201,49.1014728,August
+Application #12,AWS Key Management Service,6/1/2022,6/30/2022,13.9381955,1.81196541,15.7501609,June
+Application #3,AWS CloudTrail,4/1/2022,4/30/2022,19.6024039,2.5483125,22.1507164,April
+Application #12,AWS Config,11/1/2022,11/30/2022,53.4710085,6.95123111,60.4222396,November
+Application #4,AWS Data Transfer,2/1/2023,2/28/2023,45.3665262,5.8976484,51.2641746,February
+Application #13,AWS Data Transfer,5/1/2022,5/31/2022,3.37200911,0.43836118,3.81037029,May
+Application #11,AWS Support (Business),7/1/2022,7/31/2022,42.0207191,5.46269348,47.4834126,July
+Application #4,Amazon GuardDuty,4/1/2022,4/30/2022,28.8977505,3.75670756,32.654458,April
+Application #4,Amazon Simple Notification Service,5/1/2022,5/31/2022,23.2327457,3.02025694,26.2530026,May
+Application #7,AWS Data Transfer,6/1/2022,6/30/2022,3.64587009,0.47396311,4.1198332,June
+Application #6,AmazonCloudWatch,5/1/2022,5/31/2022,37.2964112,4.84853346,42.1449447,May
+Application #6,Amazon GuardDuty,11/1/2022,11/30/2022,54.8814369,7.13458679,62.0160236,November
+Application #6,AWS Key Management Service,4/1/2022,4/30/2022,40.6556974,5.28524067,45.9409381,April
+Application #5,AWS Data Transfer,9/1/2022,9/30/2022,27.8072979,3.61494872,31.4222466,September
+Application #12,Amazon Simple Notification Service,6/1/2022,6/30/2022,11.8190736,1.53647957,13.3555532,June
+Application #10,AWS Global Accelerator,6/1/2022,6/30/2022,37.3922665,4.86099465,42.2532612,June
+Application #3,AWS Data Transfer,2/1/2023,2/28/2023,27.6891393,3.59958811,31.2887274,February
+Application #2,AWS CloudTrail,7/1/2022,7/31/2022,12.2818542,1.59664105,13.8784952,July
+Application #5,Amazon Simple Notification Service,8/1/2022,8/31/2022,2.05671066,0.26737239,2.32408305,August
+Application #9,AWS Config,1/1/2023,1/31/2023,22.5874241,2.93636514,25.5237893,January
+Application #11,Amazon Simple Notification Service,3/1/2023,3/31/2023,46.617063,6.06021818,52.6772811,March
+Application #12,Amazon CloudFront,3/1/2023,3/31/2023,8.99834213,1.16978448,10.1681266,March
+Application #8,AWS Data Transfer,5/1/2022,5/31/2022,32.6467249,4.24407423,36.8907991,May
+Application #6,AWS Data Transfer,2/1/2023,2/28/2023,51.9947986,6.75932382,58.7541224,February
+Application #13,Amazon Simple Queue Service,4/1/2022,4/30/2022,33.7487731,4.3873405,38.1361136,April
+Application #4,AWS Data Transfer,4/1/2022,4/30/2022,43.7942677,5.69325481,49.4875225,April
+Application #2,AWS CloudTrail,5/1/2022,5/31/2022,20.2532415,2.63292139,22.8861629,May
+Application #10,Amazon Simple Notification Service,11/1/2022,11/30/2022,22.8706291,2.97318178,25.8438108,November
+Application #13,AWS Support (Business),10/1/2022,10/31/2022,28.7796521,3.74135478,32.5210069,October
+Application #9,AmazonCloudWatch,3/1/2023,3/31/2023,19.5807287,2.54549473,22.1262235,March
+Application #2,AWS Key Management Service,4/1/2022,4/30/2022,26.4706724,3.44118741,29.9118598,April
+Application #12,AmazonCloudWatch,2/1/2023,2/28/2023,44.9016078,5.83720901,50.7388168,February
+Application #10,Amazon Simple Storage Service,6/1/2022,6/30/2022,35.1204411,4.56565735,39.6860985,June
+Application #11,Savings Plans for AWS Compute usage,10/1/2022,10/31/2022,40.1191472,5.21548914,45.3346363,October
+Application #4,AWS CloudTrail,7/1/2022,7/31/2022,4.8797698,0.63437007,5.51413987,July
+Application #6,AWS Data Transfer,12/1/2022,12/31/2022,36.2537723,4.7129904,40.9667627,December
+Application #10,AWS CloudTrail,4/1/2022,4/30/2022,17.4713842,2.27127994,19.7426641,April
+Application #14,Amazon Simple Queue Service,7/1/2022,7/31/2022,31.3985438,4.0818107,35.4803545,July
+Application #7,AWS Key Management Service,7/1/2022,7/31/2022,6.76898235,0.87996771,7.64895006,July
+Application #7,AWS Data Transfer,10/1/2022,10/31/2022,20.1874414,2.62436738,22.8118088,October
+Application #2,AWS Config,1/1/2023,1/31/2023,35.3806083,4.59947908,39.9800874,January
+Application #14,AWS Support (Business),2/1/2023,2/28/2023,35.7468037,4.64708449,40.3938882,February
+Application #3,AWS Data Transfer,7/1/2022,7/31/2022,7.47960237,0.97234831,8.45195067,July
+Application #14,AWS CloudTrail,3/1/2023,3/31/2023,3.55446242,0.46208011,4.01654253,March
+Application #9,Amazon Relational Database Service,12/1/2022,12/31/2022,13.1252119,1.70627755,14.8314895,December
+Application #2,AWS Config,11/1/2022,11/30/2022,39.1250607,5.0862579,44.2113186,November
+Application #6,AmazonCloudWatch,5/1/2022,5/31/2022,37.183539,4.83386007,42.0173991,May
+Application #10,AWS Key Management Service,4/1/2022,4/30/2022,41.2874739,5.36737161,46.6548456,April
+Application #4,Amazon Route 53,4/1/2022,4/30/2022,8.65443745,1.12507687,9.77951432,April
+Application #10,AWS Global Accelerator,8/1/2022,8/31/2022,22.624814,2.94122583,25.5660399,August
+Application #4,AWS Config,6/1/2022,6/30/2022,9.43256221,1.22623309,10.6587953,June
+Application #14,Amazon Simple Notification Service,3/1/2023,3/31/2023,15.5809891,2.02552859,17.6065177,March
+Application #2,Amazon Simple Storage Service,3/1/2023,3/31/2023,30.3477824,3.94521171,34.2929941,March
+Application #8,AWS Data Transfer,6/1/2022,6/30/2022,28.3751402,3.68876822,32.0639084,June
+Application #6,Amazon Simple Notification Service,6/1/2022,6/30/2022,9.88595966,1.28517476,11.1711344,June
+Application #1,Amazon GuardDuty,11/1/2022,11/30/2022,30.6036857,3.97847914,34.5821648,November
+Application #9,AWS Data Transfer,12/1/2022,12/31/2022,24.2087744,3.14714067,27.3559151,December
+Application #11,AWS Config,5/1/2022,5/31/2022,14.9092263,1.93819942,16.8474257,May
+Application #6,AmazonCloudWatch,10/1/2022,10/31/2022,45.5656335,5.92353235,51.4891658,October
+Application #12,Amazon GuardDuty,1/1/2023,1/31/2023,47.6572853,6.19544709,53.8527324,January
+Application #9,AWS WAF,10/1/2022,10/31/2022,8.83229062,1.14819778,9.9804884,October
+Application #6,Amazon Simple Storage Service,11/1/2022,11/30/2022,32.7388837,4.25605488,36.9949386,November
+Application #5,AWS CloudTrail,5/1/2022,5/31/2022,28.9833026,3.76782934,32.7511319,May
+Application #13,AWS Data Transfer,11/1/2022,11/30/2022,44.9080972,5.83805264,50.7461498,November
+Application #12,AmazonCloudWatch,3/1/2023,3/31/2023,21.0755614,2.73982298,23.8153843,March
+Application #10,AWS Global Accelerator,7/1/2022,7/31/2022,38.167181,4.96173353,43.1289146,July
+Application #13,AWS Application #7 Hub,7/1/2022,7/31/2022,21.1955075,2.75541597,23.9509234,July
+Application #8,Amazon GuardDuty,12/1/2022,12/31/2022,7.82780007,1.01761401,8.84541408,December
+Application #1,AWS Data Transfer,3/1/2023,3/31/2023,24.5690517,3.19397672,27.7630284,March
+Application #7,Amazon GuardDuty,7/1/2022,7/31/2022,43.2313161,5.62007109,48.8513872,July
+Application #3,Amazon GuardDuty,11/1/2022,11/30/2022,16.8585479,2.19161123,19.0501592,November
+Application #6,AWS Config,6/1/2022,6/30/2022,35.399913,4.60198868,40.0019016,June
+Application #9,Amazon GuardDuty,4/1/2022,4/30/2022,19.2839931,2.5069191,21.7909122,April
+Application #8,AWS Key Management Service,8/1/2022,8/31/2022,11.5035239,1.4954581,12.998982,August
+Application #6,Amazon Simple Notification Service,6/1/2022,6/30/2022,26.476767,3.44197971,29.9187467,June
+Application #13,Amazon Simple Queue Service,5/1/2022,5/31/2022,36.1821093,4.70367421,40.8857835,May
+Application #9,AWS Data Transfer,6/1/2022,6/30/2022,15.8299493,2.05789341,17.8878427,June
+Application #2,Amazon Virtual Private Cloud,5/1/2022,5/31/2022,15.7782442,2.05117174,17.8294159,May
+Application #3,AWS CloudTrail,4/1/2022,4/30/2022,27.1998697,3.53598306,30.7358527,April
+Application #3,Amazon Elastic Compute Cloud,5/1/2022,5/31/2022,31.2635022,4.06425529,35.3277575,May
+Application #5,AWS Key Management Service,2/1/2023,2/28/2023,40.5026122,5.26533958,45.7679518,February
+Application #6,AWS Data Transfer,4/1/2022,4/30/2022,11.9007233,1.54709403,13.4478173,April
+Application #12,AWS Data Transfer,2/1/2023,2/28/2023,45.3238306,5.89209797,51.2159286,February
+Application #10,Amazon Simple Queue Service,7/1/2022,7/31/2022,17.7272837,2.30454688,20.0318306,July
+Application #2,Amazon Simple Storage Service,9/1/2022,9/30/2022,14.8012919,1.92416795,16.7254599,September
+Application #10,Amazon Elastic Compute Cloud,9/1/2022,9/30/2022,36.5591473,4.75268914,41.3118364,September
+Application #11,AWS Config,4/1/2022,4/30/2022,28.995658,3.76943554,32.7650936,April
+Application #14,Amazon CloudFront,9/1/2022,9/30/2022,17.6825641,2.29873334,19.9812975,September
+Application #3,Amazon Simple Storage Service,11/1/2022,11/30/2022,49.5865029,6.44624537,56.0327482,November
+Application #13,AWS Data Transfer,4/1/2022,4/30/2022,34.2355288,4.45061875,38.6861476,April
+Application #4,AWS Application #7 Hub,7/1/2022,7/31/2022,13.5724159,1.76441407,15.33683,July
+Application #11,Amazon GuardDuty,6/1/2022,6/30/2022,32.2132768,4.18772598,36.4010027,June
+Application #6,AWS Lambda,2/1/2023,2/28/2023,28.7243626,3.73416714,32.4585297,February
+Application #10,AWS Data Transfer,5/1/2022,5/31/2022,27.3640762,3.55732991,30.9214061,May
+Application #9,Amazon Simple Notification Service,10/1/2022,10/31/2022,5.23683262,0.68078824,5.91762086,October
+Application #11,Amazon GuardDuty,7/1/2022,7/31/2022,6.73997009,0.87619611,7.6161662,July
+Application #4,Amazon Relational Database Service,4/1/2022,4/30/2022,38.7463902,5.03703072,43.7834209,April
+Application #14,AWS Key Management Service,7/1/2022,7/31/2022,35.0164319,4.55213615,39.5685681,July
+Application #2,AWS Data Transfer,2/1/2023,2/28/2023,6.02507136,0.78325928,6.80833063,February
+Application #7,AWS Lambda,9/1/2022,9/30/2022,14.0660822,1.82859068,15.8946729,September
+Application #14,AWS Data Transfer,4/1/2022,4/30/2022,1.05365306,0.1369749,1.19062796,April
+Application #10,AWS Data Transfer,8/1/2022,8/31/2022,14.0448686,1.82583291,15.8707015,August
+Application #12,Amazon Simple Queue Service,3/1/2023,3/31/2023,17.507607,2.27598891,19.7835959,March
+Application #12,AWS Data Transfer,4/1/2022,4/30/2022,26.4775399,3.44208018,29.9196201,April
+Application #13,AWS Secrets Manager,4/1/2022,4/30/2022,18.0103446,2.34134479,20.3516894,April
+Application #14,AWS Key Management Service,5/1/2022,5/31/2022,16.0913095,2.09187024,18.1831798,May
+Application #7,AWS Config,4/1/2022,4/30/2022,3.13383927,0.40739911,3.54123838,April
+Application #3,Amazon CloudFront,2/1/2023,2/28/2023,34.0701515,4.4291197,38.4992712,February
+Application #13,AWS Config,4/1/2022,4/30/2022,23.6093372,3.06921384,26.678551,April
+Application #9,AWS Data Transfer,4/1/2022,4/30/2022,6.1468885,0.79909551,6.94598401,April
+Application #2,Amazon GuardDuty,2/1/2023,2/28/2023,7.41908263,0.96448074,8.38356337,February
+Application #10,AWS Global Accelerator,1/1/2023,1/31/2023,19.2280976,2.49965269,21.7277503,January
+Application #10,AWS Secrets Manager,5/1/2022,5/31/2022,4.1086318,0.53412213,4.64275393,May
+Application #11,AWS Data Transfer,2/1/2023,2/28/2023,1.44020087,0.18722611,1.62742698,February
+Application #6,AWS Data Transfer,5/1/2022,5/31/2022,37.3401659,4.85422157,42.1943875,May
+Application #8,AWS Data Transfer,11/1/2022,11/30/2022,10.6659915,1.38657889,12.0525704,November
+Application #12,AWS Data Transfer,10/1/2022,10/31/2022,2.17071657,0.28219315,2.45290973,October
+Application #2,Amazon Simple Notification Service,6/1/2022,6/30/2022,10.6184291,1.38039578,11.9988248,June
+Application #10,AmazonCloudWatch,10/1/2022,10/31/2022,1.42370215,0.18508128,1.60878343,October
+Application #11,AWS Data Transfer,12/1/2022,12/31/2022,25.5496214,3.32145078,28.8710721,December
+Application #2,AWS CloudTrail,4/1/2022,4/30/2022,21.345068,2.77485883,24.1199268,April
+Application #6,AWS Config,3/1/2023,3/31/2023,3.11280976,0.40466527,3.51747503,March
+Application #2,AWS Data Transfer,5/1/2022,5/31/2022,8.67103529,1.12723459,9.79826987,May
+Application #3,AWS Data Transfer,2/1/2023,2/28/2023,47.8025778,6.21433511,54.0169129,February
+Application #9,AWS Data Transfer,8/1/2022,8/31/2022,29.9298712,3.89088326,33.8207545,August
+Application #5,AWS Data Transfer,10/1/2022,10/31/2022,5.95100359,0.77363047,6.72463406,October
+Application #2,AWS Data Transfer,6/1/2022,6/30/2022,30.0689746,3.90896669,33.9779413,June
+Application #3,AWS Data Transfer,4/1/2022,4/30/2022,20.1384387,2.61799703,22.7564358,April
+Application #11,AWS CloudTrail,1/1/2023,1/31/2023,10.9380216,1.42194281,12.3599644,January
+Application #2,AWS Data Transfer,7/1/2022,7/31/2022,26.3877444,3.43040677,29.8181512,July
+Application #5,Amazon Elastic Container Service,12/1/2022,12/31/2022,45.3665697,5.89765407,51.2642238,December
+Application #9,AWS Data Transfer,12/1/2022,12/31/2022,28.4302073,3.69592695,32.1261343,December
+Application #10,Amazon Simple Queue Service,8/1/2022,8/31/2022,20.8652445,2.71248178,23.5777263,August
+Application #14,Amazon GuardDuty,10/1/2022,10/31/2022,47.6919051,6.19994766,53.8918528,October
+Application #3,Amazon GuardDuty,12/1/2022,12/31/2022,42.8546857,5.57110913,48.4257948,December
+Application #4,Amazon Simple Storage Service,4/1/2022,4/30/2022,30.0714896,3.90929365,33.9807833,April
+Application #6,Amazon Simple Storage Service,6/1/2022,6/30/2022,23.0641751,2.99834276,26.0625179,June
+Application #9,AWS Data Transfer,8/1/2022,8/31/2022,32.0458096,4.16595525,36.2117648,August
+Application #14,Amazon GuardDuty,12/1/2022,12/31/2022,51.6320212,6.71216276,58.344184,December
+Application #12,Amazon Simple Queue Service,5/1/2022,5/31/2022,38.3384643,4.98400035,43.3224646,May
+Application #3,Amazon Simple Storage Service,6/1/2022,6/30/2022,26.8159129,3.48606868,30.3019816,June
+Application #8,AWS CloudTrail,12/1/2022,12/31/2022,28.2163881,3.66813045,31.8845186,December
+Application #4,AWS Data Transfer,12/1/2022,12/31/2022,46.2668776,6.01469409,52.2815717,December
+Application #7,AWS Data Transfer,7/1/2022,7/31/2022,17.2516516,2.24271471,19.4943663,July
+Application #9,Amazon Simple Notification Service,1/1/2023,1/31/2023,38.045428,4.94590564,42.9913336,January
+Application #5,AWS Key Management Service,11/1/2022,11/30/2022,10.4003814,1.35204958,11.752431,November
+Application #7,AWS Data Transfer,2/1/2023,2/28/2023,5.9636703,0.77527714,6.73894744,February
+Application #10,Amazon GuardDuty,11/1/2022,11/30/2022,43.0989731,5.60286651,48.7018396,November
+Application #14,AWS Support (Business),9/1/2022,9/30/2022,9.59966418,1.24795634,10.8476205,September
+Application #10,Amazon Elastic Compute Cloud,6/1/2022,6/30/2022,40.4910391,5.26383508,45.7548742,June
+Application #1,Amazon GuardDuty,3/1/2023,3/31/2023,19.1744633,2.49268023,21.6671436,March
+Application #8,Amazon Simple Notification Service,4/1/2022,4/30/2022,27.6564703,3.59534114,31.2518115,April
+Application #1,AWS Data Transfer,2/1/2023,2/28/2023,17.1744607,2.23267989,19.4071406,February
+Application #5,Amazon Simple Queue Service,1/1/2023,1/31/2023,51.56443,6.7033759,58.2678059,January
+Application #14,AWS CloudTrail,5/1/2022,5/31/2022,2.66185706,0.34604142,3.00789847,May
+Application #10,Amazon Simple Queue Service,11/1/2022,11/30/2022,19.5531669,2.54191169,22.0950786,November
+Application #2,Amazon Elastic Compute Cloud,5/1/2022,5/31/2022,20.5832916,2.67582791,23.2591195,May
+Application #12,AWS Data Transfer,4/1/2022,4/30/2022,19.3363224,2.51372191,21.8500443,April
+Application #11,Savings Plans for AWS Compute usage,9/1/2022,9/30/2022,39.8551416,5.18116841,45.0363101,September
+Application #6,Amazon Simple Notification Service,8/1/2022,8/31/2022,36.8708715,4.79321329,41.6640848,August
+Application #13,Amazon GuardDuty,2/1/2023,2/28/2023,28.2731587,3.67551063,31.9486693,February
+Application #6,AWS Data Transfer,3/1/2023,3/31/2023,51.2324071,6.66021293,57.89262,March
+Application #10,AWS Config,10/1/2022,10/31/2022,6.04482282,0.78582697,6.83064979,October
+Application #7,Amazon Simple Notification Service,12/1/2022,12/31/2022,7.56404885,0.98332635,8.5473752,December
+Application #11,Amazon Simple Queue Service,10/1/2022,10/31/2022,34.9603909,4.54485082,39.5052417,October
+Application #14,AWS Data Transfer,10/1/2022,10/31/2022,22.2245607,2.88919289,25.1137536,October
+Application #14,Amazon CloudFront,8/1/2022,8/31/2022,36.8118329,4.78553828,41.5973712,August
+Application #2,AWS Support (Business),2/1/2023,2/28/2023,32.2861915,4.19720489,36.4833964,February
+Application #3,Amazon CloudFront,9/1/2022,9/30/2022,40.7449068,5.29683788,46.0417446,September
+Application #9,AWS Key Management Service,6/1/2022,6/30/2022,24.8877833,3.23541183,28.1231951,June
+Application #13,AWS Key Management Service,10/1/2022,10/31/2022,39.8161168,5.17609518,44.992212,October
+Application #14,AWS Data Transfer,10/1/2022,10/31/2022,25.7906101,3.35277931,29.1433894,October
+Application #8,AWS Data Transfer,5/1/2022,5/31/2022,33.306221,4.32980872,37.6360297,May
+Application #2,Amazon Elastic Compute Cloud,1/1/2023,1/31/2023,53.4550135,6.94915175,60.4041652,January
+Application #4,AWS Config,10/1/2022,10/31/2022,45.4202132,5.90462772,51.324841,October
+Application #5,AWS Key Management Service,10/1/2022,10/31/2022,21.1373123,2.7478506,23.8851629,October
+Application #2,AWS Config,3/1/2023,3/31/2023,23.3574317,3.03646613,26.3938979,March
+Application #13,AWS CloudTrail,1/1/2023,1/31/2023,9.4111942,1.22345525,10.6346494,January
+Application #8,Amazon Simple Notification Service,12/1/2022,12/31/2022,42.5038152,5.52549597,48.0293112,December
+Application #2,AWS Data Transfer,12/1/2022,12/31/2022,46.6517134,6.06472274,52.7164362,December
+Application #4,AWS Key Management Service,8/1/2022,8/31/2022,11.1341422,1.44743849,12.5815807,August
+Application #10,Amazon Simple Storage Service,8/1/2022,8/31/2022,42.5820087,5.53566114,48.1176699,August
+Application #12,AWS CloudTrail,1/1/2023,1/31/2023,8.82720751,1.14753698,9.97474448,January
+Application #2,Amazon Elastic Compute Cloud,9/1/2022,9/30/2022,32.3887772,4.21054104,36.5993182,September
+Application #10,AWS Data Transfer,2/1/2023,2/28/2023,44.9696576,5.84605549,50.8157131,February
+Application #1,Amazon GuardDuty,10/1/2022,10/31/2022,31.3975495,4.08168143,35.4792309,October
+Application #7,AWS Data Transfer,2/1/2023,2/28/2023,22.4061494,2.91279942,25.3189488,February
+Application #8,AWS Data Transfer,9/1/2022,9/30/2022,5.87794017,0.76413222,6.64207239,September
+Application #13,Amazon GuardDuty,4/1/2022,4/30/2022,4.10932379,0.53421209,4.64353588,April
+Application #14,AWS Data Transfer,11/1/2022,11/30/2022,6.78500293,0.88205038,7.66705331,November
+Application #11,Amazon Simple Notification Service,7/1/2022,7/31/2022,10.1593775,1.32071908,11.4800966,July
+Application #14,AWS CloudTrail,12/1/2022,12/31/2022,41.7728914,5.43047589,47.2033673,December
+Application #5,AmazonCloudWatch,12/1/2022,12/31/2022,26.0779762,3.39013691,29.4681131,December
+Application #2,AWS Data Transfer,5/1/2022,5/31/2022,5.28648293,0.68724278,5.97372571,May
+Application #12,AWS Config,6/1/2022,6/30/2022,25.0910622,3.26183809,28.3529003,June
+Application #2,Amazon Simple Queue Service,12/1/2022,12/31/2022,23.6121225,3.06957592,26.6816984,December
+Application #9,AWS Config,8/1/2022,8/31/2022,9.39453889,1.22129006,10.615829,August
+Application #5,AWS Data Transfer,5/1/2022,5/31/2022,28.582266,3.71569458,32.2979606,May
+Application #10,Amazon Simple Notification Service,7/1/2022,7/31/2022,19.9042003,2.58754604,22.4917463,July
+Application #3,Amazon CloudFront,9/1/2022,9/30/2022,19.9007833,2.58710183,22.4878852,September
+Application #2,Amazon Simple Notification Service,3/1/2023,3/31/2023,21.5383716,2.79998831,24.33836,March
+Application #1,AWS Data Transfer,1/1/2023,1/31/2023,33.3628484,4.33717029,37.7000187,January
+Application #14,Amazon Simple Queue Service,1/1/2023,1/31/2023,40.2592606,5.23370387,45.4929644,January
+Application #2,AWS Data Transfer,2/1/2023,2/28/2023,26.7500137,3.47750178,30.2275154,February
+Application #1,AWS Key Management Service,4/1/2022,4/30/2022,26.7333704,3.47533815,30.2087086,April
+Application #9,AWS Data Transfer,12/1/2022,12/31/2022,34.0630575,4.42819748,38.491255,December
+Application #14,Amazon CloudFront,4/1/2022,4/30/2022,24.6794335,3.20832635,27.8877598,April
+Application #3,AWS CloudTrail,10/1/2022,10/31/2022,45.1876899,5.87439969,51.0620896,October
+Application #1,AWS Data Transfer,8/1/2022,8/31/2022,44.8892997,5.83560896,50.7249086,August
+Application #10,AWS Config,11/1/2022,11/30/2022,36.6071584,4.7589306,41.366089,November
+Application #10,AWS Global Accelerator,10/1/2022,10/31/2022,16.1057962,2.09375351,18.1995497,October
+Application #9,AWS Data Transfer,9/1/2022,9/30/2022,16.0963536,2.09252596,18.1888795,September
+Application #11,AWS Key Management Service,12/1/2022,12/31/2022,41.6163399,5.41012419,47.0264641,December
+Application #1,AWS Data Transfer,5/1/2022,5/31/2022,35.9092131,4.6681977,40.5774108,May
+Application #10,AWS Global Accelerator,12/1/2022,12/31/2022,16.2490241,2.11237314,18.3613973,December
+Application #7,Amazon Simple Queue Service,7/1/2022,7/31/2022,13.557182,1.76243366,15.3196156,July
+Application #3,AWS Key Management Service,10/1/2022,10/31/2022,36.1498612,4.69948196,40.8493432,October
+Application #9,Amazon Elastic Compute Cloud,8/1/2022,8/31/2022,24.7092899,3.21220769,27.9214976,August
+Application #5,AWS Key Management Service,3/1/2023,3/31/2023,26.1362815,3.39771659,29.5339981,March
+Application #9,AWS Data Transfer,3/1/2023,3/31/2023,21.9904134,2.85875375,24.8491672,March
+Application #13,AWS Config,2/1/2023,2/28/2023,39.4071059,5.12292376,44.5300296,February
+Application #8,AWS CloudTrail,11/1/2022,11/30/2022,15.3139487,1.99081333,17.3047621,November
+Application #6,AWS Data Transfer,4/1/2022,4/30/2022,22.4179738,2.91433659,25.3323104,April
+Application #8,AWS Config,8/1/2022,8/31/2022,31.8769281,4.14400065,36.0209288,August
+Application #4,AWS Data Transfer,6/1/2022,6/30/2022,5.54167573,0.72041785,6.26209358,June
+Application #8,AWS Secrets Manager,8/1/2022,8/31/2022,24.1870647,3.14431841,27.3313831,August
+Application #13,AWS Application #7 Hub,9/1/2022,9/30/2022,2.79465394,0.36330501,3.15795895,September
+Application #6,Amazon Simple Queue Service,8/1/2022,8/31/2022,28.3417798,3.68443138,32.0262112,August
+Application #12,AWS Data Transfer,12/1/2022,12/31/2022,23.0622543,2.99809306,26.0603474,December
+Application #5,AWS Data Transfer,10/1/2022,10/31/2022,45.3638631,5.8973022,51.2611653,October
+Application #13,Amazon Simple Notification Service,1/1/2023,1/31/2023,14.5784938,1.89520419,16.473698,January
+Application #11,Amazon Simple Notification Service,2/1/2023,2/28/2023,33.5436058,4.36066876,37.9042746,February
+Application #1,AWS Key Management Service,3/1/2023,3/31/2023,16.8461518,2.18999973,19.0361515,March
+Application #9,Amazon Elastic Compute Cloud,7/1/2022,7/31/2022,33.5198139,4.35757581,37.8773898,July
+Application #8,AWS Data Transfer,12/1/2022,12/31/2022,12.1595854,1.5807461,13.7403315,December
+Application #11,AWS Data Transfer,6/1/2022,6/30/2022,44.6851158,5.80906505,50.4941808,June
+Application #6,AWS Secrets Manager,9/1/2022,9/30/2022,6.19827576,0.80577585,7.00405161,September
+Application #14,Amazon Simple Notification Service,3/1/2023,3/31/2023,16.1049117,2.09363851,18.1985502,March
+Application #2,AWS Data Transfer,4/1/2022,4/30/2022,42.1647531,5.48141791,47.646171,April
+Application #4,AWS Application #7 Hub,6/1/2022,6/30/2022,32.7843915,4.26197089,37.0463624,June
+Application #14,Amazon CloudFront,5/1/2022,5/31/2022,7.37634756,0.95892518,8.33527274,May
+Application #12,AmazonCloudWatch,8/1/2022,8/31/2022,31.1126255,4.04464132,35.1572669,August
+Application #11,AWS Data Transfer,11/1/2022,11/30/2022,10.3686827,1.34792875,11.7166115,November
+Application #10,AWS Application #7 Hub,9/1/2022,9/30/2022,3.66061927,0.47588051,4.13649977,September
+Application #4,AWS Data Transfer,7/1/2022,7/31/2022,41.8190529,5.43647687,47.2555297,July
+Application #6,AWS Key Management Service,9/1/2022,9/30/2022,3.76842919,0.48989579,4.25832498,September
+Application #14,AWS Key Management Service,12/1/2022,12/31/2022,16.7443086,2.17676012,18.9210687,December
+Application #11,AWS CloudTrail,11/1/2022,11/30/2022,22.3390026,2.90407034,25.2430729,November
+Application #10,AWS Data Transfer,2/1/2023,2/28/2023,8.02565492,1.04333514,9.06899006,February
+Application #9,AWS Data Transfer,7/1/2022,7/31/2022,1.90621489,0.24780794,2.15402282,July
+Application #12,Amazon Elastic Container Service,11/1/2022,11/30/2022,27.1073783,3.52395918,30.6313375,November
+Application #5,AWS Data Transfer,6/1/2022,6/30/2022,26.0754619,3.38981005,29.4652719,June
+Application #12,AWS Key Management Service,6/1/2022,6/30/2022,34.3844898,4.46998367,38.8544735,June
+Application #5,AWS CloudTrail,5/1/2022,5/31/2022,0.6017305,0.07822497,0.67995547,May
+Application #10,AWS Global Accelerator,7/1/2022,7/31/2022,19.4377002,2.52690103,21.9646013,July
+Application #12,AmazonCloudWatch,6/1/2022,6/30/2022,5.94209785,0.77247272,6.71457057,June
+Application #5,Amazon Elastic Compute Cloud,10/1/2022,10/31/2022,28.9232348,3.76002052,32.6832553,October
+Application #9,Elastic Load Balancing,7/1/2022,7/31/2022,41.5913532,5.40687592,46.9982291,July
+Application #7,AWS CloudTrail,1/1/2023,1/31/2023,52.8681277,6.8728566,59.7409843,January
+Application #6,AWS Data Transfer,7/1/2022,7/31/2022,34.1985367,4.44580978,38.6443465,July
+Application #4,AWS Data Transfer,2/1/2023,2/28/2023,47.2028851,6.13637507,53.3392602,February
+Application #6,AWS Data Transfer,4/1/2022,4/30/2022,39.511709,5.13652216,44.6482311,April
+Application #9,AWS Application #7 Hub,2/1/2023,2/28/2023,15.3420738,1.9944696,17.3365434,February
+Application #11,Amazon Simple Queue Service,6/1/2022,6/30/2022,15.7893378,2.05261392,17.8419518,June
+Application #8,AWS Data Transfer,2/1/2023,2/28/2023,52.1792917,6.78330792,58.9625996,February
+Application #6,AWS Key Management Service,11/1/2022,11/30/2022,3.57740223,0.46506229,4.04246452,November
+Application #10,AWS Global Accelerator,5/1/2022,5/31/2022,15.4910211,2.01383275,17.5048539,May
+Application #12,AmazonCloudWatch,9/1/2022,9/30/2022,31.0834714,4.04085128,35.1243226,September
+Application #3,Elastic Load Balancing,10/1/2022,10/31/2022,24.9444094,3.24277323,28.1871827,October
+Application #3,Amazon Simple Notification Service,8/1/2022,8/31/2022,35.9310572,4.67103743,40.6020946,August
+Application #3,Amazon Simple Notification Service,4/1/2022,4/30/2022,40.4499921,5.25849898,45.7084911,April
+Application #10,AWS Key Management Service,7/1/2022,7/31/2022,27.6412503,3.59336254,31.2346128,July
+Application #7,AWS Data Transfer,4/1/2022,4/30/2022,43.2460475,5.62198617,48.8680336,April
+Application #6,AmazonCloudWatch,7/1/2022,7/31/2022,8.83296575,1.14828555,9.9812513,July
+Application #11,Amazon GuardDuty,9/1/2022,9/30/2022,13.268828,1.72494764,14.9937757,September
+Application #5,Amazon EC2 Container Registry (ECR),4/1/2022,4/30/2022,42.1200746,5.4756097,47.5956843,April
+Application #7,Amazon GuardDuty,11/1/2022,11/30/2022,37.1794658,4.83333055,42.0127963,November
+Application #1,Amazon GuardDuty,5/1/2022,5/31/2022,18.7940897,2.44323167,21.2373214,May
+Application #9,AWS Secrets Manager,10/1/2022,10/31/2022,26.8850768,3.49505999,30.3801368,October
+Application #6,AWS Data Transfer,7/1/2022,7/31/2022,2.56641941,0.33363452,2.90005393,July
+Application #4,AmazonCloudWatch,7/1/2022,7/31/2022,32.0680285,4.16884371,36.2368722,July
+Application #4,AWS CloudTrail,8/1/2022,8/31/2022,42.9391236,5.58208607,48.5212097,August
+Application #2,Amazon Simple Queue Service,4/1/2022,4/30/2022,43.2118844,5.61754498,48.8294294,April
+Application #4,AWS Data Transfer,6/1/2022,6/30/2022,5.44288935,0.70757562,6.15046497,June
+Application #1,AWS Data Transfer,12/1/2022,12/31/2022,29.0523916,3.7768109,32.8292025,December
+Application #11,AWS CodePipeline,6/1/2022,6/30/2022,6.67429411,0.86765823,7.54195235,June
+Application #2,AWS Data Transfer,11/1/2022,11/30/2022,3.02166908,0.39281698,3.41448606,November
+Application #8,AWS Data Transfer,4/1/2022,4/30/2022,11.8303816,1.53794961,13.3683312,April
+Application #4,Amazon Elastic Compute Cloud,9/1/2022,9/30/2022,30.3762477,3.9489122,34.3251599,September
+Application #13,AWS CloudTrail,5/1/2022,5/31/2022,4.51085562,0.58641123,5.09726685,May
+Application #10,Amazon Simple Storage Service,12/1/2022,12/31/2022,46.8680197,6.09284257,52.9608623,December
+Application #11,AWS Key Management Service,3/1/2023,3/31/2023,43.4011397,5.64214816,49.0432879,March
+Application #8,AWS Data Transfer,5/1/2022,5/31/2022,7.34650359,0.95504547,8.30154906,May
+Application #12,AWS Key Management Service,5/1/2022,5/31/2022,8.42876798,1.09573984,9.52450782,May
+Application #8,AWS Data Transfer,9/1/2022,9/30/2022,29.5737795,3.84459134,33.4183708,September
+Application #6,CodeBuild,8/1/2022,8/31/2022,14.4919396,1.88395215,16.3758918,August
+Application #5,AWS CloudTrail,1/1/2023,1/31/2023,39.9106153,5.18837999,45.0989953,January
+Application #9,AWS Data Transfer,5/1/2022,5/31/2022,10.9366296,1.42176185,12.3583914,May
+Application #7,AWS Lambda,3/1/2023,3/31/2023,54.1759954,7.0428794,61.2188747,March
+Application #14,AWS Systems Manager,4/1/2022,4/30/2022,37.2439252,4.84171027,42.0856354,April
+Application #14,Amazon GuardDuty,3/1/2023,3/31/2023,36.7024149,4.77131394,41.4737288,March
+Application #12,AWS Data Transfer,3/1/2023,3/31/2023,16.2252218,2.10927883,18.3345006,March
+Application #12,Amazon CloudFront,4/1/2022,4/30/2022,6.70672573,0.87187435,7.57860008,April
+Application #9,AWS Data Transfer,7/1/2022,7/31/2022,15.3953538,2.001396,17.3967498,July
+Application #4,AWS Data Transfer,5/1/2022,5/31/2022,36.4407573,4.73729845,41.1780558,May
+Application #9,AmazonCloudWatch,2/1/2023,2/28/2023,32.2894067,4.19762287,36.4870296,February
+Application #12,AWS Data Transfer,8/1/2022,8/31/2022,1.97549563,0.25681443,2.23231006,August
+Application #4,AWS CloudTrail,3/1/2023,3/31/2023,52.2517231,6.792724,59.0444471,March
+Application #14,Amazon Elastic Compute Cloud,7/1/2022,7/31/2022,35.6155467,4.63002107,40.2455678,July
+Application #13,AWS Data Transfer,9/1/2022,9/30/2022,29.5114189,3.83648445,33.3479033,September
+Application #14,Amazon CloudFront,1/1/2023,1/31/2023,11.2972964,1.46864853,12.7659449,January
+Application #5,Amazon Elastic Compute Cloud,8/1/2022,8/31/2022,38.8065,5.044845,43.851345,August
+Application #10,Amazon GuardDuty,7/1/2022,7/31/2022,41.7992194,5.43389852,47.2331179,July
+Application #13,AWS Data Transfer,10/1/2022,10/31/2022,7.15075041,0.92959755,8.08034796,October
+Application #14,AWS CloudTrail,2/1/2023,2/28/2023,23.662339,3.07610406,26.738443,February
+Application #2,Amazon Simple Queue Service,7/1/2022,7/31/2022,13.6280929,1.77165208,15.399745,July
+Application #8,Amazon GuardDuty,1/1/2023,1/31/2023,41.8883421,5.44548448,47.3338266,January
+Application #10,AWS Data Transfer,12/1/2022,12/31/2022,24.9493699,3.24341808,28.1927879,December
+Application #7,Amazon Simple Queue Service,5/1/2022,5/31/2022,16.8565795,2.19135533,19.0479348,May
+Application #14,AWS Application #7 Hub,9/1/2022,9/30/2022,9.74021855,1.26622841,11.006447,September
+Application #8,AWS Support (Business),11/1/2022,11/30/2022,13.7053835,1.78169986,15.4870834,November
+Application #5,Amazon Route 53,3/1/2023,3/31/2023,26.1764676,3.40294079,29.5794084,March
+Application #8,AWS Application #7 Hub,10/1/2022,10/31/2022,10.0129725,1.30168642,11.3146589,October
+Application #6,AWS CloudTrail,4/1/2022,4/30/2022,4.83143357,0.62808636,5.45951993,April
+Application #6,AWS Data Transfer,6/1/2022,6/30/2022,32.8836749,4.27487774,37.1585527,June
+Application #4,Amazon FSx,5/1/2022,5/31/2022,32.8471546,4.2701301,37.1172847,May
+Application #12,Amazon Simple Notification Service,10/1/2022,10/31/2022,18.4652941,2.40048824,20.8657824,October
+Application #14,AWS Support (Business),5/1/2022,5/31/2022,35.7678816,4.64982461,40.4177062,May
+Application #14,AWS Data Transfer,10/1/2022,10/31/2022,30.4687097,3.96093226,34.429642,October
+Application #9,AWS CloudTrail,2/1/2023,2/28/2023,33.6000942,4.36801225,37.9681064,February
+Application #8,Amazon GuardDuty,2/1/2023,2/28/2023,13.7996622,1.79395609,15.5936183,February
+Application #3,AWS Data Transfer,5/1/2022,5/31/2022,43.2942648,5.62825443,48.9225193,May
+Application #6,AWS Data Transfer,10/1/2022,10/31/2022,15.4896321,2.01365218,17.5032843,October
+Application #5,Amazon GuardDuty,5/1/2022,5/31/2022,35.2471445,4.58212878,39.8292733,May
+Application #1,Amazon Simple Notification Service,5/1/2022,5/31/2022,17.6540514,2.29502668,19.9490781,May
+Application #12,AWS Key Management Service,8/1/2022,8/31/2022,1.20234884,0.15630535,1.35865419,August
+Application #7,Amazon Simple Queue Service,3/1/2023,3/31/2023,46.7853873,6.08210035,52.8674877,March
+Application #14,AWS Data Transfer,12/1/2022,12/31/2022,24.5306586,3.18898562,27.7196442,December
+Application #8,AWS Data Transfer,1/1/2023,1/31/2023,10.2569937,1.33340918,11.5904029,January
+Application #13,AWS Data Transfer,2/1/2023,2/28/2023,6.22104739,0.80873616,7.02978355,February
+Application #9,AWS Key Management Service,9/1/2022,9/30/2022,22.5883069,2.9364799,25.5247868,September
+Application #4,AWS Systems Manager,7/1/2022,7/31/2022,7.2686811,0.94492854,8.21360964,July
+Application #3,Amazon Simple Notification Service,6/1/2022,6/30/2022,17.8392497,2.31910246,20.1583521,June
+Application #10,AWS Global Accelerator,5/1/2022,5/31/2022,28.5966202,3.71756062,32.3141808,May
+Application #5,AmazonCloudWatch,9/1/2022,9/30/2022,5.75779977,0.74851397,6.50631374,September
+Application #12,Elastic Load Balancing,8/1/2022,8/31/2022,14.4672799,1.88074639,16.3480263,August
+Application #6,AWS Data Transfer,10/1/2022,10/31/2022,40.3738871,5.24860532,45.6224924,October
+Application #5,AWS Data Transfer,7/1/2022,7/31/2022,15.8966018,2.06655823,17.96316,July
+Application #8,AWS Support (Business),4/1/2022,4/30/2022,35.790974,4.65282661,40.4438006,April
+Application #12,AWS CloudTrail,3/1/2023,3/31/2023,54.1961385,7.04549801,61.2416365,March
+Application #9,Amazon GuardDuty,2/1/2023,2/28/2023,1.41567154,0.1840373,1.59970884,February
+Application #13,AWS Data Transfer,8/1/2022,8/31/2022,22.932258,2.98119354,25.9134515,August
+Application #3,Amazon Virtual Private Cloud,11/1/2022,11/30/2022,38.8721675,5.05338178,43.9255493,November
+Application #9,AWS Data Transfer,6/1/2022,6/30/2022,17.1933862,2.2351402,19.4285264,June
+Application #3,AWS Key Management Service,2/1/2023,2/28/2023,14.0157074,1.82204196,15.8377494,February
+Application #8,AWS Data Transfer,11/1/2022,11/30/2022,2.53127471,0.32906571,2.86034043,November
+Application #1,AWS Data Transfer,7/1/2022,7/31/2022,7.60834411,0.98908474,8.59742885,July
+Application #14,AWS Data Transfer,6/1/2022,6/30/2022,21.610712,2.80939256,24.4201045,June
+Application #2,Amazon Route 53,12/1/2022,12/31/2022,19.2382563,2.50097332,21.7392296,December
+Application #1,AWS Data Transfer,3/1/2023,3/31/2023,4.34730976,0.56515027,4.91246003,March
+Application #14,AWS Data Transfer,10/1/2022,10/31/2022,3.54720159,0.46113621,4.0083378,October
+Application #4,AWS Config,6/1/2022,6/30/2022,35.4329753,4.60628679,40.0392621,June
+Application #3,AWS Data Transfer,7/1/2022,7/31/2022,27.0208038,3.51270449,30.5335082,July
+Application #3,Amazon Simple Notification Service,5/1/2022,5/31/2022,23.3242043,3.03214655,26.3563508,May
+Application #6,AWS Data Transfer,1/1/2023,1/31/2023,45.4313272,5.90607253,51.3373997,January
+Application #10,AWS Data Transfer,8/1/2022,8/31/2022,29.0435802,3.77566542,32.8192456,August
+Application #9,AWS Data Transfer,5/1/2022,5/31/2022,9.53349758,1.23935469,10.7728523,May
+Application #9,AWS Data Transfer,9/1/2022,9/30/2022,37.9860954,4.93819241,42.9242878,September
+Application #5,AWS Data Transfer,5/1/2022,5/31/2022,41.3339373,5.37341185,46.7073492,May
+Application #6,Amazon Route 53,10/1/2022,10/31/2022,34.6971216,4.5106258,39.2077474,October
+Application #6,Elastic Load Balancing,8/1/2022,8/31/2022,3.2486574,0.42232546,3.67098287,August
+Application #10,AWS Data Transfer,7/1/2022,7/31/2022,32.1021998,4.17328597,36.2754858,July
+Application #9,AWS Data Transfer,1/1/2023,1/31/2023,47.5803925,6.18545102,53.7658435,January
+Application #12,AWS CloudTrail,6/1/2022,6/30/2022,21.6591618,2.81569104,24.4748529,June
+Application #14,AWS Data Transfer,8/1/2022,8/31/2022,17.451847,2.26874011,19.7205871,August
+Application #14,Amazon Elastic Compute Cloud,8/1/2022,8/31/2022,13.7248613,1.78423196,15.5090932,August
+Application #2,Amazon CloudFront,9/1/2022,9/30/2022,40.8057917,5.30475292,46.1105446,September
+Application #6,Amazon Simple Queue Service,8/1/2022,8/31/2022,3.81743628,0.49626672,4.313703,August
+Application #6,AWS Data Transfer,12/1/2022,12/31/2022,49.2995667,6.40894368,55.7085104,December
+Application #14,AWS Data Transfer,10/1/2022,10/31/2022,53.4990928,6.95488207,60.4539749,October
+Application #6,Amazon Kinesis Firehose,6/1/2022,6/30/2022,41.1416707,5.34841719,46.4900879,June
+Application #2,AWS Secrets Manager,2/1/2023,2/28/2023,54.7058401,7.11175921,61.8175993,February
+Application #8,Amazon FSx,6/1/2022,6/30/2022,40.1577832,5.22051181,45.378295,June
+Application #1,AmazonCloudWatch,12/1/2022,12/31/2022,20.1328491,2.61727038,22.7501195,December
+Application #6,AWS Data Transfer,9/1/2022,9/30/2022,16.3968708,2.1315932,18.528464,September
+Application #4,AWS Data Transfer,8/1/2022,8/31/2022,2.05351436,0.26695687,2.32047123,August
+Application #3,AWS Data Transfer,5/1/2022,5/31/2022,29.8218721,3.87684338,33.6987155,May
+Application #13,Amazon GuardDuty,5/1/2022,5/31/2022,30.4552279,3.95917963,34.4144076,May
+Application #5,Amazon Simple Queue Service,6/1/2022,6/30/2022,15.4375662,2.00688361,17.4444499,June
+Application #3,Amazon Simple Storage Service,4/1/2022,4/30/2022,7.07369752,0.91958068,7.99327819,April
+Application #2,AWS Data Transfer,7/1/2022,7/31/2022,16.6439342,2.16371145,18.8076457,July
+Application #6,AWS Lambda,12/1/2022,12/31/2022,11.2799556,1.46639422,12.7463498,December
+Application #1,AWS Data Transfer,3/1/2023,3/31/2023,25.900223,3.36702899,29.2672519,March
+Application #13,Amazon Simple Notification Service,6/1/2022,6/30/2022,43.0759688,5.59987595,48.6758448,June
+Application #13,AWS Data Transfer,2/1/2023,2/28/2023,10.7271415,1.39452839,12.1216699,February
+Application #10,AWS Data Transfer,8/1/2022,8/31/2022,19.2381919,2.50096495,21.7391569,August
+Application #14,Amazon Elastic Compute Cloud,2/1/2023,2/28/2023,36.1777684,4.70310989,40.8808783,February
+Application #8,AWS CloudTrail,1/1/2023,1/31/2023,3.81933493,0.49651354,4.31584847,January
+Application #3,AmazonCloudWatch,2/1/2023,2/28/2023,18.835822,2.44865686,21.2844788,February
+Application #9,Amazon EC2 Container Registry (ECR),8/1/2022,8/31/2022,17.8747289,2.32371475,20.1984436,August
+Application #6,Amazon GuardDuty,9/1/2022,9/30/2022,22.4930574,2.92409746,25.4171549,September
+Application #5,AWS Config,8/1/2022,8/31/2022,26.3674749,3.42777174,29.7952466,August
+Application #8,AmazonCloudWatch,4/1/2022,4/30/2022,28.7382732,3.73597552,32.4742488,April
+Application #8,Amazon Simple Notification Service,10/1/2022,10/31/2022,34.7765439,4.5209507,39.2974946,October
+Application #5,AWS CloudTrail,8/1/2022,8/31/2022,43.1519407,5.60975229,48.761693,August
+Application #7,AWS Data Transfer,1/1/2023,1/31/2023,31.2733458,4.06553495,35.3388807,January
+Application #5,AWS Data Transfer,12/1/2022,12/31/2022,49.9989416,6.49986241,56.498804,December
+Application #10,AWS Global Accelerator,9/1/2022,9/30/2022,28.3890719,3.69057935,32.0796513,September
+Application #10,Elastic Load Balancing,1/1/2023,1/31/2023,36.3889212,4.73055976,41.119481,January
+Application #5,Amazon Simple Notification Service,7/1/2022,7/31/2022,21.0480372,2.73624483,23.784282,July
+Application #3,Amazon Elastic Compute Cloud,1/1/2023,1/31/2023,47.6296726,6.19185744,53.8215301,January
+Application #4,AWS Data Transfer,10/1/2022,10/31/2022,43.7724991,5.69042488,49.462924,October
+Application #12,Amazon GuardDuty,9/1/2022,9/30/2022,7.35039423,0.95555125,8.30594548,September
+Application #4,AWS Config,1/1/2023,1/31/2023,1.49234313,0.19400461,1.68634774,January
+Application #9,Amazon Relational Database Service,6/1/2022,6/30/2022,17.2969319,2.24860114,19.545533,June
+Application #9,AWS Backup,6/1/2022,6/30/2022,26.4230227,3.43499296,29.8580157,June
+Application #12,Amazon Elastic Compute Cloud,9/1/2022,9/30/2022,9.5201534,1.23761994,10.7577734,September
+Application #12,AWS Data Transfer,7/1/2022,7/31/2022,7.17884489,0.93324984,8.11209472,July
+Application #10,AWS Data Transfer,6/1/2022,6/30/2022,18.0156607,2.34203589,20.3576966,June
+Application #9,AWS CloudTrail,5/1/2022,5/31/2022,18.5519846,2.411758,20.9637426,May
+Application #2,AmazonCloudWatch,1/1/2023,1/31/2023,21.5970328,2.80761427,24.4046471,January
+Application #2,AmazonCloudWatch,8/1/2022,8/31/2022,9.23843337,1.20099634,10.4394297,August
+Application #2,AWS Data Transfer,5/1/2022,5/31/2022,8.30802644,1.08004344,9.38806988,May
+Application #2,AWS Data Transfer,4/1/2022,4/30/2022,43.0344161,5.59447409,48.6288902,April
+Application #9,Amazon Elastic Compute Cloud,7/1/2022,7/31/2022,22.9103677,2.97834781,25.8887156,July
+Application #9,AWS Data Transfer,11/1/2022,11/30/2022,33.251404,4.32268252,37.5740865,November
+Application #5,AmazonCloudWatch,8/1/2022,8/31/2022,29.9792814,3.89730658,33.876588,August
+Application #5,AWS CloudTrail,12/1/2022,12/31/2022,46.8538461,6.09099999,52.9448461,December
+Application #9,AmazonCloudWatch,5/1/2022,5/31/2022,43.6920815,5.67997059,49.372052,May
+Application #13,AWS Data Transfer,10/1/2022,10/31/2022,25.9467951,3.37308336,29.3198785,October
+Application #8,AWS Data Transfer,1/1/2023,1/31/2023,51.7951437,6.73336868,58.5285124,January
+Application #1,AWS Lambda,10/1/2022,10/31/2022,16.5838662,2.1559026,18.7397688,October
+Application #6,AWS Config,4/1/2022,4/30/2022,42.1467793,5.47908131,47.6258606,April
+Application #4,AWS Config,10/1/2022,10/31/2022,5.40055957,0.70207274,6.10263231,October
+Application #12,AWS Config,10/1/2022,10/31/2022,11.907549,1.54798137,13.4555304,October
+Application #3,Amazon Simple Queue Service,3/1/2023,3/31/2023,19.4177152,2.52430298,21.9420182,March
+Application #14,AWS Config,8/1/2022,8/31/2022,7.65297446,0.99488668,8.64786114,August
+Application #5,AWS Data Transfer,6/1/2022,6/30/2022,40.0034187,5.20044444,45.2038632,June
+Application #14,Amazon CloudFront,2/1/2023,2/28/2023,37.7437631,4.90668921,42.6504523,February
+Application #14,Amazon Simple Queue Service,2/1/2023,2/28/2023,39.0110069,5.0714309,44.0824378,February
+Application #14,AWS Data Transfer,5/1/2022,5/31/2022,41.8447513,5.43981767,47.284569,May
+Application #3,Amazon CloudFront,6/1/2022,6/30/2022,10.6010203,1.37813263,11.9791529,June
+Application #9,AWS Data Transfer,11/1/2022,11/30/2022,21.9040436,2.84752566,24.7515692,November
+Application #4,AWS Data Transfer,1/1/2023,1/31/2023,53.3753305,6.93879296,60.3141234,January
+Application #3,AWS Data Transfer,3/1/2023,3/31/2023,12.6264189,1.64143446,14.2678534,March
+Application #5,Amazon Elastic Compute Cloud,5/1/2022,5/31/2022,44.6295258,5.80183836,50.4313642,May
+Application #3,AWS Data Transfer,7/1/2022,7/31/2022,29.2082797,3.79707636,33.0053561,July
+Application #4,AWS Key Management Service,7/1/2022,7/31/2022,20.3055851,2.63972606,22.9453112,July
+Application #11,Amazon Simple Notification Service,4/1/2022,4/30/2022,11.2545331,1.4630893,12.7176224,April
+Application #10,AWS Data Transfer,3/1/2023,3/31/2023,19.2530834,2.50290085,21.7559843,March
+Application #7,AWS Data Transfer,4/1/2022,4/30/2022,18.1438398,2.35869917,20.5025389,April
+Application #2,Amazon Simple Queue Service,2/1/2023,2/28/2023,9.14183916,1.18843909,10.3302783,February
+Application #11,AWS Step Functions,2/1/2023,2/28/2023,16.5738417,2.15459942,18.7284411,February
+Application #10,Amazon Virtual Private Cloud,4/1/2022,4/30/2022,32.1147373,4.17491585,36.2896532,April
+Application #8,Amazon Simple Storage Service,11/1/2022,11/30/2022,28.6789562,3.72826431,32.4072205,November
+Application #6,Amazon FSx,4/1/2022,4/30/2022,17.6450918,2.29386193,19.9389537,April
+Application #14,AWS Key Management Service,2/1/2023,2/28/2023,51.9633954,6.7552414,58.7186368,February
+Application #5,AWS Data Transfer,3/1/2023,3/31/2023,29.8608637,3.88191228,33.7427759,March
+Application #14,AWS CloudTrail,2/1/2023,2/28/2023,4.2629012,0.55417716,4.81707836,February
+Application #8,Amazon QuickSight,12/1/2022,12/31/2022,5.5665659,0.72365357,6.29021947,December
+Application #5,AWS Data Transfer,8/1/2022,8/31/2022,43.6729083,5.67747807,49.3503863,August
+Application #9,AWS Data Transfer,7/1/2022,7/31/2022,12.3173844,1.60125997,13.9186443,July
+Application #12,Amazon Route 53,12/1/2022,12/31/2022,32.3085229,4.20010798,36.5086309,December
+Application #10,AWS Data Transfer,12/1/2022,12/31/2022,54.2245541,7.04919203,61.2737461,December
+Application #11,AWS Data Transfer,7/1/2022,7/31/2022,29.7221801,3.86388341,33.5860635,July
+Application #12,Amazon Simple Queue Service,11/1/2022,11/30/2022,10.5301155,1.36891502,11.8990306,November
+Application #11,AWS Config,8/1/2022,8/31/2022,36.3978033,4.73171443,41.1295178,August
+Application #10,AWS WAF,10/1/2022,10/31/2022,46.063334,5.98823342,52.0515674,October
+Application #1,AWS Data Transfer,10/1/2022,10/31/2022,42.6648825,5.54643473,48.2113173,October
+Application #9,Amazon Simple Queue Service,9/1/2022,9/30/2022,26.5454042,3.45090254,29.9963067,September
+Application #1,Amazon GuardDuty,12/1/2022,12/31/2022,54.7370513,7.11581667,61.852868,December
+Application #9,AmazonCloudWatch,7/1/2022,7/31/2022,5.61383252,0.72979823,6.34363075,July
+Application #10,AWS Data Transfer,4/1/2022,4/30/2022,27.7652476,3.60948219,31.3747298,April
+Application #14,AWS Config,6/1/2022,6/30/2022,39.0218166,5.07283616,44.0946528,June
+Application #11,AWS Data Transfer,12/1/2022,12/31/2022,34.7001671,4.51102173,39.2111889,December
+Application #10,AWS Data Transfer,4/1/2022,4/30/2022,44.0428968,5.72557658,49.7684733,April
+Application #9,AWS Data Transfer,7/1/2022,7/31/2022,1.65229696,0.21479861,1.86709557,July
+Application #12,Amazon GuardDuty,7/1/2022,7/31/2022,29.8343072,3.87845994,33.7127671,July
+Application #13,AmazonCloudWatch,11/1/2022,11/30/2022,8.72745162,1.13456871,9.86202033,November
+Application #4,Amazon Relational Database Service,12/1/2022,12/31/2022,53.8354855,6.99861312,60.8340987,December
+Application #8,Amazon Virtual Private Cloud,8/1/2022,8/31/2022,18.7978227,2.44371695,21.2415397,August
+Application #6,AWS Config,1/1/2023,1/31/2023,1.95312379,0.25390609,2.20702988,January
+Application #9,Amazon Route 53,4/1/2022,4/30/2022,17.3204859,2.25166316,19.572149,April
+Application #1,AmazonCloudWatch,12/1/2022,12/31/2022,28.0474569,3.64616939,31.6936263,December
+Application #3,AWS Config,6/1/2022,6/30/2022,24.6551292,3.2051668,27.860296,June
+Application #8,Amazon Route 53,6/1/2022,6/30/2022,26.5172916,3.4472479,29.9645395,June
+Application #9,AWS Key Management Service,9/1/2022,9/30/2022,37.6058164,4.88875613,42.4945725,September
+Application #10,AWS Data Transfer,2/1/2023,2/28/2023,54.9613427,7.14497454,62.1063172,February
+Application #13,AWS CloudTrail,12/1/2022,12/31/2022,23.8818891,3.10464559,26.9865347,December
+Application #14,AWS Data Transfer,9/1/2022,9/30/2022,12.7120529,1.65256688,14.3646198,September
+Application #6,AWS Data Transfer,3/1/2023,3/31/2023,16.5524083,2.15181308,18.7042214,March
+Application #1,Amazon Simple Queue Service,6/1/2022,6/30/2022,38.0072896,4.94094765,42.9482373,June
+Application #6,AWS Data Transfer,7/1/2022,7/31/2022,6.34273631,0.82455572,7.16729204,July
+Application #4,AWS Data Transfer,2/1/2023,2/28/2023,45.9306826,5.97098873,51.9016713,February
+Application #6,Amazon Simple Notification Service,9/1/2022,9/30/2022,23.3262006,3.03240608,26.3586067,September
+Application #6,Amazon Simple Storage Service,2/1/2023,2/28/2023,45.0930972,5.86210263,50.9551998,February
+Application #8,AWS Data Transfer,10/1/2022,10/31/2022,16.5307827,2.14900175,18.6797844,October
+Application #11,AWS Key Management Service,9/1/2022,9/30/2022,40.9431659,5.32261157,46.2657775,September
+Application #14,AWS Data Transfer,11/1/2022,11/30/2022,21.8614221,2.84198488,24.703407,November
+Application #9,AWS Data Transfer,5/1/2022,5/31/2022,40.4665875,5.26065637,45.7272438,May
+Application #3,Amazon Simple Storage Service,12/1/2022,12/31/2022,47.3489586,6.15536462,53.5043232,December
+Application #13,AWS Key Management Service,4/1/2022,4/30/2022,31.0476614,4.03619598,35.0838574,April
+Application #9,AWS Config,2/1/2023,2/28/2023,13.9770236,1.81701307,15.7940367,February
+Application #14,Amazon Simple Storage Service,2/1/2023,2/28/2023,20.2612623,2.6339641,22.8952264,February
+Application #10,Amazon Simple Notification Service,12/1/2022,12/31/2022,17.7461189,2.30699545,20.0531143,December
+Application #12,AWS Data Transfer,11/1/2022,11/30/2022,11.6295396,1.51184015,13.1413798,November
+Application #6,AWS Data Transfer,8/1/2022,8/31/2022,35.0618493,4.5580404,39.6198897,August
+Application #12,Amazon Simple Notification Service,6/1/2022,6/30/2022,7.26871552,0.94493302,8.21364854,June
+Application #1,AWS CloudTrail,7/1/2022,7/31/2022,11.2960849,1.46849104,12.764576,July
+Application #3,Amazon Simple Queue Service,10/1/2022,10/31/2022,29.4440743,3.82772966,33.271804,October
+Application #8,AWS Data Transfer,7/1/2022,7/31/2022,27.5730868,3.58450129,31.1575881,July
+Application #2,AWS Data Transfer,6/1/2022,6/30/2022,21.1905657,2.75477354,23.9453392,June
+Application #6,AWS CloudTrail,4/1/2022,4/30/2022,5.13683734,0.66778885,5.80462619,April
+Application #1,AWS Key Management Service,9/1/2022,9/30/2022,4.40726007,0.57294381,4.98020388,September
+Application #13,AWS Data Transfer,11/1/2022,11/30/2022,33.7725567,4.39043237,38.1629891,November
+Application #3,AmazonCloudWatch,2/1/2023,2/28/2023,18.1703168,2.36214118,20.532458,February
+Application #4,Amazon GuardDuty,11/1/2022,11/30/2022,10.5847198,1.37601358,11.9607334,November
+Application #9,AWS Config,10/1/2022,10/31/2022,30.4086501,3.95312451,34.3617746,October
+Application #9,AWS Data Transfer,3/1/2023,3/31/2023,49.3460038,6.41498049,55.7609843,March
+Application #14,Amazon Simple Notification Service,7/1/2022,7/31/2022,26.8201985,3.4866258,30.3068243,July
+Application #8,AWS Application #7 Hub,4/1/2022,4/30/2022,41.4380987,5.38695283,46.8250515,April
+Application #12,Amazon GuardDuty,9/1/2022,9/30/2022,27.2535668,3.54296369,30.7965305,September
+Application #9,AWS Application #7 Hub,3/1/2023,3/31/2023,10.3401645,1.34422139,11.6843859,March
+Application #10,AWS Data Transfer,2/1/2023,2/28/2023,29.2890639,3.80757831,33.0966422,February
+Application #11,AWS Config,12/1/2022,12/31/2022,9.8544316,1.28107611,11.1355077,December
+Application #3,AWS Key Management Service,5/1/2022,5/31/2022,9.8254043,1.27730256,11.1027069,May
+Application #7,Amazon Simple Notification Service,2/1/2023,2/28/2023,13.1659611,1.71157495,14.8775361,February
+Application #8,AmazonCloudWatch,3/1/2023,3/31/2023,50.7715079,6.60029603,57.3718039,March
+Application #3,AWS Data Transfer,4/1/2022,4/30/2022,15.94896,2.0733648,18.0223248,April
+Application #14,Amazon CloudFront,6/1/2022,6/30/2022,40.0674211,5.20876474,45.2761859,June
+Application #1,Amazon Simple Notification Service,6/1/2022,6/30/2022,11.6123585,1.50960661,13.1219651,June
+Application #10,AWS Key Management Service,8/1/2022,8/31/2022,31.3948853,4.08133509,35.4762204,August
+Application #14,Amazon Virtual Private Cloud,2/1/2023,2/28/2023,35.4489621,4.60836507,40.0573271,February
+Application #4,AWS CloudTrail,2/1/2023,2/28/2023,22.8264051,2.96743267,25.7938378,February
+Application #12,AWS Support (Business),9/1/2022,9/30/2022,6.68837373,0.86948858,7.55786231,September
+Application #7,AWS Key Management Service,12/1/2022,12/31/2022,7.08154087,0.92060031,8.00214119,December
+Application #6,Amazon GuardDuty,11/1/2022,11/30/2022,37.4088232,4.86314702,42.2719702,November
+Application #14,AWS Key Management Service,9/1/2022,9/30/2022,15.8770886,2.06402151,17.9411101,September
+Application #1,AWS Config,1/1/2023,1/31/2023,9.3621449,1.21707884,10.5792237,January
+Application #11,AWS Data Transfer,6/1/2022,6/30/2022,31.9008801,4.14711442,36.0479945,June
+Application #9,Amazon Simple Notification Service,5/1/2022,5/31/2022,11.4922142,1.49398784,12.986202,May
+Application #10,AWS Data Transfer,4/1/2022,4/30/2022,22.6889665,2.94956564,25.6385321,April
+Application #8,Amazon Simple Notification Service,10/1/2022,10/31/2022,20.4590312,2.65967406,23.1187053,October
+Application #10,AWS Config,4/1/2022,4/30/2022,34.2802526,4.45643283,38.7366854,April
+Application #10,Amazon GuardDuty,8/1/2022,8/31/2022,22.7355657,2.95562354,25.6911892,August
+Application #3,AWS Data Transfer,4/1/2022,4/30/2022,37.6384318,4.89299614,42.531428,April
+Application #13,AWS CloudTrail,11/1/2022,11/30/2022,14.2076389,1.84699306,16.054632,November
+Application #2,AWS Key Management Service,10/1/2022,10/31/2022,43.0236493,5.59307441,48.6167238,October
+Application #7,AWS CloudTrail,10/1/2022,10/31/2022,14.7207346,1.9136955,16.6344301,October
+Application #7,AWS CloudTrail,6/1/2022,6/30/2022,26.7093103,3.47221034,30.1815206,June
+Application #10,AWS CloudTrail,4/1/2022,4/30/2022,29.0887541,3.78153803,32.8702921,April
+Application #10,Amazon Simple Queue Service,10/1/2022,10/31/2022,4.58118773,0.59555441,5.17674214,October
+Application #4,AWS CloudTrail,8/1/2022,8/31/2022,21.3714021,2.77828227,24.1496843,August
+Application #11,Amazon Simple Queue Service,10/1/2022,10/31/2022,32.9265574,4.28045246,37.2070099,October
+Application #2,AWS Key Management Service,9/1/2022,9/30/2022,29.0456729,3.77593748,32.8216104,September
+Application #5,AWS Data Transfer,5/1/2022,5/31/2022,23.7986855,3.09382912,26.8925147,May
+Application #4,Amazon Elastic File System,11/1/2022,11/30/2022,5.27416908,0.68564198,5.95981106,November
+Application #10,AWS Global Accelerator,1/1/2023,1/31/2023,5.56835059,0.72388558,6.29223617,January
+Application #8,AWS Data Transfer,6/1/2022,6/30/2022,37.0186245,4.81242118,41.8310457,June
+Application #12,Amazon Simple Storage Service,4/1/2022,4/30/2022,6.43042956,0.83595584,7.26638541,April
+Application #12,Amazon Elastic Compute Cloud,5/1/2022,5/31/2022,36.105488,4.69371344,40.7992014,May
+Application #6,AWS Backup,2/1/2023,2/28/2023,6.17922629,0.80329942,6.9825257,February
+Application #14,Amazon Elastic Compute Cloud,6/1/2022,6/30/2022,37.6640038,4.89632049,42.5603243,June
+Application #5,AWS Data Transfer,11/1/2022,11/30/2022,12.0052131,1.5606777,13.5658908,November
+Application #2,AWS Application #7 Hub,5/1/2022,5/31/2022,29.3592152,3.81669798,33.1759132,May
+Application #5,AWS Data Transfer,11/1/2022,11/30/2022,23.609859,3.06928167,26.6791407,November
+Application #14,AWS Data Transfer,11/1/2022,11/30/2022,20.0171116,2.60222451,22.6193361,November
+Application #7,AWS Config,6/1/2022,6/30/2022,31.6884483,4.11949828,35.8079466,June
+Application #6,Amazon Simple Queue Service,3/1/2023,3/31/2023,51.1374131,6.6478637,57.7852768,March
+Application #5,AWS Data Transfer,2/1/2023,2/28/2023,21.0067059,2.73087177,23.7375777,February
+Application #14,Amazon Elastic Compute Cloud,3/1/2023,3/31/2023,52.5480759,6.83124987,59.3793258,March
+Application #10,AWS Support (Business),5/1/2022,5/31/2022,26.8400942,3.48921224,30.3293064,May
+Application #6,Amazon Simple Notification Service,12/1/2022,12/31/2022,38.420263,4.99463419,43.4148972,December
+Application #2,AWS CloudTrail,5/1/2022,5/31/2022,15.7686262,2.04992141,17.8185477,May
+Application #14,Amazon GuardDuty,9/1/2022,9/30/2022,1.71998551,0.22359812,1.94358362,September
+Application #14,Elastic Load Balancing,10/1/2022,10/31/2022,45.6711785,5.93725321,51.6084318,October
+Application #14,AWS Data Transfer,8/1/2022,8/31/2022,40.7490895,5.29738163,46.0464711,August
+Application #6,AWS Data Transfer,12/1/2022,12/31/2022,24.5360752,3.18968977,27.7257649,December
+Application #2,AWS Data Transfer,6/1/2022,6/30/2022,44.2120019,5.74756025,49.9595621,June
+Application #10,AWS Data Transfer,12/1/2022,12/31/2022,46.7476837,6.07719888,52.8248826,December
+Application #14,AWS Data Transfer,11/1/2022,11/30/2022,9.40599842,1.2227798,10.6287782,November
+Application #14,AWS Data Transfer,5/1/2022,5/31/2022,17.2048549,2.23663113,19.441486,May
+Application #11,AWS CloudTrail,6/1/2022,6/30/2022,35.7525709,4.64783422,40.4004052,June
+Application #12,Amazon Elastic Compute Cloud,11/1/2022,11/30/2022,46.7005435,6.07107066,52.7716142,November
+Application #10,AWS Data Transfer,6/1/2022,6/30/2022,11.1611543,1.45095006,12.6121044,June
+Application #12,AmazonCloudWatch,2/1/2023,2/28/2023,45.815942,5.95607246,51.7720144,February
+Application #13,AWS CloudTrail,6/1/2022,6/30/2022,9.9067207,1.28787369,11.1945944,June
+Application #1,AWS Data Transfer,10/1/2022,10/31/2022,37.0851016,4.8210632,41.9061648,October
+Application #9,AWS Key Management Service,1/1/2023,1/31/2023,38.4078816,4.99302461,43.4009062,January
+Application #14,Amazon GuardDuty,10/1/2022,10/31/2022,39.5438811,5.14070454,44.6845856,October
+Application #12,Amazon Route 53,4/1/2022,4/30/2022,38.9129867,5.05868827,43.971675,April
+Application #13,AWS Data Transfer,1/1/2023,1/31/2023,17.5780106,2.28514138,19.863152,January
+Application #8,AWS CloudTrail,6/1/2022,6/30/2022,38.6830336,5.02879436,43.7118279,June
+Application #3,AWS Data Transfer,8/1/2022,8/31/2022,2.97913713,0.38728783,3.36642495,August
+Application #9,AWS Config,9/1/2022,9/30/2022,26.7360289,3.47568375,30.2117126,September
+Application #7,AWS Lambda,3/1/2023,3/31/2023,29.6346622,3.85250608,33.4871683,March
+Application #4,AWS Config,1/1/2023,1/31/2023,6.7311996,0.87505595,7.60625555,January
+Application #6,AWS CloudTrail,6/1/2022,6/30/2022,1.29759161,0.16868691,1.46627852,June
+Application #5,AmazonCloudWatch,9/1/2022,9/30/2022,33.7544356,4.38807663,38.1425123,September
+Application #5,AWS CloudTrail,6/1/2022,6/30/2022,29.6143993,3.84987191,33.4642712,June
+Application #7,AmazonCloudWatch,12/1/2022,12/31/2022,13.5299934,1.75889915,15.2888926,December
+Application #7,Amazon GuardDuty,10/1/2022,10/31/2022,4.70561076,0.6117294,5.31734016,October
+Application #5,Amazon Simple Notification Service,6/1/2022,6/30/2022,30.9868445,4.02828979,35.0151343,June
+Application #2,AWS Data Transfer,10/1/2022,10/31/2022,20.1104571,2.61435942,22.7248165,October
+Application #5,AWS Support (Business),8/1/2022,8/31/2022,10.2231751,1.32901276,11.5521878,August
+Application #12,Amazon Elastic Compute Cloud,3/1/2023,3/31/2023,44.4713837,5.78127988,50.2526635,March
+Application #9,AWS Data Transfer,5/1/2022,5/31/2022,31.5695767,4.10404497,35.6736216,May
+Application #5,Amazon GuardDuty,2/1/2023,2/28/2023,42.6221405,5.54087826,48.1630187,February
+Application #6,Amazon Elastic Compute Cloud,6/1/2022,6/30/2022,13.9553234,1.81419204,15.7695155,June
+Application #12,NA,1/1/2023,1/31/2023,54.3471684,7.06513189,61.4123003,January
+Application #8,Amazon GuardDuty,9/1/2022,9/30/2022,31.9514189,4.15368445,36.1051033,September
+Application #13,Amazon Simple Notification Service,9/1/2022,9/30/2022,42.0682413,5.46887137,47.5371127,September
+Application #3,Amazon Simple Queue Service,12/1/2022,12/31/2022,54.8603142,7.13184084,61.992155,December
+Application #11,AWS CloudTrail,11/1/2022,11/30/2022,3.43793822,0.44693197,3.88487019,November
+Application #14,Amazon CloudFront,2/1/2023,2/28/2023,12.5019838,1.6252579,14.1272417,February
+Application #6,AWS Support (Business),2/1/2023,2/28/2023,10.5471387,1.37112802,11.9182667,February
+Application #13,AmazonCloudWatch,4/1/2022,4/30/2022,41.3802713,5.37943527,46.7597066,April
+Application #2,AWS Data Transfer,4/1/2022,4/30/2022,37.0607888,4.81790254,41.8786913,April
+Application #7,AWS Data Transfer,9/1/2022,9/30/2022,5.59986036,0.72798185,6.3278422,September
+Application #10,AWS Global Accelerator,1/1/2023,1/31/2023,28.8273597,3.74755676,32.5749164,January
+Application #1,AWS Data Transfer,1/1/2023,1/31/2023,10.3771786,1.34903322,11.7262118,January
+Application #12,AWS Config,3/1/2023,3/31/2023,45.4683052,5.91087968,51.3791849,March
+Application #4,AWS Key Management Service,5/1/2022,5/31/2022,29.2828207,3.80676669,33.0895873,May
+Application #14,AWS Key Management Service,5/1/2022,5/31/2022,43.5257794,5.65835132,49.1841307,May
+Application #5,AWS Application #7 Hub,6/1/2022,6/30/2022,15.9906456,2.07878393,18.0694296,June
+Application #12,AWS Data Transfer,7/1/2022,7/31/2022,6.17736849,0.8030579,6.9804264,July
+Application #6,AWS CloudTrail,4/1/2022,4/30/2022,35.069215,4.55899795,39.628213,April
+Application #5,Amazon GuardDuty,1/1/2023,1/31/2023,28.8953996,3.75640195,32.6518016,January
+Application #8,AWS Data Transfer,7/1/2022,7/31/2022,8.23640104,1.07073214,9.30713318,July
+Application #4,AWS Data Transfer,6/1/2022,6/30/2022,13.1613615,1.710977,14.8723385,June
+Application #4,AWS Config,10/1/2022,10/31/2022,12.5772586,1.63504362,14.2123023,October
+Application #4,AWS CloudTrail,2/1/2023,2/28/2023,6.38946781,0.83063082,7.22009863,February
+Application #10,AWS Global Accelerator,8/1/2022,8/31/2022,12.2996439,1.59895371,13.8985976,August
+Application #12,Amazon Elastic Compute Cloud,6/1/2022,6/30/2022,4.23063403,0.54998242,4.78061645,June
+Application #5,Amazon Simple Notification Service,1/1/2023,1/31/2023,20.5304868,2.66896328,23.1994501,January
+Application #6,AWS Data Transfer,3/1/2023,3/31/2023,27.5355388,3.57962004,31.1151588,March
+Application #5,AWS Key Management Service,9/1/2022,9/30/2022,13.0485791,1.69631529,14.7448944,September
+Application #6,AWS Backup,7/1/2022,7/31/2022,6.1702411,0.80213134,6.97237244,July
+Application #7,AWS Config,10/1/2022,10/31/2022,17.8014733,2.31419153,20.1156649,October
+Application #3,AWS Data Transfer,1/1/2023,1/31/2023,50.8464513,6.61003867,57.45649,January
+Application #10,AWS Config,6/1/2022,6/30/2022,30.44816,3.9582608,34.4064208,June
+Application #14,AWS Config,3/1/2023,3/31/2023,22.0987716,2.8728403,24.9716119,March
+Application #10,AWS Data Transfer,12/1/2022,12/31/2022,24.8907548,3.23579813,28.126553,December
+Application #4,AWS Data Transfer,9/1/2022,9/30/2022,19.2339343,2.50041146,21.7343458,September
+Application #1,AWS Data Transfer,1/1/2023,1/31/2023,27.8428959,3.61957647,31.4624724,January
+Application #7,AmazonCloudWatch,4/1/2022,4/30/2022,28.8443209,3.74976172,32.5940826,April
+Application #10,Amazon Simple Storage Service,6/1/2022,6/30/2022,40.8674333,5.31276633,46.1801996,June
+Application #10,Amazon Elastic Compute Cloud,2/1/2023,2/28/2023,24.313936,3.16081168,27.4747477,February
+Application #11,AWS CloudTrail,4/1/2022,4/30/2022,5.9848452,0.77802988,6.76287507,April
+Application #7,Amazon Simple Notification Service,1/1/2023,1/31/2023,50.7985662,6.6038136,57.4023798,January
+Application #13,AWS Data Transfer,2/1/2023,2/28/2023,21.6594915,2.81573389,24.4752254,February
+Application #9,AWS WAF,5/1/2022,5/31/2022,5.72330305,0.7440294,6.46733245,May
+Application #12,Amazon Elastic Compute Cloud,7/1/2022,7/31/2022,13.6749785,1.77774721,15.4527257,July
+Application #12,AWS Config,2/1/2023,2/28/2023,50.7301093,6.5949142,57.3250235,February
+Application #9,Amazon Simple Queue Service,5/1/2022,5/31/2022,20.6244532,2.68117891,23.3056321,May
+Application #9,AWS Data Transfer,12/1/2022,12/31/2022,8.20656596,1.06685357,9.27341953,December
+Application #4,AWS Key Management Service,8/1/2022,8/31/2022,34.7171933,4.51323513,39.2304285,August
+Application #7,Amazon Simple Notification Service,12/1/2022,12/31/2022,14.3826937,1.86975018,16.2524439,December
+Application #11,AWS Data Transfer,11/1/2022,11/30/2022,23.6441942,3.07374525,26.7179394,November
+Application #3,AmazonCloudWatch,4/1/2022,4/30/2022,2.25581909,0.29325648,2.54907557,April
+Application #10,Amazon Simple Notification Service,12/1/2022,12/31/2022,48.3374753,6.28387179,54.6213471,December
+Application #6,AWS Data Transfer,2/1/2023,2/28/2023,17.392068,2.26096884,19.6530368,February
+Application #13,Amazon Simple Notification Service,7/1/2022,7/31/2022,31.3958991,4.08146689,35.477366,July
+Application #6,AWS Config,9/1/2022,9/30/2022,34.359712,4.46676256,38.8264745,September
+Application #14,AmazonCloudWatch,3/1/2023,3/31/2023,47.9036975,6.22748067,54.1311781,March
+Application #13,AWS Data Transfer,11/1/2022,11/30/2022,46.1987322,6.00583519,52.2045674,November
+Application #13,AWS Data Transfer,1/1/2023,1/31/2023,29.5292928,3.83880806,33.3681008,January
+Application #14,AWS Config,8/1/2022,8/31/2022,19.615702,2.55004126,22.1657433,August
+Application #12,AWS Data Transfer,3/1/2023,3/31/2023,4.23657977,0.55075537,4.78733514,March
+Application #6,AWS Key Management Service,7/1/2022,7/31/2022,19.1966554,2.4955652,21.6922206,July
+Application #10,Amazon GuardDuty,3/1/2023,3/31/2023,33.7951044,4.39336358,38.188468,March
+Application #7,Amazon Simple Notification Service,1/1/2023,1/31/2023,18.6502632,2.42453422,21.0747975,January
+Application #11,AWS Data Transfer,3/1/2023,3/31/2023,4.5958812,0.59746456,5.19334576,March
+Application #10,AWS Global Accelerator,12/1/2022,12/31/2022,13.8127806,1.79566147,15.608442,December
+Application #14,AmazonCloudWatch,4/1/2022,4/30/2022,18.9045517,2.45759172,21.3621434,April
+Application #5,AWS Data Transfer,2/1/2023,2/28/2023,18.5428725,2.41057342,20.9534459,February
+Application #12,AWS Config,6/1/2022,6/30/2022,36.6707382,4.76719596,41.4379341,June
+Application #6,AWS Data Transfer,4/1/2022,4/30/2022,21.53534,2.7995942,24.3349342,April
+Application #8,Elastic Load Balancing,4/1/2022,4/30/2022,15.1465058,1.96904576,17.1155516,April
+Application #12,Amazon GuardDuty,10/1/2022,10/31/2022,5.50924391,0.71620171,6.22544561,October
+Application #2,AWS Data Transfer,9/1/2022,9/30/2022,31.353594,4.07596722,35.4295612,September
+Application #6,AWS Secrets Manager,7/1/2022,7/31/2022,15.1230121,1.96599158,17.0890037,July
+Application #13,AWS Data Transfer,4/1/2022,4/30/2022,32.5248004,4.22822405,36.7530244,April
+Application #12,Amazon Cognito,4/1/2022,4/30/2022,5.69718023,0.74063343,6.43781366,April
+Application #12,AWS Key Management Service,6/1/2022,6/30/2022,11.685298,1.51908874,13.2043867,June
+Application #14,Amazon Simple Queue Service,3/1/2023,3/31/2023,53.4534104,6.94894335,60.4023538,March
+Application #12,AmazonCloudWatch,3/1/2023,3/31/2023,47.6821171,6.19867522,53.8807923,March
+Application #5,AWS CloudTrail,5/1/2022,5/31/2022,35.3204276,4.59165559,39.9120832,May
+Application #6,Amazon Elastic Compute Cloud,1/1/2023,1/31/2023,14.9339414,1.94141238,16.8753538,January
+Application #4,Amazon GuardDuty,6/1/2022,6/30/2022,44.7818274,5.82163756,50.6034649,June
+Application #2,Amazon Simple Queue Service,8/1/2022,8/31/2022,16.5244564,2.14817933,18.6726357,August
+Application #10,Amazon Virtual Private Cloud,7/1/2022,7/31/2022,12.1766071,1.58295892,13.759566,July
+Application #2,Amazon GuardDuty,2/1/2023,2/28/2023,46.3165058,6.02114575,52.3376515,February
+Application #7,AWS Lambda,9/1/2022,9/30/2022,28.6421448,3.72347883,32.3656237,September
+Application #4,AWS Secrets Manager,9/1/2022,9/30/2022,13.4709898,1.75122867,15.2222184,September
+Application #14,AWS CloudTrail,1/1/2023,1/31/2023,39.4339509,5.12641361,44.5603645,January
+Application #14,Amazon GuardDuty,5/1/2022,5/31/2022,2.77362747,0.36057157,3.13419905,May
+Application #9,AmazonCloudWatch,12/1/2022,12/31/2022,25.4714805,3.31129247,28.782773,December
+Application #2,Amazon Simple Notification Service,6/1/2022,6/30/2022,34.3159802,4.46107742,38.7770576,June
+Application #9,AWS Key Management Service,8/1/2022,8/31/2022,42.044714,5.46581282,47.5105269,August
+Application #12,Amazon Elastic Compute Cloud,5/1/2022,5/31/2022,32.5496406,4.23145328,36.7810939,May
+Application #1,AWS Data Transfer,10/1/2022,10/31/2022,31.5895395,4.10664014,35.6961797,October
+Application #9,Amazon Virtual Private Cloud,2/1/2023,2/28/2023,35.9645516,4.67539171,40.6399433,February
+Application #3,Amazon Simple Queue Service,1/1/2023,1/31/2023,31.8816823,4.1446187,36.026301,January
+Application #8,AWS Data Transfer,8/1/2022,8/31/2022,3.49155291,0.45390188,3.94545478,August
+Application #11,AWS Data Transfer,1/1/2023,1/31/2023,35.2295866,4.57984625,39.8094328,January
+Application #1,AWS Data Transfer,3/1/2023,3/31/2023,18.4133686,2.39373792,20.8071066,March
+Application #1,AWS Key Management Service,8/1/2022,8/31/2022,15.3848393,2.00002911,17.3848684,August
+Application #6,AWS Data Transfer,1/1/2023,1/31/2023,54.4156839,7.0740389,61.4897228,January
+Application #2,Amazon CloudFront,6/1/2022,6/30/2022,30.3919822,3.95095769,34.3429399,June
+Application #7,AWS Key Management Service,2/1/2023,2/28/2023,54.7559454,7.1182729,61.8742183,February
+Application #7,Amazon Simple Storage Service,6/1/2022,6/30/2022,11.8452226,1.53987894,13.3851016,June
+Application #13,AWS Data Transfer,8/1/2022,8/31/2022,16.1858274,2.10415756,18.289985,August
+Application #14,Amazon GuardDuty,7/1/2022,7/31/2022,43.6789188,5.67825944,49.3571783,July
+Application #12,AWS Data Transfer,7/1/2022,7/31/2022,42.1672624,5.48174411,47.6490065,July
+Application #5,Amazon Elastic Compute Cloud,11/1/2022,11/30/2022,49.4056036,6.42272846,55.828332,November
+Application #6,AWS Data Transfer,9/1/2022,9/30/2022,17.3977809,2.26171151,19.6594924,September
+Application #6,AWS Config,5/1/2022,5/31/2022,37.5737745,4.88459068,42.4583652,May
+Application #6,Elastic Load Balancing,10/1/2022,10/31/2022,10.3548071,1.34612492,11.700932,October
+Application #6,AWS Data Transfer,4/1/2022,4/30/2022,12.448167,1.61826171,14.0664287,April
+Application #12,Amazon GuardDuty,9/1/2022,9/30/2022,2.43617948,0.31670333,2.75288281,September
+Application #3,AWS Data Transfer,8/1/2022,8/31/2022,13.4941673,1.75424175,15.2484091,August
+Application #6,AWS Data Transfer,6/1/2022,6/30/2022,24.1196275,3.13555158,27.2551791,June
+Application #14,AWS Data Transfer,4/1/2022,4/30/2022,18.9556395,2.46423313,21.4198726,April
+Application #1,AWS Key Management Service,7/1/2022,7/31/2022,44.8126643,5.82564635,50.6383106,July
+Application #14,AWS Data Transfer,6/1/2022,6/30/2022,0.62386181,0.08110204,0.70496385,June
+Application #10,AWS Data Transfer,7/1/2022,7/31/2022,33.784592,4.39199696,38.176589,July
+Application #14,Amazon Simple Notification Service,4/1/2022,4/30/2022,20.7516827,2.69771876,23.4494015,April
+Application #1,AmazonCloudWatch,12/1/2022,12/31/2022,7.45694754,0.96940318,8.42635072,December
+Application #9,Amazon EC2 Container Registry (ECR),10/1/2022,10/31/2022,44.7959526,5.82347384,50.6194265,October
+Application #4,AWS Application #7 Hub,9/1/2022,9/30/2022,38.9955553,5.06942219,44.0649775,September
+Application #11,AWS Data Transfer,6/1/2022,6/30/2022,40.4049288,5.25264074,45.6575695,June
+Application #10,AWS Data Transfer,5/1/2022,5/31/2022,23.507899,3.05602687,26.5639258,May
+Application #7,AWS Key Management Service,2/1/2023,2/28/2023,16.4938497,2.14420046,18.6380502,February
+Application #10,AWS Global Accelerator,4/1/2022,4/30/2022,19.2819626,2.50665514,21.7886177,April
+Application #1,Amazon GuardDuty,10/1/2022,10/31/2022,14.560402,1.89285226,16.4532542,October
+Application #10,AWS Global Accelerator,10/1/2022,10/31/2022,10.4956408,1.36443331,11.8600741,October
+Application #5,AWS Data Transfer,10/1/2022,10/31/2022,9.83678904,1.27878258,11.1155716,October
+Application #7,AWS Lambda,11/1/2022,11/30/2022,22.4795586,2.92234261,25.4019012,November
+Application #3,Amazon CloudFront,9/1/2022,9/30/2022,44.1919717,5.74495633,49.9369281,September
+Application #7,AWS Support (Business),1/1/2023,1/31/2023,52.558809,6.83264517,59.3914541,January
+Application #2,AWS WAF,10/1/2022,10/31/2022,16.1673727,2.10175846,18.2691312,October
+Application #3,AWS Data Transfer,4/1/2022,4/30/2022,19.747984,2.56723793,22.315222,April
+Application #4,Amazon GuardDuty,10/1/2022,10/31/2022,20.4379285,2.6569307,23.0948592,October
+Application #5,Amazon Simple Queue Service,3/1/2023,3/31/2023,12.1357338,1.5776454,13.7133792,March
+Application #4,AWS Key Management Service,1/1/2023,1/31/2023,33.1512036,4.30965647,37.4608601,January
+Application #8,AWS Data Transfer,4/1/2022,4/30/2022,19.4826206,2.53274068,22.0153613,April
+Application #7,Amazon Simple Queue Service,3/1/2023,3/31/2023,50.1395392,6.5181401,56.6576793,March
+Application #10,AWS Key Management Service,12/1/2022,12/31/2022,13.7490124,1.78737161,15.536384,December
+Application #7,AWS CloudTrail,7/1/2022,7/31/2022,29.3657469,3.8175471,33.183294,July
+Application #10,AWS Key Management Service,11/1/2022,11/30/2022,51.9292966,6.75080856,58.6801052,November
+Application #14,Amazon CloudFront,6/1/2022,6/30/2022,22.7429339,2.9565814,25.6995153,June
+Application #11,AWS Data Transfer,11/1/2022,11/30/2022,39.5004563,5.13505932,44.6355156,November
+Application #9,Amazon Simple Queue Service,12/1/2022,12/31/2022,35.5435341,4.62065944,40.1641936,December
+Application #2,AWS Data Transfer,11/1/2022,11/30/2022,14.125326,1.83629238,15.9616184,November
+Application #1,AWS Key Management Service,6/1/2022,6/30/2022,28.4186432,3.69442361,32.1130668,June
+Application #4,AWS Data Transfer,12/1/2022,12/31/2022,45.8481616,5.96026101,51.8084226,December
+Application #4,Amazon Elastic Compute Cloud,5/1/2022,5/31/2022,21.7192981,2.82350876,24.5428069,May
+Application #5,AWS Data Transfer,1/1/2023,1/31/2023,24.0347682,3.12451987,27.1592881,January
+Application #7,AWS CloudTrail,1/1/2023,1/31/2023,27.4006592,3.56208569,30.9627449,January
+Application #10,AWS Data Transfer,1/1/2023,1/31/2023,16.4523829,2.13880978,18.5911927,January

@@ -12,21 +12,22 @@ global.d3 = d3
 const epsilon = 0.0001
 
 let data = []
-let raw_spec = []
-let min_spec = []
-let max_spec = []
-let min_spec_two_column = []
-let max_spec_two_column = []
-let sum_specs = []
-let sum_specs_two_columns = []
-let penguins = []
-let medians = []
-let products = []
-let groupby_degree_work = []
-let count_spec = []
-let count_twoColumn_spec = []
-let prod_specs = []
-let prod_specs_two_columns = []
+let applications = []
+// let raw_spec = []
+// let min_spec = []
+// let max_spec = []
+// let min_spec_two_column = []
+// let max_spec_two_column = []
+// let sum_specs = []
+// let sum_specs_two_columns = []
+// let penguins = []
+// let medians = []
+// let products = []
+// let groupby_degree_work = []
+// let count_spec = []
+// let count_twoColumn_spec = []
+// let prod_specs = []
+// let prod_specs_two_columns = []
 
 const gridSpecInput = {
   height: 300,
@@ -141,7 +142,7 @@ function compare_specs_with_file (specs, raw_spec) {
     }
   }
 }
-
+/*
 describe('Layout Functions', function () {
   describe('#generateGrid()', function () {
     const { gridValues } = generateGrid(gridSpecInput)
@@ -455,6 +456,49 @@ describe('small salary', function () {
         })
         compare_specs_with_file(specs, prod_specs_two_columns)
       })
+    })
+  })
+})
+*/
+describe('applications by product over time', function () {
+  before(function (done) {
+    fs.readFile('../../../../data-raw/applications.csv', 'utf8', function (err, fileContents) {
+      if (err) throw err
+      const lines = d3.csvParse(fileContents)
+      data = [Object.keys(lines[0])]
+      for (const line of lines) {
+        if (Object.keys(line).length > 0) {
+          const parts = Object.values(line)
+          data.push(parts)
+        }
+      }
+      fs.readFile('../../../../inst/specs/application_specs.json', 'utf8', function (err, fileContents) {
+        if (err) throw err
+        applications = JSON.parse(fileContents)
+        done()
+      })
+    })
+  })
+  context('group by one column, sum', function () {
+    it('should match', function () {
+      const specs = datamations.specs({ values: data }, ['Account Name', 'Billing Month'], 'Sum of Total Cost', {
+        'Application #1': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #2': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #3': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #4': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #5': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #6': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #7': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #8': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #9': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #10': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #11': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #12': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #13': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
+        'Application #14': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 }
+      })
+      // fs.writeFileSync('test_specs.json', JSON.stringify(specs));
+      compare_specs_with_file(specs, products);
     })
   })
 })

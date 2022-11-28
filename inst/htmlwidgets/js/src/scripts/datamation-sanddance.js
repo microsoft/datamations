@@ -899,7 +899,19 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     meta.custom_animation = operation
   }
   else if (operation === 'count' || operation === 'sum') {
-    if (groupby.length === 1) {
+    if (groupby.length === 2) {
+      min = data.map((item) => { return item.datamations_y }).reduce((prev, current) => {
+        return Math.min(prev, current)
+      })
+      max = data.map((item) => { return item.datamations_y }).reduce((prev, current) => {
+        return Math.max(prev, current)
+      })
+      meta.custom_animation = operation
+      y_encoding.scale.domain = [_.round(min, 13), _.round(max, 13)]
+      delete tooltip[0].title
+      delete y_encoding.title
+    }
+    else if (groupby.length === 1) {
       min = data.map((item) => { return item.datamations_y }).reduce((prev, current) => {
         return Math.min(prev, current)
       })
