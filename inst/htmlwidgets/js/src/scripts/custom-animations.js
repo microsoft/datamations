@@ -89,6 +89,8 @@ export const getSumStep = (source, target, added = false, shrink = false) => {
   let values = source.data.values.slice()
   const sourceMeta = source.meta
 
+  const hasFacet = source.meta.hasFacet
+
   // generate rules layer
   const rules = sourceMeta.rules.map((d, i) => {
     const n = sourceMeta.rules.length
@@ -156,7 +158,7 @@ export const getSumStep = (source, target, added = false, shrink = false) => {
         })
         return {
           ...d,
-          [CONF.Y_FIELD]: result[0][CONF.Y_FIELD]
+          [CONF.Y_FIELD]: hasFacet ? d[CONF.Y_FIELD] : result[0][CONF.Y_FIELD]
         }
       }
       else {
