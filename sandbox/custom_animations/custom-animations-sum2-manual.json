@@ -20521,14 +20521,10 @@
                 "y": {
                     "field": "datamations_y",
                     "type": "quantitative",
-                    "title": [
-                        "sum of",
-                        "Total Cost"
-                    ],
                     "scale": {
                         "domain": [
-                            0.64118305,
-                            62.1063172
+                            4.98020388,
+                            452.86640266
                         ]
                     }
                 },
@@ -20555,8 +20551,7 @@
                 "tooltip": [
                     {
                         "field": "datamations_y_tooltip",
-                        "type": "quantitative",
-                        "title": "sum(Total Cost)"
+                        "type": "quantitative"
                     },
                     {
                         "field": "Account Name",

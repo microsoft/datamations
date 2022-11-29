@@ -481,24 +481,205 @@ describe('applications by product over time', function () {
   })
   context('group by one column, sum', function () {
     it('should match', function () {
-      const specs = datamations.specs({ values: data }, ['Account Name', 'Billing Month'], 'Sum of Total Cost', {
-        'Application #1': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #2': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #3': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #4': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #5': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #6': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #7': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #8': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #9': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #10': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #11': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #12': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #13': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 },
-        'Application #14': { April: 273, May: 260, June: 279, July: 275, August: 265, September: 265, October: 272, November: 266, December: 259, January: 259, February: 262, March: 100 }
-      })
+      var output = {
+        'Application #1': {
+          January: 91.4679266,
+          February: 64.5030346,
+          March: 227.05311913,
+          April: 159.50774864,
+          May: 115.845144,
+          June: 88.1832692,
+          July: 160.36697645,
+          August: 98.3747857,
+          September: 4.98020388,
+          October: 196.4859157,
+          November: 59.7494479,
+          December: 188.87354862
+        },
+        'Application #10': {
+          January: 116.56885357,
+          February: 213.53293636,
+          March: 79.7511116,
+          April: 302.8644933,
+          May: 197.83553208,
+          June: 281.46431301,
+          July: 274.2964643,
+          August: 280.794464,
+          September: 160.50431337,
+          October: 146.30386756,
+          November: 259.08798883,
+          December: 416.498427
+        },
+        'Application #11': {
+          January: 52.1693972,
+          February: 118.78190788,
+          March: 106.91391476,
+          April: 61.55208485,
+          May: 80.3383537,
+          June: 234.38505685,
+          July: 127.0615219,
+          August: 81.0927772,
+          September: 106.2958633,
+          October: 196.9946001,
+          November: 112.19800959,
+          December: 156.0926209
+        },
+        'Application #12': {
+          January: 220.47728055,
+          February: 255.8191951,
+          March: 364.13791674,
+          April: 151.05546245,
+          May: 177.90933342,
+          June: 252.91934791,
+          July: 125.36317692,
+          August: 111.27086895,
+          September: 181.94335521,
+          October: 56.89266924,
+          November: 197.27720207,
+          December: 62.5689783
+        },
+        'Application #13': {
+          January: 116.6430285,
+          February: 135.55459635,
+          April: 247.09262588,
+          May: 84.20782824,
+          June: 59.8704392,
+          July: 138.5727234,
+          August: 103.5602919,
+          September: 125.85366473,
+          October: 121.63050755,
+          November: 216.07002393,
+          December: 118.6885826
+        },
+        'Application #14': {
+          January: 214.7055112,
+          February: 452.86640266,
+          March: 338.94347123,
+          April: 196.57820246,
+          May: 227.63992116,
+          June: 193.16723835,
+          July: 248.38020875,
+          August: 197.02977175,
+          September: 95.24153252,
+          October: 303.3339679,
+          November: 84.25398301,
+          December: 157.94637171
+        },
+        'Application #2': {
+          January: 202.14002831,
+          February: 206.3883349,
+          March: 238.0013075,
+          April: 241.0149685,
+          May: 140.12922466,
+          June: 253.2988757,
+          July: 100.2963692,
+          August: 58.21549,
+          September: 199.88777246,
+          October: 154.6489342,
+          November: 63.58742306,
+          December: 160.9515533
+        },
+        'Application #3': {
+          January: 332.21401181,
+          February: 205.15345054,
+          March: 83.685119,
+          April: 214.76282456,
+          May: 250.0077789,
+          June: 124.28787524,
+          July: 120.55135127,
+          August: 97.56341685,
+          September: 118.4665579,
+          October: 274.1487474,
+          November: 203.52960172,
+          December: 204.075543
+        },
+        'Application #4': {
+          January: 234.05006388,
+          February: 239.93135883,
+          March: 111.2139355,
+          April: 169.68569902,
+          May: 162.1807373,
+          June: 249.18429315,
+          July: 203.0895127,
+          August: 126.80337443,
+          September: 158.928674,
+          October: 188.49468761,
+          November: 54.75472596,
+          December: 164.924093
+        },
+        'Application #5': {
+          January: 193.42555537,
+          February: 174.7936633,
+          March: 151.3385304,
+          April: 101.6819851,
+          May: 305.92739447,
+          June: 178.6624201,
+          July: 59.5522006,
+          August: 263.28732039,
+          September: 140.35209504,
+          October: 125.66978916,
+          November: 107.8257945,
+          December: 229.6486421
+        },
+        'Application #6': {
+          January: 164.31762718,
+          February: 218.0382858,
+          March: 169.01475203,
+          April: 307.42758602,
+          May: 187.36425685,
+          June: 345.60785572,
+          July: 164.13419721,
+          August: 172.35130337,
+          September: 182.30386181,
+          October: 195.9952959,
+          November: 215.74051332,
+          December: 190.9690695
+        },
+        'Application #7': {
+          January: 232.9484964,
+          February: 166.98522064,
+          March: 204.23121,
+          April: 105.50589348,
+          May: 69.5924189,
+          June: 123.1450325,
+          July: 156.19854916,
+          September: 114.122421,
+          October: 125.15269226,
+          November: 67.4146975,
+          December: 139.29263059
+        },
+        'Application #8': {
+          January: 121.76859037,
+          February: 89.7285952,
+          March: 182.5260486,
+          April: 289.9057697,
+          May: 103.71185205,
+          June: 234.7684011,
+          July: 135.28957568,
+          August: 101.53828838,
+          September: 76.87627371,
+          October: 174.4473776,
+          November: 236.0680057,
+          December: 117.78272283
+        },
+        'Application #9': {
+          January: 165.6818726,
+          February: 149.82536824,
+          March: 114.4207609,
+          April: 106.37858859,
+          May: 237.38130405,
+          June: 237.37232978,
+          July: 225.34647064,
+          August: 257.275814,
+          September: 233.5514295,
+          October: 184.40161626,
+          November: 87.8910944,
+          December: 235.21772563
+        }
+      }
+      const specs = datamations.specs({ values: data }, ['Account Name', 'Billing Month'], 'Sum of Total Cost', output)
       // fs.writeFileSync('test_specs.json', JSON.stringify(specs));
-      compare_specs_with_file(specs, products);
+      compare_specs_with_file(specs, applications)
     })
   })
 })

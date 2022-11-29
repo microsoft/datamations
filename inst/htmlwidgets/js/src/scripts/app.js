@@ -686,31 +686,33 @@ export default function App (id, { specs, autoPlay = false, frameDur, frameDel }
             totalDuration: frameDuration * 2
           })
 
-          const _gemSpec = resp[0].specs.map((d) => d.spec)
+          if (resp.length > 0) {
+            const _gemSpec = resp[0].specs.map((d) => d.spec)
 
-          // make sure to add gemini_id to data change.
-          // gemini recommend does not add it by itself.
-          _gemSpec.forEach((d) => {
-            if (d.timeline.concat.length) {
-              const first = d.timeline.concat[0].sync[0]
-              if (first && first.change && first.change.data) {
-                first.change.data = {
-                  keys: ['gemini_id'],
-                  update: true,
-                  enter: true,
-                  exit: true
+            // make sure to add gemini_id to data change.
+            // gemini recommend does not add it by itself.
+            _gemSpec.forEach((d) => {
+              if (d.timeline.concat.length) {
+                const first = d.timeline.concat[0].sync[0]
+                if (first && first.change && first.change.data) {
+                  first.change.data = {
+                    keys: ['gemini_id'],
+                    update: true,
+                    enter: true,
+                    exit: true
+                  }
                 }
               }
-            }
-          })
+            })
 
-          frames.push({
-            source: prev,
-            target: curr,
-            gemSpec: _gemSpec,
-            prevMeta,
-            currMeta
-          })
+            frames.push({
+              source: prev,
+              target: curr,
+              gemSpec: _gemSpec,
+              prevMeta,
+              currMeta
+            })
+          }
         } else {
           resp = await gemini.recommend(
             prev.custom

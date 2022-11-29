@@ -795,7 +795,7 @@ export const CustomAnimations = {
     * @returns an array of vega-lite specs
     */
   sum: async (rawSource, target) => {
-    const stacks = await getGridSpec(rawSource, 10, true)
+    const stacks = await getGridSpec(rawSource, 20, true)
     delete stacks.encoding.y.axis
 
     const step = getSumStep(rawSource, target, false)
