@@ -4,7 +4,25 @@ const X_FIELD_CHR = 'datamations_x'
 const Y_FIELD_CHR = 'datamations_y'
 const Y_RAW_FIELD_CHR = 'datamations_y_raw'
 
+const long_months = [...Array(12).keys()].map(key => new Date(0, key).toLocaleString('en', { month: 'long' }).toLowerCase())
+const short_months = [...Array(12).keys()].map(key => new Date(0, key).toLocaleString('en', { month: 'short' }).toLowerCase())
+
+function month_index (m) {
+  var index = short_months.indexOf(m)
+  if (index < 0) {
+    index = long_months.indexOf(m)
+  }
+  return index
+}
+
 function compare_ignore_case (a, b) {
+  const index_a = month_index(a.toLowerCase())
+  if (index_a > -1) {
+    const index_b = month_index(b.toLowerCase())
+    if (index_b > -1) {
+      return index_a - index_b
+    }
+  }
   return a.toLowerCase().localeCompare(b.toLowerCase())
 }
 
@@ -274,8 +292,8 @@ function prep_specs_groupby (states, groupby, summarize) {
     let rows = []
     count = {}
     start = {}
-    for (col of Object.keys(states[1].groups).sort()) {
-      for (row of Object.keys(states[1].groups[col]).sort()) {
+    for (col of Object.keys(states[1].groups).sort(compare_ignore_case)) {
+      for (row of Object.keys(states[1].groups[col]).sort(compare_ignore_case)) {
         if (!cols.includes(col)) {
           cols.push(col)
         }
@@ -286,7 +304,7 @@ function prep_specs_groupby (states, groupby, summarize) {
         if (!Object.keys(start[col]).includes(row)) start[col][row] = 0
         start[col][row] = id
         if (groupby.length > 2) {
-          for (l3group of Object.keys(states[1].groups[col][row]).sort()) {
+          for (l3group of Object.keys(states[1].groups[col][row]).sort(compare_ignore_case)) {
             count[col][row] = count[col][row] + states[1].groups[col][row][l3group].length
           }
         }
@@ -471,7 +489,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     var groups = Object.keys(states[1].groups)
   } else {
     groups = Object.keys(states[1].groups)
-    groups = _.uniq(groups.sort())
+    groups = _.uniq(groups.sort(compare_ignore_case))
     var subgroups = Object.keys(output[Object.keys(output)[0]])
     if (groupby.length === 3) {
       var l3groups = []
@@ -1226,7 +1244,7 @@ function group_by (data, by) {
   if (by.length > 2) {
     let l2groups = {}
     var results = {}
-    for (var group of Object.keys(groups).sort()) {
+    for (var group of Object.keys(groups).sort(compare_ignore_case)) {
       l2groups = _.groupBy(groups[group], by[1])
       for (const l2group of Object.keys(l2groups)) {
         const l3groups = _.groupBy(l2groups[l2group], by[2])
