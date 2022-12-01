@@ -685,13 +685,13 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     }
   } else {
     var id = 1
-    for (i = 0; i < states[0].length; i++) {
+    for (item of _.sortBy(states[0], x_axis)) {
       value = {
         gemini_id: id,
-        [x_axis]: states[0][i][x_axis],
-        datamations_x: 1 + groups.indexOf(states[0][i][x_axis]),
-        datamations_y: _.round(states[0][i][y_axis], 13),
-        datamations_y_tooltip: _.round(states[0][i][y_axis], 13)
+        [x_axis]: item[x_axis],
+        datamations_x: 1 + groups.indexOf(item[x_axis]),
+        datamations_y: _.round(item[y_axis], 13),
+        datamations_y_tooltip: _.round(item[y_axis], 13)
       }
       data.push(value)
       id = id + 1
@@ -848,13 +848,13 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     }
   } else {
     id = 1
-    for (i = 0; i < states[0].length; i++) {
+    for (item of _.sortBy(states[0], x_axis)) {
       value = {
         gemini_id: id,
-        [x_axis]: states[0][i][x_axis],
-        datamations_x: 1 + groups.indexOf(states[0][i][x_axis]),
-        datamations_y: output[states[0][i][x_axis]],
-        datamations_y_tooltip: output[states[0][i][x_axis]]
+        [x_axis]: item[x_axis],
+        datamations_x: 1 + groups.indexOf(item[x_axis]),
+        datamations_y: output[item[x_axis]],
+        datamations_y_tooltip: output[item[x_axis]]
       }
       data.push(value)
       id = id + 1
@@ -1043,20 +1043,20 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     }
   } else {
     id = 1
-    for (i = 0; i < states[0].length; i++) {
+    for (item of _.sortBy(states[0], x_axis)) {
       value = {
         gemini_id: id,
-        [x_axis]: states[0][i][x_axis],
-        datamations_x: 1 + groups.indexOf(states[0][i][x_axis]),
-        datamations_y: output[states[0][i][x_axis]],
-        datamations_y_tooltip: output[states[0][i][x_axis]]
+        [x_axis]: item[x_axis],
+        datamations_x: 1 + groups.indexOf(item[x_axis]),
+        datamations_y: output[item[x_axis]],
+        datamations_y_tooltip: output[item[x_axis]]
       }
       if (operation === 'mean' || operation === 'median') {
-        value.datamations_y_raw = _.round(states[0][i][y_axis], 13)
+        value.datamations_y_raw = _.round(item[y_axis], 13)
       }
       if (operation === 'mean') {
-        value.Lower = output[states[0][i][x_axis]] - _error[states[0][i][x_axis]]
-        value.Upper = output[states[0][i][x_axis]] + _error[states[0][i][x_axis]]
+        value.Lower = output[item[x_axis]] - _error[item[x_axis]]
+        value.Upper = output[item[x_axis]] + _error[item[x_axis]]
       }
       data.push(value)
       id = id + 1
