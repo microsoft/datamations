@@ -241,6 +241,8 @@ datamationSandDance <- function(specs, width = NULL, height = NULL, elementId = 
     package = "datamations",
     elementId = elementId
   )
+
+  write(specs, file = "specs.json")
 }
 
 #' Output and render functions for using datamation_sanddance in Shiny
