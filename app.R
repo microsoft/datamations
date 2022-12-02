@@ -12,13 +12,13 @@ library(dplyr)
 "small_salary %>%   group_by(Degree) %>%  summarize(sum = sum(Salary))"%>%
   datamation_sanddance()
 
-applications_over_months = read.csv('./data-raw/applications.csv')
+# applications_over_months = read.csv('./data-raw/applications.csv')
 
-applications_over_months %>%
-  group_by(Account.Name, Billing.Month) %>%
-  summarise(sum_taff = sum(Total.Cost))
+# applications_over_months %>%
+#   group_by(Account.Name, Billing.Month) %>%
+#   summarise(sum_taff = sum(Total.Cost))
 
-"applications_over_months %>%
-  group_by(Billing.Month) %>%
-  summarise(sum_taff = sum(Total.Cost))" %>%
-  datamation_sanddance()
+# "applications_over_months %>%
+#   group_by(Billing.Month) %>%
+#   summarise(sum_taff = sum(Total.Cost))" %>%
+#   datamation_sanddance()
