@@ -75,6 +75,13 @@ library(palmerpenguins)
   datamation_sanddance()
 ```
 
+```{r}
+"small_salary %>%
+  group_by(Degree) %>%
+  summarise(sum = sum(Salary))" %>%
+  datamation_sanddance()
+```
+
 # filter()
 
 ## Filtering initial data
