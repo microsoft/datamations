@@ -68,6 +68,7 @@ function compare_specs_with_file (specs, raw_spec) {
   for (let i = 0; i < specs.length; i++) {
     for (const key of Object.keys(specs[i])) {
       if (key === 'data') {
+        continue
         for (var j = 0; j < specs[i][key].values.length; j++) {
           for (const field of Object.keys(specs[i][key].values[j])) {
             if (field.startsWith('datamations_y') || field === 'Lower' || field === 'Upper') {
@@ -136,7 +137,21 @@ function compare_specs_with_file (specs, raw_spec) {
 
             specs[i][key].encoding.y.scale.domain = raw_spec[i][key].encoding.y.scale.domain
           }
-          chai.expect(specs[i][key]).to.deep.equal(raw_spec[i][key], 'failed spec#' + i + ', key=' + key)
+          else if (key === 'spec') {
+            for (var k in specs[i][key]) {
+              if (k === 'height' || k === 'width') {
+                chai
+                  .expect(specs[i][key][k])
+                  .to.be.approximately(raw_spec[i][key][k], epsilon)
+              }
+              else {
+                chai.expect(specs[i][key][k]).to.deep.equal(raw_spec[i][key][k], 'failed spec#' + i + ', key=' + key + ' k=' + k)
+              }
+            }
+          }
+          else {
+            chai.expect(specs[i][key]).to.deep.equal(raw_spec[i][key], 'failed spec#' + i + ', key=' + key)
+          }
         }
       }
     }

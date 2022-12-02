@@ -240,8 +240,8 @@ function prep_specs_groupby (states, groupby, summarize) {
     var cols = []
     var count = {}
     var start = {}
-    for (var col of Object.keys(states[1].groups)) {
-      for (var row of Object.keys(states[1].groups[col])) {
+    for (var col of Object.keys(states[1].groups).sort(compare_ignore_case)) {
+      for (var row of Object.keys(states[1].groups[col]).sort(compare_ignore_case)) {
         if (!cols.includes(col)) cols.push(col)
         if (!Object.keys(count).includes(col)) count[col] = 0
         if (groupby.length > 2) {
@@ -293,7 +293,7 @@ function prep_specs_groupby (states, groupby, summarize) {
     count = {}
     start = {}
     for (col of Object.keys(states[1].groups).sort(compare_ignore_case)) {
-      for (row of Object.keys(states[1].groups[col]).sort(compare_ignore_case)) {
+      for (row of Object.keys(states[1].groups[col]).sort((a, b) => { return a.toLowerCase().localeCompare(b.toLowerCase()) })) {
         if (!cols.includes(col)) {
           cols.push(col)
         }
@@ -657,14 +657,14 @@ function prep_specs_summarize (states, groupby, summarize, output) {
     i = 1
     data = []
     for (group of Object.keys(states[1].groups).sort(compare_ignore_case)) {
-      for (subgroup of Object.keys(states[1].groups[group]).sort(compare_ignore_case)) {
+      for (subgroup of Object.keys(states[1].groups[group]).sort((a, b) => { return a.toLowerCase().localeCompare(b.toLowerCase()) })) {
         for (item of states[1].groups[group][subgroup]) {
           value = {
             gemini_id: i,
             [groupby[0]]: item[groupby[0]],
             [groupby[1]]: item[groupby[1]],
             datamations_x:
-            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : 1 + subgroups.indexOf(item[groupby[1]])
+            groupby.length > 2 ? 1 + l3groups.indexOf(item[groupby[2]]) : 1 + Object.keys(states[1].groups[group]).sort().indexOf(item[groupby[1]])
           }
           if (!isNaN(item[y_axis])) {
             value.datamations_y = _.round(item[y_axis], 13)
@@ -906,10 +906,10 @@ function prep_specs_summarize (states, groupby, summarize, output) {
       max = data.map((item) => { return item.datamations_y }).reduce((prev, current) => {
         return Math.max(prev, current)
       })
-      meta.custom_animation = operation
-      y_encoding.scale.domain = [_.round(min, 13), _.round(max, 13)]
-      delete tooltip[0].title
-      delete y_encoding.title
+      // meta.custom_animation = operation
+      // y_encoding.scale.domain = [_.round(min, 13), _.round(max, 13)]
+      // delete tooltip[0].title
+      // delete y_encoding.title
     }
     else if (groupby.length === 1) {
       min = data.map((item) => { return item.datamations_y }).reduce((prev, current) => {
