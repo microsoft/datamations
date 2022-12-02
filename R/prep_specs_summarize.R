@@ -589,7 +589,7 @@ if(!is.null(mapping$y)) {
       spec[["meta"]][["custom_animation"]] <- list(mapping$summary_function, mapping$summary_parameters)
     }
 
-    if (mapping$summary_function %in% c("mean", "median", "min", "max")) {
+    if (mapping$summary_function %in% c("mean", "median", "min", "max", "sum")) {
       spec[["meta"]][["custom_animation"]] <- mapping$summary_function
     }
 
