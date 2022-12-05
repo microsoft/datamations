@@ -486,7 +486,7 @@ function prep_specs_summarize (states, groupby, summarize, output) {
   }
 
   if (groupby.length === 1) {
-    var groups = Object.keys(states[1].groups)
+    var groups = Object.keys(states[1].groups).map((x) => { return isNaN(x) ? x : Number(x) })
   } else {
     groups = Object.keys(states[1].groups)
     groups = _.uniq(groups.sort(compare_ignore_case))
