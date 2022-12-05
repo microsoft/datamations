@@ -589,7 +589,7 @@ if(!is.null(mapping$y)) {
       spec[["meta"]][["custom_animation"]] <- list(mapping$summary_function, mapping$summary_parameters)
     }
 
-    if (mapping$summary_function %in% c("mean", "median", "min", "max")) {
+    if (mapping$summary_function %in% c("mean", "median", "min", "max", "sum")) {
       spec[["meta"]][["custom_animation"]] <- mapping$summary_function
     }
 
@@ -697,7 +697,7 @@ if(!is.null(mapping$y)) {
 
       specs_list <- append(specs_list, list(spec))
     }
-  } else if (mapping$summary_function != "mean" & y_type != "null") { # Zoomed in but function is not mean - not in n() case since previous frame is already
+  } else if ((mapping$summary_function != "mean" && mapping$summary_function != "sum") & y_type != "null") { # Zoomed in but function is not mean - not in n() case since previous frame is already
     description <- glue::glue("{description}, zoomed in")
 
     # Range is just the range of the actual y
