@@ -177,7 +177,7 @@ describe('products rating', function () {
       for (const line of lines) {
         if (line.trim()) {
           const parts = line.split(',')
-          data.push(parts.map((x) => { return Number(x) ? Number(x) : x }))
+          data.push(parts.map((x) => { return isNaN(x) ? x : Number(x) }))
         }
       }
       fs.readFile('../../../../sandbox/products_mean_rating.json', 'utf8', function (err, fileContents) {
