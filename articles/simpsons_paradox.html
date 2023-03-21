@@ -86,9 +86,9 @@
 
       
 
-      </header><script src="simpsons_paradox_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="simpsons_paradox_files/font-awesome-6.2.0/css/all.min.css" rel="stylesheet">
-<link href="simpsons_paradox_files/font-awesome-6.2.0/css/v4-shims.min.css" rel="stylesheet">
-<script src="simpsons_paradox_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="simpsons_paradox_files/vega-5.20.2/vega.js"></script><script src="simpsons_paradox_files/vega-lite-5.1.0/vega-lite.js"></script><script src="simpsons_paradox_files/vega-embed-6.17.0/vega-embed.js"></script><script src="simpsons_paradox_files/d3-6.7.0/d3.js"></script><script src="simpsons_paradox_files/gemini-0.1.0/gemini.web.js"></script><script src="simpsons_paradox_files/gifshot-0.0.1/gifshot.min.js"></script><script src="simpsons_paradox_files/html2canvas-0.0.1/html2canvas.min.js"></script><script src="simpsons_paradox_files/download2-0.0.1/download2.js"></script><script src="simpsons_paradox_files/datamations-0.0.1/datamations.min.js"></script><link href="simpsons_paradox_files/css-0.0.1/datamationSandDance.css" rel="stylesheet">
+      </header><script src="simpsons_paradox_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="simpsons_paradox_files/font-awesome-6.2.1/css/all.min.css" rel="stylesheet">
+<link href="simpsons_paradox_files/font-awesome-6.2.1/css/v4-shims.min.css" rel="stylesheet">
+<script src="simpsons_paradox_files/htmlwidgets-1.6.2/htmlwidgets.js"></script><script src="simpsons_paradox_files/vega-5.20.2/vega.js"></script><script src="simpsons_paradox_files/vega-lite-5.1.0/vega-lite.js"></script><script src="simpsons_paradox_files/vega-embed-6.17.0/vega-embed.js"></script><script src="simpsons_paradox_files/d3-6.7.0/d3.js"></script><script src="simpsons_paradox_files/gemini-0.1.0/gemini.web.js"></script><script src="simpsons_paradox_files/gifshot-0.0.1/gifshot.min.js"></script><script src="simpsons_paradox_files/html2canvas-0.0.1/html2canvas.min.js"></script><script src="simpsons_paradox_files/download2-0.0.1/download2.js"></script><script src="simpsons_paradox_files/datamations-0.0.1/datamations.min.js"></script><link href="simpsons_paradox_files/css-0.0.1/datamationSandDance.css" rel="stylesheet">
 <link href="simpsons_paradox_files/fa-icons-0.0.1/fa-all.min.css" rel="stylesheet">
 <script src="simpsons_paradox_files/datamationSandDance-binding-0.0.0.9009/datamationSandDance.js"></script><div class="row">
   <div class="col-md-9 contents">
@@ -154,18 +154,28 @@
 <span><span class="st">  group_by(player) %&gt;%</span></span>
 <span><span class="st">  summarize(batting_average = mean(is_hit),</span></span>
 <span><span class="st">            se = sqrt(batting_average * (1 - batting_average) / n()) )'</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div id="htmlwidget-118a79b2c0264b14a417" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<span>  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in</span></span>
+<span><span class="co">#&gt; dplyr 1.1.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `reframe()` instead.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> When switching from `summarise()` to `reframe()`, remember that `reframe()`</span></span>
+<span><span class="co">#&gt;   always returns an ungrouped data frame and adjust accordingly.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">datamations</span> package.</span></span>
+<span><span class="co">#&gt;   Please report the issue to the authors.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre></div>
+<div class="datamationSandDance html-widget html-fill-item-overflow-hidden html-fill-item" height="432.632880098888" id="htmlwidget-a156042cac18a29cfb61" style="width:700px;height:432.632880098888px;" width="700">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget118a79b2c0264b14a417.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidgeta156042cac18a29cfb61.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget118a79b2c0264b14a417.onSlide('htmlwidget118a79b2c0264b14a417')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidgeta156042cac18a29cfb61.onSlide('htmlwidgeta156042cac18a29cfb61')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget118a79b2c0264b14a417.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidgeta156042cac18a29cfb61.exportGif('1')">
 <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -180,7 +190,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-118a79b2c0264b14a417">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-a156042cac18a29cfb61">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -20600,17 +20610,17 @@
 <span><span class="st">  summarize(batting_average = mean(is_hit),</span></span>
 <span><span class="st">            se = sqrt(batting_average * (1 - batting_average) / n()) )'</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/datamation_sanddance.html">datamation_sanddance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div id="htmlwidget-8bf5d7a2d4fccb770018" style="width:700px;height:432.632880098888px;" class="datamationSandDance html-widget" width="700" height="432.632880098888">
+<div class="datamationSandDance html-widget html-fill-item-overflow-hidden html-fill-item" height="432.632880098888" id="htmlwidget-54a9e5c1bfa9e8c0de0d" style="width:700px;height:432.632880098888px;" width="700">
 <div class="controls-wrapper">
 <div class="control-bar">
 <div class="button-wrapper">
-<button class="replay-btn" onclick="window.apphtmlwidget8bf5d7a2d4fccb770018.play('')">Replay</button>
+<button class="replay-btn" onclick="window.apphtmlwidget54a9e5c1bfa9e8c0de0d.play('')">Replay</button>
 </div>
 <div class="slider-wrapper">
-<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget8bf5d7a2d4fccb770018.onSlide('htmlwidget8bf5d7a2d4fccb770018')">
+<input class="slider" type="range" min="0" value="0" onchange="window.apphtmlwidget54a9e5c1bfa9e8c0de0d.onSlide('htmlwidget54a9e5c1bfa9e8c0de0d')">
 </div>
 <div class="button-wrapper">
-<button class="export-btn" onclick="window.apphtmlwidget8bf5d7a2d4fccb770018.exportGif('1')">
+<button class="export-btn" onclick="window.apphtmlwidget54a9e5c1bfa9e8c0de0d.exportGif('1')">
 <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
 </button>
 </div>
@@ -20625,7 +20635,7 @@
 </div>
 </div>
 </div>
-<script type="application/json" data-for="htmlwidget-8bf5d7a2d4fccb770018">{"x":{"specs":[
+<script type="application/json" data-for="htmlwidget-54a9e5c1bfa9e8c0de0d">{"x":{"specs":[
   {
     "height": 300,
     "width": 300,
@@ -43624,7 +43634,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
