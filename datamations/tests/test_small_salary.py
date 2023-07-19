@@ -5,7 +5,7 @@ from datamations import small_salary
 
 def test_small_salary(capsys):
     df = small_salary().df
-    print(df.groupby('Work').mean())
+    print(df.groupby('Work').mean(numeric_only=True))
     captured = capsys.readouterr()
 
     assert "Work" in captured.out
