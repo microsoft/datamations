@@ -44,14 +44,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         self._axis = axis
         self._states.append(self)
         self._operations.append('mean')
-        df = super(DatamationGroupBy, self).mean()
+        df = super(DatamationGroupBy, self).mean(numeric_only=True)
         df = datamation_frame.DatamationFrame(df)
         df._by = self.states[1]._by
         df._states = self._states
         df._operations = self._operations
         self._output = df
         self._axis = axis if axis else df.keys()[0]
-        self._error = super(DatamationGroupBy, self).std()
+        self._error = super(DatamationGroupBy, self).std(numeric_only=True)
         for i in range(len(self._error[self._axis])):
             self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
         return df
@@ -61,14 +61,14 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         self._axis = axis
         self._states.append(self)
         self._operations.append('median')
-        df = super(DatamationGroupBy, self).median()
+        df = super(DatamationGroupBy, self).median(numeric_only=True)
         df = datamation_frame.DatamationFrame(df)
         df._by = self.states[1]._by
         df._states = self._states
         df._operations = self._operations
         self._output = df
         self._axis = axis if axis else df.keys()[0]
-        self._error = super(DatamationGroupBy, self).std()
+        self._error = super(DatamationGroupBy, self).std(numeric_only=True)
         for i in range(len(self._error[self._axis])):
             self._error[self._axis][i] = (0 if pd.isna(self._error[self._axis][i]) else self._error[self._axis][i]) / math.sqrt(len(list(self.states[1].groups.values())[i]))
         return df
@@ -119,7 +119,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         self._axis = axis
         self._states.append(self)
         self._operations.append('sum')
-        df = super(DatamationGroupBy, self).sum()
+        df = super(DatamationGroupBy, self).sum(numeric_only=True)
         df = datamation_frame.DatamationFrame(df)
         df._by = self.states[1]._by
         df._states = self._states
@@ -133,7 +133,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         self._probs = probs
         self._states.append(self)
         self._operations.append('quantile')
-        df = super(DatamationGroupBy, self).quantile(self._probs)
+        df = super(DatamationGroupBy, self).quantile(self._probs, numeric_only=True)
         df = datamation_frame.DatamationFrame(df)
         df._by = self.states[1]._by
         df._states = self._states
@@ -147,7 +147,7 @@ class DatamationGroupBy(pd.core.groupby.generic.DataFrameGroupBy):
         self._axis = axis
         self._states.append(self)
         self._operations.append('product')
-        df = super(DatamationGroupBy, self).prod()
+        df = super(DatamationGroupBy, self).prod(numeric_only=True)
         df = datamation_frame.DatamationFrame(df)
         df._by = self.states[1]._by
         df._states = self._states
